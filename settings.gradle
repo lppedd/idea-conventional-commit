@@ -1,0 +1,2 @@
+rootProject.name = 'idea-conventional-commit'
+startParameter.excludedTaskNames.addAll('buildSearchableOptions', 'jarSearchableOptions')

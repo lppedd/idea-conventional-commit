@@ -1,0 +1,32 @@
+<idea-plugin>
+	<id>com.github.lppedd.idea-conventional-commit</id>
+	<name>Conventional commit</name>
+	<vendor email="lp.edoardo@gmail.com" url="https://github.com/lppedd">Edoardo Luppi</vendor>
+	<idea-version since-build="192" />
+
+	<description><![CDATA[
+      Provides an inline template as an intelligent shortcut
+      to write conventional commit messages.
+	]]></description>
+
+	<version>0.1.0</version>
+	<change-notes>
+		Alpha release with basic functionality.
+		This release is targeted mostly at Angular developers.
+	</change-notes>
+
+	<depends>com.intellij.modules.platform</depends>
+	<depends>com.intellij.modules.vcs</depends>
+
+	<resource-bundle>messages.ConventionalCommitBundle</resource-bundle>
+
+	<extensions defaultExtensionNs="com.intellij">
+		<liveTemplateMacro implementation="com.github.lppedd.cc.macro.CommitTypeMacro" />
+		<liveTemplateMacro implementation="com.github.lppedd.cc.macro.CommitScopeMacro" />
+		<liveTemplateMacro implementation="com.github.lppedd.cc.macro.CommitDescriptionMacro" />
+		<defaultLiveTemplatesProvider implementation="com.github.lppedd.cc.CCTemplateProvider" />
+		<documentationProvider implementation="com.github.lppedd.cc.documentation.CommitTypeDocumentationProvider" />
+	</extensions>
+
+	<depends optional="true" config-file="angular2.xml">AngularJS</depends>
+</idea-plugin>
