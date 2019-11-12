@@ -1,32 +1,50 @@
 <idea-plugin>
 	<id>com.github.lppedd.idea-conventional-commit</id>
-	<name>Conventional commit</name>
-	<vendor email="lp.edoardo@gmail.com" url="https://github.com/lppedd">Edoardo Luppi</vendor>
-	<idea-version since-build="192" />
-
-	<description><![CDATA[
-      Provides an inline template as an intelligent shortcut
-      to write conventional commit messages.
-	]]></description>
-
-	<version>0.1.0</version>
-	<change-notes>
-		Alpha release with basic functionality.
-		This release is targeted mostly at Angular developers.
-	</change-notes>
+	<name>Conventional Commit</name>
+	<vendor
+			email="lp.edoardo@gmail.com"
+			url="https://github.com/lppedd/idea-conventional-commit"
+	>
+		Edoardo Luppi
+	</vendor>
 
 	<depends>com.intellij.modules.platform</depends>
 	<depends>com.intellij.modules.vcs</depends>
 
 	<resource-bundle>messages.ConventionalCommitBundle</resource-bundle>
 
+	<application-components>
+		<component>
+			<implementation-class>
+				com.github.lppedd.cc.configuration.ConventionalCommitConfig
+			</implementation-class>
+		</component>
+	</application-components>
+
 	<extensions defaultExtensionNs="com.intellij">
+		<completion.contributor
+				id="commitTypeCompletion"
+				language="TEXT"
+				order="first, before commitCompletion"
+				implementationClass="com.github.lppedd.cc.completion.ConventionalCommitCompletionContributor"
+		/>
 		<liveTemplateMacro implementation="com.github.lppedd.cc.macro.CommitTypeMacro" />
 		<liveTemplateMacro implementation="com.github.lppedd.cc.macro.CommitScopeMacro" />
-		<liveTemplateMacro implementation="com.github.lppedd.cc.macro.CommitDescriptionMacro" />
-		<defaultLiveTemplatesProvider implementation="com.github.lppedd.cc.CCTemplateProvider" />
+		<liveTemplateMacro implementation="com.github.lppedd.cc.macro.CommitSubjectMacro" />
+		<defaultLiveTemplatesProvider implementation="com.github.lppedd.cc.ConventionalCommitTemplateProvider" />
 		<documentationProvider implementation="com.github.lppedd.cc.documentation.CommitTypeDocumentationProvider" />
+		<typedHandler order="first" implementation="com.github.lppedd.cc.editor.ConventionalCommitTypedHandlerDelegate" />
+
+		<applicationConfigurable
+				id="preferences.ConventionalCommit"
+				instance="com.github.lppedd.cc.configuration.ConventionalCommitConfigurable"
+		/>
 	</extensions>
 
-	<depends optional="true" config-file="angular2.xml">AngularJS</depends>
+	<extensionPoints>
+		<extensionPoint
+				name="conventionalCommitProvider"
+				interface="com.github.lppedd.cc.extensions.ConventionalCommitProvider"
+		/>
+	</extensionPoints>
 </idea-plugin>

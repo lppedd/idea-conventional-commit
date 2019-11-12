@@ -1,9 +1,0 @@
-<idea-plugin>
-	<extensions defaultExtensionNs="com.intellij">
-		<projectService
-				id="angular2ScopeHandler"
-				serviceInterface="com.github.lppedd.cc.service.CommitScopeHandler"
-				serviceImplementation="com.github.lppedd.cc.service.impl.Angular2CommitScopeHandler"
-		/>
-	</extensions>
-</idea-plugin>

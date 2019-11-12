@@ -275,6 +275,9 @@
       <option name="EXPR_CASE_THEN_WRAP" value="true" />
       <option name="PRIMARY_KEY_NAME_TEMPLATE" value="{table}_{columns}_pk" />
     </PostgresCodeStyleSettings>
+    <Properties>
+      <option name="KEEP_BLANK_LINES" value="true" />
+    </Properties>
     <SQLiteCodeStyleSettings version="1">
       <option name="myVersion" value="1" />
       <option name="ALIAS_CASE" value="1" />
