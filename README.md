@@ -1,4 +1,4 @@
-<img align="left" width="85" height="85" src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc-logo.png" alt="Plugin logo">
+<img align="left" width="85" height="85" src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_logo.png" alt="Plugin logo">
 
 # Conventional Commit
 
@@ -55,6 +55,9 @@ a JSON file named
 ```
 cc_defaults.json
 ```
+
+<img width="845" height="528" src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_custom_defaults.png" alt="Custom defaults">
+
 You're allowed to provide custom _types_ and _scopes_, and the JSON file must respect a certain scheme, 
 which is shown here as an example.
 
