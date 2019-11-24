@@ -1,50 +1,77 @@
 <idea-plugin>
-	<id>com.github.lppedd.idea-conventional-commit</id>
-	<name>Conventional Commit</name>
-	<vendor
-			email="lp.edoardo@gmail.com"
-			url="https://github.com/lppedd/idea-conventional-commit"
-	>
-		Edoardo Luppi
-	</vendor>
+  <id>com.github.lppedd.idea-conventional-commit</id>
+  <name>Conventional Commit</name>
+  <vendor
+      email="lp.edoardo@gmail.com"
+      url="https://github.com/lppedd/idea-conventional-commit"
+  >
+    Edoardo Luppi
+  </vendor>
 
-	<depends>com.intellij.modules.platform</depends>
-	<depends>com.intellij.modules.vcs</depends>
+  <depends>com.intellij.modules.platform</depends>
+  <depends>com.intellij.modules.vcs</depends>
 
-	<resource-bundle>messages.ConventionalCommitBundle</resource-bundle>
+  <resource-bundle>messages.ConventionalCommitBundle</resource-bundle>
 
-	<application-components>
-		<component>
-			<implementation-class>
-				com.github.lppedd.cc.configuration.ConventionalCommitConfig
-			</implementation-class>
-		</component>
-	</application-components>
+  <extensions defaultExtensionNs="com.intellij">
+    <iconProvider implementation="com.github.lppedd.cc.icon.CCConfigFileIconProvider" />
 
-	<extensions defaultExtensionNs="com.intellij">
-		<completion.contributor
-				id="commitTypeCompletion"
-				language="TEXT"
-				order="first, before commitCompletion"
-				implementationClass="com.github.lppedd.cc.completion.ConventionalCommitCompletionContributor"
-		/>
-		<liveTemplateMacro implementation="com.github.lppedd.cc.macro.CommitTypeMacro" />
-		<liveTemplateMacro implementation="com.github.lppedd.cc.macro.CommitScopeMacro" />
-		<liveTemplateMacro implementation="com.github.lppedd.cc.macro.CommitSubjectMacro" />
-		<defaultLiveTemplatesProvider implementation="com.github.lppedd.cc.ConventionalCommitTemplateProvider" />
-		<documentationProvider implementation="com.github.lppedd.cc.documentation.CommitTypeDocumentationProvider" />
-		<typedHandler order="first" implementation="com.github.lppedd.cc.editor.ConventionalCommitTypedHandlerDelegate" />
+    <completion.contributor
+        id="commitTypeCompletion"
+        language="TEXT"
+        order="first, before commitCompletion"
+        implementationClass="com.github.lppedd.cc.completion.CommitCompletionContributor"
+    />
 
-		<applicationConfigurable
-				id="preferences.ConventionalCommit"
-				instance="com.github.lppedd.cc.configuration.ConventionalCommitConfigurable"
-		/>
-	</extensions>
+    <typedHandler order="first" implementation="com.github.lppedd.cc.editor.CommitTypedHandlerDelegate" />
 
-	<extensionPoints>
-		<extensionPoint
-				name="conventionalCommitProvider"
-				interface="com.github.lppedd.cc.extensions.ConventionalCommitProvider"
-		/>
-	</extensionPoints>
+    <liveTemplateMacro implementation="com.github.lppedd.cc.liveTemplate.CommitTypeMacro" />
+    <liveTemplateMacro implementation="com.github.lppedd.cc.liveTemplate.CommitScopeMacro" />
+    <liveTemplateMacro implementation="com.github.lppedd.cc.liveTemplate.CommitSubjectMacro" />
+    <defaultLiveTemplatesProvider implementation="com.github.lppedd.cc.liveTemplate.CCLiveTemplatesProvider" />
+
+    <documentationProvider implementation="com.github.lppedd.cc.documentation.CommitTypeDocumentationProvider" />
+    <documentationProvider implementation="com.github.lppedd.cc.documentation.CommitScopeDocumentationProvider" />
+
+    <projectConfigurable
+        id="preferences.ConventionalCommit"
+        key="cc.plugin.name"
+        bundle="messages.ConventionalCommitBundle"
+        instance="com.github.lppedd.cc.configuration.CCMainConfigurable"
+    >
+      <configurable
+          id="preferences.ConventionalCommit.providers"
+          key="cc.config.providers"
+          bundle="messages.ConventionalCommitBundle"
+          instance="com.github.lppedd.cc.configuration.CCProvidersConfigurable"
+      />
+    </projectConfigurable>
+
+    <projectService serviceImplementation="com.github.lppedd.cc.configuration.CCConfigService" />
+    <projectService serviceImplementation="com.github.lppedd.cc.configuration.CCDefaultTokensService" />
+  </extensions>
+
+  <extensionPoints>
+    <extensionPoint
+        area="IDEA_PROJECT"
+        name="commitTypeProvider"
+        interface="com.github.lppedd.cc.api.CommitTypeProvider"
+    />
+    <extensionPoint
+        area="IDEA_PROJECT"
+        name="commitScopeProvider"
+        interface="com.github.lppedd.cc.api.CommitScopeProvider"
+    />
+    <extensionPoint
+        area="IDEA_PROJECT"
+        name="commitSubjectProvider"
+        interface="com.github.lppedd.cc.api.CommitSubjectProvider"
+    />
+  </extensionPoints>
+
+  <extensions defaultExtensionNs="com.github.lppedd.idea-conventional-commit">
+    <commitTypeProvider implementation="com.github.lppedd.cc.api.DefaultCommitTokenProvider" />
+    <commitScopeProvider implementation="com.github.lppedd.cc.api.DefaultCommitTokenProvider" />
+    <commitSubjectProvider implementation="com.github.lppedd.cc.api.DefaultCommitTokenProvider" />
+  </extensions>
 </idea-plugin>

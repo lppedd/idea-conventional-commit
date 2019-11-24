@@ -1,7 +1,7 @@
 <templateSet group="Conventional commit">
-  <template id="ConventionalCommit-cc" name="cc" value="$TYPE$: $DESCRIPTION$" description="Conventional commit" toReformat="false" toShortenFQNames="true">
-    <variable name="TYPE" expression="conventionalCommitType()" defaultValue="" alwaysStopAt="true" />
-    <variable name="DESCRIPTION" expression="conventionalCommitDescription()" defaultValue="" alwaysStopAt="true" />
+  <template id="ConventionalCommit-cc" name="cc" value="$TYPE$: $SUBJECT$" description="Conventional commit" toReformat="false" toShortenFQNames="true">
+    <variable name="TYPE" expression="commitType()" defaultValue="" alwaysStopAt="true" />
+    <variable name="SUBJECT" expression="commitSubject()" defaultValue="" alwaysStopAt="true" />
     <context>
       <option name="ACTION_SCRIPT" value="false" />
       <option name="ASPECTJ" value="false" />
@@ -30,10 +30,10 @@
       <option name="XML" value="false" />
     </context>
   </template>
-  <template id="ConventionalCommit-cs" name="cs" value="$TYPE$($SCOPE$): $DESCRIPTION$" description="Conventional commit with scope" toReformat="false" toShortenFQNames="true">
-    <variable name="TYPE" expression="conventionalCommitType()" defaultValue="" alwaysStopAt="true" />
-    <variable name="SCOPE" expression="conventionalCommitScope()" defaultValue="" alwaysStopAt="true" />
-    <variable name="DESCRIPTION" expression="conventionalCommitDescription()" defaultValue="" alwaysStopAt="true" />
+  <template id="ConventionalCommit-cs" name="cs" value="$TYPE$($SCOPE$): $SUBJECT$" description="Conventional commit with scope" toReformat="false" toShortenFQNames="true">
+    <variable name="TYPE" expression="commitType()" defaultValue="" alwaysStopAt="true" />
+    <variable name="SCOPE" expression="commitScope()" defaultValue="" alwaysStopAt="true" />
+    <variable name="SUBJECT" expression="commitSubject()" defaultValue="" alwaysStopAt="true" />
     <context>
       <option name="ACTION_SCRIPT" value="false" />
       <option name="ASPECTJ" value="false" />
@@ -62,8 +62,8 @@
       <option name="XML" value="false" />
     </context>
   </template>
-  <template id="ConventionalCommit-subject" name="test" value="$DESCRIPTION$" description="Conventional commit with scope" toReformat="false" toShortenFQNames="true">
-    <variable name="DESCRIPTION" expression="conventionalCommitDescription()" defaultValue="" alwaysStopAt="true" />
+  <template id="ConventionalCommit-subject" name="test" value="$SUBJECT$" description="Conventional commit with scope" toReformat="false" toShortenFQNames="true">
+    <variable name="SUBJECT" expression="commitSubject()" defaultValue="" alwaysStopAt="true" />
     <context>
       <option name="ACTION_SCRIPT" value="false" />
       <option name="ASPECTJ" value="false" />

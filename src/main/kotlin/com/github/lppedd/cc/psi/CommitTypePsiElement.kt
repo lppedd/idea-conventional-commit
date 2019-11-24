@@ -1,14 +1,14 @@
 package com.github.lppedd.cc.psi
 
+import com.github.lppedd.cc.api.CommitTypeProvider.CommitType
 import com.intellij.psi.PsiManager
 
 /**
  * @author Edoardo Luppi
  */
-class CommitTypePsiElement(
-  val commitTypeName: String,
-  val commitTypeDescription: String?,
+internal class CommitTypePsiElement(
+  val commitType: CommitType,
   psiManager: PsiManager
 ) : CommitFakePsiElement(psiManager) {
-  override fun toString() = "CommitType:$commitTypeName"
+  override fun toString() = "$commitType"
 }

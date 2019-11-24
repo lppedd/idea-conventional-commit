@@ -7,4 +7,5 @@ import com.intellij.psi.impl.light.LightElement
 /**
  * @author Edoardo Luppi
  */
-abstract class CommitFakePsiElement(psiManager: PsiManager) : LightElement(psiManager, Language.ANY)
+internal abstract class CommitFakePsiElement(psiManager: PsiManager)
+  : LightElement(psiManager, Language.ANY)
