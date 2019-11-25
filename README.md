@@ -2,12 +2,14 @@
 
 # Conventional Commit
 
-<br>Looking for the latest **plugin binaries**? Get them [here][1] as `.zip`  
+### Available @ [JetBrains Plugins Repository][1]
+
+Looking for the latest **plugin binaries**? Get them [here][2] as `.zip`  
 <small>Supported IDE versions: `192.*` to `193.*` (both inclusive)</small> 
 
 -----
 
-The aim of this plugin is to provide completion for [conventional commits][2],
+The aim of this plugin is to provide completion for [conventional commits][3],
 also named _semantic_ commits, inside the VCS Commit dialog.  
 The plugin must provide:
 
@@ -101,5 +103,6 @@ are going to be automatically filtered by the core engine.
 
  - Edoardo Luppi (<lp.edoardo@gmail.com>)
 
-[1]: https://github.com/lppedd/idea-conventional-commit/releases
-[2]: https://conventionalcommits.org/
+[1]: https://plugins.jetbrains.com/plugin/13389-conventional-commit
+[2]: https://github.com/lppedd/idea-conventional-commit/releases
+[3]: https://conventionalcommits.org/
