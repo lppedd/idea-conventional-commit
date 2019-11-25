@@ -1,9 +1,6 @@
 package com.github.lppedd.cc.completion
 
 import com.github.lppedd.cc.*
-import com.github.lppedd.cc.api.CommitScopeProvider
-import com.github.lppedd.cc.api.CommitSubjectProvider
-import com.github.lppedd.cc.api.CommitTypeProvider
 import com.github.lppedd.cc.completion.weigher.CommitScopeElementWeigher
 import com.github.lppedd.cc.completion.weigher.CommitSubjectElementWeigher
 import com.github.lppedd.cc.completion.weigher.CommitTypeElementWeigher
@@ -21,28 +18,30 @@ import com.intellij.codeInsight.completion.impl.CompletionSorterImpl
 import com.intellij.codeInsight.completion.impl.PreferStartMatching
 import com.intellij.codeInsight.lookup.LookupElementWeigher
 import com.intellij.openapi.components.ServiceManager
+import com.intellij.openapi.util.Couple
 import com.intellij.openapi.vcs.ui.CommitMessage
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiManager
 import com.intellij.ui.TextFieldWithAutoCompletionListProvider
 import com.intellij.util.ProcessingContext
 import com.intellij.util.concurrency.Semaphore
+import com.github.lppedd.cc.api.CommitScopeProvider.Companion.EP_NAME as SCOPE_EP
+import com.github.lppedd.cc.api.CommitSubjectProvider.Companion.EP_NAME as SUBJECT_EP
+import com.github.lppedd.cc.api.CommitTypeProvider.Companion.EP_NAME as TYPE_EP
 
 /**
+ * Provides context-based completion items inside the VCS commit dialog.
+ *
  * @author Edoardo Luppi
  */
 internal class CommitCompletionProvider : CompletionProvider<CompletionParameters>() {
-  companion object {
-    private val TYPE_EP = CommitTypeProvider.EP_NAME
-    private val SCOPE_EP = CommitScopeProvider.EP_NAME
-    private val SUBJECT_EP = CommitSubjectProvider.EP_NAME
-  }
-
   override fun addCompletions(
     parameters: CompletionParameters,
     context: ProcessingContext,
     result: CompletionResultSet
   ) {
+    // Completion items must be provided only for explicit completion invocation
+    // (e.g. by using keyboard completion shortcuts)
     if (!parameters.isAutoPopup && parameters.invocationCount < 1) {
       return
     }
@@ -51,6 +50,8 @@ internal class CommitCompletionProvider : CompletionProvider<CompletionParameter
     val project = file.project
     val document = PsiDocumentManager.getInstance(project).getDocument(file)
 
+    // Items must be provided only inside the VCS commit dialog,
+    // not in all generic text documents
     if (document?.getUserData(CommitMessage.DATA_KEY) == null) {
       return
     }
@@ -63,6 +64,9 @@ internal class CommitCompletionProvider : CompletionProvider<CompletionParameter
       .caseInsensitive()
       .withPrefixMatcher(PlainPrefixMatcher(prefix))
 
+    // If the user configured commit messages to be completed via templates,
+    // we provide special `LookupElement`s which programmatically initiate
+    // a `Template` instance on insertion
     if (config.completionType == CompletionType.TEMPLATE) {
       if (!parameters.isAutoPopup) {
         resultSet
@@ -70,12 +74,12 @@ internal class CommitCompletionProvider : CompletionProvider<CompletionParameter
           .also { rs ->
             TYPE_EP.getExtensions(project)
               .asSequence()
-              .sortedBy { config.getProviderOrder(it) }
+              .sortedBy(config::getProviderOrder)
               .flatMap { runWithCheckCanceled { it.getCommitTypes("") }.asSequence() }
               .map { CommitTypePsiElement(it, psiManager) }
-              .mapIndexed { i, psi -> TemplateCommitTypeLookupElement(i, psi) }
-              .distinctBy { e -> e.lookupString }
-              .forEach { rs.addElement(it) }
+              .mapIndexed(::TemplateCommitTypeLookupElement)
+              .distinctBy(TemplateCommitTypeLookupElement::getLookupString)
+              .forEach(rs::addElement)
           }
       }
 
@@ -85,7 +89,7 @@ internal class CommitCompletionProvider : CompletionProvider<CompletionParameter
     val caretOffset = parameters.editor.caretModel.logicalPosition.column
     val textPrecedingCaret = CCEditorUtils.getCurrentLineUntilCaret(parameters.editor)
     val commitTokens = CCParser.parseText(textPrecedingCaret)
-    val subjectCtx = isInSubjectContext(commitTokens)
+    val subjectCtx = trySubjectContext(commitTokens)
 
     if (subjectCtx != null) {
       resultSet
@@ -95,61 +99,58 @@ internal class CommitCompletionProvider : CompletionProvider<CompletionParameter
           safelyReleaseSemaphore(parameters.process)
           SUBJECT_EP.getExtensions(project)
             .asSequence()
-            .sortedBy { config.getProviderOrder(it) }
+            .sortedBy(config::getProviderOrder)
             .flatMap {
               runWithCheckCanceled {
                 it.getCommitSubjects(subjectCtx.first, subjectCtx.second)
               }.asSequence()
             }
             .map { CommitSubjectPsiElement(it, psiManager) }
-            .mapIndexed { i, psi -> CommitSubjectLookupElement(i, psi) }
-            .distinctBy { e -> e.lookupString }
-            .forEach { rs.addElement(it) }
+            .mapIndexed(::CommitSubjectLookupElement)
+            .distinctBy(CommitSubjectLookupElement::getLookupString)
+            .forEach(rs::addElement)
         }
 
       return
     }
 
-    val scopeCtx = isInScopeContext(caretOffset - 1, commitTokens)
+    val scopeCtx = tryScopeContext(caretOffset - 1, commitTokens)
 
     if (scopeCtx != null) {
       val (type, scope) = scopeCtx
       resultSet
-        .withPrefixMatcher(scope)
+        .withPrefixMatcher(scope ?: return)
         .withRelevanceSorter(sorter(CommitScopeElementWeigher))
         .also { rs ->
           safelyReleaseSemaphore(parameters.process)
           SCOPE_EP.getExtensions(project)
             .asSequence()
-            .sortedBy { config.getProviderOrder(it) }
+            .sortedBy(config::getProviderOrder)
             .flatMap { runWithCheckCanceled { it.getCommitScopes(type) }.asSequence() }
             .map { CommitScopePsiElement(it, psiManager) }
-            .mapIndexed { i, psi -> CommitScopeLookupElement(i, psi) }
-            .distinctBy { e -> e.lookupString }
-            .forEach { rs.addElement(it) }
+            .mapIndexed(::CommitScopeLookupElement)
+            .distinctBy(CommitScopeLookupElement::getLookupString)
+            .forEach(rs::addElement)
         }
 
       return
     }
 
-    val typeStr = isInTypeContext(textPrecedingCaret, caretOffset, commitTokens.type)
-
-    if (typeStr != null) {
-      resultSet
-        .withPrefixMatcher(typeStr)
-        .withRelevanceSorter(sorter(CommitTypeElementWeigher))
-        .also { rs ->
-          safelyReleaseSemaphore(parameters.process)
-          TYPE_EP.getExtensions(project)
-            .asSequence()
-            .sortedBy { config.getProviderOrder(it) }
-            .flatMap { runWithCheckCanceled { it.getCommitTypes(typeStr) }.asSequence() }
-            .map { CommitTypePsiElement(it, psiManager) }
-            .mapIndexed { i, psi -> CommitTypeLookupElement(i, psi) }
-            .distinctBy { e -> e.lookupString }
-            .forEach { rs.addElement(it) }
-        }
-    }
+    val typeValue = tryTypeContext(textPrecedingCaret, caretOffset, commitTokens.type)
+    resultSet
+      .withPrefixMatcher(typeValue)
+      .withRelevanceSorter(sorter(CommitTypeElementWeigher))
+      .also { rs ->
+        safelyReleaseSemaphore(parameters.process)
+        TYPE_EP.getExtensions(project)
+          .asSequence()
+          .sortedBy(config::getProviderOrder)
+          .flatMap { runWithCheckCanceled { it.getCommitTypes(typeValue) }.asSequence() }
+          .map { CommitTypePsiElement(it, psiManager) }
+          .mapIndexed(::CommitTypeLookupElement)
+          .distinctBy(CommitTypeLookupElement::getLookupString)
+          .forEach(rs::addElement)
+      }
   }
 
   private fun sorter(weigher: LookupElementWeigher): CompletionSorter {
@@ -159,7 +160,12 @@ internal class CommitCompletionProvider : CompletionProvider<CompletionParameter
       .withClassifier(CompletionSorterImpl.weighingFactory(weigher))
   }
 
-  private fun isInTypeContext(text: String, caretOffset: Int, type: PCommitType): String? {
+  /**
+   * Checks if the caret is positioned inside the commit **type** context.
+   *
+   * @return a string representing the possibly partial commit type
+   */
+  private fun tryTypeContext(text: String, caretOffset: Int, type: PCommitType): String {
     return if (type.isInContext(caretOffset)) {
       type.value
     } else {
@@ -167,16 +173,29 @@ internal class CommitCompletionProvider : CompletionProvider<CompletionParameter
     }
   }
 
-  private fun isInScopeContext(caretOffset: Int, commitTokens: PCommitTokens): Pair<String, String>? =
+  /**
+   * Checks if the caret is positioned inside the commit **scope** context.
+   *
+   * @return a couple of strings, representing the commit type (first) and
+   *         the possibly partial commit scope (second), or `null` if the
+   *         caret isn't in context
+   */
+  private fun tryScopeContext(caretOffset: Int, commitTokens: PCommitTokens): Couple<String>? =
     if (commitTokens.scope.isInContext(caretOffset)) {
-      Pair(commitTokens.type.value, commitTokens.scope.value)
+      Couple(commitTokens.type.value, commitTokens.scope.value)
     } else {
       null
     }
 
-  private fun isInSubjectContext(commitTokens: PCommitTokens): Pair<String, String>? =
+  /**
+   * Checks if the caret is positioned inside the commit **subject** context.
+   *
+   * @return a couple of strings, representing the commit type (first) and
+   *         the commit scope (second), or `null` if the caret isn't in context
+   */
+  private fun trySubjectContext(commitTokens: PCommitTokens): Couple<String>? =
     if (commitTokens.separator) {
-      Pair(commitTokens.type.value, commitTokens.scope.value)
+      Couple.of(commitTokens.type.value, commitTokens.scope.value)
     } else {
       null
     }
