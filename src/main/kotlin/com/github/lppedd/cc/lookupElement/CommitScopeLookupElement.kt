@@ -47,7 +47,10 @@ internal open class CommitScopeLookupElement(
       .append("):")
 
     val typeStartOffset = lineRange.first + type.range.first
-    val newTextLengthWithoutSubject = newTextBuilder.length
+    val newTextLengthWithoutSubject =
+      newTextBuilder.length +
+      if (!subject.isValid || subject.value.startsWith(" ")) 1 else 0
+
     val newText = newTextBuilder
       .append(subject.value.ifEmpty { " " })
       .toString()
@@ -56,7 +59,7 @@ internal open class CommitScopeLookupElement(
       document.replaceString(typeStartOffset, lineRange.last, newText)
     }
 
-    editor.caretModel.moveToOffset(typeStartOffset + newTextLengthWithoutSubject + 1)
+    editor.caretModel.moveToOffset(typeStartOffset + newTextLengthWithoutSubject)
     AutoPopupController.getInstance(context.project).scheduleAutoPopup(editor)
   }
 }
