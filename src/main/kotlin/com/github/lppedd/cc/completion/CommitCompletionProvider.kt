@@ -92,7 +92,7 @@ internal class CommitCompletionProvider : CompletionProvider<CompletionParameter
 
     if (subjectCtx != null) {
       resultSet
-        .withPrefixMatcher(commitTokens.subject.value)
+        .withPrefixMatcher(commitTokens.subject.value.trimStart())
         .withRelevanceSorter(sorter(CommitSubjectElementWeigher))
         .also { rs ->
           safelyReleaseSemaphore(parameters.process)
@@ -118,7 +118,7 @@ internal class CommitCompletionProvider : CompletionProvider<CompletionParameter
     if (scopeCtx != null) {
       val (type, scope) = scopeCtx
       resultSet
-        .withPrefixMatcher(scope ?: return)
+        .withPrefixMatcher(scope?.trimStart() ?: return)
         .withRelevanceSorter(sorter(CommitScopeElementWeigher))
         .also { rs ->
           safelyReleaseSemaphore(parameters.process)
