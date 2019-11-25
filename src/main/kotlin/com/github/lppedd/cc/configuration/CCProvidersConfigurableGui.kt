@@ -17,7 +17,7 @@ import javax.swing.JPanel
  * @author Edoardo Luppi
  */
 internal class CCProvidersConfigurableGui {
-  val rootPanel = JPanel(BorderLayout(0, 10))
+  val rootPanel = JPanel(BorderLayout(0, 15))
 
   private val types = CommitProviderTable<CommitTypeProvider>("Type providers")
   private val scopes = CommitProviderTable<CommitScopeProvider>("Scope providers")
