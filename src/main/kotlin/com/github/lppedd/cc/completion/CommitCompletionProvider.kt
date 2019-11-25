@@ -92,7 +92,7 @@ internal class CommitCompletionProvider : CompletionProvider<CompletionParameter
 
     if (subjectCtx != null) {
       resultSet
-        .withPrefixMatcher(PrefixMatcher.ALWAYS_TRUE)
+        .withPrefixMatcher(commitTokens.subject.value)
         .withRelevanceSorter(sorter(CommitSubjectElementWeigher))
         .also { rs ->
           safelyReleaseSemaphore(parameters.process)
