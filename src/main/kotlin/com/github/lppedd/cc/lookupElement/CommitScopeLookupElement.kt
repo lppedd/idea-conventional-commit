@@ -38,7 +38,7 @@ internal open class CommitScopeLookupElement(
     val editor = context.editor
     val document = context.document
     val range = CCEditorUtils.getCurrentLineRange(editor)
-    val text = document.text.substring(range.first, range.last - 1)
+    val text = document.text.substring(range.first, range.last)
     val commitTokens = CCParser.parseText(text)
     val newTextBuilder = StringBuilder(150)
       .append(commitTokens.type.value)
