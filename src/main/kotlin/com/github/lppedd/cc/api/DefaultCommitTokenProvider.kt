@@ -53,6 +53,7 @@ internal class DefaultCommitTokenProvider(private val project: Project)
       .map(PCommitTokens::subject)
       .map(PCommitSubject::value)
       .map(String::trim)
+      .filter(String::isNotEmpty)
       .map(::CommitSubject)
       .toList()
   }
