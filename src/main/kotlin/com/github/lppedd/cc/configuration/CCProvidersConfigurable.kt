@@ -12,7 +12,7 @@ import com.intellij.openapi.project.Project
 /**
  * @author Edoardo Luppi
  */
-class CCProvidersConfigurable(project: Project) : SearchableConfigurable, NoScroll {
+internal class CCProvidersConfigurable(project: Project) : SearchableConfigurable, NoScroll {
   companion object {
     private val TYPE_EP = CommitTypeProvider.EP_NAME
     private val SCOPE_EP = CommitScopeProvider.EP_NAME
@@ -24,9 +24,9 @@ class CCProvidersConfigurable(project: Project) : SearchableConfigurable, NoScro
 
   init {
     gui.setProviders(
-      TYPE_EP.getExtensions(project).sortedBy { config.getProviderOrder(it) },
-      SCOPE_EP.getExtensions(project).sortedBy { config.getProviderOrder(it) },
-      SUBJECT_EP.getExtensions(project).sortedBy { config.getProviderOrder(it) }
+      TYPE_EP.getExtensions(project).sortedBy(config::getProviderOrder),
+      SCOPE_EP.getExtensions(project).sortedBy(config::getProviderOrder),
+      SUBJECT_EP.getExtensions(project).sortedBy(config::getProviderOrder)
     )
   }
 
@@ -60,7 +60,7 @@ class CCProvidersConfigurable(project: Project) : SearchableConfigurable, NoScro
   }
 
   override fun reset() {
-    gui.reset();
+    gui.reset()
   }
 
   override fun isModified() = gui.isModified
