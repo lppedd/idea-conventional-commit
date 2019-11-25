@@ -37,28 +37,26 @@ internal open class CommitScopeLookupElement(
   override fun handleInsert(context: InsertionContext) {
     val editor = context.editor
     val document = context.document
-    val range = CCEditorUtils.getCurrentLineRange(editor)
-    val text = document.text.substring(range.first, range.last)
-    val commitTokens = CCParser.parseText(text)
+    val lineRange = CCEditorUtils.getCurrentLineRange(editor)
+    val lineText = document.text.substring(lineRange.first, lineRange.last)
+    val (type, _, _, _, subject) = CCParser.parseText(lineText)
     val newTextBuilder = StringBuilder(150)
-      .append(commitTokens.type.value)
+      .append(type.value)
       .append('(')
       .append(lookupString)
       .append("):")
 
-    val length = newTextBuilder.length
+    val typeStartOffset = lineRange.first + type.range.first
+    val newTextLengthWithoutSubject = newTextBuilder.length
     val newText = newTextBuilder
-      .append(commitTokens.subject.value.ifEmpty { " " })
+      .append(subject.value.ifEmpty { " " })
       .toString()
 
-    val typeRangeStart = range.first + commitTokens.type.range.first
-    val newOffset = typeRangeStart + length + 1
-
     runWriteAction {
-      document.replaceString(typeRangeStart, range.last, newText)
+      document.replaceString(typeStartOffset, lineRange.last, newText)
     }
 
-    editor.caretModel.moveToOffset(newOffset)
+    editor.caretModel.moveToOffset(typeStartOffset + newTextLengthWithoutSubject + 1)
     AutoPopupController.getInstance(context.project).scheduleAutoPopup(editor)
   }
 }
