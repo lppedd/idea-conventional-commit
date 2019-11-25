@@ -16,20 +16,6 @@ internal class DefaultCommitTokenProvider(private val project: Project)
   : CommitTypeProvider,
     CommitScopeProvider,
     CommitSubjectProvider {
-  companion object {
-    private val TYPES = listOf(
-      CommitType("refactor", CCBundle["commit.type.refactor"]),
-      CommitType("fix", CCBundle["commit.type.fix"]),
-      CommitType("feat", CCBundle["commit.type.feat"]),
-      CommitType("perf", CCBundle["commit.type.perf"]),
-      CommitType("test", CCBundle["commit.type.test"]),
-      CommitType("style", CCBundle["commit.type.style"]),
-      CommitType("build", CCBundle["commit.type.build"]),
-      CommitType("docs", CCBundle["commit.type.docs"]),
-      CommitType("ci", CCBundle["commit.type.ci"])
-    )
-  }
-
   private val defaultsService = ServiceManager.getService(
     project,
     CCDefaultTokensService::class.java
