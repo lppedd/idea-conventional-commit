@@ -5,7 +5,6 @@ import com.github.lppedd.cc.api.CommitScopeProvider.CommitScope
 import com.github.lppedd.cc.api.CommitSubjectProvider.CommitSubject
 import com.github.lppedd.cc.api.CommitTypeProvider.CommitType
 import com.github.lppedd.cc.configuration.CCDefaultTokensService
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vcs.VcsConfiguration
 
@@ -16,10 +15,7 @@ internal class DefaultCommitTokenProvider(private val project: Project)
   : CommitTypeProvider,
     CommitScopeProvider,
     CommitSubjectProvider {
-  private val defaultsService = ServiceManager.getService(
-    project,
-    CCDefaultTokensService::class.java
-  )
+  private val defaultsService = CCDefaultTokensService.getInstance(project)
 
   override fun getId() = CCConstants.DEFAULT_PROVIDER_ID
   override fun getPresentation() =

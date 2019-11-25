@@ -9,8 +9,8 @@ import com.intellij.openapi.project.Project
 import java.io.FileReader
 import java.io.InputStreamReader
 import java.util.*
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.locks.ReentrantReadWriteLock
+import java.util.concurrent.atomic.*
+import java.util.concurrent.locks.*
 import kotlin.concurrent.read
 import kotlin.concurrent.write
 
@@ -24,6 +24,9 @@ internal class CCDefaultTokensService(private val project: Project) : DefaultTok
 
     // WARN: this one must stay below TYPE, or it will be null!
     val DEFAULT_TOKENS: Map<String, JsonCommitType> = refreshTokens()
+
+    fun getInstance(project: Project): CCDefaultTokensService =
+      ServiceManager.getService(project, CCDefaultTokensService::class.java)
 
     fun refreshTokens(filePath: String): Map<String, JsonCommitType> =
       GSON.fromJson<Map<String, JsonCommitType>>(FileReader(filePath), TYPE) ?: emptyMap()
@@ -43,7 +46,7 @@ internal class CCDefaultTokensService(private val project: Project) : DefaultTok
   }
 
   private val firstAccess = AtomicBoolean(true)
-  private val config = ServiceManager.getService(project, CCConfigService::class.java)
+  private val config = CCConfigService.getInstance(project)
   private val rwLock = ReentrantReadWriteLock(true)
   private var defaults: Map<String, JsonCommitType> = DEFAULT_TOKENS
 

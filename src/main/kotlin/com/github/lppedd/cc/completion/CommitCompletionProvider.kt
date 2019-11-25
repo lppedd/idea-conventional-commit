@@ -17,7 +17,6 @@ import com.intellij.codeInsight.completion.*
 import com.intellij.codeInsight.completion.impl.CompletionSorterImpl
 import com.intellij.codeInsight.completion.impl.PreferStartMatching
 import com.intellij.codeInsight.lookup.LookupElementWeigher
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.util.Couple
 import com.intellij.openapi.vcs.ui.CommitMessage
 import com.intellij.psi.PsiDocumentManager
@@ -58,7 +57,7 @@ internal class CommitCompletionProvider : CompletionProvider<CompletionParameter
 
     val psiManager = PsiManager.getInstance(project)
     val prefix = TextFieldWithAutoCompletionListProvider.getCompletionPrefix(parameters)
-    val config = ServiceManager.getService(project, CCConfigService::class.java)
+    val config = CCConfigService.getInstance(project)
 
     val resultSet = result
       .caseInsensitive()

@@ -5,7 +5,6 @@ import com.github.lppedd.cc.CCConstants
 import com.github.lppedd.cc.api.CommitScopeProvider
 import com.github.lppedd.cc.api.CommitSubjectProvider
 import com.github.lppedd.cc.api.CommitTypeProvider
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.options.Configurable.NoScroll
 import com.intellij.openapi.options.SearchableConfigurable
 import com.intellij.openapi.project.Project
@@ -21,7 +20,7 @@ class CCProvidersConfigurable(project: Project) : SearchableConfigurable, NoScro
   }
 
   private val gui = CCProvidersConfigurableGui()
-  private val config = ServiceManager.getService(project, CCConfigService::class.java)
+  private val config = CCConfigService.getInstance(project)
 
   init {
     gui.setProviders(

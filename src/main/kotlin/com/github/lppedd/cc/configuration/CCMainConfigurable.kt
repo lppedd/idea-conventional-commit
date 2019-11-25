@@ -3,7 +3,6 @@ package com.github.lppedd.cc.configuration
 import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.CCConstants
 import com.github.lppedd.cc.api.DefaultCommitTokenProvider.JsonCommitType
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.options.Configurable.NoScroll
 import com.intellij.openapi.options.SearchableConfigurable
 import com.intellij.openapi.project.Project
@@ -15,8 +14,8 @@ import javax.swing.JComponent
  */
 internal class CCMainConfigurable(private val project: Project) : SearchableConfigurable, NoScroll {
   private val disposable = Disposer.newDisposable()
-  private val defaults = ServiceManager.getService(project, CCDefaultTokensService::class.java)
-  private val config = ServiceManager.getService(project, CCConfigService::class.java)
+  private val defaults = CCDefaultTokensService.getInstance(project)
+  private val config = CCConfigService.getInstance(project)
   private val gui = CCMainConfigurableGui(disposable)
 
   override fun getId() = "preferences.${CCConstants.APP_NAME}"

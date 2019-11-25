@@ -5,8 +5,10 @@ import com.github.lppedd.cc.api.CommitScopeProvider
 import com.github.lppedd.cc.api.CommitSubjectProvider
 import com.github.lppedd.cc.api.CommitTypeProvider
 import com.intellij.openapi.components.PersistentStateComponent
+import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
+import com.intellij.openapi.project.Project
 import com.intellij.util.xmlb.XmlSerializerUtil
 import com.intellij.util.xmlb.annotations.XMap
 import java.util.*
@@ -21,6 +23,9 @@ import java.util.*
 internal class CCConfigService : PersistentStateComponent<CCConfigService> {
   companion object {
     private val DEFAULT_ENTRY = Pair(CCConstants.DEFAULT_PROVIDER_ID, 0)
+
+    fun getInstance(project: Project): CCConfigService =
+      ServiceManager.getService(project, CCConfigService::class.java)
   }
 
   var completionType: CompletionType = CompletionType.AUTOPOPUP
