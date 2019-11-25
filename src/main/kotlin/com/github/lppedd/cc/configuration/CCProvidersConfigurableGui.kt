@@ -58,9 +58,9 @@ internal class CCProvidersConfigurableGui {
   }
 
   private fun finishUpComponents() {
-    TableSpeedSearch(types, Convertor { p: Any -> (p as CommitTypeProvider).getPresentationName() })
-    TableSpeedSearch(scopes, Convertor { p: Any -> (p as CommitScopeProvider).getPresentationName() })
-    TableSpeedSearch(subjects, Convertor { p: Any -> (p as CommitSubjectProvider).getPresentationName() })
+    TableSpeedSearch(types, Convertor { p -> (p as CommitTypeProvider).getPresentation().name })
+    TableSpeedSearch(scopes, Convertor { p -> (p as CommitScopeProvider).getPresentation().name })
+    TableSpeedSearch(subjects, Convertor { p -> (p as CommitSubjectProvider).getPresentation().name })
 
     val providersPanel = JPanel(GridLayout(3, 1, 0, 10)).apply {
       add(

@@ -43,17 +43,16 @@ internal class CommitProviderRenderer<T : CommitTokenProvider> : DefaultTableCel
 
   override fun setValue(value: Any) {
     if (value is CommitTokenProvider) {
-      icon = getIcon(value)
-      text = getText(value)
+      val (name, icon) = value.getPresentation()
+      text = name
+      setIcon(getIcon(icon))
     } else {
-      icon = null
       text = null
+      icon = null
     }
   }
 
-  private fun getText(provider: CommitTokenProvider) = provider.getPresentationName()
-  private fun getIcon(configuration: CommitTokenProvider): Icon {
-    val icon = configuration.getPresentationIcon()
+  private fun getIcon(icon: Icon): Icon {
     return if (icon.iconHeight <= ICON_HW && icon.iconWidth <= ICON_HW) {
       icon
     } else {

@@ -22,8 +22,11 @@ internal class DefaultCommitTokenProvider(private val project: Project)
   )
 
   override fun getId() = CCConstants.DEFAULT_PROVIDER_ID
-  override fun getPresentationName() = "Default"
-  override fun getPresentationIcon() = CCIcons.DEFAULT_PRESENTATION
+  override fun getPresentation() =
+    ProviderPresentation(
+      "Default",
+      CCIcons.DEFAULT_PRESENTATION
+    )
 
   override fun getCommitTypes(prefix: String?) =
     defaultsService.getDefaults().map { CommitType(it.key, it.value.description) }
