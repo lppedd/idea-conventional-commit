@@ -7,14 +7,14 @@
 
 -----
 
-The aim of this plugin is to provide completion for conventional commits, also named "semantic" commits,
-inside the VCS Commit dialog.  
+The aim of this plugin is to provide completion for [conventional commits][2],
+also named _semantic_ commits, inside the VCS Commit dialog.  
 The plugin must provide:
 
- - standard completion, based on context
- - template completion, invoked intentionally
- - extensibility, which means allowing attaching providers for the various parts of the commit:  
-   _TYPE_, _SCOPE_, _SUBJECT_
+ - standard completion - based on context
+ - template completion - initiated intentionally
+ - extensibility - which means allowing attaching providers for the various parts of the commit:  
+   _type_, _scope_ and _subject_
 
 -----
 
@@ -93,6 +93,8 @@ _Type_, _scope_ and _subject_ each have a specific entry point, and the implemen
 You're allowed to re-order Providers per your necessities, knowing that possible duplicates
 are going to be automatically filtered by the core engine.
 
+<b>More on this later on...</b>
+
 -----
 
 ## Author
@@ -100,3 +102,4 @@ are going to be automatically filtered by the core engine.
  - Edoardo Luppi (<lp.edoardo@gmail.com>)
 
 [1]: https://github.com/lppedd/idea-conventional-commit/releases
+[2]: https://conventionalcommits.org/
