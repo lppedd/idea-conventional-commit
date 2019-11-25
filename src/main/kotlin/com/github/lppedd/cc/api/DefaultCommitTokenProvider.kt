@@ -1,8 +1,6 @@
 package com.github.lppedd.cc.api
 
-import com.github.lppedd.cc.CCBundle
-import com.github.lppedd.cc.CCConstants
-import com.github.lppedd.cc.CCIcons
+import com.github.lppedd.cc.*
 import com.github.lppedd.cc.api.CommitScopeProvider.CommitScope
 import com.github.lppedd.cc.api.CommitSubjectProvider.CommitSubject
 import com.github.lppedd.cc.api.CommitTypeProvider.CommitType
@@ -58,12 +56,16 @@ internal class DefaultCommitTokenProvider(private val project: Project)
     getRecentVcsMessages(project)
 
   private fun getRecentVcsMessages(project: Project): List<CommitSubject> {
-    val recentMessages = VcsConfiguration.getInstance(project).recentMessages.reversed()
-    return recentMessages
+    return VcsConfiguration.getInstance(project).recentMessages
+      .asReversed()
+      .asSequence()
       .take(20)
-      .map { m -> m.replaceFirst("(^(${TYPES.joinToString("|") { it.text }})).*:".toRegex(), "") }
-      .map { m -> m.trim { it <= ' ' } }
-      .map { m -> CommitSubject(m) }
+      .map(CCParser::parseText)
+      .map(PCommitTokens::subject)
+      .map(PCommitSubject::value)
+      .map(String::trim)
+      .map(::CommitSubject)
+      .toList()
   }
 
   internal class JsonCommitType(
