@@ -1,5 +1,4 @@
 import org.jetbrains.intellij.tasks.PatchPluginXmlTask
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
   java
@@ -49,5 +48,6 @@ tasks.getByName<PatchPluginXmlTask>("patchPluginXml") {
   version(project.version)
   sinceBuild("192")
   untilBuild("193.*")
-  changeNotes(File("change-notes/${version.replace('.', '_')}.html").readText(charset("UTF-8")))
+  pluginDescription(File("plugin-description.html").readText(Charsets.UTF_8))
+  changeNotes(File("change-notes/${version.replace('.', '_')}.html").readText(Charsets.UTF_8))
 }
