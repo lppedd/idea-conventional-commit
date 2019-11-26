@@ -51,7 +51,7 @@ class CommitTypeMacro : CommitMacro() {
     CommitTypeProvider.EP_NAME.getExtensions(project)
       .flatMap { it.getCommitTypes("") }
       .map { CommitTypePsiElement(it, psiManager) }
-      .mapIndexed { i, psi -> CommitTypeLookupElement(i, psi) }
+      .mapIndexed(::CommitTypeLookupElement)
       .forEach { lookup.addItem(it, PrefixMatcher.ALWAYS_TRUE) }
   }
 }

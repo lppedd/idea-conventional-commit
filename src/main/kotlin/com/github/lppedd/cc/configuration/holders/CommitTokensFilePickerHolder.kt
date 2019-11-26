@@ -47,7 +47,7 @@ internal class CommitTokensFilePickerHolder(private val disposable: Disposable) 
       customFile.text = FileUtil.toSystemDependentName(path)
       ComponentValidator
         .getInstance(customFile)
-        .ifPresent { it.revalidate() }
+        .ifPresent(ComponentValidator::revalidate)
     } else {
       isCustomFile.isSelected = false
       customFile.isEnabled = false
@@ -106,7 +106,7 @@ internal class CommitTokensFilePickerHolder(private val disposable: Disposable) 
       override fun textChanged(e: DocumentEvent) {
         ComponentValidator
           .getInstance(customFile)
-          .ifPresent { it.revalidate() }
+          .ifPresent(ComponentValidator::revalidate)
       }
     })
   }

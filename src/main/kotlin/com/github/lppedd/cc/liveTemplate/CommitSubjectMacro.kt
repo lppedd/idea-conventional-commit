@@ -19,7 +19,7 @@ class CommitSubjectMacro : CommitMacro() {
     CommitSubjectProvider.EP_NAME.getExtensions(project)
       .flatMap { it.getCommitSubjects("", "") }
       .map { CommitSubjectPsiElement(it, psiManager) }
-      .mapIndexed { i, psi -> CommitSubjectLookupElement(i, psi) }
+      .mapIndexed(::CommitSubjectLookupElement)
       .forEach { lookup.addItem(it, PrefixMatcher.ALWAYS_TRUE) }
   }
 }

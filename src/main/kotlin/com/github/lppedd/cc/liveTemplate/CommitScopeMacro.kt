@@ -66,7 +66,7 @@ internal class CommitScopeMacro : CommitMacro() {
     CommitScopeProvider.EP_NAME.getExtensions(project)
       .flatMap { it.getCommitScopes(commitType) }
       .map { CommitScopePsiElement(it, psiManager) }
-      .mapIndexed { i, psi -> CommitScopeLookupElement(i, psi) }
+      .mapIndexed(::CommitScopeLookupElement)
       .forEach { lookup.addItem(it, PrefixMatcher.ALWAYS_TRUE) }
   }
 }
