@@ -12,7 +12,7 @@ import javax.swing.table.DefaultTableCellRenderer
 /**
  * @author Edoardo Luppi
  */
-internal class CommitProviderRenderer<T : CommitTokenProvider> : DefaultTableCellRenderer() {
+internal class CommitProviderRenderer : DefaultTableCellRenderer() {
   companion object {
     private val APP = ApplicationInfo.getInstance()
     private val ICON_HW = getIconSizeForVersion()

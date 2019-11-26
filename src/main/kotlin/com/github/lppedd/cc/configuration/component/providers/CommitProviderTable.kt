@@ -28,7 +28,7 @@ internal class CommitProviderTable<T : CommitTokenProvider>(title: String) : JBT
 
     getColumnModel().getColumn(COLUMN_PROVIDER).apply {
       minWidth = 100
-      cellRenderer = CommitProviderRenderer<T>()
+      cellRenderer = CommitProviderRenderer()
     }
   }
 
