@@ -10,8 +10,6 @@ import com.intellij.util.component2
  * @author Edoardo Luppi
  */
 internal object CCEditorUtils {
-  val COMPLETION_ENTER = "\n"
-
   fun getCurrentLineUntilOffset(editor: Editor, offset: Int): String {
     val document = editor.document
     val lineNumber = document.getLineNumber(offset)
