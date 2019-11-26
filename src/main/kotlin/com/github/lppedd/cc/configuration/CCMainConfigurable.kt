@@ -65,6 +65,6 @@ internal class CCMainConfigurable(private val project: Project) : SearchableConf
   }
 
   override fun disposeUIResources() {
-    Disposer.dispose(disposable);
+    Disposer.dispose(disposable)
   }
 }

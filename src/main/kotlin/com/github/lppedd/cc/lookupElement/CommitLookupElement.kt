@@ -8,7 +8,7 @@ import com.intellij.codeInsight.lookup.LookupElement
  */
 internal abstract class CommitLookupElement : LookupElement() {
   open val weight: Int = 10
-  abstract val index: Int;
+  abstract val index: Int
 
   override fun isCaseSensitive() = false
   override fun getAutoCompletionPolicy() = AutoCompletionPolicy.NEVER_AUTOCOMPLETE
