@@ -64,7 +64,7 @@ internal class TemplateCommitTypeLookupElement(
       EditorModificationUtil.insertStringAtCaret(editor, psiElement.commitType.text)
     }
 
-    // And we confirm it by navigating to the subject context
+    // ...and we confirm it by navigating to the subject context
     TemplateManagerImpl.getTemplateState(editor)?.nextTab()
   }
 
