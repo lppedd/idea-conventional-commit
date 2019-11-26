@@ -13,6 +13,14 @@
 
   <resource-bundle>messages.ConventionalCommitBundle</resource-bundle>
 
+  <actions>
+    <action
+        id="EditorTab"
+        overrides="true"
+        class="com.github.lppedd.cc.action.CommitTabAction"
+    />
+  </actions>
+
   <extensions defaultExtensionNs="com.intellij">
     <iconProvider implementation="com.github.lppedd.cc.icon.CCConfigFileIconProvider" />
 
