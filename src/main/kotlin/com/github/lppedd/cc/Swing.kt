@@ -1,4 +1,4 @@
-package com.github.lppedd.cc.configuration.component
+package com.github.lppedd.cc
 
 import com.intellij.uiDesigner.core.GridConstraints
 import java.awt.Dimension

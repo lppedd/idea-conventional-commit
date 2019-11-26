@@ -5,7 +5,7 @@ import com.github.lppedd.cc.CCConstants
 import com.github.lppedd.cc.CCIcons
 import com.github.lppedd.cc.configuration.CCDefaultTokensService
 import com.github.lppedd.cc.configuration.component.ComponentHolder
-import com.github.lppedd.cc.configuration.component.KGridConstraints
+import com.github.lppedd.cc.KGridConstraints
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.ui.ComponentValidator
