@@ -37,11 +37,7 @@ intellij {
   version = "IU-2019.2"
   downloadSources = true
   pluginName = "Conventional Commit"
-  setPlugins(
-    "java",
-    "AngularJS",
-    "JavaScriptLanguage"
-  )
+  setPlugins("java")
 }
 
 tasks.getByName<PatchPluginXmlTask>("patchPluginXml") {
