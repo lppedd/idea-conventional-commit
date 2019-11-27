@@ -35,7 +35,7 @@ object CCParser {
   private const val SUBJECT = "subject"
 
   private val regexp = """
-    |(?:(.*? )|)??(?<$TYPE>[a-zA-Z0-9]+)
+    |(?:(.*? )|)??(?<$TYPE>[a-zA-Z0-9-]+)
     |(?<$SCOPE>(?:\([^()\r\n]*\)|\(.*(?=!)|\(.*(?=:))|\(.*(?=$))?
     |(?<$BRK_CHANGE>!)?
     |(?<$SEPARATOR>:)? ?
