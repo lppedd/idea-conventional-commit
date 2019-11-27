@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Commit types",
+  "type": "object",
+  "additionalProperties": false,
+  "patternProperties": {
+    "^([a-zA-Z0-9-]+)$": {
+      "$ref": "#/definitions/commitType"
+    }
+  },
+  "definitions": {
+    "commitType": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "scopes": {
+          "type": "object",
+          "additionalProperties": false,
+          "patternProperties": {
+            "^([a-zA-Z0-9-:]+)$": {
+              "$ref": "#/definitions/commitScope"
+            }
+          }
+        }
+      }
+    },
+    "commitScope": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
