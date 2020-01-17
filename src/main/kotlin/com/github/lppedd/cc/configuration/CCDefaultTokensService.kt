@@ -6,8 +6,10 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
-import java.io.FileReader
 import java.io.InputStreamReader
+import java.nio.charset.StandardCharsets
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.util.*
 import java.util.concurrent.atomic.*
 import java.util.concurrent.locks.*
@@ -28,13 +30,15 @@ internal class CCDefaultTokensService(private val project: Project) : DefaultTok
     fun getInstance(project: Project): CCDefaultTokensService =
       ServiceManager.getService(project, CCDefaultTokensService::class.java)
 
-    fun refreshTokens(filePath: String): Map<String, JsonCommitType> =
-      GSON.fromJson<Map<String, JsonCommitType>>(FileReader(filePath), TYPE) ?: emptyMap()
+    fun refreshTokens(filePath: String): Map<String, JsonCommitType> {
+      val bufferedReader = Files.newBufferedReader(Paths.get(filePath), StandardCharsets.UTF_8)
+      return GSON.fromJson<Map<String, JsonCommitType>>(bufferedReader, TYPE) ?: emptyMap()
+    }
 
     private fun refreshTokens(): Map<String, JsonCommitType> {
       val path = "/defaults/${CCConstants.DEFAULT_FILE}"
       val inputStream = CCConfigService::class.java.getResourceAsStream(path)
-      val reader = InputStreamReader(inputStream)
+      val reader = InputStreamReader(inputStream, StandardCharsets.UTF_8)
       return GSON.fromJson<Map<String, JsonCommitType>>(reader, TYPE) ?: emptyMap()
     }
   }
