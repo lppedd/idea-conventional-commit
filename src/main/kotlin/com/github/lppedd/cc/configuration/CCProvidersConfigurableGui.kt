@@ -19,9 +19,9 @@ import javax.swing.JPanel
 internal class CCProvidersConfigurableGui {
   val rootPanel = JPanel(BorderLayout(0, 15))
 
-  private val types = CommitProviderTable<CommitTypeProvider>("Type providers")
-  private val scopes = CommitProviderTable<CommitScopeProvider>("Scope providers")
-  private val subjects = CommitProviderTable<CommitSubjectProvider>("Subject providers")
+  private val types = CommitProviderTable<CommitTypeProvider>(get("cc.config.providers.type.title"))
+  private val scopes = CommitProviderTable<CommitScopeProvider>(get("cc.config.providers.scope.title"))
+  private val subjects = CommitProviderTable<CommitSubjectProvider>(get("cc.config.providers.subject.title"))
 
   init {
     finishUpComponents()
