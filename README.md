@@ -99,10 +99,12 @@ are going to be automatically filtered by the core engine.
 
 -----
 
-## Author
+## Author and contributors
 
  - Edoardo Luppi (<lp.edoardo@gmail.com>)
+ - [ymind][4]
 
 [1]: https://plugins.jetbrains.com/plugin/13389-conventional-commit
 [2]: https://github.com/lppedd/idea-conventional-commit/releases
 [3]: https://conventionalcommits.org/
+[4]: https://github.com/ymind
