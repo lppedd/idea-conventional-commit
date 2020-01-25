@@ -35,7 +35,7 @@
     "description": "Changes which affect CI configuration files and scripts (example scopes: travis, circle, browser-stack, sauce-labs)."
   },
   "chore": {
-    "description": "Updating grunt tasks etc; no production code change",
+    "description": "Other modifications, such as build processes, dependency management.",
     "scopes": {
       "package": {
         "description": ""
