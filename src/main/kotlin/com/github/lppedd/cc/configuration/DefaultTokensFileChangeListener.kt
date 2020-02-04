@@ -10,7 +10,7 @@ import com.intellij.util.messages.Topic
  */
 internal interface DefaultTokensFileChangeListener {
   companion object {
-    val TOPIC = Topic.create(
+    internal val TOPIC = Topic.create(
       "Notification for ${CCConstants.DEFAULT_FILE} changes",
       DefaultTokensFileChangeListener::class.java
     )
