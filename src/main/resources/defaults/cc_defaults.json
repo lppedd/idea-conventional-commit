@@ -1,37 +1,39 @@
 {
-  "refactor": {
-    "description": "Changes which neither fix a bug nor add a feature."
-  },
-  "fix": {
-    "description": "Changes which patch a bug."
-  },
-  "feat": {
-    "description": "Changes which introduce a new feature."
-  },
-  "build": {
-    "description": "Changes which affect the build system or external dependencies (example scopes: gulp, broccoli, npm).",
-    "scopes": {
-      "gulp": {
-        "description": ""
-      },
-      "npm": {
-        "description": ""
+  "types": {
+    "refactor": {
+      "description": "Changes which neither fix a bug nor add a feature."
+    },
+    "fix": {
+      "description": "Changes which patch a bug."
+    },
+    "feat": {
+      "description": "Changes which introduce a new feature."
+    },
+    "build": {
+      "description": "Changes which affect the build system or external dependencies (example scopes: gulp, broccoli, npm).",
+      "scopes": {
+        "gulp": {
+          "description": ""
+        },
+        "npm": {
+          "description": ""
+        }
       }
+    },
+    "style": {
+      "description": "Changes which don't affect code logic.\nWhite-space, formatting, missing semi-colons, etc."
+    },
+    "test": {
+      "description": "Changes which add missing tests or correct existing tests."
+    },
+    "docs": {
+      "description": "Changes which affect documentation."
+    },
+    "perf": {
+      "description": "Changes which improve performance."
+    },
+    "ci": {
+      "description": "Changes which affect CI configuration files and scripts (example scopes: travis, circle, browser-stack, sauce-labs)."
     }
-  },
-  "style": {
-    "description": "Changes which don't affect code logic.\nWhite-space, formatting, missing semi-colons, etc."
-  },
-  "test": {
-    "description": "Changes which add missing tests or correct existing tests."
-  },
-  "docs": {
-    "description": "Changes which affect documentation."
-  },
-  "perf": {
-    "description": "Changes which improve performance."
-  },
-  "ci": {
-    "description": "Changes which affect CI configuration files and scripts (example scopes: travis, circle, browser-stack, sauce-labs)."
   }
 }

@@ -11,11 +11,13 @@ version = "0.2.2"
 
 repositories {
   mavenCentral()
+  maven("https://jitpack.io")
 }
 
 dependencies {
   implementation(kotlin("stdlib-jdk8", "1.3.61"))
-  implementation("com.google.code.gson", "gson", "2.8.6")
+  implementation("org.json", "json", "20190722")
+  implementation("com.github.everit-org.json-schema", "org.everit.json.schema", "1.12.1")
   testCompile("junit:junit:4.12")
 }
 
