@@ -3,9 +3,9 @@ package com.github.lppedd.cc.configuration.holders
 import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.CCConstants
 import com.github.lppedd.cc.CCIcons
+import com.github.lppedd.cc.KGridConstraints
 import com.github.lppedd.cc.configuration.CCDefaultTokensService
 import com.github.lppedd.cc.configuration.component.ComponentHolder
-import com.github.lppedd.cc.KGridConstraints
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.ui.ComponentValidator
@@ -20,6 +20,7 @@ import com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL
 import com.intellij.uiDesigner.core.GridLayoutManager
 import com.intellij.util.ui.ComponentWithEmptyText
 import com.intellij.util.ui.JBUI
+import org.everit.json.schema.ValidationException
 import java.awt.event.ItemEvent
 import javax.swing.Icon
 import javax.swing.JComponent
@@ -135,7 +136,15 @@ internal class CommitTokensFilePickerHolder(private val disposable: Disposable) 
       null
     } catch (e: Exception) {
       isValid = false
-      ValidationInfo(CCBundle["cc.config.filePicker.error.schema"], customFile)
+
+      val error = if (e is ValidationException) {
+        val messages = e.allMessages.joinToString("<br />", ":<br />")
+        CCBundle["cc.config.filePicker.error.schema"] + messages
+      } else {
+        CCBundle["cc.config.filePicker.error.schema"]
+      }
+
+      ValidationInfo(error, customFile)
     }
   }
 
