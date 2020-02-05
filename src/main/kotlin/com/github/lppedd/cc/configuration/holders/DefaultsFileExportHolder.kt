@@ -25,7 +25,7 @@ import javax.swing.JPanel
 internal class DefaultsFileExportHolder : ComponentHolder, LinkListener<Any?> {
   private val exportAction = ActionLinkLabel(CCBundle["cc.config.defaults.exportToPath"], this)
   private val exportInfo = JBLabel()
-  private val panel = JPanel(GridLayoutManager(1, 2, JBUI.insetsLeft(10), 20, 0)).apply {
+  private val panel = JPanel(GridLayoutManager(1, 2, JBUI.insets(0, 1, 6, 0), 20, 0)).apply {
     val gc = GridConstraints()
     gc.fill = GridConstraints.FILL_HORIZONTAL
     gc.hSizePolicy = GridConstraints.SIZEPOLICY_FIXED

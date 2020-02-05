@@ -120,6 +120,7 @@ public class CCMainConfigurableGui {
     );
 
     final GridConstraints gc = new GridConstraints();
+    gc.setIndent(1);
     gc.setFill(FILL_BOTH);
     gc.setHSizePolicy(SIZEPOLICY_CAN_SHRINK | SIZEPOLICY_CAN_GROW | SIZEPOLICY_WANT_GROW);
     defaultsPanel.add(new DefaultsFileExportHolder().getComponent(), gc);
@@ -129,6 +130,7 @@ public class CCMainConfigurableGui {
     defaultsPanel.add(defaultsFilePickerHolder.getComponent(), gc);
 
     gc.setRow(2);
+    gc.setIndent(0);
     gc.setVSizePolicy(SIZEPOLICY_CAN_SHRINK | SIZEPOLICY_CAN_GROW | SIZEPOLICY_WANT_GROW);
     defaultsPanel.add(defaultsListsHolder.getComponent(), gc);
   }

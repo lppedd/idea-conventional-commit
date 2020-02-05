@@ -31,7 +31,7 @@ import javax.swing.event.DocumentEvent
  * @author Edoardo Luppi
  */
 internal class DefaultsFilePickerHolder(private val disposable: Disposable) : ComponentHolder {
-  private val panel = JPanel(GridLayoutManager(2, 1, JBUI.insetsLeft(10), 0, 10))
+  private val panel = JPanel(GridLayoutManager(2, 1, JBUI.emptyInsets(), 0, 10))
   private val isCustomFile = JBCheckBox(CCBundle["cc.config.defaults.customDefaults"])
   private val customFile = TextFieldWithBrowseButton()
   private var isValid = true
