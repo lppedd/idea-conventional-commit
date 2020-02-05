@@ -30,7 +30,7 @@ internal class CCMainConfigurable(private val project: Project) : SearchableConf
     val tokens = try {
       refreshTokens(customFilePath)
     } catch (e: Exception) {
-      emptyMap<String, JsonCommitType>()
+      emptyMap()
     }
 
     gui.setTokens(tokens)

@@ -9,6 +9,7 @@ import com.intellij.util.component2
 /**
  * @author Edoardo Luppi
  */
+@Suppress("unused", "MemberVisibilityCanBePrivate")
 internal object CCEditorUtils {
   fun getCurrentLineUntilOffset(editor: Editor, offset: Int): String {
     val document = editor.document
