@@ -7,6 +7,13 @@
 Looking for the latest **plugin binaries**? Get them [here][2] as `.zip`  
 <small>Supported IDE versions: `192.*` to `201.*` (both inclusive)</small> 
 
+<strong>Additional Providers</strong> are available by installing other lightweight plugins.  
+
+| Context & GitHub | Plugins Repository | Type | Scope | Subject |
+| --- | :---: | :---: | :---: | :---: |
+| [Angular (2+)][6] | :heavy_check_mark: [Install][7] | :heavy_check_mark: | :heavy_check_mark: | |
+| Coming soon... | | | | |
+
 -----
 
 The aim of this plugin is to provide completion for [conventional commits][3],
@@ -117,3 +124,5 @@ are going to be automatically filtered by the core engine.
 [3]: https://conventionalcommits.org/
 [4]: https://github.com/ymind
 [5]: https://github.com/lppedd/idea-conventional-commit/blob/master/src/main/resources/defaults/cc_defaults.schema.json
+[6]: https://github.com/lppedd/idea-conventional-commit-angular2
+[7]: https://plugins.jetbrains.com/plugin/13405-angular-conventional-commit
