@@ -17,9 +17,9 @@ import org.jetbrains.annotations.Nullable;
 import com.github.lppedd.cc.CCBundle;
 import com.github.lppedd.cc.api.DefaultCommitTokenProvider.JsonCommitType;
 import com.github.lppedd.cc.configuration.CCConfigService.CompletionType;
-import com.github.lppedd.cc.configuration.holders.CommitTokensFileExportHolder;
-import com.github.lppedd.cc.configuration.holders.CommitTokensFilePickerHolder;
-import com.github.lppedd.cc.configuration.holders.CommitTokensListsHolder;
+import com.github.lppedd.cc.configuration.holders.DefaultsFileExportHolder;
+import com.github.lppedd.cc.configuration.holders.DefaultsFilePickerHolder;
+import com.github.lppedd.cc.configuration.holders.DefaultsListsHolder;
 import com.intellij.openapi.Disposable;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.components.JBLabel;
@@ -42,8 +42,8 @@ public class CCMainConfigurableGui {
   private JBRadioButton isTemplate;
 
   private JPanel defaultsPanel;
-  private CommitTokensFilePickerHolder filePickerHolder;
-  private final CommitTokensListsHolder listsHolder = new CommitTokensListsHolder();
+  private DefaultsFilePickerHolder defaultsFilePickerHolder;
+  private final DefaultsListsHolder defaultsListsHolder = new DefaultsListsHolder();
 
   public CCMainConfigurableGui(final Disposable disposable) {
     this();
@@ -72,7 +72,7 @@ public class CCMainConfigurableGui {
 
   @Nullable
   public String getCustomFilePath() {
-    return filePickerHolder.getCustomFilePath();
+    return defaultsFilePickerHolder.getCustomFilePath();
   }
 
   public void setCompletionType(@NotNull final CompletionType completionType) {
@@ -89,15 +89,15 @@ public class CCMainConfigurableGui {
   }
 
   public void setCustomFilePath(@Nullable final String path) {
-    filePickerHolder.setCustomFilePath(path);
+    defaultsFilePickerHolder.setCustomFilePath(path);
   }
 
   public void setTokens(@NotNull final Map<String, JsonCommitType> tokens) {
-    listsHolder.setTokens(tokens);
+    defaultsListsHolder.setTokens(tokens);
   }
 
   public boolean isValid() {
-    return filePickerHolder.isValid();
+    return defaultsFilePickerHolder.isValid();
   }
 
   private void finishUpComponents(final Disposable disposable) {
@@ -122,15 +122,15 @@ public class CCMainConfigurableGui {
     final GridConstraints gc = new GridConstraints();
     gc.setFill(FILL_BOTH);
     gc.setHSizePolicy(SIZEPOLICY_CAN_SHRINK | SIZEPOLICY_CAN_GROW | SIZEPOLICY_WANT_GROW);
-    defaultsPanel.add(new CommitTokensFileExportHolder().getComponent(), gc);
+    defaultsPanel.add(new DefaultsFileExportHolder().getComponent(), gc);
 
     gc.setRow(1);
-    filePickerHolder = new CommitTokensFilePickerHolder(disposable);
-    defaultsPanel.add(filePickerHolder.getComponent(), gc);
+    defaultsFilePickerHolder = new DefaultsFilePickerHolder(disposable);
+    defaultsPanel.add(defaultsFilePickerHolder.getComponent(), gc);
 
     gc.setRow(2);
     gc.setVSizePolicy(SIZEPOLICY_CAN_SHRINK | SIZEPOLICY_CAN_GROW | SIZEPOLICY_WANT_GROW);
-    defaultsPanel.add(listsHolder.getComponent(), gc);
+    defaultsPanel.add(defaultsListsHolder.getComponent(), gc);
   }
 
   private static class LearnMoreAction extends AbstractAction {

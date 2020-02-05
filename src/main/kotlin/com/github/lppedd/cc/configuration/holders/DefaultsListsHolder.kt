@@ -21,7 +21,7 @@ import javax.swing.JPanel
 /**
  * @author Edoardo Luppi
  */
-internal class CommitTokensListsHolder : ComponentHolder {
+internal class DefaultsListsHolder : ComponentHolder {
   private lateinit var latestTokens: Map<String, JsonCommitType>
   private val panel = JPanel(BorderLayout())
   private val scopeList = CommitTokenList(CCIcons.SCOPE)

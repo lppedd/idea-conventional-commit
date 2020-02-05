@@ -30,7 +30,7 @@ import javax.swing.event.DocumentEvent
 /**
  * @author Edoardo Luppi
  */
-internal class CommitTokensFilePickerHolder(private val disposable: Disposable) : ComponentHolder {
+internal class DefaultsFilePickerHolder(private val disposable: Disposable) : ComponentHolder {
   private val panel = JPanel(GridLayoutManager(2, 1, JBUI.insetsLeft(10), 0, 10))
   private val isCustomFile = JBCheckBox(CCBundle["cc.config.defaults.customDefaults"])
   private val customFile = TextFieldWithBrowseButton()
@@ -62,7 +62,7 @@ internal class CommitTokensFilePickerHolder(private val disposable: Disposable) 
   private fun buildComponents(): JPanel {
     installValidationOnFilePicker()
 
-    customFile.addBrowseFolderListener(TextBrowseFolderListener(CustomFileChooserDescriptor()))
+    customFile.addBrowseFolderListener(TextBrowseFolderListener(DefaultsFileChooserDescriptor()))
 
     setEmptyText(
       customFile.textField,
@@ -161,7 +161,7 @@ internal class CommitTokensFilePickerHolder(private val disposable: Disposable) 
     }
   }
 
-  private class CustomFileChooserDescriptor : FileChooserDescriptor(true, true, true, true, false, false) {
+  private class DefaultsFileChooserDescriptor : FileChooserDescriptor(true, true, true, true, false, false) {
     init {
       withFileFilter { file: VirtualFile -> file.isValid && CCConstants.DEFAULT_FILE == file.name }
       withTitle(CCBundle["cc.config.fileDialog.title"])

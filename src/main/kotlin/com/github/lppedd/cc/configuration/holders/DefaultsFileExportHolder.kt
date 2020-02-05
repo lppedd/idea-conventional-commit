@@ -21,7 +21,7 @@ import javax.swing.JPanel
 /**
  * @author Edoardo Luppi
  */
-internal class CommitTokensFileExportHolder : ComponentHolder, LinkListener<Any?> {
+internal class DefaultsFileExportHolder : ComponentHolder, LinkListener<Any?> {
   private val exportAction = ActionLinkLabel(CCBundle["cc.config.defaults.exportToPath"], this)
   private val exportInfo = JBLabel()
   private val panel = JPanel(GridLayoutManager(1, 2, JBUI.insetsLeft(10), 20, 0)).apply {
