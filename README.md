@@ -60,25 +60,33 @@ cc_defaults.json
 
 <img width="845" height="528" src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_custom_defaults.png" alt="Custom defaults">
 
-You're allowed to provide custom _types_ and _scopes_, and the JSON file must respect a certain scheme, 
-which is shown here as an example.
+You're allowed to provide custom _types_ and _scopes_, given the JSON file respects a Schema ([see here][5]).   
+An example is shown below:
 
 ```json
 {
-  "customType": {
-    "description":"My custom type description"
-  },
-  "anotherCustomType": { },
-  "yetAnotherCustomType": {
-    "description":"This is my description",
-    "scopes": {
-      "first": {
-        "description":"My first description"
-      },
-      "second": {
-        "description":"My second description"
+  "types": {
+    "customType": {
+      "description": "My custom type description"
+    },
+    "anotherCustomType": { },
+    "yetAnotherCustomType": {
+      "description": "This is my description",
+      "scopes": {
+        "first": {
+          "description": "My first description"
+        },
+        "second": {
+          "description": "My second description"
+        }
       }
     }
+  },
+  "commonScopes": {
+    "one": {
+      "description": "My first common scope"
+    },
+    "two": { }
   }
 }
 ```
@@ -108,3 +116,4 @@ are going to be automatically filtered by the core engine.
 [2]: https://github.com/lppedd/idea-conventional-commit/releases
 [3]: https://conventionalcommits.org/
 [4]: https://github.com/ymind
+[5]: https://github.com/lppedd/idea-conventional-commit/blob/master/src/main/resources/defaults/cc_defaults.schema.json
