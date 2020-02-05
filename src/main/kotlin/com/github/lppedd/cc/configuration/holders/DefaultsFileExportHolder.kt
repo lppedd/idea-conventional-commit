@@ -2,6 +2,7 @@ package com.github.lppedd.cc.configuration.holders
 
 import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.CCConstants
+import com.github.lppedd.cc.configuration.component.ActionLinkLabel
 import com.github.lppedd.cc.configuration.component.ComponentHolder
 import com.github.lppedd.cc.getResourceAsStream
 import com.intellij.openapi.application.runWriteAction
@@ -55,15 +56,6 @@ internal class DefaultsFileExportHolder : ComponentHolder, LinkListener<Any?> {
 
       exportInfo.foreground = UIUtil.getLabelDisabledForeground()
       exportInfo.text = CCBundle["cc.config.defaults.exportToPath.completed"]
-    }
-  }
-
-  private class ActionLinkLabel(
-    label: String,
-    listener: LinkListener<Any?>
-  ) : LinkLabel<Any?>(label, null) {
-    init {
-      setListener(listener, null)
     }
   }
 }
