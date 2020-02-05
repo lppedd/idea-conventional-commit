@@ -17,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import com.github.lppedd.cc.CCBundle;
 import com.github.lppedd.cc.api.DefaultCommitTokenProvider.JsonCommitType;
 import com.github.lppedd.cc.configuration.CCConfigService.CompletionType;
+import com.github.lppedd.cc.configuration.holders.CommitTokensFileExportHolder;
 import com.github.lppedd.cc.configuration.holders.CommitTokensFilePickerHolder;
 import com.github.lppedd.cc.configuration.holders.CommitTokensListsHolder;
 import com.intellij.openapi.Disposable;
@@ -110,7 +111,7 @@ public class CCMainConfigurableGui {
     isAutoPopup.setText(CCBundle.get("cc.config.autoPopup"));
     isTemplate.setText(CCBundle.get("cc.config.template"));
 
-    defaultsPanel.setLayout(new GridLayoutManager(2, 1));
+    defaultsPanel.setLayout(new GridLayoutManager(3, 1));
     defaultsPanel.setBorder(
         IdeBorderFactory.createTitledBorder(
             CCBundle.get("cc.config.defaults"),
@@ -118,14 +119,16 @@ public class CCMainConfigurableGui {
         )
     );
 
-    filePickerHolder = new CommitTokensFilePickerHolder(disposable);
-
     final GridConstraints gc = new GridConstraints();
-    gc.setHSizePolicy(SIZEPOLICY_CAN_SHRINK | SIZEPOLICY_CAN_GROW | SIZEPOLICY_WANT_GROW);
     gc.setFill(FILL_BOTH);
-    defaultsPanel.add(filePickerHolder.getComponent(), gc);
+    gc.setHSizePolicy(SIZEPOLICY_CAN_SHRINK | SIZEPOLICY_CAN_GROW | SIZEPOLICY_WANT_GROW);
+    defaultsPanel.add(new CommitTokensFileExportHolder().getComponent(), gc);
 
     gc.setRow(1);
+    filePickerHolder = new CommitTokensFilePickerHolder(disposable);
+    defaultsPanel.add(filePickerHolder.getComponent(), gc);
+
+    gc.setRow(2);
     gc.setVSizePolicy(SIZEPOLICY_CAN_SHRINK | SIZEPOLICY_CAN_GROW | SIZEPOLICY_WANT_GROW);
     defaultsPanel.add(listsHolder.getComponent(), gc);
   }

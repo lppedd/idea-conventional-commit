@@ -3,6 +3,7 @@ package com.github.lppedd.cc.configuration
 import com.github.lppedd.cc.CCConstants
 import com.github.lppedd.cc.api.DefaultCommitTokenProvider.JsonCommitScope
 import com.github.lppedd.cc.api.DefaultCommitTokenProvider.JsonCommitType
+import com.github.lppedd.cc.getResourceAsStream
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import org.everit.json.schema.Schema
@@ -39,7 +40,7 @@ internal class CCDefaultTokensService(private val project: Project) : DefaultTok
 
     private fun getDefaultTokens(): Map<String, JsonCommitType> {
       val path = "/defaults/${CCConstants.DEFAULT_FILE}"
-      val inputStream = CCConfigService::class.java.getResourceAsStream(path)
+      val inputStream = getResourceAsStream(path)
       val reader = BufferedReader(InputStreamReader(inputStream, StandardCharsets.UTF_8))
       return readFile(reader)
     }
@@ -89,7 +90,7 @@ internal class CCDefaultTokensService(private val project: Project) : DefaultTok
 
     private fun readSchema(): Schema {
       val schemaPath = "/defaults/${CCConstants.DEFAULT_SCHEMA}"
-      val schemaInputStream = CCConfigService::class.java.getResourceAsStream(schemaPath)
+      val schemaInputStream = getResourceAsStream(schemaPath)
       val schemaReader = BufferedReader(InputStreamReader(schemaInputStream, StandardCharsets.UTF_8))
       val rawSchema = JSONObject(JSONTokener(schemaReader))
       return SchemaLoader.load(rawSchema)
