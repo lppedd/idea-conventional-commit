@@ -65,7 +65,7 @@ a JSON file named
 cc_defaults.json
 ```
 
-<img width="845" height="528" src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_custom_defaults.png" alt="Custom defaults">
+<img width="845" height="554" src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_custom_defaults.png" alt="Custom defaults">
 
 You're allowed to provide custom _types_ and _scopes_, given the JSON file respects a Schema ([see here][5]).   
 An example is shown below:
@@ -105,7 +105,7 @@ but the plugin exposes an API to enhance completion items, per each token.
 _Type_, _scope_ and _subject_ each have a specific entry point, and the implementation is called
 **Provider**. Each Provider is listed in a table, based on its context.
 
-<img width="845" height="503" src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_providers.png" alt="Providers">
+<img width="845" height="552" src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_providers.png" alt="Providers">
 
 You're allowed to re-order Providers per your necessities, knowing that possible duplicates
 are going to be automatically filtered by the core engine.
