@@ -9,7 +9,7 @@ import com.intellij.psi.PsiManager
 /**
  * @author Edoardo Luppi
  */
-class CommitTypeDocumentationProvider : AbstractDocumentationProvider() {
+internal class CommitTypeDocumentationProvider : AbstractDocumentationProvider() {
   override fun generateDoc(element: PsiElement, originalElement: PsiElement?) =
     if (element is CommitTypePsiElement) {
       val description = element.commitType.description ?: ""

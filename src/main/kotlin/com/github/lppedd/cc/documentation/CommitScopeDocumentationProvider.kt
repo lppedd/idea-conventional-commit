@@ -9,7 +9,7 @@ import com.intellij.psi.PsiManager
 /**
  * @author Edoardo Luppi
  */
-class CommitScopeDocumentationProvider : AbstractDocumentationProvider() {
+internal class CommitScopeDocumentationProvider : AbstractDocumentationProvider() {
   override fun generateDoc(element: PsiElement, originalElement: PsiElement?) =
     if (element is CommitScopePsiElement) {
       val description = element.commitScope.description ?: ""

@@ -8,7 +8,7 @@ import com.intellij.codeInsight.template.*
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 
-abstract class CommitMacro : Macro() {
+internal abstract class CommitMacro : Macro() {
   override fun calculateResult(
     params: Array<Expression>,
     context: ExpressionContext?

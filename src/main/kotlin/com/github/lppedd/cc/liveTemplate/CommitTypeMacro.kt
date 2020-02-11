@@ -16,7 +16,7 @@ import com.intellij.psi.PsiManager
 /**
  * @author Edoardo Luppi
  */
-class CommitTypeMacro : CommitMacro() {
+internal class CommitTypeMacro : CommitMacro() {
   override fun getName() = "commitType"
   override fun getPresentableName() = "commitType()"
   override fun getCommitTokens(context: ExpressionContext?) {

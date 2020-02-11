@@ -11,7 +11,7 @@ import com.intellij.psi.PsiManager
 /**
  * @author Edoardo Luppi
  */
-class CommitSubjectMacro : CommitMacro() {
+internal class CommitSubjectMacro : CommitMacro() {
   override fun getName() = "commitSubject"
   override fun getPresentableName() = "commitSubject()"
   override fun queryProviders(project: Project, lookup: LookupImpl) {
