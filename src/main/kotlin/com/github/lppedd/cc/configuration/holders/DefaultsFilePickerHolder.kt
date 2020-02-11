@@ -1,8 +1,6 @@
 package com.github.lppedd.cc.configuration.holders
 
 import com.github.lppedd.cc.CCBundle
-import com.github.lppedd.cc.CCConstants
-import com.github.lppedd.cc.CCIcons
 import com.github.lppedd.cc.KGridConstraints
 import com.github.lppedd.cc.configuration.CCDefaultTokensService
 import com.github.lppedd.cc.configuration.component.ComponentHolder
@@ -22,7 +20,6 @@ import com.intellij.util.ui.ComponentWithEmptyText
 import com.intellij.util.ui.JBUI
 import org.everit.json.schema.ValidationException
 import java.awt.event.ItemEvent
-import javax.swing.Icon
 import javax.swing.JComponent
 import javax.swing.JPanel
 import javax.swing.event.DocumentEvent
@@ -126,7 +123,7 @@ internal class DefaultsFilePickerHolder(private val disposable: Disposable) : Co
       return ValidationInfo(CCBundle["cc.config.filePicker.error.empty"], customFile)
     }
 
-    if (!text.endsWith(CCConstants.DEFAULT_FILE)) {
+    if (!text.endsWith("json", true)) {
       isValid = false
       return ValidationInfo(CCBundle["cc.config.filePicker.error.path"], customFile)
     }
@@ -163,16 +160,9 @@ internal class DefaultsFilePickerHolder(private val disposable: Disposable) : Co
 
   private class DefaultsFileChooserDescriptor : FileChooserDescriptor(true, true, true, true, false, false) {
     init {
-      withFileFilter { file: VirtualFile -> file.isValid && CCConstants.DEFAULT_FILE == file.name }
+      withFileFilter { file: VirtualFile -> file.isValid && "json".equals(file.extension, true) }
       withTitle(CCBundle["cc.config.fileDialog.title"])
       withDescription(CCBundle["cc.config.fileDialog.description"])
     }
-
-    override fun getIcon(file: VirtualFile): Icon? =
-      if (file.isValid && CCConstants.DEFAULT_FILE == file.name) {
-        CCIcons.DEFAULT_PRESENTATION
-      } else {
-        super.getIcon(file)
-      }
   }
 }
