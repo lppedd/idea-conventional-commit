@@ -8,6 +8,7 @@ import com.github.lppedd.cc.getResourceAsStream
 import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.fileChooser.FileChooserFactory
 import com.intellij.openapi.fileChooser.FileSaverDescriptor
+import com.intellij.openapi.vfs.VirtualFileWrapper
 import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.labels.LinkLabel
@@ -41,9 +42,25 @@ internal class DefaultsFileExportHolder : ComponentHolder, LinkListener<Any?> {
     val virtualFileWrapper = FileChooserFactory.getInstance()
       .createSaveFileDialog(FileSaverDescriptor(CCBundle["cc.config.exportDialog.title"], ""), null)
       .save(null, CCConstants.DEFAULT_FILE)
-    val virtualFile = virtualFileWrapper?.getVirtualFile(true) ?: return
 
-    if (!virtualFile.isWritable) {
+    try {
+      writeFile(virtualFileWrapper)
+    } catch (e: Exception) {
+      exportInfo.foreground = JBColor.RED
+      exportInfo.text = "${CCBundle["cc.config.defaults.exportToPath.error"]} - ${e.message}"
+    }
+  }
+
+  private fun writeFile(virtualFileWrapper: VirtualFileWrapper?) {
+    val file = virtualFileWrapper?.file ?: return
+
+    if (!file.exists()) {
+      file.createNewFile()
+    }
+
+    val virtualFile = virtualFileWrapper.virtualFile
+
+    if (virtualFile == null || !virtualFile.isWritable) {
       exportInfo.foreground = JBColor.RED
       exportInfo.text = CCBundle["cc.config.defaults.exportToPath.error"]
       return
