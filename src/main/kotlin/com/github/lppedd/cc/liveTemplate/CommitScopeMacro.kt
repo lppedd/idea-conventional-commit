@@ -1,6 +1,7 @@
 package com.github.lppedd.cc.liveTemplate
 
 import com.github.lppedd.cc.api.CommitScopeProvider
+import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.lookupElement.CommitNoScopeLookupElement
 import com.github.lppedd.cc.lookupElement.CommitScopeLookupElement
 import com.github.lppedd.cc.psi.CommitScopePsiElement
@@ -63,10 +64,15 @@ internal class CommitScopeMacro : CommitMacro() {
 
   private fun queryProviders(project: Project, commitType: String, lookup: LookupImpl) {
     val psiManager = PsiManager.getInstance(project)
+    val config = CCConfigService.getInstance(project)
+
     CommitScopeProvider.EP_NAME.getExtensions(project)
-      .flatMap { it.getCommitScopes(commitType) }
+      .asSequence()
+      .sortedBy(config::getProviderOrder)
+      .flatMap { it.getCommitScopes(commitType).asSequence() }
       .map { CommitScopePsiElement(it, psiManager) }
       .mapIndexed(::CommitScopeLookupElement)
+      .distinctBy(CommitScopeLookupElement::getLookupString)
       .forEach { lookup.addItem(it, PrefixMatcher.ALWAYS_TRUE) }
   }
 }

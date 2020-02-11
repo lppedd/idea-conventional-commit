@@ -1,6 +1,7 @@
 package com.github.lppedd.cc.liveTemplate
 
 import com.github.lppedd.cc.api.CommitTypeProvider
+import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.lookupElement.CommitTypeLookupElement
 import com.github.lppedd.cc.psi.CommitTypePsiElement
 import com.intellij.codeInsight.completion.PrefixMatcher
@@ -48,10 +49,15 @@ internal class CommitTypeMacro : CommitMacro() {
 
   private fun queryExtensions(project: Project, lookup: LookupImpl) {
     val psiManager = PsiManager.getInstance(project)
+    val config = CCConfigService.getInstance(project)
+
     CommitTypeProvider.EP_NAME.getExtensions(project)
-      .flatMap { it.getCommitTypes("") }
+      .asSequence()
+      .sortedBy(config::getProviderOrder)
+      .flatMap { it.getCommitTypes("").asSequence() }
       .map { CommitTypePsiElement(it, psiManager) }
       .mapIndexed(::CommitTypeLookupElement)
+      .distinctBy(CommitTypeLookupElement::getLookupString)
       .forEach { lookup.addItem(it, PrefixMatcher.ALWAYS_TRUE) }
   }
 }
