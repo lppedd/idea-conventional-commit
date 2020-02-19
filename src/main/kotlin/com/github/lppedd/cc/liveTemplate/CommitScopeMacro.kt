@@ -64,11 +64,11 @@ internal class CommitScopeMacro : CommitMacro() {
 
   private fun queryProviders(project: Project, commitType: String, lookup: LookupImpl) {
     val psiManager = PsiManager.getInstance(project)
-    val config = CCConfigService.getInstance(project)
+    val configService = CCConfigService.getInstance(project)
 
     CommitScopeProvider.EP_NAME.getExtensions(project)
       .asSequence()
-      .sortedBy(config::getProviderOrder)
+      .sortedBy(configService::getProviderOrder)
       .flatMap { it.getCommitScopes(commitType).asSequence() }
       .map { CommitScopePsiElement(it, psiManager) }
       .mapIndexed(::CommitScopeLookupElement)

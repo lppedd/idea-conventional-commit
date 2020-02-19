@@ -17,11 +17,11 @@ internal class CommitSubjectMacro : CommitMacro() {
   override fun getPresentableName() = "commitSubject()"
   override fun queryProviders(project: Project, lookup: LookupImpl) {
     val psiManager = PsiManager.getInstance(project)
-    val config = CCConfigService.getInstance(project)
+    val configService = CCConfigService.getInstance(project)
 
     CommitSubjectProvider.EP_NAME.getExtensions(project)
       .asSequence()
-      .sortedBy(config::getProviderOrder)
+      .sortedBy(configService::getProviderOrder)
       .flatMap { it.getCommitSubjects("", "").asSequence() }
       .map { CommitSubjectPsiElement(it, psiManager) }
       .mapIndexed(::CommitSubjectLookupElement)

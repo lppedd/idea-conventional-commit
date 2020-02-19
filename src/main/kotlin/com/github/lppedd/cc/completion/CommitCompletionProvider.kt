@@ -57,7 +57,7 @@ internal class CommitCompletionProvider : CompletionProvider<CompletionParameter
 
     val psiManager = PsiManager.getInstance(project)
     val prefix = TextFieldWithAutoCompletionListProvider.getCompletionPrefix(parameters)
-    val config = CCConfigService.getInstance(project)
+    val configService = CCConfigService.getInstance(project)
 
     val resultSet = result
       .caseInsensitive()
@@ -66,14 +66,14 @@ internal class CommitCompletionProvider : CompletionProvider<CompletionParameter
     // If the user configured commit messages to be completed via templates,
     // we provide special `LookupElement`s which programmatically initiate
     // a `Template` instance on insertion
-    if (config.completionType == CompletionType.TEMPLATE) {
+    if (configService.completionType == CompletionType.TEMPLATE) {
       if (!parameters.isAutoPopup) {
         resultSet
           .withRelevanceSorter(sorter(CommitTypeElementWeigher))
           .also { rs ->
             TYPE_EP.getExtensions(project)
               .asSequence()
-              .sortedBy(config::getProviderOrder)
+              .sortedBy(configService::getProviderOrder)
               .flatMap { runWithCheckCanceled { it.getCommitTypes("") }.asSequence() }
               .map { CommitTypePsiElement(it, psiManager) }
               .mapIndexed(::TemplateCommitTypeLookupElement)
@@ -98,7 +98,7 @@ internal class CommitCompletionProvider : CompletionProvider<CompletionParameter
           safelyReleaseSemaphore(parameters.process)
           SUBJECT_EP.getExtensions(project)
             .asSequence()
-            .sortedBy(config::getProviderOrder)
+            .sortedBy(configService::getProviderOrder)
             .flatMap {
               runWithCheckCanceled {
                 it.getCommitSubjects(subjectCtx.first, subjectCtx.second)
@@ -124,7 +124,7 @@ internal class CommitCompletionProvider : CompletionProvider<CompletionParameter
           safelyReleaseSemaphore(parameters.process)
           SCOPE_EP.getExtensions(project)
             .asSequence()
-            .sortedBy(config::getProviderOrder)
+            .sortedBy(configService::getProviderOrder)
             .flatMap { runWithCheckCanceled { it.getCommitScopes(type) }.asSequence() }
             .map { CommitScopePsiElement(it, psiManager) }
             .mapIndexed(::CommitScopeLookupElement)
@@ -143,7 +143,7 @@ internal class CommitCompletionProvider : CompletionProvider<CompletionParameter
         safelyReleaseSemaphore(parameters.process)
         TYPE_EP.getExtensions(project)
           .asSequence()
-          .sortedBy(config::getProviderOrder)
+          .sortedBy(configService::getProviderOrder)
           .flatMap { runWithCheckCanceled { it.getCommitTypes(typeValue) }.asSequence() }
           .map { CommitTypePsiElement(it, psiManager) }
           .mapIndexed(::CommitTypeLookupElement)

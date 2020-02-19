@@ -3,7 +3,7 @@ package com.github.lppedd.cc.configuration.holders
 import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.CCIcons
 import com.github.lppedd.cc.CCIcons.ARROW_RIGHT
-import com.github.lppedd.cc.api.DefaultCommitTokenProvider.JsonCommitType
+import com.github.lppedd.cc.configuration.CCDefaultTokensService.JsonCommitType
 import com.github.lppedd.cc.configuration.component.ComponentHolder
 import com.github.lppedd.cc.configuration.component.tokens.CommitTokenList
 import com.intellij.ui.IdeBorderFactory

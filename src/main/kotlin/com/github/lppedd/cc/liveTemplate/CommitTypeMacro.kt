@@ -49,11 +49,11 @@ internal class CommitTypeMacro : CommitMacro() {
 
   private fun queryExtensions(project: Project, lookup: LookupImpl) {
     val psiManager = PsiManager.getInstance(project)
-    val config = CCConfigService.getInstance(project)
+    val configService = CCConfigService.getInstance(project)
 
     CommitTypeProvider.EP_NAME.getExtensions(project)
       .asSequence()
-      .sortedBy(config::getProviderOrder)
+      .sortedBy(configService::getProviderOrder)
       .flatMap { it.getCommitTypes("").asSequence() }
       .map { CommitTypePsiElement(it, psiManager) }
       .mapIndexed(::CommitTypeLookupElement)

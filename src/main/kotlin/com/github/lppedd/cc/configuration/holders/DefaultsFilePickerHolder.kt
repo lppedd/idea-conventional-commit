@@ -6,6 +6,7 @@ import com.github.lppedd.cc.configuration.CCDefaultTokensService
 import com.github.lppedd.cc.configuration.component.ComponentHolder
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.fileChooser.FileChooserDescriptor
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.ComponentValidator
 import com.intellij.openapi.ui.TextBrowseFolderListener
 import com.intellij.openapi.ui.TextFieldWithBrowseButton
@@ -27,11 +28,15 @@ import javax.swing.event.DocumentEvent
 /**
  * @author Edoardo Luppi
  */
-internal class DefaultsFilePickerHolder(private val disposable: Disposable) : ComponentHolder {
+internal class DefaultsFilePickerHolder(
+  project: Project,
+  private val disposable: Disposable
+) : ComponentHolder {
   private val panel = JPanel(GridLayoutManager(2, 1, JBUI.emptyInsets(), 0, 10))
   private val isCustomFile = JBCheckBox(CCBundle["cc.config.defaults.customDefaults"])
   private val customFile = TextFieldWithBrowseButton()
   private var isValid = true
+  private val defaultsService = CCDefaultTokensService.getInstance(project)
 
   override fun getComponent() = buildComponents()
 
@@ -55,6 +60,12 @@ internal class DefaultsFilePickerHolder(private val disposable: Disposable) : Co
   }
 
   fun isValid() = isValid
+
+  fun revalidate() {
+    ComponentValidator.getInstance(customFile)
+      .get()
+      .revalidate()
+  }
 
   private fun buildComponents(): JPanel {
     installValidationOnFilePicker()
@@ -116,20 +127,20 @@ internal class DefaultsFilePickerHolder(private val disposable: Disposable) : Co
       return null
     }
 
-    val text = customFile.text.trim()
+    val path = customFile.text.trim()
 
-    if (text.isEmpty()) {
+    if (path.isEmpty()) {
       isValid = false
       return ValidationInfo(CCBundle["cc.config.filePicker.error.empty"], customFile)
     }
 
-    if (!text.endsWith("json", true)) {
+    if (!path.endsWith("json", true)) {
       isValid = false
       return ValidationInfo(CCBundle["cc.config.filePicker.error.path"], customFile)
     }
 
     return try {
-      CCDefaultTokensService.refreshTokens(text)
+      defaultsService.validateDefaultsFile(path)
       isValid = true
       null
     } catch (e: Exception) {
@@ -142,6 +153,7 @@ internal class DefaultsFilePickerHolder(private val disposable: Disposable) : Co
         CCBundle["cc.config.filePicker.error.schema"]
       }
 
+      customFile.requestFocus()
       ValidationInfo(error, customFile)
     }
   }

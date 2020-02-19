@@ -15,12 +15,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.github.lppedd.cc.CCBundle;
-import com.github.lppedd.cc.api.DefaultCommitTokenProvider.JsonCommitType;
 import com.github.lppedd.cc.configuration.CCConfigService.CompletionType;
+import com.github.lppedd.cc.configuration.CCDefaultTokensService.JsonCommitType;
 import com.github.lppedd.cc.configuration.holders.DefaultsFileExportHolder;
 import com.github.lppedd.cc.configuration.holders.DefaultsFilePickerHolder;
 import com.github.lppedd.cc.configuration.holders.DefaultsListsHolder;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.project.Project;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBRadioButton;
@@ -45,9 +46,11 @@ public class CCMainConfigurableGui {
   private DefaultsFilePickerHolder defaultsFilePickerHolder;
   private final DefaultsListsHolder defaultsListsHolder = new DefaultsListsHolder();
 
-  public CCMainConfigurableGui(final Disposable disposable) {
+  public CCMainConfigurableGui(
+      @NotNull final Project project,
+      @NotNull final Disposable disposable) {
     this();
-    finishUpComponents(disposable);
+    finishUpComponents(project, disposable);
   }
 
   private CCMainConfigurableGui() {}
@@ -100,7 +103,13 @@ public class CCMainConfigurableGui {
     return defaultsFilePickerHolder.isValid();
   }
 
-  private void finishUpComponents(final Disposable disposable) {
+  public void revalidate() {
+    defaultsFilePickerHolder.revalidate();
+  }
+
+  private void finishUpComponents(
+      @NotNull final Project project,
+      @NotNull final Disposable disposable) {
     infoPanel.add(Box.createHorizontalStrut(10));
     infoPanel.add(new SwingActionLink(new LearnMoreAction()));
 
@@ -126,8 +135,9 @@ public class CCMainConfigurableGui {
     defaultsPanel.add(new DefaultsFileExportHolder().getComponent(), gc);
 
     gc.setRow(1);
-    defaultsFilePickerHolder = new DefaultsFilePickerHolder(disposable);
+    defaultsFilePickerHolder = new DefaultsFilePickerHolder(project, disposable);
     defaultsPanel.add(defaultsFilePickerHolder.getComponent(), gc);
+    defaultsFilePickerHolder.revalidate();
 
     gc.setRow(2);
     gc.setIndent(0);
