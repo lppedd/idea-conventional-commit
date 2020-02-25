@@ -9,7 +9,8 @@ import javax.swing.Icon
  */
 abstract class CommitTokenElement {
   companion object {
-    @JvmField val FOREGROUND = JBColor.namedColor("CompletionPopup.foreground", JBColor.foreground())
+    @JvmField
+    val FOREGROUND: JBColor = JBColor.namedColor("CompletionPopup.foreground", JBColor.foreground())
   }
 
   open fun getRendering(): CommitTokenRendering = CommitTokenRendering()

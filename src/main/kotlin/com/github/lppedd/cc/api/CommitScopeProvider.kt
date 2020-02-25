@@ -7,7 +7,7 @@ import com.intellij.openapi.extensions.ProjectExtensionPointName
  */
 interface CommitScopeProvider : CommitTokenProvider {
   companion object {
-    val EP_NAME = ProjectExtensionPointName<CommitScopeProvider>(
+    internal val EP_NAME = ProjectExtensionPointName<CommitScopeProvider>(
       "com.github.lppedd.idea-conventional-commit.commitScopeProvider"
     )
   }

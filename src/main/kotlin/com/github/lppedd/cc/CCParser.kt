@@ -7,7 +7,7 @@ data class PCommitToken(
   val range: IntRange = IntRange(0, 0),
   val isValid: Boolean = true
 ) {
-  fun isInContext(i: Int) = isValid && range.contains(i)
+  fun isInContext(i: Int): Boolean = isValid && range.contains(i)
 }
 
 typealias PCommitType = PCommitToken

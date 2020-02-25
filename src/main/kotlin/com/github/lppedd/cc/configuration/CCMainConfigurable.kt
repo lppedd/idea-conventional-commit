@@ -2,7 +2,6 @@ package com.github.lppedd.cc.configuration
 
 import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.CCConstants
-import com.github.lppedd.cc.api.DefaultCommitTokenProvider.JsonCommitType
 import com.intellij.openapi.options.Configurable.NoScroll
 import com.intellij.openapi.options.SearchableConfigurable
 import com.intellij.openapi.project.Project
@@ -12,55 +11,50 @@ import javax.swing.JComponent
 /**
  * @author Edoardo Luppi
  */
-internal class CCMainConfigurable(private val project: Project) : SearchableConfigurable, NoScroll {
+internal class CCMainConfigurable(project: Project) : SearchableConfigurable, NoScroll {
   private val disposable = Disposer.newDisposable()
-  private val defaults = CCDefaultTokensService.getInstance(project)
-  private val config = CCConfigService.getInstance(project)
-  private val gui = CCMainConfigurableGui(disposable)
+  private val gui = CCMainConfigurableGui(project, disposable)
+  private val defaultsService = CCDefaultTokensService.getInstance(project)
+  private val configService = CCConfigService.getInstance(project)
 
   override fun getId() = "preferences.${CCConstants.APP_NAME}"
   override fun getDisplayName() = CCBundle["cc.plugin.name"]
 
   override fun apply() {
-    val customFilePath = gui.customFilePath
-
-    config.completionType = gui.completionType
-    config.customFilePath = customFilePath
+    configService.completionType = gui.completionType
+    configService.customFilePath = gui.customFilePath
 
     val tokens = try {
-      refreshTokens(customFilePath)
+      defaultsService.getDefaultsFromCustomFile(configService.customFilePath)
     } catch (e: Exception) {
-      emptyMap<String, JsonCommitType>()
+      gui.revalidate()
+      return
     }
 
     gui.setTokens(tokens)
-    project.messageBus
-      .syncPublisher(DefaultTokensFileChangeListener.TOPIC)
-      .fileChanged(project, tokens)
-  }
-
-  private fun refreshTokens(customFilePath: String?): Map<String, JsonCommitType> {
-    return if (customFilePath != null) {
-      CCDefaultTokensService.refreshTokens(customFilePath)
-    } else {
-      CCDefaultTokensService.DEFAULT_TOKENS
-    }
   }
 
   override fun reset() {
-    gui.completionType = config.completionType
-    gui.customFilePath = config.customFilePath
+    gui.completionType = configService.completionType
+    gui.customFilePath = configService.customFilePath
   }
 
   override fun isModified() =
     gui.isValid
-    && (gui.completionType != config.completionType
-        || gui.customFilePath != config.customFilePath)
+    && (gui.completionType != configService.completionType
+        || gui.customFilePath != configService.customFilePath)
 
   override fun createComponent(): JComponent? {
-    gui.completionType = config.completionType
-    gui.customFilePath = config.customFilePath
-    gui.setTokens(defaults.getDefaults())
+    gui.completionType = configService.completionType
+    gui.customFilePath = configService.customFilePath
+
+    val tokens = try {
+      defaultsService.getDefaultsFromCustomFile(configService.customFilePath)
+    } catch (e: Exception) {
+      defaultsService.getBuiltInDefaults()
+    }
+
+    gui.setTokens(tokens)
     return gui.rootPanel
   }
 

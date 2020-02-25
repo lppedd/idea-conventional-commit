@@ -15,11 +15,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.github.lppedd.cc.CCBundle;
-import com.github.lppedd.cc.api.DefaultCommitTokenProvider.JsonCommitType;
 import com.github.lppedd.cc.configuration.CCConfigService.CompletionType;
-import com.github.lppedd.cc.configuration.holders.CommitTokensFilePickerHolder;
-import com.github.lppedd.cc.configuration.holders.CommitTokensListsHolder;
+import com.github.lppedd.cc.configuration.CCDefaultTokensService.JsonCommitType;
+import com.github.lppedd.cc.configuration.holders.DefaultsFileExportHolder;
+import com.github.lppedd.cc.configuration.holders.DefaultsFilePickerHolder;
+import com.github.lppedd.cc.configuration.holders.DefaultsListsHolder;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.project.Project;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBRadioButton;
@@ -41,12 +43,14 @@ public class CCMainConfigurableGui {
   private JBRadioButton isTemplate;
 
   private JPanel defaultsPanel;
-  private CommitTokensFilePickerHolder filePickerHolder;
-  private final CommitTokensListsHolder listsHolder = new CommitTokensListsHolder();
+  private DefaultsFilePickerHolder defaultsFilePickerHolder;
+  private final DefaultsListsHolder defaultsListsHolder = new DefaultsListsHolder();
 
-  public CCMainConfigurableGui(final Disposable disposable) {
+  public CCMainConfigurableGui(
+      @NotNull final Project project,
+      @NotNull final Disposable disposable) {
     this();
-    finishUpComponents(disposable);
+    finishUpComponents(project, disposable);
   }
 
   private CCMainConfigurableGui() {}
@@ -71,7 +75,7 @@ public class CCMainConfigurableGui {
 
   @Nullable
   public String getCustomFilePath() {
-    return filePickerHolder.getCustomFilePath();
+    return defaultsFilePickerHolder.getCustomFilePath();
   }
 
   public void setCompletionType(@NotNull final CompletionType completionType) {
@@ -88,18 +92,24 @@ public class CCMainConfigurableGui {
   }
 
   public void setCustomFilePath(@Nullable final String path) {
-    filePickerHolder.setCustomFilePath(path);
+    defaultsFilePickerHolder.setCustomFilePath(path);
   }
 
   public void setTokens(@NotNull final Map<String, JsonCommitType> tokens) {
-    listsHolder.setTokens(tokens);
+    defaultsListsHolder.setTokens(tokens);
   }
 
   public boolean isValid() {
-    return filePickerHolder.isValid();
+    return defaultsFilePickerHolder.isValid();
   }
 
-  private void finishUpComponents(final Disposable disposable) {
+  public void revalidate() {
+    defaultsFilePickerHolder.revalidate();
+  }
+
+  private void finishUpComponents(
+      @NotNull final Project project,
+      @NotNull final Disposable disposable) {
     infoPanel.add(Box.createHorizontalStrut(10));
     infoPanel.add(new SwingActionLink(new LearnMoreAction()));
 
@@ -110,7 +120,7 @@ public class CCMainConfigurableGui {
     isAutoPopup.setText(CCBundle.get("cc.config.autoPopup"));
     isTemplate.setText(CCBundle.get("cc.config.template"));
 
-    defaultsPanel.setLayout(new GridLayoutManager(2, 1));
+    defaultsPanel.setLayout(new GridLayoutManager(3, 1));
     defaultsPanel.setBorder(
         IdeBorderFactory.createTitledBorder(
             CCBundle.get("cc.config.defaults"),
@@ -118,16 +128,21 @@ public class CCMainConfigurableGui {
         )
     );
 
-    filePickerHolder = new CommitTokensFilePickerHolder(disposable);
-
     final GridConstraints gc = new GridConstraints();
-    gc.setHSizePolicy(SIZEPOLICY_CAN_SHRINK | SIZEPOLICY_CAN_GROW | SIZEPOLICY_WANT_GROW);
+    gc.setIndent(1);
     gc.setFill(FILL_BOTH);
-    defaultsPanel.add(filePickerHolder.getComponent(), gc);
+    gc.setHSizePolicy(SIZEPOLICY_CAN_SHRINK | SIZEPOLICY_CAN_GROW | SIZEPOLICY_WANT_GROW);
+    defaultsPanel.add(new DefaultsFileExportHolder().getComponent(), gc);
 
     gc.setRow(1);
+    defaultsFilePickerHolder = new DefaultsFilePickerHolder(project, disposable);
+    defaultsPanel.add(defaultsFilePickerHolder.getComponent(), gc);
+    defaultsFilePickerHolder.revalidate();
+
+    gc.setRow(2);
+    gc.setIndent(0);
     gc.setVSizePolicy(SIZEPOLICY_CAN_SHRINK | SIZEPOLICY_CAN_GROW | SIZEPOLICY_WANT_GROW);
-    defaultsPanel.add(listsHolder.getComponent(), gc);
+    defaultsPanel.add(defaultsListsHolder.getComponent(), gc);
   }
 
   private static class LearnMoreAction extends AbstractAction {

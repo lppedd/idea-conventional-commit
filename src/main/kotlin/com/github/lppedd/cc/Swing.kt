@@ -1,3 +1,5 @@
+@file:Suppress("FunctionName", "unused")
+
 package com.github.lppedd.cc
 
 import com.intellij.uiDesigner.core.GridConstraints
@@ -9,8 +11,7 @@ import java.awt.Insets
  * Creates a GridBagConstraints object with
  * all of its fields set to the passed-in arguments.
  */
-@Suppress("FunctionName")
-fun KGridBagConstraints(
+internal fun KGridBagConstraints(
   gridx: Int = GridBagConstraints.RELATIVE,
   gridy: Int = GridBagConstraints.RELATIVE,
   gridwidth: Int = 1,
@@ -36,8 +37,7 @@ fun KGridBagConstraints(
   ipady
 )
 
-@Suppress("FunctionName")
-fun KGridConstraints(
+internal fun KGridConstraints(
   row: Int = 0,
   column: Int = 0,
   rowSpan: Int = 1,

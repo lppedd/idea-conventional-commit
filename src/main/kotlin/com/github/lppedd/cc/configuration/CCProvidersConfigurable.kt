@@ -20,13 +20,13 @@ internal class CCProvidersConfigurable(project: Project) : SearchableConfigurabl
   }
 
   private val gui = CCProvidersConfigurableGui()
-  private val config = CCConfigService.getInstance(project)
+  private val configService = CCConfigService.getInstance(project)
 
   init {
     gui.setProviders(
-      TYPE_EP.getExtensions(project).sortedBy(config::getProviderOrder),
-      SCOPE_EP.getExtensions(project).sortedBy(config::getProviderOrder),
-      SUBJECT_EP.getExtensions(project).sortedBy(config::getProviderOrder)
+      TYPE_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
+      SCOPE_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
+      SUBJECT_EP.getExtensions(project).sortedBy(configService::getProviderOrder)
     )
   }
 
@@ -34,19 +34,19 @@ internal class CCProvidersConfigurable(project: Project) : SearchableConfigurabl
   override fun getDisplayName() = CCBundle["cc.config.providers"]
 
   override fun apply() {
-    config.setTypeProvidersOrder(
+    configService.setTypeProvidersOrder(
       gui.typeProviders
         .mapIndexed { index, provider -> provider.getId() to index }
         .toMap()
     )
 
-    config.setScopeProvidersOrder(
+    configService.setScopeProvidersOrder(
       gui.scopeProviders
         .mapIndexed { index, provider -> provider.getId() to index }
         .toMap()
     )
 
-    config.setSubjectProvidersOrder(
+    configService.setSubjectProvidersOrder(
       gui.subjectProviders
         .mapIndexed { index, provider -> provider.getId() to index }
         .toMap()

@@ -1,5 +1,11 @@
 <templateSet group="Conventional commit">
-  <template id="ConventionalCommit-cc" name="cc" value="$TYPE$: $SUBJECT$" description="Conventional commit" toReformat="false" toShortenFQNames="true">
+  <template
+      id="ConventionalCommit-cc"
+      name="cc"
+      value="$TYPE$: $SUBJECT$"
+      description="Conventional commit"
+      toReformat="false"
+      toShortenFQNames="true">
     <variable name="TYPE" expression="commitType()" defaultValue="" alwaysStopAt="true" />
     <variable name="SUBJECT" expression="commitSubject()" defaultValue="" alwaysStopAt="true" />
     <context>
@@ -30,7 +36,13 @@
       <option name="XML" value="false" />
     </context>
   </template>
-  <template id="ConventionalCommit-cs" name="cs" value="$TYPE$($SCOPE$): $SUBJECT$" description="Conventional commit with scope" toReformat="false" toShortenFQNames="true">
+  <template
+      id="ConventionalCommit-cs"
+      name="cs"
+      value="$TYPE$($SCOPE$): $SUBJECT$"
+      description="Conventional commit with scope"
+      toReformat="false"
+      toShortenFQNames="true">
     <variable name="TYPE" expression="commitType()" defaultValue="" alwaysStopAt="true" />
     <variable name="SCOPE" expression="commitScope()" defaultValue="" alwaysStopAt="true" />
     <variable name="SUBJECT" expression="commitSubject()" defaultValue="" alwaysStopAt="true" />
@@ -62,7 +74,13 @@
       <option name="XML" value="false" />
     </context>
   </template>
-  <template id="ConventionalCommit-subject" name="test" value="$SUBJECT$" description="Conventional commit with scope" toReformat="false" toShortenFQNames="true">
+  <template
+      id="ConventionalCommit-subject"
+      name="test"
+      value="$SUBJECT$"
+      description="Conventional commit with scope"
+      toReformat="false"
+      toShortenFQNames="true">
     <variable name="SUBJECT" expression="commitSubject()" defaultValue="" alwaysStopAt="true" />
     <context>
       <option name="ACTION_SCRIPT" value="false" />

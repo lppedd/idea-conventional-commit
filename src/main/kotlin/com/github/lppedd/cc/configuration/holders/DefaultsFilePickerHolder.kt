@@ -1,13 +1,12 @@
 package com.github.lppedd.cc.configuration.holders
 
 import com.github.lppedd.cc.CCBundle
-import com.github.lppedd.cc.CCConstants
-import com.github.lppedd.cc.CCIcons
+import com.github.lppedd.cc.KGridConstraints
 import com.github.lppedd.cc.configuration.CCDefaultTokensService
 import com.github.lppedd.cc.configuration.component.ComponentHolder
-import com.github.lppedd.cc.KGridConstraints
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.fileChooser.FileChooserDescriptor
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.ComponentValidator
 import com.intellij.openapi.ui.TextBrowseFolderListener
 import com.intellij.openapi.ui.TextFieldWithBrowseButton
@@ -20,8 +19,8 @@ import com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL
 import com.intellij.uiDesigner.core.GridLayoutManager
 import com.intellij.util.ui.ComponentWithEmptyText
 import com.intellij.util.ui.JBUI
+import org.everit.json.schema.ValidationException
 import java.awt.event.ItemEvent
-import javax.swing.Icon
 import javax.swing.JComponent
 import javax.swing.JPanel
 import javax.swing.event.DocumentEvent
@@ -29,11 +28,16 @@ import javax.swing.event.DocumentEvent
 /**
  * @author Edoardo Luppi
  */
-internal class CommitTokensFilePickerHolder(private val disposable: Disposable) : ComponentHolder {
+internal class DefaultsFilePickerHolder(
+  project: Project,
+  private val disposable: Disposable
+) : ComponentHolder {
   private val panel = JPanel(GridLayoutManager(2, 1, JBUI.emptyInsets(), 0, 10))
   private val isCustomFile = JBCheckBox(CCBundle["cc.config.defaults.customDefaults"])
   private val customFile = TextFieldWithBrowseButton()
   private var isValid = true
+  private val defaultsService = CCDefaultTokensService.getInstance(project)
+
   override fun getComponent() = buildComponents()
 
   fun getCustomFilePath() =
@@ -57,10 +61,16 @@ internal class CommitTokensFilePickerHolder(private val disposable: Disposable) 
 
   fun isValid() = isValid
 
+  fun revalidate() {
+    ComponentValidator.getInstance(customFile)
+      .get()
+      .revalidate()
+  }
+
   private fun buildComponents(): JPanel {
     installValidationOnFilePicker()
 
-    customFile.addBrowseFolderListener(TextBrowseFolderListener(CustomFileChooserDescriptor()))
+    customFile.addBrowseFolderListener(TextBrowseFolderListener(DefaultsFileChooserDescriptor()))
 
     setEmptyText(
       customFile.textField,
@@ -117,25 +127,34 @@ internal class CommitTokensFilePickerHolder(private val disposable: Disposable) 
       return null
     }
 
-    val text = customFile.text.trim()
+    val path = customFile.text.trim()
 
-    if (text.isEmpty()) {
+    if (path.isEmpty()) {
       isValid = false
       return ValidationInfo(CCBundle["cc.config.filePicker.error.empty"], customFile)
     }
 
-    if (!text.endsWith(CCConstants.DEFAULT_FILE)) {
+    if (!path.endsWith("json", true)) {
       isValid = false
       return ValidationInfo(CCBundle["cc.config.filePicker.error.path"], customFile)
     }
 
     return try {
-      CCDefaultTokensService.refreshTokens(text)
+      defaultsService.validateDefaultsFile(path)
       isValid = true
       null
     } catch (e: Exception) {
       isValid = false
-      ValidationInfo(CCBundle["cc.config.filePicker.error.schema"], customFile)
+
+      val error = if (e is ValidationException) {
+        val messages = e.allMessages.joinToString("<br />", ":<br />")
+        CCBundle["cc.config.filePicker.error.schema"] + messages
+      } else {
+        CCBundle["cc.config.filePicker.error.schema"]
+      }
+
+      customFile.requestFocus()
+      ValidationInfo(error, customFile)
     }
   }
 
@@ -151,18 +170,11 @@ internal class CommitTokensFilePickerHolder(private val disposable: Disposable) 
     }
   }
 
-  private class CustomFileChooserDescriptor : FileChooserDescriptor(true, true, true, true, false, false) {
+  private class DefaultsFileChooserDescriptor : FileChooserDescriptor(true, true, true, true, false, false) {
     init {
-      withFileFilter { file: VirtualFile -> file.isValid && CCConstants.DEFAULT_FILE == file.name }
+      withFileFilter { file: VirtualFile -> file.isValid && "json".equals(file.extension, true) }
       withTitle(CCBundle["cc.config.fileDialog.title"])
       withDescription(CCBundle["cc.config.fileDialog.description"])
     }
-
-    override fun getIcon(file: VirtualFile): Icon? =
-      if (file.isValid && CCConstants.DEFAULT_FILE == file.name) {
-        CCIcons.DEFAULT_PRESENTATION
-      } else {
-        super.getIcon(file)
-      }
   }
 }

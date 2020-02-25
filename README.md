@@ -5,7 +5,14 @@
 ### Available @ [JetBrains Plugins Repository][1]
 
 Looking for the latest **plugin binaries**? Get them [here][2] as `.zip`  
-<small>Supported IDE versions: `192.*` to `193.*` (both inclusive)</small> 
+<small>Supported IDE versions: `192.*` to `201.*` (both inclusive)</small> 
+
+<strong>Additional Providers</strong> are available by installing other lightweight plugins.  
+
+| Context & GitHub | Plugins Repository | Type | Scope | Subject |
+| --- | :---: | :---: | :---: | :---: |
+| [Angular (2+)][6] | :heavy_check_mark: [Install][7] | :heavy_check_mark: | :heavy_check_mark: | |
+| Coming soon... | | | | |
 
 -----
 
@@ -58,27 +65,35 @@ a JSON file named
 cc_defaults.json
 ```
 
-<img width="845" height="528" src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_custom_defaults.png" alt="Custom defaults">
+<img width="845" height="554" src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_custom_defaults.png" alt="Custom defaults">
 
-You're allowed to provide custom _types_ and _scopes_, and the JSON file must respect a certain scheme, 
-which is shown here as an example.
+You're allowed to provide custom _types_ and _scopes_, given the JSON file respects a Schema ([see here][5]).   
+An example is shown below:
 
 ```json
 {
-  "customType": {
-    "description":"My custom type description"
-  },
-  "anotherCustomType": { },
-  "yetAnotherCustomType": {
-    "description":"This is my description",
-    "scopes": {
-      "first": {
-        "description":"My first description"
-      },
-      "second": {
-        "description":"My second description"
+  "types": {
+    "customType": {
+      "description": "My custom type description"
+    },
+    "anotherCustomType": { },
+    "yetAnotherCustomType": {
+      "description": "This is my description",
+      "scopes": {
+        "first": {
+          "description": "My first description"
+        },
+        "second": {
+          "description": "My second description"
+        }
       }
     }
+  },
+  "commonScopes": {
+    "one": {
+      "description": "My first common scope"
+    },
+    "two": { }
   }
 }
 ```
@@ -90,7 +105,7 @@ but the plugin exposes an API to enhance completion items, per each token.
 _Type_, _scope_ and _subject_ each have a specific entry point, and the implementation is called
 **Provider**. Each Provider is listed in a table, based on its context.
 
-<img width="845" height="503" src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_providers.png" alt="Providers">
+<img width="845" height="552" src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_providers.png" alt="Providers">
 
 You're allowed to re-order Providers per your necessities, knowing that possible duplicates
 are going to be automatically filtered by the core engine.
@@ -99,10 +114,15 @@ are going to be automatically filtered by the core engine.
 
 -----
 
-## Author
+## Author and contributors
 
  - Edoardo Luppi (<lp.edoardo@gmail.com>)
+ - [ymind][4]
 
 [1]: https://plugins.jetbrains.com/plugin/13389-conventional-commit
 [2]: https://github.com/lppedd/idea-conventional-commit/releases
 [3]: https://conventionalcommits.org/
+[4]: https://github.com/ymind
+[5]: https://github.com/lppedd/idea-conventional-commit/blob/master/src/main/resources/defaults/cc_defaults.schema.json
+[6]: https://github.com/lppedd/idea-conventional-commit-angular2
+[7]: https://plugins.jetbrains.com/plugin/13405-angular-conventional-commit

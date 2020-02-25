@@ -1,14 +1,37 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Commit types",
+  "title": "Commit types and scopes",
   "type": "object",
   "additionalProperties": false,
-  "patternProperties": {
-    "^([a-zA-Z0-9-]+)$": {
-      "$ref": "#/definitions/commitType"
+  "required": [
+    "types"
+  ],
+  "properties": {
+    "types": {
+      "$ref": "#/definitions/types"
+    },
+    "commonScopes": {
+      "$ref": "#/definitions/commonScopes"
     }
   },
   "definitions": {
+    "types": {
+      "additionalProperties": false,
+      "patternProperties": {
+        "^([a-zA-Z0-9-]+)$": {
+          "$ref": "#/definitions/commitType"
+        }
+      }
+    },
+    "commonScopes": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^([a-zA-Z0-9-:]+)$": {
+          "$ref": "#/definitions/commitScope"
+        }
+      }
+    },
     "commitType": {
       "type": "object",
       "additionalProperties": false,

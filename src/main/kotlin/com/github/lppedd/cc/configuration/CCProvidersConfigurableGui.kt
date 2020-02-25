@@ -1,6 +1,6 @@
 package com.github.lppedd.cc.configuration
 
-import com.github.lppedd.cc.CCBundle.get
+import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.api.CommitScopeProvider
 import com.github.lppedd.cc.api.CommitSubjectProvider
 import com.github.lppedd.cc.api.CommitTypeProvider
@@ -19,9 +19,9 @@ import javax.swing.JPanel
 internal class CCProvidersConfigurableGui {
   val rootPanel = JPanel(BorderLayout(0, 15))
 
-  private val types = CommitProviderTable<CommitTypeProvider>(get("cc.config.providers.type.title"))
-  private val scopes = CommitProviderTable<CommitScopeProvider>(get("cc.config.providers.scope.title"))
-  private val subjects = CommitProviderTable<CommitSubjectProvider>(get("cc.config.providers.subject.title"))
+  private val types = CommitProviderTable<CommitTypeProvider>(CCBundle["cc.config.providers.type.title"])
+  private val scopes = CommitProviderTable<CommitScopeProvider>(CCBundle["cc.config.providers.scope.title"])
+  private val subjects = CommitProviderTable<CommitSubjectProvider>(CCBundle["cc.config.providers.subject.title"])
 
   init {
     finishUpComponents()
@@ -86,7 +86,7 @@ internal class CCProvidersConfigurableGui {
       )
     }
 
-    rootPanel.add(JBLabel(get("cc.config.providersPriority")), BorderLayout.NORTH)
+    rootPanel.add(JBLabel(CCBundle["cc.config.providersPriority"]), BorderLayout.NORTH)
     rootPanel.add(providersPanel, BorderLayout.CENTER)
   }
 }
