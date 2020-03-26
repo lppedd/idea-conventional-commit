@@ -12,16 +12,13 @@
     "build": {
       "description": "Changes which affect the build system or external dependencies (example scopes: gulp, broccoli, npm).",
       "scopes": {
-        "gulp": {
-          "description": ""
-        },
-        "npm": {
-          "description": ""
-        }
+        "npm": {},
+        "gulp": {},
+        "broccoli": {}
       }
     },
     "style": {
-      "description": "Changes which don't affect code logic.\nWhite-space, formatting, missing semi-colons, etc."
+      "description": "Changes which don't affect code logic.\nWhite-spaces, formatting, missing semi-colons, etc."
     },
     "test": {
       "description": "Changes which add missing tests or correct existing tests."
