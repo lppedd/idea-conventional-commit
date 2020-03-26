@@ -1,7 +1,9 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
   java
   id("org.jetbrains.intellij") version "0.4.16"
-  kotlin("jvm") version "1.3.70-eap-184"
+  kotlin("jvm") version "1.4-M1"
 }
 
 group = "com.github.lppedd"
@@ -14,10 +16,17 @@ repositories {
 }
 
 dependencies {
-  implementation(kotlin("stdlib-jdk8", "1.3.70-eap-184"))
   implementation("org.json", "json", "20190722")
   implementation("com.github.everit-org.json-schema", "org.everit.json.schema", "1.12.1")
-  testCompile("junit:junit:4.12")
+
+  testImplementation("junit:junit:4.12")
+}
+
+intellij {
+  version = "IU-2019.2"
+  downloadSources = true
+  pluginName = "idea-conventional-commit"
+  setPlugins("java")
 }
 
 configure<JavaPluginConvention> {
@@ -25,15 +34,19 @@ configure<JavaPluginConvention> {
 }
 
 tasks {
-  compileKotlin {
+  val kotlinSettings: KotlinCompile.() -> Unit = {
     kotlinOptions.jvmTarget = "1.8"
-    kotlinOptions.freeCompilerArgs += "-XXLanguage:+NewInference"
+    kotlinOptions.freeCompilerArgs += listOf(
+      "-Xno-param-assertions",
+      "-Xjvm-default=enable",
+      "-Xallow-kotlin-package",
+      "-Xopt-in=kotlin.contracts.ExperimentalContracts",
+      "-XXLanguage:+InlineClasses"
+    )
   }
 
-  compileTestKotlin {
-    kotlinOptions.jvmTarget = "1.8"
-    kotlinOptions.freeCompilerArgs += "-XXLanguage:+NewInference"
-  }
+  compileKotlin(kotlinSettings)
+  compileTestKotlin(kotlinSettings)
 
   patchPluginXml {
     version(project.version)
@@ -42,11 +55,4 @@ tasks {
     pluginDescription(File("plugin-description.html").readText(Charsets.UTF_8))
     changeNotes(File("change-notes/${version.replace('.', '_')}.html").readText(Charsets.UTF_8))
   }
-}
-
-intellij {
-  version = "IU-2019.2"
-  downloadSources = true
-  pluginName = "Conventional Commit"
-  setPlugins("java")
 }
