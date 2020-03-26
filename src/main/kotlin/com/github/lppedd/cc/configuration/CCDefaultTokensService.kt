@@ -132,12 +132,12 @@ internal class CCDefaultTokensService(private val project: Project) {
     return SchemaLoader.load(schemaJson)
   }
 
-  internal class JsonCommitType(
+  class JsonCommitType(
       var description: String? = null,
       var scopes: Map<String, JsonCommitScope>? = null,
   )
 
-  internal class JsonCommitScope(var description: String? = null)
+  class JsonCommitScope(var description: String? = null)
 }
 
 /**

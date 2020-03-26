@@ -22,7 +22,7 @@ import com.intellij.openapi.project.Project
 /**
  * @author Edoardo Luppi
  */
-internal class CommitScopeMacro : CommitMacro() {
+private class CommitScopeMacro : CommitMacro() {
   override fun getName() = "commitScope"
 
   override fun getCommitTokens(context: ExpressionContext) {
