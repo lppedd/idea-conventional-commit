@@ -22,6 +22,7 @@ import com.github.lppedd.cc.configuration.holders.DefaultsFilePickerHolder;
 import com.github.lppedd.cc.configuration.holders.DefaultsListsHolder;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
+import com.intellij.serialization.PropertyMapping;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBRadioButton;
@@ -39,7 +40,7 @@ public class CCMainConfigurableGui {
   private JBLabel info;
 
   private final ButtonGroup group = new ButtonGroup();
-  private JBRadioButton isAutoPopup;
+  private JBRadioButton isPopup;
   private JBRadioButton isTemplate;
 
   private JPanel defaultsPanel;
@@ -62,8 +63,8 @@ public class CCMainConfigurableGui {
 
   @NotNull
   public CompletionType getCompletionType() {
-    if (isAutoPopup.isSelected()) {
-      return CompletionType.AUTOPOPUP;
+    if (isPopup.isSelected()) {
+      return CompletionType.POPUP;
     }
 
     if (isTemplate.isSelected()) {
@@ -80,8 +81,8 @@ public class CCMainConfigurableGui {
 
   public void setCompletionType(@NotNull final CompletionType completionType) {
     switch (completionType) {
-      case AUTOPOPUP:
-        isAutoPopup.setSelected(true);
+      case POPUP:
+        isPopup.setSelected(true);
         break;
       case TEMPLATE:
         isTemplate.setSelected(true);
@@ -113,11 +114,11 @@ public class CCMainConfigurableGui {
     infoPanel.add(Box.createHorizontalStrut(10));
     infoPanel.add(new SwingActionLink(new LearnMoreAction()));
 
-    group.add(isAutoPopup);
+    group.add(isPopup);
     group.add(isTemplate);
 
     info.setText(CCBundle.get("cc.config.info"));
-    isAutoPopup.setText(CCBundle.get("cc.config.autoPopup"));
+    isPopup.setText(CCBundle.get("cc.config.popup"));
     isTemplate.setText(CCBundle.get("cc.config.template"));
 
     defaultsPanel.setLayout(new GridLayoutManager(3, 1));
@@ -131,6 +132,8 @@ public class CCMainConfigurableGui {
     final GridConstraints gc = new GridConstraints();
     gc.setIndent(1);
     gc.setFill(FILL_BOTH);
+
+    // noinspection ConstantExpression
     gc.setHSizePolicy(SIZEPOLICY_CAN_SHRINK | SIZEPOLICY_CAN_GROW | SIZEPOLICY_WANT_GROW);
     defaultsPanel.add(new DefaultsFileExportHolder().getComponent(), gc);
 
@@ -141,6 +144,8 @@ public class CCMainConfigurableGui {
 
     gc.setRow(2);
     gc.setIndent(0);
+
+    // noinspection ConstantExpression
     gc.setVSizePolicy(SIZEPOLICY_CAN_SHRINK | SIZEPOLICY_CAN_GROW | SIZEPOLICY_WANT_GROW);
     defaultsPanel.add(defaultsListsHolder.getComponent(), gc);
   }
@@ -148,6 +153,7 @@ public class CCMainConfigurableGui {
   private static class LearnMoreAction extends AbstractAction {
     private static final long serialVersionUID = 1L;
 
+    @PropertyMapping({})
     LearnMoreAction() {
       super(CCBundle.get("cc.config.info.learnMore"));
     }

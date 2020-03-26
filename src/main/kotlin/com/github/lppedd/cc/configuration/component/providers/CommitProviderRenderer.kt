@@ -1,6 +1,6 @@
 package com.github.lppedd.cc.configuration.component.providers
 
-import com.github.lppedd.cc.CCIcons
+import com.github.lppedd.cc.ICON_UNKNOWN_PROVIDER
 import com.github.lppedd.cc.api.CommitTokenProvider
 import com.intellij.openapi.application.ApplicationInfo
 import java.awt.Component
@@ -19,20 +19,20 @@ internal class CommitProviderRenderer : DefaultTableCellRenderer() {
 
     private fun getIconSizeForVersion(): Int {
       return when (APP.minorVersion) {
-        "2"  -> 16
-        "3"  -> 32
+        "2" -> 16
+        "3" -> 32
         else -> 32
       }
     }
   }
 
   override fun getTableCellRendererComponent(
-    table: JTable,
-    value: Any,
-    isSelected: Boolean,
-    hasFocus: Boolean,
-    row: Int,
-    column: Int
+      table: JTable,
+      value: Any,
+      isSelected: Boolean,
+      hasFocus: Boolean,
+      row: Int,
+      column: Int,
   ): Component? {
     super.getTableCellRendererComponent(table, value, isSelected, false, row, column)
     val paddingBorder = BorderFactory.createEmptyBorder(1, 3, 2, 3)
@@ -58,7 +58,7 @@ internal class CommitProviderRenderer : DefaultTableCellRenderer() {
     } else {
       // The icon doesn't match the size prerequisite.
       // Thus we display a generic one
-      CCIcons.UNKNOWN_PROVIDER
+      ICON_UNKNOWN_PROVIDER
     }
   }
 }

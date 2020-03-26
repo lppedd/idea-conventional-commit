@@ -16,11 +16,11 @@ abstract class CommitTokenElement {
   open fun getRendering(): CommitTokenRendering = CommitTokenRendering()
 
   data class CommitTokenRendering @JvmOverloads constructor(
-    val bold: Boolean = false,
-    val italic: Boolean = false,
-    val strikeout: Boolean = false,
-    val foreground: Color = FOREGROUND,
-    val type: String? = null,
-    val icon: Icon? = null
+      val bold: Boolean = false,
+      val italic: Boolean = false,
+      val strikeout: Boolean = false,
+      val foreground: Color = FOREGROUND,
+      val type: String? = null,
+      val icon: Icon? = null,
   )
 }

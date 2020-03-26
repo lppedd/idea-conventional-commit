@@ -13,11 +13,11 @@ import javax.swing.JList
  */
 internal class CommitTokenCellRenderer(private val cellIcon: Icon) : ColoredListCellRenderer<String>() {
   override fun customizeCellRenderer(
-    list: JList<out String>,
-    value: String,
-    index: Int,
-    isSelected: Boolean,
-    cellHasFocus: Boolean
+      list: JList<out String>,
+      value: String,
+      index: Int,
+      isSelected: Boolean,
+      cellHasFocus: Boolean,
   ) {
     if (!isSelected && index % 2 == 0) {
       background = UIUtil.getDecoratedRowColor()

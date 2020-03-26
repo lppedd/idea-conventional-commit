@@ -9,9 +9,7 @@ import com.intellij.codeInsight.lookup.LookupElementPresentation
 internal class CommitNoScopeLookupElement : LookupElement() {
   override fun getLookupString() = ""
   override fun renderElement(presentation: LookupElementPresentation) {
-    presentation.run {
-      itemText = "No scope"
-      isItemTextItalic = true
-    }
+    presentation.itemText = "No scope"
+    presentation.isItemTextItalic = true
   }
 }

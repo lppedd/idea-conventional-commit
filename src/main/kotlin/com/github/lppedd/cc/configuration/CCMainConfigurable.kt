@@ -1,7 +1,7 @@
 package com.github.lppedd.cc.configuration
 
+import com.github.lppedd.cc.APP_NAME
 import com.github.lppedd.cc.CCBundle
-import com.github.lppedd.cc.CCConstants
 import com.intellij.openapi.options.Configurable.NoScroll
 import com.intellij.openapi.options.SearchableConfigurable
 import com.intellij.openapi.project.Project
@@ -11,13 +11,13 @@ import javax.swing.JComponent
 /**
  * @author Edoardo Luppi
  */
-internal class CCMainConfigurable(project: Project) : SearchableConfigurable, NoScroll {
+private class CCMainConfigurable(project: Project) : SearchableConfigurable, NoScroll {
   private val disposable = Disposer.newDisposable()
   private val gui = CCMainConfigurableGui(project, disposable)
   private val defaultsService = CCDefaultTokensService.getInstance(project)
   private val configService = CCConfigService.getInstance(project)
 
-  override fun getId() = "preferences.${CCConstants.APP_NAME}"
+  override fun getId() = "preferences.${APP_NAME}"
   override fun getDisplayName() = CCBundle["cc.plugin.name"]
 
   override fun apply() {

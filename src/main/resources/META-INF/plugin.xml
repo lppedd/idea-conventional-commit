@@ -17,7 +17,7 @@
     <action
         id="EditorTab"
         overrides="true"
-        class="com.github.lppedd.cc.action.CommitTabAction"
+        class="com.github.lppedd.cc.editor.CommitTabAction"
     />
   </actions>
 
@@ -45,8 +45,7 @@
     <liveTemplateMacro implementation="com.github.lppedd.cc.liveTemplate.CommitSubjectMacro" />
     <defaultLiveTemplatesProvider implementation="com.github.lppedd.cc.liveTemplate.CCLiveTemplatesProvider" />
 
-    <documentationProvider implementation="com.github.lppedd.cc.documentation.CommitTypeDocumentationProvider" />
-    <documentationProvider implementation="com.github.lppedd.cc.documentation.CommitScopeDocumentationProvider" />
+    <documentationProvider implementation="com.github.lppedd.cc.documentation.CommitTokenDocumentationProvider" />
 
     <projectConfigurable
         id="preferences.ConventionalCommit"

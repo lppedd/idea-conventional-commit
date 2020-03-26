@@ -1,9 +1,9 @@
 package com.github.lppedd.cc.configuration.holders
 
 import com.github.lppedd.cc.CCBundle
-import com.github.lppedd.cc.KGridConstraints
 import com.github.lppedd.cc.configuration.CCDefaultTokensService
 import com.github.lppedd.cc.configuration.component.ComponentHolder
+import com.github.lppedd.cc.gridConstraints
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.project.Project
@@ -29,8 +29,8 @@ import javax.swing.event.DocumentEvent
  * @author Edoardo Luppi
  */
 internal class DefaultsFilePickerHolder(
-  project: Project,
-  private val disposable: Disposable
+    project: Project,
+    private val disposable: Disposable,
 ) : ComponentHolder {
   private val panel = JPanel(GridLayoutManager(2, 1, JBUI.emptyInsets(), 0, 10))
   private val isCustomFile = JBCheckBox(CCBundle["cc.config.defaults.customDefaults"])
@@ -79,7 +79,7 @@ internal class DefaultsFilePickerHolder(
 
     isCustomFile.addItemListener {
       when (it.stateChange) {
-        ItemEvent.SELECTED   -> {
+        ItemEvent.SELECTED -> {
           isValid = false
           customFile.isEnabled = true
           customFile.requestFocus()
@@ -100,8 +100,8 @@ internal class DefaultsFilePickerHolder(
     }
 
     return panel.apply {
-      add(isCustomFile, KGridConstraints(row = 0, fill = FILL_HORIZONTAL))
-      add(customFile, KGridConstraints(row = 1, fill = FILL_HORIZONTAL))
+      add(isCustomFile, gridConstraints(row = 0, fill = FILL_HORIZONTAL))
+      add(customFile, gridConstraints(row = 1, fill = FILL_HORIZONTAL))
     }
   }
 

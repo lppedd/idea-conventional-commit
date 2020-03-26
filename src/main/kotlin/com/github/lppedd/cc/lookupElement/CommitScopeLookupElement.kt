@@ -1,10 +1,9 @@
 package com.github.lppedd.cc.lookupElement
 
-import com.github.lppedd.cc.CCEditorUtils
-import com.github.lppedd.cc.CCIcons
-import com.github.lppedd.cc.CCParser
-import com.github.lppedd.cc.psi.CommitScopePsiElement
-import com.intellij.codeInsight.AutoPopupController
+import com.github.lppedd.cc.*
+import com.github.lppedd.cc.parser.CCParser
+import com.github.lppedd.cc.parser.ValidToken
+import com.github.lppedd.cc.psiElement.CommitScopePsiElement
 import com.intellij.codeInsight.completion.InsertionContext
 import com.intellij.codeInsight.lookup.LookupElementPresentation
 import com.intellij.openapi.application.runWriteAction
@@ -12,54 +11,59 @@ import com.intellij.openapi.application.runWriteAction
 /**
  * @author Edoardo Luppi
  */
-internal open class CommitScopeLookupElement(
-  override val index: Int,
-  private val psi: CommitScopePsiElement
+internal class CommitScopeLookupElement(
+    override val index: Int,
+    private val psi: CommitScopePsiElement,
 ) : CommitLookupElement() {
   override val weight = 20
-
   override fun getPsiElement() = psi
   override fun getLookupString() = psi.commitScope.text
+
   override fun renderElement(presentation: LookupElementPresentation) {
     val commitScope = psi.commitScope
     val rendering = commitScope.getRendering()
-    presentation.run {
-      itemText = commitScope.text
-      icon = CCIcons.SCOPE
-      isItemTextBold = rendering.bold
-      isItemTextItalic = rendering.italic
-      isStrikeout = rendering.strikeout
-      isTypeIconRightAligned = true
-      setTypeText(rendering.type, rendering.icon)
-    }
+    presentation.itemText = commitScope.text
+    presentation.icon = ICON_SCOPE
+    presentation.isItemTextBold = rendering.bold
+    presentation.isItemTextItalic = rendering.italic
+    presentation.isStrikeout = rendering.strikeout
+    presentation.isTypeIconRightAligned = true
+    presentation.setTypeText(rendering.type, rendering.icon)
   }
 
   override fun handleInsert(context: InsertionContext) {
     val editor = context.editor
     val document = context.document
-    val lineRange = CCEditorUtils.getCurrentLineRange(editor)
-    val lineText = document.text.substring(lineRange.first, lineRange.last)
-    val (type, _, _, _, subject) = CCParser.parseText(lineText)
-    val newTextBuilder = StringBuilder(150)
-      .append(type.value)
-      .append('(')
-      .append(lookupString)
-      .append("):")
 
-    val typeStartOffset = lineRange.first + type.range.first
-    val newTextLengthWithoutSubject =
-      newTextBuilder.length +
-      if (!subject.isValid || subject.value.startsWith(" ")) 1 else 0
+    val (lineStart, lineEnd) = editor.getCurrentLineRange()
+    val lineText = document.getText(lineStart to lineEnd)
+    val (type, _, breakingChange, _, subject) = CCParser.parseText(lineText)
+    val text = StringBuilder(150)
 
-    val newText = newTextBuilder
-      .append(subject.value.ifEmpty { " " })
-      .toString()
-
-    runWriteAction {
-      document.replaceString(typeStartOffset, lineRange.last, newText)
+    // If a type had been specified, we need to insert it again
+    // starting from the original position
+    val typeStartOffset = if (type is ValidToken) {
+      text += type.value
+      lineStart + type.range.first
+    } else {
+      lineStart
     }
 
-    editor.caretModel.moveToOffset(typeStartOffset + newTextLengthWithoutSubject)
-    AutoPopupController.getInstance(context.project).scheduleAutoPopup(editor)
+    // We insert the new scope
+    text += "($lookupString)"
+
+    // If a breaking change indicator was present, we insert it back
+    text += if (breakingChange.isPresent) "!:" else ":"
+
+    // If a subject had been specified, we insert it back
+    val subjectValue = (subject as? ValidToken)?.value.orWhitespace()
+    val textLengthWithoutSubject = text.length + if (subjectValue.isFirstWhitespace()) 1 else 0
+
+    runWriteAction {
+      document.replaceString(typeStartOffset to lineEnd, text + subjectValue)
+    }
+
+    editor.moveCaretToOffset(typeStartOffset + textLengthWithoutSubject)
+    editor.scheduleAutoPopup()
   }
 }

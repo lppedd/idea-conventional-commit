@@ -1,8 +1,7 @@
 package com.github.lppedd.cc
 
-import com.intellij.CommonBundle
+import com.intellij.BundleBase
 import com.intellij.reference.SoftReference
-import org.jetbrains.annotations.NonNls
 import org.jetbrains.annotations.PropertyKey
 import java.lang.ref.Reference
 import java.util.*
@@ -12,23 +11,16 @@ import java.util.*
  */
 object CCBundle {
   private const val BUNDLE = "messages.ConventionalCommitBundle"
-  private var bundleReference: Reference<ResourceBundle?>? = null
+
+  private var bundleReference: Reference<ResourceBundle>? = null
+  private val bundle: ResourceBundle by lazy {
+    SoftReference.dereference(bundleReference)
+    ?: ResourceBundle.getBundle(BUNDLE).also {
+      bundleReference = java.lang.ref.SoftReference(it)
+    }
+  }
 
   @JvmStatic
-  operator fun get(@PropertyKey(resourceBundle = BUNDLE) key: String, vararg params: Any): String {
-    val bundle = getBundle() ?: return ""
-    return CommonBundle.message(bundle, key, *params)
-  }
-
-  @NonNls
-  private fun getBundle(): ResourceBundle? {
-    var bundle = SoftReference.dereference(bundleReference)
-
-    if (bundle == null) {
-      bundle = ResourceBundle.getBundle(BUNDLE)
-      bundleReference = java.lang.ref.SoftReference(bundle)
-    }
-
-    return bundle
-  }
+  operator fun get(@PropertyKey(resourceBundle = BUNDLE) key: String, vararg params: Any): String =
+    BundleBase.message(bundle, key, *params)
 }

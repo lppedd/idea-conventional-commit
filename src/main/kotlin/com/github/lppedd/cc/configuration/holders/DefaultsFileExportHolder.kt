@@ -1,7 +1,7 @@
 package com.github.lppedd.cc.configuration.holders
 
 import com.github.lppedd.cc.CCBundle
-import com.github.lppedd.cc.CCConstants
+import com.github.lppedd.cc.DEFAULT_FILE
 import com.github.lppedd.cc.configuration.component.ActionLinkLabel
 import com.github.lppedd.cc.configuration.component.ComponentHolder
 import com.github.lppedd.cc.getResourceAsStream
@@ -41,7 +41,7 @@ internal class DefaultsFileExportHolder : ComponentHolder, LinkListener<Any?> {
   override fun linkSelected(aSource: LinkLabel<*>?, aLinkData: Any?) {
     val virtualFileWrapper = FileChooserFactory.getInstance()
       .createSaveFileDialog(FileSaverDescriptor(CCBundle["cc.config.exportDialog.title"], ""), null)
-      .save(null, CCConstants.DEFAULT_FILE)
+      .save(null, DEFAULT_FILE)
 
     try {
       writeFile(virtualFileWrapper)
@@ -66,7 +66,7 @@ internal class DefaultsFileExportHolder : ComponentHolder, LinkListener<Any?> {
       return
     }
 
-    getResourceAsStream("/defaults/${CCConstants.DEFAULT_FILE}").use {
+    getResourceAsStream("/defaults/${DEFAULT_FILE}").use {
       runWriteAction {
         virtualFile.setBinaryContent(it.readBytes())
       }

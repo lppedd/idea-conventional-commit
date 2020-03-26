@@ -21,7 +21,8 @@ internal class CCProvidersConfigurableGui {
 
   private val types = CommitProviderTable<CommitTypeProvider>(CCBundle["cc.config.providers.type.title"])
   private val scopes = CommitProviderTable<CommitScopeProvider>(CCBundle["cc.config.providers.scope.title"])
-  private val subjects = CommitProviderTable<CommitSubjectProvider>(CCBundle["cc.config.providers.subject.title"])
+  private val subjects =
+    CommitProviderTable<CommitSubjectProvider>(CCBundle["cc.config.providers.subject.title"])
 
   init {
     finishUpComponents()
@@ -37,9 +38,9 @@ internal class CCProvidersConfigurableGui {
     get() = subjects.providers
 
   fun setProviders(
-    types: List<CommitTypeProvider>,
-    scopes: List<CommitScopeProvider>,
-    subjects: List<CommitSubjectProvider>
+      types: List<CommitTypeProvider>,
+      scopes: List<CommitScopeProvider>,
+      subjects: List<CommitSubjectProvider>,
   ) {
     this.types.providers = types
     this.scopes.providers = scopes
@@ -47,9 +48,7 @@ internal class CCProvidersConfigurableGui {
   }
 
   val isModified: Boolean
-    get() = types.isModified() ||
-            scopes.isModified() ||
-            subjects.isModified()
+    get() = types.isModified() || scopes.isModified() || subjects.isModified()
 
   fun reset() {
     types.reset()
@@ -58,26 +57,26 @@ internal class CCProvidersConfigurableGui {
   }
 
   private fun finishUpComponents() {
-    TableSpeedSearch(types, Convertor { p -> (p as CommitTypeProvider).getPresentation().name })
-    TableSpeedSearch(scopes, Convertor { p -> (p as CommitScopeProvider).getPresentation().name })
-    TableSpeedSearch(subjects, Convertor { p -> (p as CommitSubjectProvider).getPresentation().name })
+    TableSpeedSearch(types, Convertor { (it as CommitTypeProvider).getPresentation().name })
+    TableSpeedSearch(scopes, Convertor { (it as CommitScopeProvider).getPresentation().name })
+    TableSpeedSearch(subjects, Convertor { (it as CommitSubjectProvider).getPresentation().name })
 
-    val providersPanel = JPanel(GridLayout(3, 1, 0, 10)).apply {
-      add(
+    val providersPanel = JPanel(GridLayout(3, 1, 0, 10)).also {
+      it.add(
         ToolbarDecorator
           .createDecorator(types)
           .setRemoveAction(null)
           .setAddAction(null)
           .createPanel()
       )
-      add(
+      it.add(
         ToolbarDecorator
           .createDecorator(scopes)
           .setRemoveAction(null)
           .setAddAction(null)
           .createPanel()
       )
-      add(
+      it.add(
         ToolbarDecorator
           .createDecorator(subjects)
           .setRemoveAction(null)

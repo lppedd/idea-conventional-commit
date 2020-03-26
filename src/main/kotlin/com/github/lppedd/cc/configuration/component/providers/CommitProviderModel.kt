@@ -7,7 +7,7 @@ import com.github.lppedd.cc.configuration.component.AbstractTableEditableModel
  * @author Edoardo Luppi
  */
 internal class CommitProviderModel<T : CommitTokenProvider>(
-  private val title: String
+    private val title: String,
 ) : AbstractTableEditableModel() {
   companion object {
     private const val serialVersionUID = 1L

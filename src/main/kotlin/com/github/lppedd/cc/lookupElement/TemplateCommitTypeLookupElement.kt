@@ -1,12 +1,15 @@
 package com.github.lppedd.cc.lookupElement
 
-import com.github.lppedd.cc.psi.CommitTypePsiElement
+import com.github.lppedd.cc.component1
+import com.github.lppedd.cc.component2
+import com.github.lppedd.cc.component3
+import com.github.lppedd.cc.getTemplateState
+import com.github.lppedd.cc.psiElement.CommitTypePsiElement
 import com.intellij.codeInsight.completion.InsertionContext
 import com.intellij.codeInsight.template.Template
 import com.intellij.codeInsight.template.TemplateEditingAdapter
 import com.intellij.codeInsight.template.TemplateManager
 import com.intellij.codeInsight.template.impl.TemplateImpl
-import com.intellij.codeInsight.template.impl.TemplateManagerImpl
 import com.intellij.codeInsight.template.impl.TemplateSettings
 import com.intellij.codeInsight.template.impl.TemplateState
 import com.intellij.openapi.application.runWriteAction
@@ -19,8 +22,8 @@ import com.intellij.openapi.editor.EditorModificationUtil
  * @see com.intellij.codeInsight.template.impl.Variable
  */
 internal class TemplateCommitTypeLookupElement(
-  index: Int,
-  psiElement: CommitTypePsiElement
+    index: Int,
+    psiElement: CommitTypePsiElement,
 ) : CommitTypeLookupElement(index, psiElement) {
   private val templateSettings = TemplateSettings.getInstance()
 
@@ -36,17 +39,13 @@ internal class TemplateCommitTypeLookupElement(
    * caret positioned in the commit scope context, with an active completion popup.
    */
   override fun handleInsert(context: InsertionContext) {
-    val template =
-      templateSettings.getTemplateById("ConventionalCommit-cs") as TemplateImpl?
-      ?: return
-
+    val template = templateSettings.getTemplateById("ConventionalCommit-cs") as? TemplateImpl ?: return
     val project = context.project
     val editor = context.editor
-    val document = editor.document
 
     // We delete the text inserted when the user confirmed the commit type (e.g. "build")
     runWriteAction {
-      document.deleteString(context.startOffset, context.tailOffset)
+      editor.document.deleteString(context.startOffset, context.tailOffset)
     }
 
     // Now that we have a clean document state, we can initiate the template
@@ -65,10 +64,10 @@ internal class TemplateCommitTypeLookupElement(
     }
 
     // ...and we confirm it by navigating to the subject context
-    TemplateManagerImpl.getTemplateState(editor)?.nextTab()
+    editor.getTemplateState()?.nextTab()
   }
 
-  internal object CCTemplateEditingListener : TemplateEditingAdapter() {
+  object CCTemplateEditingListener : TemplateEditingAdapter() {
     private val templateSettings = TemplateSettings.getInstance()
 
     override fun templateFinished(template: Template, brokenOff: Boolean) {
@@ -79,24 +78,28 @@ internal class TemplateCommitTypeLookupElement(
       // TODO: handle "no scope" insertion by deleting the empty parenthesis "()"
     }
 
-    override fun currentVariableChanged(templateState: TemplateState, template: Template?, oldIndex: Int, newIndex: Int) {
+    override fun currentVariableChanged(
+        templateState: TemplateState,
+        template: Template?,
+        oldIndex: Int,
+        newIndex: Int,
+    ) {
       // TODO: maybe remove deleting the empty parenthesis "()" immediately
       //  in favor of doing it on template ending
       if (oldIndex != 1 || newIndex != 2) {
         return
       }
 
-      val scopeRange = templateState.getSegmentRange(1)
+      val (scopeStart, scopeEnd, isEmpty) = templateState.getSegmentRange(1)
 
-      if (!scopeRange.isEmpty) {
+      if (!isEmpty) {
         return
       }
 
       val editor = templateState.editor
-      val document = editor.document
 
       runWriteAction {
-        document.deleteString(scopeRange.startOffset - 1, scopeRange.endOffset + 1)
+        editor.document.deleteString(scopeStart - 1, scopeEnd + 1)
       }
 
       TemplateManager.getInstance(editor.project).startTemplate(

@@ -2,20 +2,18 @@ package com.github.lppedd.cc.api
 
 import com.intellij.openapi.extensions.ProjectExtensionPointName
 
+internal val SCOPE_EP = ProjectExtensionPointName<CommitScopeProvider>(
+  "com.github.lppedd.idea-conventional-commit.commitScopeProvider"
+)
+
 /**
  * @author Edoardo Luppi
  */
 interface CommitScopeProvider : CommitTokenProvider {
-  companion object {
-    internal val EP_NAME = ProjectExtensionPointName<CommitScopeProvider>(
-      "com.github.lppedd.idea-conventional-commit.commitScopeProvider"
-    )
-  }
-
-  fun getCommitScopes(commitType: String?): List<CommitScope>
-
-  open class CommitScope(
-    val text: String,
-    val description: String? = null
-  ) : CommitTokenElement()
+  fun getCommitScopes(commitType: String?): Collection<CommitScope>
 }
+
+open class CommitScope(
+    val text: String,
+    val description: String? = null,
+) : CommitTokenElement()

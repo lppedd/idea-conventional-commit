@@ -1,7 +1,7 @@
 package com.github.lppedd.cc.icon
 
-import com.github.lppedd.cc.CCConstants
-import com.github.lppedd.cc.CCIcons
+import com.github.lppedd.cc.DEFAULT_FILE
+import com.github.lppedd.cc.ICON_DEFAULT_PRESENTATION
 import com.github.lppedd.cc.configuration.CCConfigService
 import com.intellij.ide.IconProvider
 import com.intellij.json.psi.JsonFile
@@ -19,7 +19,7 @@ import javax.swing.Icon
  *
  * @author Edoardo Luppi
  */
-internal class CCConfigFileIconProvider : IconProvider(), DumbAware {
+private class CCConfigFileIconProvider : IconProvider(), DumbAware {
   override fun getIcon(psiElement: PsiElement, flags: Int): Icon? {
     if (psiElement !is JsonFile) {
       return null
@@ -28,10 +28,9 @@ internal class CCConfigFileIconProvider : IconProvider(), DumbAware {
     val customFilePath = CCConfigService.getInstance(psiElement.project).customFilePath
 
     return if (
-      isCustomFile(customFilePath, psiElement) ||
-      isDefaultFile(customFilePath, psiElement)
-    ) {
-      CCIcons.DEFAULT_PRESENTATION
+        isCustomFile(customFilePath, psiElement) ||
+        isDefaultFile(customFilePath, psiElement)) {
+      ICON_DEFAULT_PRESENTATION
     } else {
       null
     }
@@ -40,13 +39,11 @@ internal class CCConfigFileIconProvider : IconProvider(), DumbAware {
   /**
    * Checks if the file is an explicit custom file provided by the user via settings.
    */
-  private fun isCustomFile(customFilePath: String?, psiFile: JsonFile): Boolean =
-    customFilePath != null &&
-    psiFile.virtualFile.path == PathUtil.toSystemIndependentName(customFilePath)
+  private fun isCustomFile(customFilePath: String?, psiFile: JsonFile) =
+    customFilePath != null && psiFile.virtualFile.path == PathUtil.toSystemIndependentName(customFilePath)
 
   /**
-   * Checks iif the file is the implicit `conventionalcommit.json`
-   * in the project's root directory.
+   * Checks if the file is the implicit `conventionalcommit.json` in the project's root directory.
    */
   private fun isDefaultFile(customFilePath: String?, psiFile: JsonFile): Boolean {
     if (customFilePath != null) {
@@ -54,7 +51,6 @@ internal class CCConfigFileIconProvider : IconProvider(), DumbAware {
     }
 
     val virtualFile = psiFile.virtualFile
-    return virtualFile.name == CCConstants.DEFAULT_FILE &&
-           virtualFile.parent.path == psiFile.project.basePath
+    return virtualFile.name == DEFAULT_FILE && virtualFile.parent.path == psiFile.project.basePath
   }
 }

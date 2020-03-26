@@ -1,6 +1,7 @@
 package com.github.lppedd.cc.configuration
 
-import com.github.lppedd.cc.CCConstants
+import com.github.lppedd.cc.DEFAULT_PROVIDER_ID
+import com.github.lppedd.cc.STORAGE_FILE
 import com.github.lppedd.cc.api.CommitScopeProvider
 import com.github.lppedd.cc.api.CommitSubjectProvider
 import com.github.lppedd.cc.api.CommitTypeProvider
@@ -18,17 +19,17 @@ import java.util.*
  */
 @State(
   name = "general",
-  storages = [Storage(CCConstants.STORAGE_FILE)]
+  storages = [Storage(STORAGE_FILE)]
 )
 internal class CCConfigService : PersistentStateComponent<CCConfigService> {
   companion object {
-    private val DEFAULT_ENTRY = Pair(CCConstants.DEFAULT_PROVIDER_ID, 0)
+    private val DEFAULT_ENTRY = Pair(DEFAULT_PROVIDER_ID, 0)
 
     fun getInstance(project: Project): CCConfigService =
       ServiceManager.getService(project, CCConfigService::class.java)
   }
 
-  var completionType: CompletionType = CompletionType.AUTOPOPUP
+  var completionType: CompletionType = CompletionType.POPUP
   var customFilePath: String? = null
 
   @XMap(
@@ -83,16 +84,17 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
            Objects.equals(subjectProvidersMap, other.subjectProvidersMap)
   }
 
-  override fun hashCode() = Objects.hash(
-    completionType,
-    customFilePath,
-    typeProvidersMap,
-    scopeProvidersMap,
-    subjectProvidersMap
-  )
+  override fun hashCode() =
+    Objects.hash(
+      completionType,
+      customFilePath,
+      typeProvidersMap,
+      scopeProvidersMap,
+      subjectProvidersMap
+    )
 
   enum class CompletionType {
     TEMPLATE,
-    AUTOPOPUP
+    POPUP
   }
 }
