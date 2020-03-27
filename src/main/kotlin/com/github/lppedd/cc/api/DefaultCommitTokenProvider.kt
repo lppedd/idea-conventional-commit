@@ -13,13 +13,20 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vcs.VcsConfiguration
 import org.everit.json.schema.ValidationException
 
+private val FOOTER_TYPES = listOf(
+  CommitFooterType("BREAKING CHANGE"),
+  CommitFooterType("Closes"),
+  CommitFooterType("Implements"),
+)
+
 /**
  * @author Edoardo Luppi
  */
 private class DefaultCommitTokenProvider(private val project: Project) :
     CommitTypeProvider,
     CommitScopeProvider,
-    CommitSubjectProvider {
+    CommitSubjectProvider,
+    CommitFooterProvider {
   private val configService = CCConfigService.getInstance(project)
   private val defaultsService = CCDefaultTokensService.getInstance(project)
 
@@ -45,6 +52,16 @@ private class DefaultCommitTokenProvider(private val project: Project) :
   override fun getCommitSubjects(commitType: String?, commitScope: String?): Collection<CommitSubject> =
     getRecentVcsMessages(project)
 
+  override fun getCommitFooterTypes(): Collection<CommitFooterType> =
+    FOOTER_TYPES
+
+  override fun getCommitFooters(
+      footerType: String,
+      commitType: String?,
+      commitScope: String?,
+      commitSubject: String?,
+  ): Collection<CommitFooter> = emptyList()
+
   private fun getDefaults() =
     try {
       defaultsService.getDefaultsFromCustomFile(configService.customFilePath)
@@ -68,7 +85,7 @@ private class DefaultCommitTokenProvider(private val project: Project) :
       .asReversed()
       .asSequence()
       .take(20)
-      .map(CCParser::parseText)
+      .map(CCParser::parseHeader)
       .map(CommitTokens::subject)
       .filterIsInstance(ValidToken::class.java)
       .map(ValidToken::value)

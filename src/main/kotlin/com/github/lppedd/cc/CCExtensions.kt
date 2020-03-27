@@ -29,15 +29,24 @@ internal inline val PsiFile.document: Document?
 // endregion
 // region Document
 
-internal fun Document.getLineRange(line: Int): TextRange {
-  val lineStartOffset = getLineStartOffset(line)
-  val lineEndOffset = getLineEndOffset(line)
-  return TextRange(lineStartOffset, lineEndOffset)
+@InlineOnly
+internal inline fun Document.getSegment(range: IntRange): CharSequence =
+  charsSequence.subSequence(range)
+
+internal fun Document.getLineRange(line: Int): TextRange =
+  TextRange(getLineStartOffset(line), getLineEndOffset(line))
+
+internal fun Document.getLineRangeByOffset(offset: Int): TextRange =
+  getLineRange(getLineNumber(offset))
+
+internal fun Document.getLine(line: Int): CharSequence {
+  val (start, end) = getLineRange(line)
+  return charsSequence.subSequence(start, end)
 }
 
 @InlineOnly
-internal inline fun Document.replaceString(range: TextRange, text: CharSequence) {
-  replaceString(range.startOffset, range.endOffset, text)
+internal inline fun Document.removeRange(start: Int, end: Int) {
+  replaceString(start, end, "")
 }
 
 // endregion
@@ -76,7 +85,7 @@ internal fun Editor.getCurrentLineRange(): TextRange {
 internal fun Editor.getCurrentLineUntilCaret(): CharSequence {
   val logicalPosition = caretModel.logicalPosition
   val lineStartOffset = document.getLineStartOffset(logicalPosition.line)
-  return document.getText(lineStartOffset to lineStartOffset + logicalPosition.column)
+  return document.getSegment(lineStartOffset until lineStartOffset + logicalPosition.column)
 }
 
 // endregion
@@ -99,6 +108,15 @@ internal inline operator fun TextRange.component2(): Int = endOffset
 
 @InlineOnly
 internal inline operator fun TextRange.component3(): Boolean = isEmpty
+
+// endregion
+// region IntProgression
+
+@InlineOnly
+internal inline operator fun IntProgression.component1(): Int = first
+
+@InlineOnly
+internal inline operator fun IntProgression.component2(): Int = last
 
 // endregion
 // region LookupImpl
@@ -137,17 +155,17 @@ internal inline operator fun StringBuilder.plusAssign(string: String) {
 // endregion
 // region CharSequence
 
+private val WHITESPACE_REGEX = "\\s".toRegex()
+
+@InlineOnly
+internal inline fun CharSequence.flattenWhitespaces(): String =
+  replace(WHITESPACE_REGEX, " ")
+
 internal fun CharSequence?.orWhitespace(): String =
   if (this == null || isEmpty()) " " else this.toString()
 
-internal fun CharSequence.isFirstWhitespace(): Boolean =
+internal fun CharSequence.firstIsWhitespace(): Boolean =
   firstOrNull()?.isWhitespace() == true
-
-// endregion
-// region Int
-
-@InlineOnly
-internal inline infix fun Int.to(that: Int): TextRange = TextRange(this, that)
 
 // endregion
 // region Utilities

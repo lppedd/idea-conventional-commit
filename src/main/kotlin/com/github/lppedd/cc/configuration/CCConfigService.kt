@@ -2,9 +2,7 @@ package com.github.lppedd.cc.configuration
 
 import com.github.lppedd.cc.DEFAULT_PROVIDER_ID
 import com.github.lppedd.cc.STORAGE_FILE
-import com.github.lppedd.cc.api.CommitScopeProvider
-import com.github.lppedd.cc.api.CommitSubjectProvider
-import com.github.lppedd.cc.api.CommitTypeProvider
+import com.github.lppedd.cc.api.*
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.components.State
@@ -53,9 +51,25 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
   )
   private var subjectProvidersMap: Map<String, Int> = hashMapOf(DEFAULT_ENTRY)
 
+  @XMap(
+    propertyElementName = "commitFooters",
+    keyAttributeName = "providerId",
+    valueAttributeName = "order"
+  )
+  private var footerProvidersMap: Map<String, Int> = hashMapOf(DEFAULT_ENTRY)
+
+  @XMap(
+    propertyElementName = "commitBodies",
+    keyAttributeName = "providerId",
+    valueAttributeName = "order"
+  )
+  private var bodyProvidersMap: Map<String, Int> = hashMapOf(DEFAULT_ENTRY)
+
   fun getProviderOrder(provider: CommitTypeProvider) = typeProvidersMap[provider.getId()] ?: 0
   fun getProviderOrder(provider: CommitScopeProvider) = scopeProvidersMap[provider.getId()] ?: 0
   fun getProviderOrder(provider: CommitSubjectProvider) = subjectProvidersMap[provider.getId()] ?: 0
+  fun getProviderOrder(provider: CommitFooterProvider) = footerProvidersMap[provider.getId()] ?: 0
+  fun getProviderOrder(provider: CommitBodyProvider) = bodyProvidersMap[provider.getId()] ?: 0
 
   fun setTypeProvidersOrder(typeProvidersMap: Map<String, Int>) {
     this.typeProvidersMap = typeProvidersMap

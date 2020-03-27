@@ -81,11 +81,22 @@
         name="commitSubjectProvider"
         interface="com.github.lppedd.cc.api.CommitSubjectProvider"
     />
+    <extensionPoint
+        area="IDEA_PROJECT"
+        name="commitBodyProvider"
+        interface="com.github.lppedd.cc.api.CommitBodyProvider"
+    />
+    <extensionPoint
+        area="IDEA_PROJECT"
+        name="commitFooterProvider"
+        interface="com.github.lppedd.cc.api.CommitFooterProvider"
+    />
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.github.lppedd.idea-conventional-commit">
     <commitTypeProvider implementation="com.github.lppedd.cc.api.DefaultCommitTokenProvider" />
     <commitScopeProvider implementation="com.github.lppedd.cc.api.DefaultCommitTokenProvider" />
     <commitSubjectProvider implementation="com.github.lppedd.cc.api.DefaultCommitTokenProvider" />
+    <commitFooterProvider implementation="com.github.lppedd.cc.api.DefaultCommitTokenProvider" />
   </extensions>
 </idea-plugin>

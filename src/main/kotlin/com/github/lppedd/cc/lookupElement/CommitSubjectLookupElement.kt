@@ -6,21 +6,25 @@ import com.github.lppedd.cc.parser.ValidToken
 import com.github.lppedd.cc.psiElement.CommitSubjectPsiElement
 import com.intellij.codeInsight.completion.InsertionContext
 import com.intellij.codeInsight.lookup.LookupElementPresentation
-import com.intellij.openapi.application.runWriteAction
+import com.intellij.psi.PsiElement
 
 /**
  * @author Edoardo Luppi
  */
 internal class CommitSubjectLookupElement(
     override val index: Int,
-    private val psi: CommitSubjectPsiElement,
+    private val psiElement: CommitSubjectPsiElement,
 ) : CommitLookupElement() {
-  override val weight = 10
-  override fun getPsiElement() = psi
-  override fun getLookupString() = psi.commitSubject.text
+  override val weight: UInt = WEIGHT_SUBJECT
+
+  override fun getPsiElement(): PsiElement =
+    psiElement
+
+  override fun getLookupString(): String =
+    psiElement.commitSubject.text
 
   override fun renderElement(presentation: LookupElementPresentation) {
-    val commitSubject = psi.commitSubject
+    val commitSubject = psiElement.commitSubject
     val rendering = commitSubject.getRendering()
     presentation.itemText = commitSubject.text
     presentation.icon = ICON_SUBJECT
@@ -36,15 +40,12 @@ internal class CommitSubjectLookupElement(
     val document = context.document
 
     val (lineStart, lineEnd) = editor.getCurrentLineRange()
-    val lineText = document.getText(lineStart to lineEnd)
-    val subject = CCParser.parseText(lineText).subject
+    val line = document.getSegment(lineStart until lineEnd)
+    val subject = CCParser.parseHeader(line).subject
     val subjectStartOffset = lineStart + ((subject as? ValidToken)?.range?.first ?: 0)
     val subjectText = " $lookupString"
 
-    runWriteAction {
-      document.replaceString(subjectStartOffset, lineEnd, subjectText)
-    }
-
+    document.replaceString(subjectStartOffset, lineEnd, subjectText)
     editor.moveCaretToOffset(subjectStartOffset + subjectText.length)
   }
 }

@@ -1,9 +1,6 @@
 package com.github.lppedd.cc.lookupElement
 
-import com.github.lppedd.cc.component1
-import com.github.lppedd.cc.component2
-import com.github.lppedd.cc.component3
-import com.github.lppedd.cc.getTemplateState
+import com.github.lppedd.cc.*
 import com.github.lppedd.cc.psiElement.CommitTypePsiElement
 import com.intellij.codeInsight.completion.InsertionContext
 import com.intellij.codeInsight.template.Template
@@ -13,7 +10,6 @@ import com.intellij.codeInsight.template.impl.TemplateImpl
 import com.intellij.codeInsight.template.impl.TemplateSettings
 import com.intellij.codeInsight.template.impl.TemplateState
 import com.intellij.openapi.application.runWriteAction
-import com.intellij.openapi.editor.EditorModificationUtil
 
 /**
  * @author Edoardo Luppi
@@ -60,7 +56,7 @@ internal class TemplateCommitTypeLookupElement(
 
     // We populate the macro type context with the chosen commit type
     runWriteAction {
-      EditorModificationUtil.insertStringAtCaret(editor, psiElement.commitType.text)
+      editor.insertStringAtCaret(psiElement.commitType.text)
     }
 
     // ...and we confirm it by navigating to the subject context

@@ -40,10 +40,10 @@ private class CommitScopeMacro : CommitMacro() {
       ) as LookupImpl
 
       lookup.focusDegree = FocusDegree.UNFOCUSED
-      lookup.addItem(CommitNoScopeLookupElement(), PrefixMatcher.ALWAYS_TRUE)
+      lookup.addItem(CommitNoScopeLookupElement, PrefixMatcher.ALWAYS_TRUE)
       lookup.addLookupListener(object : LookupListener {
         override fun itemSelected(event: LookupEvent) {
-          if (event.item is CommitNoScopeLookupElement) {
+          if (event.item === CommitNoScopeLookupElement) {
             templateState.nextTab()
           }
         }

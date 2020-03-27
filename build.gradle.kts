@@ -40,6 +40,7 @@ tasks {
       "-Xno-param-assertions",
       "-Xjvm-default=enable",
       "-Xallow-kotlin-package",
+      "-Xopt-in=kotlin.ExperimentalUnsignedTypes",
       "-Xopt-in=kotlin.contracts.ExperimentalContracts",
       "-XXLanguage:+InlineClasses"
     )

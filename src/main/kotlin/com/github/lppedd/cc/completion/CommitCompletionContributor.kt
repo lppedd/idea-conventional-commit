@@ -1,27 +1,21 @@
 package com.github.lppedd.cc.completion
 
-import com.github.lppedd.cc.api.SCOPE_EP
-import com.github.lppedd.cc.api.SUBJECT_EP
-import com.github.lppedd.cc.api.TYPE_EP
+import com.github.lppedd.cc.*
+import com.github.lppedd.cc.api.*
 import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.configuration.CCConfigService.CompletionType.TEMPLATE
-import com.github.lppedd.cc.document
-import com.github.lppedd.cc.getCompletionPrefix
-import com.github.lppedd.cc.getCurrentLineUntilCaret
-import com.github.lppedd.cc.lookupElement.CommitScopeLookupElement
-import com.github.lppedd.cc.lookupElement.CommitSubjectLookupElement
-import com.github.lppedd.cc.lookupElement.CommitTypeLookupElement
-import com.github.lppedd.cc.lookupElement.TemplateCommitTypeLookupElement
+import com.github.lppedd.cc.lookupElement.*
 import com.github.lppedd.cc.parser.CCParser
-import com.github.lppedd.cc.parser.Context.*
-import com.github.lppedd.cc.psiElement.CommitScopePsiElement
-import com.github.lppedd.cc.psiElement.CommitSubjectPsiElement
-import com.github.lppedd.cc.psiElement.CommitTypePsiElement
-import com.github.lppedd.cc.runWithCheckCanceled
+import com.github.lppedd.cc.parser.CommitContext.*
+import com.github.lppedd.cc.parser.FooterContext.FooterTypeContext
+import com.github.lppedd.cc.parser.FooterContext.FooterValueContext
+import com.github.lppedd.cc.parser.ValidToken
+import com.github.lppedd.cc.psiElement.*
 import com.intellij.codeInsight.completion.*
 import com.intellij.codeInsight.completion.impl.CompletionSorterImpl
 import com.intellij.codeInsight.completion.impl.PreferStartMatching
 import com.intellij.codeInsight.lookup.LookupElementWeigher
+import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.fileTypes.PlainTextLanguage
 import com.intellij.openapi.vcs.ui.CommitMessage
 import com.intellij.patterns.PlatformPatterns
@@ -61,6 +55,7 @@ private class CommitCompletionContributor : CompletionContributor() {
       val resultSet = result
         .caseInsensitive()
         .withPrefixMatcher(PlainPrefixMatcher(parameters.getCompletionPrefix()))
+        .withRelevanceSorter(sorter(CommitLookupElementWeigher))
 
       // If the user configured commit messages to be completed via templates,
       // we provide special `LookupElement`s which programmatically initiate
@@ -81,12 +76,10 @@ private class CommitCompletionContributor : CompletionContributor() {
         return
       }
 
-      fun fillResultSetWithTypes(context: TypeContext) {
-        val rs = resultSet
-          .withPrefixMatcher(context.type)
-          .withRelevanceSorter(sorter(CommitLookupElementWeigher))
-
+      fun fillResultSetWithTypes(context: TypeCommitContext) {
+        val rs = resultSet.withPrefixMatcher(context.type)
         safelyReleaseSemaphore(parameters.process)
+
         TYPE_EP.getExtensions(project)
           .asSequence()
           .sortedBy(configService::getProviderOrder)
@@ -97,12 +90,10 @@ private class CommitCompletionContributor : CompletionContributor() {
           .forEach(rs::addElement)
       }
 
-      fun fillResultSetWithScopes(context: ScopeContext) {
-        val rs = resultSet
-          .withPrefixMatcher(context.scope.trimStart())
-          .withRelevanceSorter(sorter(CommitLookupElementWeigher))
-
+      fun fillResultSetWithScopes(context: ScopeCommitContext) {
+        val rs = resultSet.withPrefixMatcher(context.scope.trimStart())
         safelyReleaseSemaphore(parameters.process)
+
         SCOPE_EP.getExtensions(project)
           .asSequence()
           .sortedBy(configService::getProviderOrder)
@@ -113,12 +104,10 @@ private class CommitCompletionContributor : CompletionContributor() {
           .forEach(rs::addElement)
       }
 
-      fun fillResultSetWithSubjects(context: SubjectContext) {
-        val rs = resultSet
-          .withPrefixMatcher(context.subject.trimStart())
-          .withRelevanceSorter(sorter(CommitLookupElementWeigher))
-
+      fun fillResultSetWithSubjects(context: SubjectCommitContext) {
+        val rs = resultSet.withPrefixMatcher(context.subject.trimStart())
         safelyReleaseSemaphore(parameters.process)
+
         SUBJECT_EP.getExtensions(project)
           .asSequence()
           .sortedBy(configService::getProviderOrder)
@@ -135,13 +124,80 @@ private class CommitCompletionContributor : CompletionContributor() {
 
       val editor = parameters.editor
       val caretOffset = editor.caretModel.logicalPosition.column
-      val textUntilCaret = editor.getCurrentLineUntilCaret()
-      val commitTokens = CCParser.parseText(textUntilCaret)
+      val lineUntilCaret = editor.getCurrentLineUntilCaret()
+      val commitTokens = CCParser.parseHeader(lineUntilCaret)
+
+      if (isInBodyOrFooterContext(editor)) {
+        val footerEps =
+          FOOTER_EP.getExtensions(project)
+            .asSequence()
+            .sortedBy(configService::getProviderOrder)
+
+        val (type, scope, _, _, subject) = CCParser.parseHeader(editor.document.getLine(0))
+
+        fun fillResultSetWithBodiesAndFooterTypes(context: FooterTypeContext) {
+          val rs = resultSet.withPrefixMatcher(FlatPrefixMatcher(context.type))
+          safelyReleaseSemaphore(parameters.process)
+
+          footerEps.flatMap {
+              runWithCheckCanceled(it::getCommitFooterTypes).asSequence()
+            }
+            .map { CommitFooterTypePsiElement(project, it) }
+            .mapIndexed(::CommitFooterTypeLookupElement)
+            .distinctBy(CommitLookupElement::getLookupString)
+            .forEach(rs::addElement)
+
+          BODY_EP.getExtensions(project)
+            .asSequence()
+            .sortedBy(configService::getProviderOrder)
+            .flatMap {
+              runWithCheckCanceled {
+                it.getCommitBodies(
+                  (type as? ValidToken)?.value,
+                  (scope as? ValidToken)?.value,
+                  (subject as? ValidToken)?.value
+                )
+              }.asSequence()
+            }
+            .map { CommitBodyPsiElement(project, it) }
+            .mapIndexed { i, psi -> CommitBodyLookupElement(i, psi, context.type) }
+            .distinctBy(CommitLookupElement::getLookupString)
+            .forEach(rs::addElement)
+        }
+
+        fun fillResultSetWithFooterValues(context: FooterValueContext) {
+          val prefix = context.value.trimStart()
+          val rs = resultSet.withPrefixMatcher(FlatPrefixMatcher(prefix))
+          safelyReleaseSemaphore(parameters.process)
+
+          footerEps.flatMap {
+              runWithCheckCanceled {
+                it.getCommitFooters(
+                  context.type,
+                  (type as? ValidToken)?.value,
+                  (scope as? ValidToken)?.value,
+                  (subject as? ValidToken)?.value
+                )
+              }.asSequence()
+            }
+            .map { CommitFooterPsiElement(project, it) }
+            .mapIndexed { i, psi -> CommitFooterLookupElement(i, psi, prefix) }
+            .distinctBy(CommitLookupElement::getLookupString)
+            .forEach(rs::addElement)
+        }
+
+        val footerTokens = CCParser.parseFooter(lineUntilCaret)
+
+        when (val context = footerTokens.getContext(caretOffset)) {
+          is FooterTypeContext -> fillResultSetWithBodiesAndFooterTypes(context)
+          is FooterValueContext -> fillResultSetWithFooterValues(context)
+        }
+      }
 
       when (val context = commitTokens.getContext(caretOffset)) {
-        is TypeContext -> fillResultSetWithTypes(context)
-        is ScopeContext -> fillResultSetWithScopes(context)
-        is SubjectContext -> fillResultSetWithSubjects(context)
+        is TypeCommitContext -> fillResultSetWithTypes(context)
+        is ScopeCommitContext -> fillResultSetWithScopes(context)
+        is SubjectCommitContext -> fillResultSetWithSubjects(context)
       }
     }
 
@@ -149,6 +205,15 @@ private class CommitCompletionContributor : CompletionContributor() {
       return (CompletionSorter.emptySorter() as CompletionSorterImpl)
         .withClassifier(CompletionSorterImpl.weighingFactory(PreferStartMatching()))
         .withClassifier(CompletionSorterImpl.weighingFactory(weigher))
+    }
+
+    private fun isInBodyOrFooterContext(editor: Editor): Boolean {
+      val currentLine = maxOf(0, editor.caretModel.logicalPosition.line - 1)
+      return when {
+        currentLine == 0 -> false
+        editor.document.getLine(currentLine).isBlank() -> true
+        else -> false
+      }
     }
 
     /**

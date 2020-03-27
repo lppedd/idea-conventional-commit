@@ -10,4 +10,6 @@ import javax.swing.Icon
 @JvmField val ICON_TYPE: Icon = IconLoader.getIcon("/icons/commitType.svg")
 @JvmField val ICON_SCOPE: Icon = IconLoader.getIcon("/icons/commitScope.svg")
 @JvmField val ICON_SUBJECT: Icon = IconLoader.getIcon("/icons/commitDescription.svg")
+@JvmField val ICON_BODY: Icon = IconLoader.getIcon("/icons/commitBody.svg")
+@JvmField val ICON_FOOTER: Icon = IconLoader.getIcon("/icons/commitFooter.svg")
 @JvmField val ICON_ARROW_RIGHT: Icon = IconLoader.getIcon("/icons/arrowRight.svg")

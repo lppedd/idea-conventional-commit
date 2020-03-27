@@ -6,8 +6,8 @@ import com.intellij.codeInsight.lookup.LookupElementPresentation
 /**
  * @author Edoardo Luppi
  */
-internal class CommitNoScopeLookupElement : LookupElement() {
-  override fun getLookupString() = ""
+internal object CommitNoScopeLookupElement : LookupElement() {
+  override fun getLookupString(): String = ""
   override fun renderElement(presentation: LookupElementPresentation) {
     presentation.itemText = "No scope"
     presentation.isItemTextItalic = true

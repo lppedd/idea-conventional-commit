@@ -104,7 +104,7 @@ private class CommitTypedHandlerDelegate : TypedHandlerDelegate() {
     }
 
     val lineUntilCaret = editor.getCurrentLineUntilCaret()
-    val (type, _, _, separator) = CCParser.parseText(lineUntilCaret)
+    val (type, _, _, separator) = CCParser.parseHeader(lineUntilCaret)
     return type is ValidToken && !separator.isPresent
   }
 }

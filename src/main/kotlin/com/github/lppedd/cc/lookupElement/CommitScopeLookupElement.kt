@@ -6,21 +6,25 @@ import com.github.lppedd.cc.parser.ValidToken
 import com.github.lppedd.cc.psiElement.CommitScopePsiElement
 import com.intellij.codeInsight.completion.InsertionContext
 import com.intellij.codeInsight.lookup.LookupElementPresentation
-import com.intellij.openapi.application.runWriteAction
+import com.intellij.psi.PsiElement
 
 /**
  * @author Edoardo Luppi
  */
 internal class CommitScopeLookupElement(
     override val index: Int,
-    private val psi: CommitScopePsiElement,
+    private val psiElement: CommitScopePsiElement,
 ) : CommitLookupElement() {
-  override val weight = 20
-  override fun getPsiElement() = psi
-  override fun getLookupString() = psi.commitScope.text
+  override val weight: UInt = WEIGHT_SCOPE
+
+  override fun getPsiElement(): PsiElement =
+    psiElement
+
+  override fun getLookupString(): String =
+    psiElement.commitScope.text
 
   override fun renderElement(presentation: LookupElementPresentation) {
-    val commitScope = psi.commitScope
+    val commitScope = psiElement.commitScope
     val rendering = commitScope.getRendering()
     presentation.itemText = commitScope.text
     presentation.icon = ICON_SCOPE
@@ -36,8 +40,8 @@ internal class CommitScopeLookupElement(
     val document = context.document
 
     val (lineStart, lineEnd) = editor.getCurrentLineRange()
-    val lineText = document.getText(lineStart to lineEnd)
-    val (type, _, breakingChange, _, subject) = CCParser.parseText(lineText)
+    val lineText = document.getSegment(lineStart until lineEnd)
+    val (type, _, breakingChange, _, subject) = CCParser.parseHeader(lineText)
     val text = StringBuilder(150)
 
     // If a type had been specified, we need to insert it again
@@ -57,12 +61,9 @@ internal class CommitScopeLookupElement(
 
     // If a subject had been specified, we insert it back
     val subjectValue = (subject as? ValidToken)?.value.orWhitespace()
-    val textLengthWithoutSubject = text.length + if (subjectValue.isFirstWhitespace()) 1 else 0
+    val textLengthWithoutSubject = text.length + if (subjectValue.firstIsWhitespace()) 1 else 0
 
-    runWriteAction {
-      document.replaceString(typeStartOffset to lineEnd, text + subjectValue)
-    }
-
+    document.replaceString(typeStartOffset, lineEnd, text + subjectValue)
     editor.moveCaretToOffset(typeStartOffset + textLengthWithoutSubject)
     editor.scheduleAutoPopup()
   }

@@ -1,7 +1,6 @@
 package com.github.lppedd.cc.parser
 
-import com.github.lppedd.cc.parser.Context.*
-import kotlin.contracts.contract
+import com.github.lppedd.cc.parser.CommitContext.*
 
 /**
  * @author Edoardo Luppi
@@ -13,31 +12,23 @@ internal data class CommitTokens(
     val separator: Separator = Separator(false),
     val subject: Subject = InvalidToken,
 ) {
-  fun getContext(offset: Int): Context? {
+  fun getContext(offset: Int): CommitContext? {
     return when {
-      offset == 0 -> TypeContext("")
-      separator.isPresent -> SubjectContext(
+      offset == 0 -> TypeCommitContext("")
+      separator.isPresent -> SubjectCommitContext(
         (type as ValidToken).value,
         (scope as? ValidToken)?.value ?: "",
         (subject as? ValidToken)?.value ?: "",
       )
-      scope.isInContext(offset) -> ScopeContext((type as ValidToken).value, scope.value)
-      type.isInContext(offset) -> TypeContext(type.value)
+      scope.isInContext(offset) -> ScopeCommitContext((type as ValidToken).value, scope.value)
+      type.isInContext(offset) -> TypeCommitContext(type.value)
       else -> null
     }
   }
 }
 
-internal sealed class Context {
-  data class TypeContext(val type: String) : Context()
-  data class ScopeContext(val type: String, val scope: String) : Context()
-  data class SubjectContext(val type: String, val scope: String, val subject: String) : Context()
-}
-
-private fun Token.isInContext(offset: Int): Boolean {
-  contract {
-    returns(true) implies (this@isInContext is ValidToken)
-  }
-
-  return this is ValidToken && range.contains(maxOf(0, offset - 1))
+internal sealed class CommitContext {
+  data class TypeCommitContext(val type: String) : CommitContext()
+  data class ScopeCommitContext(val type: String, val scope: String) : CommitContext()
+  data class SubjectCommitContext(val type: String, val scope: String, val subject: String) : CommitContext()
 }

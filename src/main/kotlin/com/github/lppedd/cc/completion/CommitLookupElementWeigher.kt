@@ -10,7 +10,7 @@ import com.intellij.codeInsight.lookup.LookupElementWeigher
 internal object CommitLookupElementWeigher : LookupElementWeigher("commitLookupElementWeigher") {
   override fun weigh(element: LookupElement): Comparable<*> =
     if (element is CommitLookupElement) {
-      element.index + element.weight
+      element.weight + element.index.toUInt()
     } else {
       0
     }

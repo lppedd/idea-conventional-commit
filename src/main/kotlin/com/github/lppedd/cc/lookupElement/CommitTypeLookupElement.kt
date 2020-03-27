@@ -1,29 +1,30 @@
 package com.github.lppedd.cc.lookupElement
 
-import com.github.lppedd.cc.ICON_TYPE
-import com.github.lppedd.cc.component1
-import com.github.lppedd.cc.component2
-import com.github.lppedd.cc.getCurrentLineRange
+import com.github.lppedd.cc.*
 import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.ValidToken
+import com.github.lppedd.cc.parser.isInContext
 import com.github.lppedd.cc.psiElement.CommitTypePsiElement
 import com.intellij.codeInsight.completion.InsertionContext
 import com.intellij.codeInsight.lookup.LookupElementPresentation
-import com.intellij.openapi.application.runWriteAction
 
 /**
  * @author Edoardo Luppi
  */
 internal open class CommitTypeLookupElement(
     override val index: Int,
-    private val psi: CommitTypePsiElement,
+    private val psiElement: CommitTypePsiElement,
 ) : CommitLookupElement() {
-  override val weight = 30
-  override fun getPsiElement() = psi
-  override fun getLookupString() = psi.commitType.text
+  override val weight: UInt = WEIGHT_TYPE
+
+  override fun getPsiElement(): CommitTypePsiElement =
+    psiElement
+
+  override fun getLookupString(): String =
+    psiElement.commitType.text
 
   override fun renderElement(presentation: LookupElementPresentation) {
-    val commitType = psi.commitType
+    val commitType = psiElement.commitType
     val rendering = commitType.getRendering()
     presentation.itemText = commitType.text
     presentation.icon = ICON_TYPE
@@ -38,34 +39,25 @@ internal open class CommitTypeLookupElement(
     val editor = context.editor
     val document = context.document
 
-    val (_, lineEnd) = editor.getCurrentLineRange()
-    val lineText = document.charsSequence.subSequence(context.tailOffset, lineEnd)
+    val (lineStart, lineEnd) = editor.getCurrentLineRange()
+    val documentText = document.charsSequence
+    val lineText = documentText.subSequence(lineStart, lineEnd)
+    val type = CCParser.parseHeader(lineText).type
+    val startingCaretOffset = context.tailOffset - lineStart - lookupString.length
 
-    if (lineText.isNotEmpty()) {
-      val firstSpaceIndex =
-        lineText.indexOfAny(charArrayOf('(', ':'))
-          .let { if (it > 0) it else lineText.lastIndex }
-          .let(lineText::take)
-          .indexOf(' ')
-
-      if (firstSpaceIndex >= 0) {
-        runWriteAction {
-          document.replaceString(context.startOffset, context.tailOffset + firstSpaceIndex, lookupString)
-        }
-
-        return
+    if (type is ValidToken && type.isInContext(startingCaretOffset)) {
+      if (type.value != lookupString) {
+        val (typeStart, typeEnd) = type.range
+        val text = lineText.replaceRange(typeStart, typeEnd, lookupString)
+        document.replaceString(lineStart, lineEnd, text)
       }
-    }
-
-    val type = CCParser.parseText(lineText).type
-
-    if (type is ValidToken) {
-      val range = type.range
-      val text = lineText.replaceRange(range.first, range.last + 1, lookupString)
-
-      runWriteAction {
-        document.replaceString(context.startOffset, lineEnd, text)
-      }
+    } else {
+      val startOffset = context.startOffset
+      document.replaceString(
+        startOffset,
+        maxOf(documentText.indexOf(' ', startOffset), 0),
+        lookupString
+      )
     }
   }
 }

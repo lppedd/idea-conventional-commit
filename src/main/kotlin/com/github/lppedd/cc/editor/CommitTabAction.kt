@@ -25,8 +25,9 @@ private class CommitTabAction : TabAction() {
       val document = editor.document
 
       if (document.getUserData(MOVE_CARET_KEY) != null) {
-        editor.moveCaretRelatively(1)
         document.putUserData(MOVE_CARET_KEY, null)
+        editor.moveCaretRelatively(1)
+        editor.scheduleAutoPopup()
       } else {
         super.executeWriteAction(editor, caret, dataContext)
       }
@@ -37,13 +38,13 @@ private class CommitTabAction : TabAction() {
 
       if (document.getUserData(CommitMessage.DATA_KEY) != null) {
         val (lineStart, lineEnd) = editor.getCurrentLineRange()
-        val lineText = document.getText(lineStart to lineEnd)
+        val lineText = document.getSegment(lineStart until lineEnd)
         val lineCaretOffset = editor.caretModel.offset - lineStart
-        val scope = CCParser.parseText(lineText).scope
+        val scope = CCParser.parseHeader(lineText).scope
 
         if (scope is ValidToken && (
-                lineCaretOffset == scope.range.last ||
-                lineCaretOffset == scope.range.first)) {
+                lineCaretOffset == scope.range.first - 1 ||
+                lineCaretOffset == scope.range.last)) {
           document.putUserData(MOVE_CARET_KEY, Unit)
           return true
         }

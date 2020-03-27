@@ -1,8 +1,7 @@
 package com.github.lppedd.cc.documentation
 
 import com.github.lppedd.cc.lookupElement.CommitLookupElement
-import com.github.lppedd.cc.psiElement.CommitScopePsiElement
-import com.github.lppedd.cc.psiElement.CommitTypePsiElement
+import com.github.lppedd.cc.psiElement.*
 import com.intellij.lang.documentation.AbstractDocumentationProvider
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
@@ -11,13 +10,18 @@ import com.intellij.psi.PsiManager
  * @author Edoardo Luppi
  */
 private class CommitTokenDocumentationProvider : AbstractDocumentationProvider() {
-  override fun generateDoc(
-      element: PsiElement?,
-      originalElement: PsiElement?,
-  ) = when (element) {
-    is CommitTypePsiElement -> element.commitType.description?.ifBlank { null }
-    is CommitScopePsiElement -> element.commitScope.description?.ifBlank { null }
-    else -> null
+  override fun generateDoc(element: PsiElement?, originalElement: PsiElement?): String? {
+    val description = when (element) {
+      !is CommitFakePsiElement -> null
+      is CommitTypePsiElement -> element.commitType.description
+      is CommitScopePsiElement -> element.commitScope.description
+      is CommitBodyPsiElement -> element.commitBody.description
+      is CommitFooterPsiElement -> element.commitFooter.description
+      is CommitFooterTypePsiElement -> element.commitFooterType.description
+      else -> null
+    }
+
+    return description?.ifBlank { null }
   }
 
   override fun getDocumentationElementForLookupItem(
