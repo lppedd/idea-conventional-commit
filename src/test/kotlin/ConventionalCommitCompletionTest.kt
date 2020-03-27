@@ -11,6 +11,7 @@ internal class ConventionalCommitCompletionTest : LightJavaCodeInsightFixtureTes
       "refactor",
       "fix",
       "feat",
+      "chore",
       "build",
       "style",
       "test",
