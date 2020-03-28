@@ -6,11 +6,7 @@ import com.github.lppedd.cc.DEFAULT_PROVIDER_ID
 import com.github.lppedd.cc.ICON_DEFAULT_PRESENTATION
 import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.configuration.CCDefaultTokensService
-import com.github.lppedd.cc.parser.CCParser
-import com.github.lppedd.cc.parser.CommitTokens
-import com.github.lppedd.cc.parser.ValidToken
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.vcs.VcsConfiguration
 import org.everit.json.schema.ValidationException
 
 private val FOOTER_TYPES = listOf(
@@ -25,7 +21,6 @@ private val FOOTER_TYPES = listOf(
 private class DefaultCommitTokenProvider(private val project: Project) :
     CommitTypeProvider,
     CommitScopeProvider,
-    CommitSubjectProvider,
     CommitFooterProvider {
   private val configService = CCConfigService.getInstance(project)
   private val defaultsService = CCDefaultTokensService.getInstance(project)
@@ -48,9 +43,6 @@ private class DefaultCommitTokenProvider(private val project: Project) :
           ?.map { CommitScope(it.key, it.value.description) }
         ?: emptyList()
     }
-
-  override fun getCommitSubjects(commitType: String?, commitScope: String?): Collection<CommitSubject> =
-    getRecentVcsMessages(project)
 
   override fun getCommitFooterTypes(): Collection<CommitFooterType> =
     FOOTER_TYPES
@@ -78,19 +70,4 @@ private class DefaultCommitTokenProvider(private val project: Project) :
 
       defaultsService.getBuiltInDefaults()
     }
-
-  private fun getRecentVcsMessages(project: Project) =
-    VcsConfiguration.getInstance(project)
-      .recentMessages
-      .asReversed()
-      .asSequence()
-      .take(20)
-      .map(CCParser::parseHeader)
-      .map(CommitTokens::subject)
-      .filterIsInstance(ValidToken::class.java)
-      .map(ValidToken::value)
-      .map(String::trim)
-      .filter(String::isNotEmpty)
-      .map(::CommitSubject)
-      .toList()
 }

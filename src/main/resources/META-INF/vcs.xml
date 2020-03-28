@@ -1,0 +1,5 @@
+<idea-plugin>
+  <extensions defaultExtensionNs="com.github.lppedd.idea-conventional-commit">
+    <commitSubjectProvider order="first" implementation="com.github.lppedd.cc.api.DefaultVcsCommitSubjectProvider" />
+  </extensions>
+</idea-plugin>
