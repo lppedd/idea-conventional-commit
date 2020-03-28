@@ -118,6 +118,13 @@ internal inline operator fun IntProgression.component1(): Int = first
 @InlineOnly
 internal inline operator fun IntProgression.component2(): Int = last
 
+@InlineOnly
+internal inline fun IntProgression.replace(
+    text: CharSequence,
+    rangeReplacement: CharSequence,
+): CharSequence =
+  text.replaceRange(first, last, rangeReplacement)
+
 // endregion
 // region LookupImpl
 

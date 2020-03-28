@@ -54,8 +54,7 @@ internal class CommitFooterTypeLookupElement(
         textToAdd = ": "
       }
 
-      val (footerStart, footerEnd) = footerType.range
-      val text = lineText.replaceRange(footerStart, footerEnd, lookupString)
+      val text = footerType.range.replace(lineText, lookupString)
       document.replaceString(context.startOffset, lineEnd, "$text$textToAdd")
     } else {
       document.insertString(context.tailOffset, ": ")

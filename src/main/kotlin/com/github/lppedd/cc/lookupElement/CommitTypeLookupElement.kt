@@ -47,8 +47,7 @@ internal open class CommitTypeLookupElement(
 
     if (type is ValidToken && type.isInContext(startingCaretOffset)) {
       if (type.value != lookupString) {
-        val (typeStart, typeEnd) = type.range
-        val text = lineText.replaceRange(typeStart, typeEnd, lookupString)
+        val text = type.range.replace(lineText, lookupString)
         document.replaceString(lineStart, lineEnd, text)
       }
     } else {
