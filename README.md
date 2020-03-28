@@ -58,6 +58,13 @@ The plugin offers two completion modes.
 
     <img src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_template.gif" alt="Template completion">
 
+### Documentation
+
+Each commit token is able to hold documentation. This is important in case you forgot their meaning,
+or if you want to share additional pieces of information with users.
+
+<img src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_docs.gif" alt="Documentation">
+
 ### Custom default types and scopes
 
 Default commit types and scopes can be totally customized and shared with your team by creating and populating
