@@ -94,9 +94,9 @@
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.github.lppedd.idea-conventional-commit">
-    <commitTypeProvider implementation="com.github.lppedd.cc.api.DefaultCommitTokenProvider" />
-    <commitScopeProvider implementation="com.github.lppedd.cc.api.DefaultCommitTokenProvider" />
-    <commitSubjectProvider implementation="com.github.lppedd.cc.api.DefaultCommitTokenProvider" />
-    <commitFooterProvider implementation="com.github.lppedd.cc.api.DefaultCommitTokenProvider" />
+    <commitTypeProvider order="first" implementation="com.github.lppedd.cc.api.DefaultCommitTokenProvider" />
+    <commitScopeProvider order="first" implementation="com.github.lppedd.cc.api.DefaultCommitTokenProvider" />
+    <commitSubjectProvider order="first" implementation="com.github.lppedd.cc.api.DefaultCommitTokenProvider" />
+    <commitFooterProvider order="first" implementation="com.github.lppedd.cc.api.DefaultCommitTokenProvider" />
   </extensions>
 </idea-plugin>
