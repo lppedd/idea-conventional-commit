@@ -17,36 +17,37 @@ Looking for the latest **plugin binaries**? Get them [here][2] as `.zip`
 -----
 
 The aim of this plugin is to provide completion for [conventional commits][3],
-also named _semantic_ commits, inside the VCS Commit dialog.  
-The plugin must provide:
+also named _semantic_ commits, inside the VCS Commit dialog. The plugin must provide:
 
- - standard completion — based on context
- - template completion — initiated intentionally
- - extensibility — which means allowing attaching providers for the various parts of the commit:  
-   _type_, _scope_ and _subject_
+ - **standard completion** — based on context
+ - **template completion** — initiated intentionally
+ - **extensibility** — which means allowing attaching providers for the various parts of the commit:  
+   _type_, _scope_, _subject_, _body_ and _footer_
 
 -----
 
 Writing quality commit messages is important to keep an understandable and searchable history
 of your project. Conventional commits are a perfect example of that.  
-However, it can happen choosing the correct _type_ or _scope_ (if any) isn't that immediate.
+However, as an example, it can happen choosing the correct _type_ or _scope_ isn't that immediate.
 We might have forgotten about when a specific _type_ should be used or what are the
 available _scopes_, or we simply need a way to quickly complete the _subject_.
 
 The plugin helps with the above, while also respecting the aforementioned requirements, so that
-each user is able to customize the experience based on its preferences. 
+each user is able to customize the experience based on its preferences.
 
 ### Completion modes
 
 The plugin offers two completion modes.
   
   - #### Context based
-    The commit message can be written like you have done until now, but by explicitly invoking
+    The commit message can be written like you have done until now, but by invoking
     completion you'll be offered the correct items based on the scope.
     Certain commodities, such as auto-completing the scope parenthesis or the `:` separator,
     are there too.
     
-    <img width="845" height="229" src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_standard.gif" alt="Standard completion">
+    _(Body and footer completion, which is shown here, will be available shortly in release 0.8.0)_
+    
+    <img src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_standard.gif" alt="Standard completion">
     
   - #### Template based
     By firstly invoking the _type_ completion and confirming an item, a template will be
@@ -55,19 +56,22 @@ The plugin offers two completion modes.
     
     Arbitrary characters' insertion is also allowed inside each template's range marker.
 
-    <img width="845" height="229" src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_template.gif" alt="Template completion">
+    <img src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_template.gif" alt="Template completion">
 
-### Custom default tokens
+### Custom default types and scopes
 
-Default tokens can be totally customized, and shared with your team, by creating and populating
+Default commit types and scopes can be totally customized and shared with your team by creating and populating
 a JSON file named 
 ```
-cc_defaults.json
+conventionalcommit.json
 ```
 
-<img width="845" height="554" src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_custom_defaults.png" alt="Custom defaults">
+The plugin uses an internal version of that file, which you can export via _Export built-in defaults to path_.  
+You may then customize it per your needs.
 
-You're allowed to provide custom _types_ and _scopes_, given the JSON file respects a Schema ([see here][5]).   
+<img width="840" height="572" src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_custom_defaults.png" alt="Custom defaults">
+
+You're allowed to provide custom _types_ and _scopes_, given the JSON file respects a [Schema][5].   
 An example is shown below:
 
 ```json
@@ -76,7 +80,7 @@ An example is shown below:
     "customType": {
       "description": "My custom type description"
     },
-    "anotherCustomType": { },
+    "anotherCustomType": {},
     "yetAnotherCustomType": {
       "description": "This is my description",
       "scopes": {
@@ -93,10 +97,13 @@ An example is shown below:
     "one": {
       "description": "My first common scope"
     },
-    "two": { }
+    "two": {}
   }
 }
 ```
+
+**If the file is located in the project's root directory, the plugin will pick it up automatically**,
+making it easy to version it, and avoiding to explicitly set a _Custom default tokens_ path. 
 
 ### Providers
 
