@@ -29,11 +29,11 @@ internal object CCParser {
     .toRegex()
 
   private val footerRegExp = """
-    ^(?<$FOOTER_TYPE>[ a-zA-Z0-9-]+)?
-    (?<$SEPARATOR>:)?
-    (?<$FOOTER>(?<=:)(?:.|\s(?!\s))*)?
+    |^(?<$FOOTER_TYPE>[ a-zA-Z0-9-]+)?
+    |(?<$SEPARATOR>:)?
+    |(?<$FOOTER>(?<=:)(?:.|\s(?!\s))*)?
   """
-    .trimIndent()
+    .trimMargin()
     .replace("\n", "")
     .trim()
     .toRegex()
