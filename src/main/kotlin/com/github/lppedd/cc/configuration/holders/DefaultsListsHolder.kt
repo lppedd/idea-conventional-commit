@@ -65,7 +65,7 @@ internal class DefaultsListsHolder : ComponentHolder {
 
     if (selectedValue != null) {
       val jsonCommitType = latestTokens[selectedValue] ?: return
-      val scopes = jsonCommitType.scopes?.map(JsonCommitScope::name) ?: emptyList()
+      val scopes = jsonCommitType.scopes.map(JsonCommitScope::name)
       scopeList.setTokens(scopes)
     }
   }

@@ -13,7 +13,7 @@ interface CommitTypeProvider : CommitTokenProvider {
   fun getCommitTypes(prefix: String?): Collection<CommitType>
 }
 
-open class CommitType(
+open class CommitType @JvmOverloads constructor(
     val text: String,
-    val description: String? = null,
+    val description: String = "",
 ) : CommitTokenElement()

@@ -13,7 +13,7 @@ interface CommitScopeProvider : CommitTokenProvider {
   fun getCommitScopes(commitType: String?): Collection<CommitScope>
 }
 
-open class CommitScope(
+open class CommitScope @JvmOverloads constructor(
     val text: String,
-    val description: String? = null,
+    val description: String = "",
 ) : CommitTokenElement()

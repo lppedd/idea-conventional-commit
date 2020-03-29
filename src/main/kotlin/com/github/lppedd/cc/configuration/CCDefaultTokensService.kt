@@ -105,7 +105,7 @@ internal class CCDefaultTokensService(private val project: Project) {
     jsonObject.keySet().associateWith {
       val descriptor = jsonObject.getJSONObject(it)
       JsonCommitType(
-        descriptor.optString("description"),
+        descriptor.optString("description", ""),
         commonScopes + buildScopes(descriptor.optJSONObject("scopes")),
       )
     }
@@ -114,7 +114,7 @@ internal class CCDefaultTokensService(private val project: Project) {
     val jsonScopes = jsonObject ?: EMPTY_JSON_OBJECT
     return jsonScopes.keySet().map {
       val descriptor = jsonScopes.getJSONObject(it)
-      JsonCommitScope(it, descriptor.optString("description"))
+      JsonCommitScope(it, descriptor.optString("description", ""))
     }
   }
 
@@ -124,13 +124,13 @@ internal class CCDefaultTokensService(private val project: Project) {
       .asSequence()
       .map {
         it as JSONObject
-        JsonCommitFooterType(it.getString("name"), it.optString("description"))
+        JsonCommitFooterType(it.getString("name"), it.optString("description", ""))
       }.toList()
 
   class JsonDefaults(val types: CommitTypesMap, val footerTypes: CommitFooterTypes)
-  class JsonCommitType(val description: String?, val scopes: CommitScopes?)
-  class JsonCommitScope(val name: String, val description: String?)
-  class JsonCommitFooterType(val name: String, val description: String?)
+  class JsonCommitType(val description: String, val scopes: CommitScopes)
+  class JsonCommitScope(val name: String, val description: String)
+  class JsonCommitFooterType(val name: String, val description: String)
 }
 
 /** Validate a JSON object against this JSON Schema. */

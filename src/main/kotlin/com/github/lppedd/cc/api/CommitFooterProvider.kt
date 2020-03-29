@@ -19,5 +19,12 @@ interface CommitFooterProvider : CommitTokenProvider {
   ): Collection<CommitFooter>
 }
 
-open class CommitFooterType(val text: String, val description: String = "") : CommitTokenElement()
-open class CommitFooter(val text: String, val description: String = "") : CommitTokenElement()
+open class CommitFooterType @JvmOverloads constructor(
+    val text: String,
+    val description: String = "",
+) : CommitTokenElement()
+
+open class CommitFooter @JvmOverloads constructor(
+    val text: String,
+    val description: String = "",
+) : CommitTokenElement()
