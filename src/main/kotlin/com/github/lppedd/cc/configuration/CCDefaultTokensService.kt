@@ -10,6 +10,7 @@ import com.intellij.openapi.project.guessProjectDir
 import org.everit.json.schema.Schema
 import org.everit.json.schema.Validator
 import org.everit.json.schema.loader.SchemaLoader
+import org.json.JSONArray
 import org.json.JSONObject
 import org.json.JSONTokener
 import java.io.BufferedReader
@@ -21,9 +22,10 @@ import java.nio.file.Paths
 
 internal typealias CommitTypesMap = Map<String, JsonCommitType>
 internal typealias CommitScopesMap = Map<String, JsonCommitScope>
-internal typealias CommitFooterTypesMap = Map<String, JsonCommitFooterType>
+internal typealias CommitFooterTypes = Collection<JsonCommitFooterType>
 
 private val EMPTY_JSON_OBJECT = JSONObject()
+private val EMPTY_JSON_ARRAY = JSONArray()
 
 /**
  * Manages default commit types and scopes.
@@ -94,7 +96,7 @@ internal class CCDefaultTokensService(private val project: Project) {
 
     val commonScopes = buildScopes(rootJsonObject.optJSONObject("commonScopes"))
     val types = buildTypes(rootJsonObject.getJSONObject("types"), commonScopes)
-    val footerTypes = buildFooterTypes(rootJsonObject.optJSONObject("footerTypes"))
+    val footerTypes = buildFooterTypes(rootJsonObject.optJSONArray("footerTypes"))
 
     return JsonDefaults(types, footerTypes)
   }
@@ -116,24 +118,19 @@ internal class CCDefaultTokensService(private val project: Project) {
     }
   }
 
-  private fun buildFooterTypes(jsonObject: JSONObject?): CommitFooterTypesMap {
-    val footerTypes = jsonObject ?: EMPTY_JSON_OBJECT
-    return footerTypes.keySet().associateWith {
-        val descriptor = footerTypes.getJSONObject(it)
-        JsonCommitFooterType(
-          descriptor.optString("description"),
-          descriptor.optInt("weight", 0),
-        )
-      }
-      .toList()
-      .sortedBy { (_, f) -> f.weight }
-      .toMap()
-  }
+  private fun buildFooterTypes(jsonArray: JSONArray?): List<JsonCommitFooterType> =
+    (jsonArray ?: EMPTY_JSON_ARRAY)
+      .iterator()
+      .asSequence()
+      .map {
+        it as JSONObject
+        JsonCommitFooterType(it.getString("name"), it.optString("description"))
+      }.toList()
 
-  class JsonDefaults(val types: CommitTypesMap, val footerTypes: CommitFooterTypesMap)
+  class JsonDefaults(val types: CommitTypesMap, val footerTypes: CommitFooterTypes)
   class JsonCommitType(val description: String?, val scopes: CommitScopesMap?)
   class JsonCommitScope(val description: String?)
-  class JsonCommitFooterType(val description: String?, val weight: Int)
+  class JsonCommitFooterType(val name: String, val description: String?)
 }
 
 /** Validate a JSON object against this JSON Schema. */

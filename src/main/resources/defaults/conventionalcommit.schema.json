@@ -36,19 +36,17 @@
       }
     },
     "footerTypes": {
-      "type": "object",
-      "additionalProperties": false,
-      "patternProperties": {
-        "^(BREAKING[- ]CHANGE|[a-zA-Z0-9-]+)$": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "description": {
-              "type": "string"
-            },
-            "weight": {
-              "type": "integer"
-            }
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "pattern": "^(BREAKING[- ]CHANGE|[a-zA-Z0-9-]+)$",
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
           }
         }
       }

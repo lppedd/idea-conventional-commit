@@ -39,18 +39,18 @@
       "description": "Changes which revert a previous commit."
     }
   },
-  "footerTypes": {
-    "BREAKING CHANGE": {
-      "description": "",
-      "weight": 0
+  "footerTypes": [
+    {
+      "name": "BREAKING CHANGE",
+      "description": ""
     },
-    "Closes": {
-      "description": "",
-      "weight": 5
+    {
+      "name": "Closes",
+      "description": ""
     },
-    "Implements": {
-      "description": "",
-      "weight": 10
+    {
+      "name": "Implements",
+      "description": ""
     }
-  }
+  ]
 }

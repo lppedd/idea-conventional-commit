@@ -46,7 +46,7 @@ private class DefaultCommitTokenProvider(private val project: Project) :
     }
 
   override fun getCommitFooterTypes(): Collection<CommitFooterType> =
-    defaults.footerTypes.map { CommitFooterType(it.key, it.value.description) }
+    defaults.footerTypes.map { CommitFooterType(it.name, it.description) }
 
   override fun getCommitFooters(
       footerType: String,
