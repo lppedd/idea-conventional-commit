@@ -5,7 +5,7 @@ import com.github.lppedd.cc.ICON_ARROW_RIGHT
 import com.github.lppedd.cc.ICON_SCOPE
 import com.github.lppedd.cc.ICON_TYPE
 import com.github.lppedd.cc.configuration.CCDefaultTokensService.JsonCommitScope
-import com.github.lppedd.cc.configuration.CommitTypesMap
+import com.github.lppedd.cc.configuration.CommitTypeMap
 import com.github.lppedd.cc.configuration.component.ComponentHolder
 import com.github.lppedd.cc.configuration.component.tokens.CommitTokenList
 import com.intellij.ui.IdeBorderFactory
@@ -24,7 +24,7 @@ import javax.swing.JPanel
  * @author Edoardo Luppi
  */
 internal class DefaultsListsHolder : ComponentHolder {
-  private lateinit var latestTokens: CommitTypesMap
+  private lateinit var latestTokens: CommitTypeMap
   private val panel = JPanel(BorderLayout())
   private val scopeList = CommitTokenList(ICON_SCOPE)
   private val typeList = CommitTokenList(ICON_TYPE).apply {
@@ -33,7 +33,7 @@ internal class DefaultsListsHolder : ComponentHolder {
 
   override fun getComponent() = buildComponents()
 
-  fun setTokens(tokens: CommitTypesMap) {
+  fun setTokens(tokens: CommitTypeMap) {
     latestTokens = tokens
     typeList.setTokens(tokens.keys)
     onCommitTypeChanged()

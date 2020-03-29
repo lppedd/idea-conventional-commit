@@ -20,9 +20,9 @@ import java.nio.charset.StandardCharsets.UTF_8
 import java.nio.file.Files
 import java.nio.file.Paths
 
-internal typealias CommitTypesMap = Map<String, JsonCommitType>
-internal typealias CommitScopes = Collection<JsonCommitScope>
-internal typealias CommitFooterTypes = Collection<JsonCommitFooterType>
+internal typealias CommitTypeMap = Map<String, JsonCommitType>
+internal typealias CommitScopeList = Collection<JsonCommitScope>
+internal typealias CommitFooterTypeList = Collection<JsonCommitFooterType>
 
 private val EMPTY_JSON_OBJECT = JSONObject()
 private val EMPTY_JSON_ARRAY = JSONArray()
@@ -101,7 +101,7 @@ internal class CCDefaultTokensService(private val project: Project) {
     return JsonDefaults(types, footerTypes)
   }
 
-  private fun buildTypes(jsonObject: JSONObject, commonScopes: CommitScopes): CommitTypesMap =
+  private fun buildTypes(jsonObject: JSONObject, commonScopes: CommitScopeList): CommitTypeMap =
     jsonObject.keySet().associateWith {
       val descriptor = jsonObject.getJSONObject(it)
       JsonCommitType(
@@ -110,7 +110,7 @@ internal class CCDefaultTokensService(private val project: Project) {
       )
     }
 
-  private fun buildScopes(jsonObject: JSONObject?): CommitScopes {
+  private fun buildScopes(jsonObject: JSONObject?): CommitScopeList {
     val jsonScopes = jsonObject ?: EMPTY_JSON_OBJECT
     return jsonScopes.keySet().map {
       val descriptor = jsonScopes.getJSONObject(it)
@@ -127,8 +127,8 @@ internal class CCDefaultTokensService(private val project: Project) {
         JsonCommitFooterType(it.getString("name"), it.optString("description", ""))
       }.toList()
 
-  class JsonDefaults(val types: CommitTypesMap, val footerTypes: CommitFooterTypes)
-  class JsonCommitType(val description: String, val scopes: CommitScopes)
+  class JsonDefaults(val types: CommitTypeMap, val footerTypes: CommitFooterTypeList)
+  class JsonCommitType(val description: String, val scopes: CommitScopeList)
   class JsonCommitScope(val name: String, val description: String)
   class JsonCommitFooterType(val name: String, val description: String)
 }
