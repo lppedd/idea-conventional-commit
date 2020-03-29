@@ -4,6 +4,7 @@ import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.ICON_ARROW_RIGHT
 import com.github.lppedd.cc.ICON_SCOPE
 import com.github.lppedd.cc.ICON_TYPE
+import com.github.lppedd.cc.configuration.CCDefaultTokensService.JsonCommitScope
 import com.github.lppedd.cc.configuration.CommitTypesMap
 import com.github.lppedd.cc.configuration.component.ComponentHolder
 import com.github.lppedd.cc.configuration.component.tokens.CommitTokenList
@@ -63,8 +64,8 @@ internal class DefaultsListsHolder : ComponentHolder {
     val selectedValue: String? = typeList.selectedValue
 
     if (selectedValue != null) {
-      val jsonCommitType = latestTokens[selectedValue]
-      val scopes = (jsonCommitType ?: return).scopes?.keys ?: emptySet()
+      val jsonCommitType = latestTokens[selectedValue] ?: return
+      val scopes = jsonCommitType.scopes?.map(JsonCommitScope::name) ?: emptyList()
       scopeList.setTokens(scopes)
     }
   }

@@ -21,7 +21,7 @@ import java.nio.file.Files
 import java.nio.file.Paths
 
 internal typealias CommitTypesMap = Map<String, JsonCommitType>
-internal typealias CommitScopesMap = Map<String, JsonCommitScope>
+internal typealias CommitScopes = Collection<JsonCommitScope>
 internal typealias CommitFooterTypes = Collection<JsonCommitFooterType>
 
 private val EMPTY_JSON_OBJECT = JSONObject()
@@ -101,7 +101,7 @@ internal class CCDefaultTokensService(private val project: Project) {
     return JsonDefaults(types, footerTypes)
   }
 
-  private fun buildTypes(jsonObject: JSONObject, commonScopes: CommitScopesMap): CommitTypesMap =
+  private fun buildTypes(jsonObject: JSONObject, commonScopes: CommitScopes): CommitTypesMap =
     jsonObject.keySet().associateWith {
       val descriptor = jsonObject.getJSONObject(it)
       JsonCommitType(
@@ -110,11 +110,11 @@ internal class CCDefaultTokensService(private val project: Project) {
       )
     }
 
-  private fun buildScopes(jsonObject: JSONObject?): CommitScopesMap {
+  private fun buildScopes(jsonObject: JSONObject?): CommitScopes {
     val jsonScopes = jsonObject ?: EMPTY_JSON_OBJECT
-    return jsonScopes.keySet().associateWith {
+    return jsonScopes.keySet().map {
       val descriptor = jsonScopes.getJSONObject(it)
-      JsonCommitScope(descriptor.optString("description"))
+      JsonCommitScope(it, descriptor.optString("description"))
     }
   }
 
@@ -128,8 +128,8 @@ internal class CCDefaultTokensService(private val project: Project) {
       }.toList()
 
   class JsonDefaults(val types: CommitTypesMap, val footerTypes: CommitFooterTypes)
-  class JsonCommitType(val description: String?, val scopes: CommitScopesMap?)
-  class JsonCommitScope(val description: String?)
+  class JsonCommitType(val description: String?, val scopes: CommitScopes?)
+  class JsonCommitScope(val name: String, val description: String?)
   class JsonCommitFooterType(val name: String, val description: String?)
 }
 

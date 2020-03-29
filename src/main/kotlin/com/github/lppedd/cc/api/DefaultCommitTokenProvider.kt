@@ -41,7 +41,7 @@ private class DefaultCommitTokenProvider(private val project: Project) :
       else ->
         defaults.types[commitType]
           ?.scopes
-          ?.map { CommitScope(it.key, it.value.description) }
+          ?.map { CommitScope(it.name, it.description) }
         ?: emptyList()
     }
 
