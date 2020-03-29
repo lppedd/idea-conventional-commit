@@ -19,5 +19,5 @@ interface CommitFooterProvider : CommitTokenProvider {
   ): Collection<CommitFooter>
 }
 
-open class CommitFooterType(val text: String, val description: String? = null) : CommitTokenElement()
-open class CommitFooter(val text: String, val description: String? = null) : CommitTokenElement()
+open class CommitFooterType(val text: String, val description: String = "") : CommitTokenElement()
+open class CommitFooter(val text: String, val description: String = "") : CommitTokenElement()

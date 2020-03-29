@@ -17,4 +17,4 @@ interface CommitBodyProvider : CommitTokenProvider {
   ): Collection<CommitBody>
 }
 
-open class CommitBody(val text: String, val description: String? = null) : CommitTokenElement()
+open class CommitBody(val text: String, val description: String = "") : CommitTokenElement()
