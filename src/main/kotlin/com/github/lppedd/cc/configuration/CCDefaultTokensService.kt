@@ -2,6 +2,7 @@ package com.github.lppedd.cc.configuration
 
 import com.github.lppedd.cc.DEFAULT_FILE
 import com.github.lppedd.cc.DEFAULT_SCHEMA
+import com.github.lppedd.cc.configuration.CCDefaultTokensService.*
 import com.github.lppedd.cc.getResourceAsStream
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
@@ -14,9 +15,15 @@ import org.json.JSONTokener
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.io.Reader
-import java.nio.charset.StandardCharsets
+import java.nio.charset.StandardCharsets.UTF_8
 import java.nio.file.Files
 import java.nio.file.Paths
+
+internal typealias CommitTypesMap = Map<String, JsonCommitType>
+internal typealias CommitScopesMap = Map<String, JsonCommitScope>
+internal typealias CommitFooterTypesMap = Map<String, JsonCommitFooterType>
+
+private val EMPTY_JSON_OBJECT = JSONObject()
 
 /**
  * Manages default commit types and scopes.
@@ -30,26 +37,31 @@ internal class CCDefaultTokensService(private val project: Project) {
   }
 
   /** JSON Schema used to validate the default commit types and scopes JSON file. */
-  private val defaultsSchema by lazy(::loadDefaultsSchema)
+  private val defaultsSchema by lazy {
+    val schemaInputStream = getResourceAsStream("/defaults/${DEFAULT_SCHEMA}")
+    val schemaReader = BufferedReader(InputStreamReader(schemaInputStream, UTF_8))
+    val schemaJson = JSONObject(JSONTokener(schemaReader))
+    SchemaLoader.load(schemaJson)
+  }
 
   /** Built-in default commit types and scopes. */
-  private val builtInDefaultTokens by lazy(::readBuiltInDefaults)
+  private val builtInDefaultTokens by lazy {
+    val inputStream = getResourceAsStream("/defaults/${DEFAULT_FILE}")
+    val reader = BufferedReader(InputStreamReader(inputStream, UTF_8))
+    reader.use(::readFile)
+  }
 
-  fun getDefaultsFromCustomFile(filePath: String? = null): Map<String, JsonCommitType> {
+  fun getDefaultsFromCustomFile(filePath: String? = null): JsonDefaults {
     val path = filePath ?: findDefaultFilePathFromProjectRoot()
     return path?.let(::readDefaultsFromFile) ?: builtInDefaultTokens
   }
 
-  /**
-   * Returns the built-in commit types and scopes.
-   */
-  fun getBuiltInDefaults(): Map<String, JsonCommitType> = builtInDefaultTokens.toMap()
+  /** Returns the built-in commit types and scopes. */
+  fun getBuiltInDefaults(): JsonDefaults = builtInDefaultTokens
 
-  /**
-   * Validates a file via the inputted absolute path.
-   */
+  /** Validates a file via the inputted absolute path. */
   fun validateDefaultsFile(filePath: String) {
-    Files.newBufferedReader(Paths.get(filePath), StandardCharsets.UTF_8).use {
+    Files.newBufferedReader(Paths.get(filePath), UTF_8).use {
       defaultsSchema.validateJson(JSONObject(JSONTokener(it)))
     }
   }
@@ -58,25 +70,14 @@ internal class CCDefaultTokensService(private val project: Project) {
    * Returns the full path of the default tokens file located
    * in the project root directory, or `null`.
    */
-  private fun findDefaultFilePathFromProjectRoot() =
+  private fun findDefaultFilePathFromProjectRoot(): String? =
     project.guessProjectDir()
       ?.findChild(DEFAULT_FILE)
       ?.path
 
-  /**
-   * Reads default commit types and scopes from a file in FS via its absolute path.
-   */
-  private fun readDefaultsFromFile(filePath: String) =
-    Files.newBufferedReader(Paths.get(filePath), StandardCharsets.UTF_8).use(::readFile)
-
-  /**
-   * Reads default commit types and scopes from the built-in file.
-   */
-  private fun readBuiltInDefaults(): Map<String, JsonCommitType> {
-    val inputStream = getResourceAsStream("/defaults/${DEFAULT_FILE}")
-    val reader = BufferedReader(InputStreamReader(inputStream, StandardCharsets.UTF_8))
-    return reader.use(::readFile)
-  }
+  /** Reads default commit types and scopes from a file in FS via its absolute path. */
+  private fun readDefaultsFromFile(filePath: String): JsonDefaults =
+    Files.newBufferedReader(Paths.get(filePath), UTF_8).use(::readFile)
 
   /**
    * Reads a file using the inputted `Reader` and transforms the JSON content
@@ -84,65 +85,58 @@ internal class CCDefaultTokensService(private val project: Project) {
    *
    * **Note that the `Reader` must be closed by the caller.**
    */
-  private fun readFile(reader: Reader): Map<String, JsonCommitType> {
+  private fun readFile(reader: Reader): JsonDefaults {
     val rootJsonObject = JSONObject(JSONTokener(reader))
 
     // If the inputted JSON isn't valid an exception is thrown.
     // The exception contains the validation errors which can be used to notify the user
     defaultsSchema.validateJson(rootJsonObject)
 
-    val jsonTypes = rootJsonObject.getJSONObject("types")
-    val jsonCommonScopes: JSONObject? = rootJsonObject.optJSONObject("commonScopes")
+    val commonScopes = buildScopes(rootJsonObject.optJSONObject("commonScopes"))
+    val types = buildTypes(rootJsonObject.getJSONObject("types"), commonScopes)
+    val footerTypes = buildFooterTypes(rootJsonObject.optJSONObject("footerTypes"))
 
-    // Common scopes must be added to each type's scopes
-    val commonScopes = buildScopes(jsonCommonScopes)
-
-    return jsonTypes
-      .keySet()
-      .associateWith {
-        jsonTypes.getJSONObject(it).run {
-          JsonCommitType(
-            optString("description"),
-            commonScopes + buildScopes(optJSONObject("scopes")),
-          )
-        }
-      }
+    return JsonDefaults(types, footerTypes)
   }
 
-  /**
-   * Builds a map of commit scopes given a keyed JSON object.
-   */
-  private fun buildScopes(jsonScopes: JSONObject?) =
-    when (jsonScopes) {
-      null -> emptyMap()
-      else -> jsonScopes
-        .keySet()
-        .associateWith {
-          JsonCommitScope(jsonScopes.getJSONObject(it).optString("description"))
-        }
+  private fun buildTypes(jsonObject: JSONObject, commonScopes: CommitScopesMap): CommitTypesMap =
+    jsonObject.keySet().associateWith {
+      val descriptor = jsonObject.getJSONObject(it)
+      JsonCommitType(
+        descriptor.optString("description"),
+        commonScopes + buildScopes(descriptor.optJSONObject("scopes")),
+      )
     }
 
-  /**
-   * Loads the JSON Schema used to validate the default commit types and scopes JSON file.
-   */
-  private fun loadDefaultsSchema(): Schema {
-    val schemaInputStream = getResourceAsStream("/defaults/${DEFAULT_SCHEMA}")
-    val schemaReader = BufferedReader(InputStreamReader(schemaInputStream, StandardCharsets.UTF_8))
-    val schemaJson = JSONObject(JSONTokener(schemaReader))
-    return SchemaLoader.load(schemaJson)
+  private fun buildScopes(jsonObject: JSONObject?): CommitScopesMap {
+    val jsonScopes = jsonObject ?: EMPTY_JSON_OBJECT
+    return jsonScopes.keySet().associateWith {
+      val descriptor = jsonScopes.getJSONObject(it)
+      JsonCommitScope(descriptor.optString("description"))
+    }
   }
 
-  class JsonCommitType(
-      var description: String? = null,
-      var scopes: Map<String, JsonCommitScope>? = null,
-  )
+  private fun buildFooterTypes(jsonObject: JSONObject?): CommitFooterTypesMap {
+    val footerTypes = jsonObject ?: EMPTY_JSON_OBJECT
+    return footerTypes.keySet().associateWith {
+        val descriptor = footerTypes.getJSONObject(it)
+        JsonCommitFooterType(
+          descriptor.optString("description"),
+          descriptor.optInt("weight", 0),
+        )
+      }
+      .toList()
+      .sortedBy { (_, f) -> f.weight }
+      .toMap()
+  }
 
-  class JsonCommitScope(var description: String? = null)
+  class JsonDefaults(val types: CommitTypesMap, val footerTypes: CommitFooterTypesMap)
+  class JsonCommitType(val description: String?, val scopes: CommitScopesMap?)
+  class JsonCommitScope(val description: String?)
+  class JsonCommitFooterType(val description: String?, val weight: Int)
 }
 
-/**
- * Validate a JSON object against this JSON Schema.
- */
+/** Validate a JSON object against this JSON Schema. */
 private fun Schema.validateJson(jsonObject: JSONObject) {
   Validator.builder()
     .failEarly()

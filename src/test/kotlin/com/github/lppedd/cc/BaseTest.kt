@@ -5,6 +5,7 @@ import com.github.lppedd.cc.api.FOOTER_EP
 import com.github.lppedd.cc.api.SUBJECT_EP
 import com.github.lppedd.cc.provider.TestProvider
 import com.intellij.openapi.vcs.ui.CommitMessage
+import com.intellij.testFramework.UsefulTestCase
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase
 
 private const val TEST_FILE_NAME = "test.txt"
@@ -20,8 +21,16 @@ abstract class BaseTest : LightJavaCodeInsightFixtureTestCase() {
 
   protected fun testCompletionVariants(text: String, vararg variants: String) {
     myFixture.configureByText(TEST_FILE_NAME, text)
-    myFixture.file.document?.putUserData(CommitMessage.DATA_KEY, CommitMessage(myFixture.project))
+    myFixture.file.document!!.putUserData(CommitMessage.DATA_KEY, CommitMessage(myFixture.project))
     myFixture.testCompletionVariants(TEST_FILE_NAME, *variants)
+  }
+
+  protected fun testCompletionVariantsContain(text: String, vararg variants: String) {
+    myFixture.configureByText(TEST_FILE_NAME, text)
+    myFixture.file.document!!.putUserData(CommitMessage.DATA_KEY, CommitMessage(myFixture.project))
+
+    val result = myFixture.getCompletionVariants(TEST_FILE_NAME)!!
+    UsefulTestCase.assertContainsElements(result, *variants)
   }
 
   protected fun testCompletionSelectItemOrFirst(
@@ -45,7 +54,7 @@ abstract class BaseTest : LightJavaCodeInsightFixtureTestCase() {
 
   protected fun prepareFile(text: String) {
     val file = myFixture.addFileToProject(TEST_FILE_NAME, text)
-    file.document?.putUserData(CommitMessage.DATA_KEY, CommitMessage(myFixture.project))
+    file.document!!.putUserData(CommitMessage.DATA_KEY, CommitMessage(myFixture.project))
     myFixture.configureFromExistingVirtualFile(file.virtualFile)
   }
 }

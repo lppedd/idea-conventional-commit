@@ -31,7 +31,7 @@ private class CCMainConfigurable(project: Project) : SearchableConfigurable, NoS
       return
     }
 
-    gui.setTokens(tokens)
+    gui.setTokens(tokens.types)
   }
 
   override fun reset() {
@@ -41,8 +41,8 @@ private class CCMainConfigurable(project: Project) : SearchableConfigurable, NoS
 
   override fun isModified() =
     gui.isValid
-    && (gui.completionType != configService.completionType
-        || gui.customFilePath != configService.customFilePath)
+    && (gui.completionType != configService.completionType ||
+        gui.customFilePath != configService.customFilePath)
 
   override fun createComponent(): JComponent? {
     gui.completionType = configService.completionType
@@ -54,7 +54,7 @@ private class CCMainConfigurable(project: Project) : SearchableConfigurable, NoS
       defaultsService.getBuiltInDefaults()
     }
 
-    gui.setTokens(tokens)
+    gui.setTokens(tokens.types)
     return gui.rootPanel
   }
 

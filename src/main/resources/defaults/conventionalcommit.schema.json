@@ -12,6 +12,9 @@
     },
     "commonScopes": {
       "$ref": "#/definitions/commonScopes"
+    },
+    "footerTypes": {
+      "$ref": "#/definitions/footerTypes"
     }
   },
   "definitions": {
@@ -29,6 +32,24 @@
       "patternProperties": {
         "^([a-zA-Z0-9-:]+)$": {
           "$ref": "#/definitions/commitScope"
+        }
+      }
+    },
+    "footerTypes": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^(BREAKING[- ]CHANGE|[a-zA-Z0-9-]+)$": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "description": {
+              "type": "string"
+            },
+            "weight": {
+              "type": "integer"
+            }
+          }
         }
       }
     },
