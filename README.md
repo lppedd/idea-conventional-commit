@@ -46,8 +46,6 @@ The plugin offers two completion modes.
     Certain commodities, such as auto-completing the scope parenthesis or the `:` separator,
     are there too.
     
-    _(Body and footer completion, which is shown here, will be available shortly in release 0.8.0)_
-    
     <img src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_standard.gif" alt="Standard completion">
     
   - #### Template based
@@ -65,6 +63,10 @@ Each commit token is able to hold documentation. This is important in case you f
 or if you want to share additional pieces of information with users.
 
 <img src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_docs.gif" alt="Documentation">
+
+Documentation for tokens which might hold long text, spawning multiple lines, is rendered a bit differently.
+
+<img width="840" height="281" src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_long_doc.png" alt="Long documentation">
 
 ### Custom default types and scopes
 
