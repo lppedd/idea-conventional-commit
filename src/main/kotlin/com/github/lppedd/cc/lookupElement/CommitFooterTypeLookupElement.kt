@@ -35,7 +35,7 @@ internal class CommitFooterTypeLookupElement(
     val document = context.document
 
     val (lineStart, lineEnd) = editor.getCurrentLineRange()
-    val lineText = document.charsSequence.subSequence(lineStart, lineEnd)
+    val lineText = document.immutableCharSequence.subSequence(lineStart, lineEnd)
     val (footerType, separator, footerValue) = CCParser.parseFooter(lineText)
     val caretShift: Int
     val textToAdd: String

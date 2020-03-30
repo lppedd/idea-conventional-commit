@@ -31,7 +31,7 @@ internal inline val PsiFile.document: Document?
 
 @InlineOnly
 internal inline fun Document.getSegment(range: IntRange): CharSequence =
-  charsSequence.subSequence(range)
+  immutableCharSequence.subSequence(range)
 
 internal fun Document.getLineRange(line: Int): TextRange =
   TextRange(getLineStartOffset(line), getLineEndOffset(line))
@@ -41,7 +41,7 @@ internal fun Document.getLineRangeByOffset(offset: Int): TextRange =
 
 internal fun Document.getLine(line: Int): CharSequence {
   val (start, end) = getLineRange(line)
-  return charsSequence.subSequence(start, end)
+  return immutableCharSequence.subSequence(start, end)
 }
 
 @InlineOnly

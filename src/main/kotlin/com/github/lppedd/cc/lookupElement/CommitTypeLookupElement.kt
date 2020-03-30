@@ -40,7 +40,7 @@ internal open class CommitTypeLookupElement(
     val document = context.document
 
     val (lineStart, lineEnd) = editor.getCurrentLineRange()
-    val documentText = document.charsSequence
+    val documentText = document.immutableCharSequence
     val lineText = documentText.subSequence(lineStart, lineEnd)
     val type = CCParser.parseHeader(lineText).type
     val startingCaretOffset = context.tailOffset - lineStart - lookupString.length
