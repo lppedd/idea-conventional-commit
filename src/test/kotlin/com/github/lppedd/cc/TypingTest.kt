@@ -7,19 +7,19 @@ class TypingTest : BaseTest() {
     myFixture.checkResult("build(<caret>)")
   }
 
-  fun test_opening_paren_insertion_with_it_already_present() {
+  fun `test_opening_paren_insertion_before_(`() {
     prepareFile("build<caret>(")
     myFixture.type("(")
     myFixture.checkResult("build(<caret>)")
   }
 
-  fun test_opening_paren_insertion_with_both_already_present() {
+  fun `test_opening_paren_insertion_before_()`() {
     prepareFile("build<caret>()")
     myFixture.type("(")
     myFixture.checkResult("build(<caret>)")
   }
 
-  fun test_opening_paren_insertion_with_complete_scope() {
+  fun test_opening_paren_insertion_before_complete_scope() {
     prepareFile("build<caret>(gulp): my description")
     myFixture.type("(")
     myFixture.checkResult("build(<caret>gulp): my description")
@@ -31,31 +31,31 @@ class TypingTest : BaseTest() {
     myFixture.checkResult("build((<caret>gulp): my description")
   }
 
-  fun test_opening_paren_insertion_inside_incomplete_scope() {
-    prepareFile("build(np<caret> other")
-    myFixture.type("(")
-    myFixture.checkResult("build(np(<caret> other")
-  }
-
-  fun test_closing_paren_insertion_with_incomplete_scope_1() {
+  fun test_closing_paren_insertion_inside_incomplete_scope_1() {
     prepareFile("build(<caret>")
     myFixture.type(")")
     myFixture.checkResult("build()<caret>")
   }
 
-  fun test_closing_paren_insertion_with_incomplete_scope_2() {
+  fun test_closing_paren_insertion_inside_incomplete_scope_2() {
     prepareFile("build(np<caret>")
     myFixture.type(")")
     myFixture.checkResult("build(np)<caret>")
   }
 
-  fun test_closing_paren_insertion_with_it_already_present() {
+  fun test_opening_paren_insertion_inside_incomplete_scope_3() {
+    prepareFile("build(np<caret> other")
+    myFixture.type("(")
+    myFixture.checkResult("build(np(<caret> other")
+  }
+
+  fun test_closing_paren_insertion_inside_empty_scope() {
     prepareFile("build(<caret>)")
     myFixture.type(")")
     myFixture.checkResult("build()<caret>")
   }
 
-  fun test_closing_paren_insertion_inside_scope() {
+  fun test_closing_paren_insertion_inside_complete_scope() {
     prepareFile("build(np<caret>m)")
     myFixture.type(")")
     myFixture.checkResult("build(np)<caret>m)")
