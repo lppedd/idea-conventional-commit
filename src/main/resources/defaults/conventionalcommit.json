@@ -1,16 +1,16 @@
 {
   "types": {
     "refactor": {
-      "description": "Changes which neither fix a bug nor add a feature."
+      "description": "Changes which neither fix a bug nor add a feature"
     },
     "fix": {
-      "description": "Changes which patch a bug."
+      "description": "Changes which patch a bug"
     },
     "feat": {
-      "description": "Changes which introduce a new feature."
+      "description": "Changes which introduce a new feature"
     },
     "build": {
-      "description": "Changes which affect the build system or external dependencies (example scopes: gulp, broccoli, npm).",
+      "description": "Changes which affect the build system or external dependencies (example scopes: gulp, broccoli, npm)",
       "scopes": {
         "npm": {},
         "gulp": {},
@@ -21,22 +21,22 @@
       "description": "Changes which aren’t user-facing"
     },
     "style": {
-      "description": "Changes which don't affect code logic.\nWhite-spaces, formatting, missing semi-colons, etc."
+      "description": "Changes which don't affect code logic.\nWhite-spaces, formatting, missing semi-colons, etc"
     },
     "test": {
-      "description": "Changes which add missing tests or correct existing tests."
+      "description": "Changes which add missing tests or correct existing tests"
     },
     "docs": {
-      "description": "Changes which affect documentation."
+      "description": "Changes which affect documentation"
     },
     "perf": {
-      "description": "Changes which improve performance."
+      "description": "Changes which improve performance"
     },
     "ci": {
-      "description": "Changes which affect CI configuration files and scripts (example scopes: travis, circle, browser-stack, sauce-labs)."
+      "description": "Changes which affect CI configuration files and scripts (example scopes: travis, circle, browser-stack, sauce-labs)"
     },
     "revert": {
-      "description": "Changes which revert a previous commit."
+      "description": "Changes which revert a previous commit"
     }
   },
   "footerTypes": [
