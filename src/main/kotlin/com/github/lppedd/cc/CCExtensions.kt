@@ -63,8 +63,9 @@ internal inline fun Editor.moveCaretToOffset(offset: Int, locateBeforeSoftWrap: 
 }
 
 @InlineOnly
-internal inline fun Editor.moveCaretRelatively(caretShift: Int) {
+internal inline fun Editor.moveCaretRelatively(caretShift: Int): Int {
   EditorModificationUtil.moveCaretRelatively(this, caretShift)
+  return caretModel.offset
 }
 
 @InlineOnly
@@ -80,6 +81,11 @@ internal inline fun Editor.getTemplateState(): TemplateState? =
 internal fun Editor.getCurrentLineRange(): TextRange {
   val mainCaretLine = EditorUtil.calcCaretLineRange(this).first.line
   return document.getLineRange(mainCaretLine)
+}
+
+internal fun Editor.getCurrentLine(): CharSequence {
+  val (start, end) = getCurrentLineRange()
+  return document.immutableCharSequence.subSequence(start, end)
 }
 
 internal fun Editor.getCurrentLineUntilCaret(): CharSequence {
@@ -117,6 +123,10 @@ internal inline operator fun IntProgression.component1(): Int = first
 
 @InlineOnly
 internal inline operator fun IntProgression.component2(): Int = last
+
+@InlineOnly
+internal inline val IntRange.isEmpty: Boolean
+  get() = first >= last
 
 @InlineOnly
 internal inline fun IntProgression.replace(
