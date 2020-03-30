@@ -108,7 +108,13 @@ An example is shown below:
       "description": "My first common scope"
     },
     "two": {}
-  }
+  },
+  "footerTypes": [
+    {
+      "name": "My-custom-footer",
+      "description": "My footer description"
+    }
+  ]
 }
 ```
 
@@ -140,6 +146,6 @@ are going to be automatically filtered by the core engine.
 [2]: https://github.com/lppedd/idea-conventional-commit/releases
 [3]: https://conventionalcommits.org/
 [4]: https://github.com/ymind
-[5]: https://github.com/lppedd/idea-conventional-commit/blob/master/src/main/resources/defaults/cc_defaults.schema.json
+[5]: https://github.com/lppedd/idea-conventional-commit/blob/master/src/main/resources/defaults/conventionalcommit.schema.json
 [6]: https://github.com/lppedd/idea-conventional-commit-angular2
 [7]: https://plugins.jetbrains.com/plugin/13405-angular-conventional-commit
