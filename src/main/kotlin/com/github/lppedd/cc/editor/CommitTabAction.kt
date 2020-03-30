@@ -53,5 +53,12 @@ private class CommitTabAction : TabAction() {
       @Suppress("DEPRECATION")
       return super.isEnabled(editor, dataContext)
     }
+
+    override fun isEnabledForCaret(editor: Editor, caret: Caret, dataContext: DataContext?): Boolean =
+      if (editor.document.getUserData(CommitMessage.DATA_KEY) != null) {
+        true
+      } else {
+        super.isEnabledForCaret(editor, caret, dataContext)
+      }
   }
 }
