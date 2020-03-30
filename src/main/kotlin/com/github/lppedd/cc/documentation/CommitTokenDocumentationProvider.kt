@@ -9,6 +9,8 @@ import com.intellij.lang.documentation.DocumentationMarkup
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
 
+private val LINE_SEPARATOR_REGEX = Regex("\r\n|\n|\r")
+
 /**
  * @author Edoardo Luppi
  */
@@ -58,7 +60,7 @@ private class CommitTokenDocumentationProvider : AbstractDocumentationProvider()
       .append("Text:")
       .append(DocumentationMarkup.SECTION_SEPARATOR)
       .append("<p>")
-      .append(text)
+      .append(LINE_SEPARATOR_REGEX.replace(text, "<p>"))
       .append(DocumentationMarkup.SECTION_END)
       .append(DocumentationMarkup.SECTIONS_END)
       .toString()

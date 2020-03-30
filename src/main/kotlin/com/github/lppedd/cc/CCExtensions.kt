@@ -185,6 +185,49 @@ internal fun CharSequence.firstIsWhitespace(): Boolean =
   firstOrNull()?.isWhitespace() == true
 
 // endregion
+// region String
+
+private val NON_THIN_REGEX = Regex("[^iIl1.,']")
+
+@InlineOnly
+private inline fun textWidth(str: String): Int =
+  str.length - NON_THIN_REGEX.replace(str, "").length / 2
+
+// Adapted from https://stackoverflow.com/questions/3597550/ideal-method-to-truncate-a-string-with-ellipsis
+internal fun String.abbreviate(max: Int, suffix: CharSequence = "\u2026"): String {
+  if (textWidth(this) <= max) {
+    return this
+  }
+
+  var end = minOf(
+    lastIndexOf(' ', max - 3),
+    lastIndexOf('\n', max - 3),
+    lastIndexOf('\r', max - 3),
+  )
+
+  if (end == -1) {
+    return take(max - 3) + suffix
+  }
+
+  var newEnd = end
+
+  do {
+    end = newEnd
+    newEnd = minOf(
+      indexOf(' ', end + 1),
+      indexOf('\n', end + 1),
+      indexOf('\r', end + 1),
+    )
+
+    if (newEnd == -1) {
+      newEnd = length
+    }
+  } while (textWidth(substring(0, newEnd) + suffix) < max)
+
+  return take(end) + suffix
+}
+
+// endregion
 // region Utilities
 
 @InlineOnly

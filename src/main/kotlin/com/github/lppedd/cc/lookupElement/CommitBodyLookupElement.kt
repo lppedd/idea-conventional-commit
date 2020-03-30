@@ -24,7 +24,7 @@ internal class CommitBodyLookupElement(
 
   override fun renderElement(presentation: LookupElementPresentation) {
     presentation.icon = ICON_BODY
-    presentation.itemText = lookupString.flattenWhitespaces()
+    presentation.itemText = lookupString.flattenWhitespaces().abbreviate(100)
     presentation.isTypeIconRightAligned = true
   }
 

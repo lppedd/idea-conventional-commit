@@ -26,7 +26,7 @@ internal class CommitFooterLookupElement(
 
   override fun renderElement(presentation: LookupElementPresentation) {
     presentation.icon = ICON_FOOTER
-    presentation.itemText = lookupString.flattenWhitespaces()
+    presentation.itemText = lookupString.flattenWhitespaces().abbreviate(100)
     presentation.isTypeIconRightAligned = true
   }
 
