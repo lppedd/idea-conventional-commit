@@ -23,7 +23,7 @@ private class DefaultVcsCommitSubjectProvider(private val project: Project) : Co
       .recentMessages
       .asReversed()
       .asSequence()
-      .take(20)
+      .take(30)
       .map(CCParser::parseHeader)
       .map(CommitTokens::subject)
       .filterIsInstance(ValidToken::class.java)
