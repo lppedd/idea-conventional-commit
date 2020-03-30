@@ -12,11 +12,13 @@ import com.intellij.openapi.editor.Editor
  */
 private class CloseParenHandler : BaseTypedHandler(')') {
   override fun beforeCharTyped(commitTokens: CommitTokens, editor: Editor): Result {
-    val caretOffset = editor.caretModel.logicalPosition.column
+    val caretModel = editor.caretModel
+    val lineOffset = caretModel.logicalPosition.column
+    val textOffset = caretModel.offset
     val text = editor.document.immutableCharSequence
     return if (
-        caretOffset == (commitTokens.scope as ValidToken).range.last &&
-        caretOffset < text.length && text[caretOffset] == myChar) {
+        lineOffset == (commitTokens.scope as ValidToken).range.last &&
+        textOffset < text.length && text[textOffset] == myChar) {
       // type(...|)
       editor.moveCaretRelatively(1)
       STOP
