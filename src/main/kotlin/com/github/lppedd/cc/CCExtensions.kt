@@ -194,7 +194,7 @@ private inline fun textWidth(str: String): Int =
   str.length - NON_THIN_REGEX.replace(str, "").length / 2
 
 // Adapted from https://stackoverflow.com/questions/3597550/ideal-method-to-truncate-a-string-with-ellipsis
-internal fun String.abbreviate(max: Int, suffix: CharSequence = "\u2026"): String {
+internal fun String.abbreviate(max: Int, suffix: CharSequence = "..."): String {
   if (textWidth(this) <= max) {
     return this
   }
