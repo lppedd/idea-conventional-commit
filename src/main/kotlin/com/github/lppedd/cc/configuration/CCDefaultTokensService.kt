@@ -120,7 +120,6 @@ internal class CCDefaultTokensService(private val project: Project) {
 
   private fun buildFooterTypes(jsonArray: JSONArray?): List<JsonCommitFooterType> =
     (jsonArray ?: EMPTY_JSON_ARRAY)
-      .iterator()
       .asSequence()
       .map {
         it as JSONObject
