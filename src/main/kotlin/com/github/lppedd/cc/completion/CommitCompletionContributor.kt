@@ -208,10 +208,10 @@ private class CommitCompletionContributor : CompletionContributor() {
     }
 
     private fun isInBodyOrFooterContext(editor: Editor): Boolean {
-      val currentLine = maxOf(0, editor.caretModel.logicalPosition.line - 1)
+      val lineAboveNumber = maxOf(0, editor.caretModel.logicalPosition.line - 1)
       return when {
-        currentLine == 0 -> false
-        editor.document.getLine(currentLine).isBlank() -> true
+        lineAboveNumber == 0 -> false
+        editor.document.getLine(lineAboveNumber).isBlank() -> true
         else -> false
       }
     }
