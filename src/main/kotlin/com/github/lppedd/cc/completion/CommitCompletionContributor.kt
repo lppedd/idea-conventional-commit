@@ -190,7 +190,7 @@ private class CommitCompletionContributor : CompletionContributor() {
 
         when (val context = footerTokens.getContext(caretOffset)) {
           is FooterTypeContext -> fillResultSetWithBodiesAndFooterTypes(context)
-          is FooterValueContext -> fillResultSetWithFooterValues(context)
+          is FooterValueContext -> return fillResultSetWithFooterValues(context)
         }
       }
 
