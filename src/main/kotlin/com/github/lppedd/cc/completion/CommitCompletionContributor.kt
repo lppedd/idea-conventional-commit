@@ -235,12 +235,12 @@ private class CommitCompletionContributor : CompletionContributor() {
         }
       }
     }
-
-    @Suppress("DEPRECATION")
-    private fun CompletionProgressIndicator.getFreezeSemaphore(): Semaphore =
-      javaClass.getDeclaredField("myFreezeSemaphore").let {
-        it.isAccessible = true
-        it.get(this) as Semaphore
-      }
   }
 }
+
+@Suppress("DEPRECATION")
+private fun CompletionProgressIndicator.getFreezeSemaphore(): Semaphore =
+  javaClass.getDeclaredField("myFreezeSemaphore").let {
+    it.isAccessible = true
+    it.get(this) as Semaphore
+  }
