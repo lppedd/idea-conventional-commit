@@ -81,7 +81,7 @@ You may then customize it per your needs.
 
 <img width="840" height="572" src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_custom_defaults.png" alt="Custom defaults">
 
-You're allowed to provide custom _types_ and _scopes_, given the JSON file respects a [Schema][5].   
+You're allowed to provide custom commit's _types_, _scopes_ and _footer types_, given the JSON file respects a [Schema][5].   
 An example is shown below:
 
 ```json
@@ -123,7 +123,7 @@ making it easy to version it, and avoiding to explicitly set a _Custom default t
 
 ### Providers
 
-In a fresh installation you'll only be offered the most common tokens (e.g. `fix`, `feat`, `build`, etc.),
+In a fresh installation you'll only be offered the most common tokens (e.g. `fix`, `feat`, `build`, `BREAKING CHANGE`, etc.),
 but the plugin exposes an API to enhance completion items, per each token.
 _Type_, _scope_ and _subject_ each have a specific entry point, and the implementation is called
 **Provider**. Each Provider is listed in a table, based on its context.
