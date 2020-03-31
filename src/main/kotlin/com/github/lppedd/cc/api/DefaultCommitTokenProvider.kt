@@ -6,8 +6,16 @@ import com.github.lppedd.cc.DEFAULT_PROVIDER_ID
 import com.github.lppedd.cc.ICON_DEFAULT_PRESENTATION
 import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.configuration.CCDefaultTokensService
+import com.github.lppedd.cc.parser.CCParser
+import com.github.lppedd.cc.parser.FooterTokens
+import com.github.lppedd.cc.parser.ValidToken
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.vcs.VcsConfiguration
 import org.everit.json.schema.ValidationException
+import kotlin.text.RegexOption.MULTILINE
+
+private val BEGIN_END_WS_REGEX = Regex("""^\s+|\s+$""")
+private val BLANK_LINES_REGEX = Regex("""^\s*$""", MULTILINE)
 
 /**
  * @author Edoardo Luppi
@@ -53,7 +61,31 @@ private class DefaultCommitTokenProvider(private val project: Project) :
       commitType: String?,
       commitScope: String?,
       commitSubject: String?,
-  ): Collection<CommitFooter> = emptyList()
+  ): Collection<CommitFooter> =
+    VcsConfiguration.getInstance(project)
+      .recentMessages
+      .asReversed()
+      .asSequence()
+      .take(15)
+      .flatMap { message -> getFooterValues(footerType, message) }
+      .map { CommitFooter(it) }
+      .toList()
+
+  private fun getFooterValues(footerType: String, message: String): Sequence<String> =
+    message.replace(BEGIN_END_WS_REGEX, "")
+      .split(BLANK_LINES_REGEX)
+      .drop(1)
+      .asReversed()
+      .asSequence()
+      .map { it.replace(BEGIN_END_WS_REGEX, "") }
+      .filter(String::isNotBlank)
+      .map(CCParser::parseFooter)
+      .filter { (it.type as ValidToken).value == footerType }
+      .map(FooterTokens::footer)
+      .filterIsInstance<ValidToken>()
+      .map(ValidToken::value)
+      .map(String::trim)
+      .filter(String::isNotEmpty)
 
   private fun notifyErrorToUser(e: Exception) {
     val message =
