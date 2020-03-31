@@ -26,7 +26,7 @@ private class DefaultVcsCommitSubjectProvider(private val project: Project) : Co
       .take(30)
       .map(CCParser::parseHeader)
       .map(CommitTokens::subject)
-      .filterIsInstance(ValidToken::class.java)
+      .filterIsInstance<ValidToken>()
       .map(ValidToken::value)
       .map(String::trim)
       .filter(String::isNotEmpty)
