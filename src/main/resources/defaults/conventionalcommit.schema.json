@@ -19,6 +19,8 @@
   },
   "definitions": {
     "types": {
+      "description": "Commit types with their optionally associated commit scopes",
+      "type": "object",
       "additionalProperties": false,
       "patternProperties": {
         "^([a-zA-Z0-9-]+)$": {
@@ -27,6 +29,7 @@
       }
     },
     "commonScopes": {
+      "description": "Commit scopes which are merged with and available on every commit type",
       "type": "object",
       "additionalProperties": false,
       "patternProperties": {
@@ -36,29 +39,35 @@
       }
     },
     "footerTypes": {
+      "description": "Commit footer types (the order of the elements is maintained during selection)",
       "type": "array",
       "items": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
           "name": {
+            "description": "The commit footer type's name (it should possibly be unique)",
             "pattern": "^(BREAKING[- ]CHANGE|[a-zA-Z0-9-]+)$",
             "type": "string"
           },
           "description": {
+            "description": "The commit footer type's short description",
             "type": "string"
           }
         }
       }
     },
     "commitType": {
+      "description": "The commit type's name",
       "type": "object",
       "additionalProperties": false,
       "properties": {
         "description": {
+          "description": "The commit type's short description",
           "type": "string"
         },
         "scopes": {
+          "description": "The commit scopes associated with the parent commit type",
           "type": "object",
           "additionalProperties": false,
           "patternProperties": {
@@ -70,10 +79,12 @@
       }
     },
     "commitScope": {
+      "description": "The commit scope's name",
       "type": "object",
       "additionalProperties": false,
       "properties": {
         "description": {
+          "description": "The commit scope's short description",
           "type": "string"
         }
       }
