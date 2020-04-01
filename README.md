@@ -12,6 +12,7 @@ Looking for the latest **plugin binaries**? Get them [here][2] as `.zip`
 | Context & GitHub | Plugins Repository | Type | Scope | Subject | Body | Footer type | Footer value |
 | --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | [Angular (2+)][6] | :heavy_check_mark: [Install][7] | | :heavy_check_mark: | | | | |
+| [Commitlint][8] | :heavy_check_mark: [Install][9] | :heavy_check_mark: | :heavy_check_mark: | | | | |
 | GitHub | Coming soon... | | | | | | |
 | VCS (extended) | Coming soon... | | | | | | |
 
@@ -149,3 +150,5 @@ are going to be automatically filtered by the core engine.
 [5]: https://github.com/lppedd/idea-conventional-commit/blob/master/src/main/resources/defaults/conventionalcommit.schema.json
 [6]: https://github.com/lppedd/idea-conventional-commit-angular2
 [7]: https://plugins.jetbrains.com/plugin/13405-angular-conventional-commit
+[8]: https://github.com/lppedd/idea-conventional-commit-commitlint
+[9]: https://plugins.jetbrains.com/plugin/14046-commitlint-conventional-commit
