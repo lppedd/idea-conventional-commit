@@ -1,0 +1,20 @@
+<h3>0.8.2 (02/04/2020)</h3>
+<p>
+  Thirteenth alpha release.<br/>
+  New Provider, fix and refactoring
+</p>
+<ul>
+  <li>
+    Landed a new Provider which extract commit types and scopes from <strong>Commitlint</strong> rules!<br>
+    You can find it at <a href="https://github.com/lppedd/idea-conventional-commit-commitlint">Commitlint Conventional Commit</a>
+  </li>
+  <li>
+    Fixed Provider's icons rendering in the Providers settings page.<br>
+    To maintain a good looking UI I ask Provider implementations to use
+    <code>16x16</code> or <code>32x32</code> icons. Unfortunately I did not consider scaling
+  </li>
+  <li>
+    Omitted commit subjects during footer value's completion, and offer completion items
+    based on the footer type
+  </li>
+</ul>
