@@ -20,7 +20,7 @@ internal class CommitFooterTypeLookupElement(
     psiElement
 
   override fun getLookupString(): String =
-    psiElement.commitFooterType.text
+    psiElement.commitFooterType.value
 
   override fun renderElement(presentation: LookupElementPresentation) {
     presentation.icon = ICON_FOOTER

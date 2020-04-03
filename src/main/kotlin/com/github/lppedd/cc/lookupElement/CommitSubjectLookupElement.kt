@@ -20,12 +20,12 @@ internal class CommitSubjectLookupElement(
     psiElement
 
   override fun getLookupString(): String =
-    psiElement.commitSubject.text
+    psiElement.commitSubject.value
 
   override fun renderElement(presentation: LookupElementPresentation) {
     val commitSubject = psiElement.commitSubject
     val rendering = commitSubject.getRendering()
-    presentation.itemText = commitSubject.text
+    presentation.itemText = commitSubject.value
     presentation.icon = ICON_SUBJECT
     presentation.isItemTextBold = rendering.bold
     presentation.isItemTextItalic = rendering.italic

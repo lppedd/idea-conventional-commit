@@ -14,6 +14,7 @@ interface CommitScopeProvider : CommitTokenProvider {
 }
 
 open class CommitScope @JvmOverloads constructor(
-    val text: String,
+    @get:JvmName("getText")
+    val value: String,
     val description: String = "",
 ) : CommitTokenElement()

@@ -40,10 +40,10 @@ private class CommitTokenDocumentationProvider : AbstractDocumentationProvider()
   }
 
   private fun generateDocForFooter(element: CommitFooter): String =
-    generateHtml(element.text.trim(), element.description.trim())
+    generateHtml(element.value.trim(), element.description.trim())
 
   private fun generateDocForBody(element: CommitBody): String =
-    generateHtml(element.text.trim(), element.description.trim())
+    generateHtml(element.value.trim(), element.description.trim())
 
   private fun generateHtml(text: String, description: String): String {
     val totalLength = text.length + description.length
@@ -58,7 +58,7 @@ private class CommitTokenDocumentationProvider : AbstractDocumentationProvider()
     if (text.isNotEmpty()) {
       sb.append(DocumentationMarkup.SECTIONS_START)
         .append(DocumentationMarkup.SECTION_HEADER_START)
-        .append("Text:")
+        .append("Value:")
         .append(DocumentationMarkup.SECTION_SEPARATOR)
         .append("<p>")
         .append(LINE_SEPARATOR_REGEX.replace(text, "<p>"))

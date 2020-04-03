@@ -14,6 +14,7 @@ interface CommitTypeProvider : CommitTokenProvider {
 }
 
 open class CommitType @JvmOverloads constructor(
-    val text: String,
+    @get:JvmName("getText")
+    val value: String,
     val description: String = "",
 ) : CommitTokenElement()

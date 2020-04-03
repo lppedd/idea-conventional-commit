@@ -19,7 +19,7 @@ internal class CommitBodyLookupElement(
     psiElement
 
   override fun getLookupString(): String =
-    psiElement.commitBody.text
+    psiElement.commitBody.value
 
   override fun renderElement(presentation: LookupElementPresentation) {
     presentation.icon = ICON_BODY

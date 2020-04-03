@@ -21,12 +21,12 @@ internal open class CommitTypeLookupElement(
     psiElement
 
   override fun getLookupString(): String =
-    psiElement.commitType.text
+    psiElement.commitType.value
 
   override fun renderElement(presentation: LookupElementPresentation) {
     val commitType = psiElement.commitType
     val rendering = commitType.getRendering()
-    presentation.itemText = commitType.text
+    presentation.itemText = commitType.value
     presentation.icon = ICON_TYPE
     presentation.isItemTextBold = rendering.bold
     presentation.isItemTextItalic = rendering.italic

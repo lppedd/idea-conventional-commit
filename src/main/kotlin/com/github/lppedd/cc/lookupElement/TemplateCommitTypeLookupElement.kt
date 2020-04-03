@@ -56,7 +56,7 @@ internal class TemplateCommitTypeLookupElement(
 
     // We populate the macro type context with the chosen commit type
     runWriteAction {
-      editor.insertStringAtCaret(psiElement.commitType.text)
+      editor.insertStringAtCaret(psiElement.commitType.value)
     }
 
     // ...and we confirm it by navigating to the subject context

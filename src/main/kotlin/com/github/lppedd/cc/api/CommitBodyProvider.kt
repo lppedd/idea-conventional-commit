@@ -18,6 +18,7 @@ interface CommitBodyProvider : CommitTokenProvider {
 }
 
 open class CommitBody @JvmOverloads constructor(
-    val text: String,
+    @get:JvmName("getText")
+    val value: String,
     val description: String = "",
 ) : CommitTokenElement()
