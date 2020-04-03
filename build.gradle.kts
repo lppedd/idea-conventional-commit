@@ -2,12 +2,12 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
   java
-  id("org.jetbrains.intellij") version "0.4.16"
+  id("org.jetbrains.intellij") version "0.4.18"
   kotlin("jvm") version "1.4-M1"
 }
 
 group = "com.github.lppedd"
-version = "0.8.2"
+version = "0.9.0"
 
 repositories {
   maven("https://dl.bintray.com/kotlin/kotlin-eap")
