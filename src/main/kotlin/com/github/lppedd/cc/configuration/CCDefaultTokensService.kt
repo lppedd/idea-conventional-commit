@@ -1,12 +1,16 @@
 package com.github.lppedd.cc.configuration
 
+import com.github.lppedd.cc.COAUTHORS_FILE
 import com.github.lppedd.cc.DEFAULT_FILE
 import com.github.lppedd.cc.DEFAULT_SCHEMA
 import com.github.lppedd.cc.configuration.CCDefaultTokensService.*
+import com.github.lppedd.cc.configuration.component.providers.CoAuthors
 import com.github.lppedd.cc.getResourceAsStream
 import com.intellij.openapi.components.ServiceManager
+import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
+import com.intellij.openapi.vfs.LocalFileSystem
 import org.everit.json.schema.Schema
 import org.everit.json.schema.Validator
 import org.everit.json.schema.loader.SchemaLoader
@@ -14,11 +18,12 @@ import org.json.JSONArray
 import org.json.JSONObject
 import org.json.JSONTokener
 import java.io.BufferedReader
+import java.io.IOException
 import java.io.InputStreamReader
 import java.io.Reader
 import java.nio.charset.StandardCharsets.UTF_8
 import java.nio.file.Files
-import java.nio.file.Paths
+import java.nio.file.Path
 
 internal typealias CommitTypeMap = Map<String, JsonCommitType>
 internal typealias CommitScopeList = Collection<JsonCommitScope>
@@ -26,6 +31,7 @@ internal typealias CommitFooterTypeList = Collection<JsonCommitFooterType>
 
 private val EMPTY_JSON_OBJECT = JSONObject()
 private val EMPTY_JSON_ARRAY = JSONArray()
+private val logger = Logger.getInstance(CCDefaultTokensService::class.java)
 
 /**
  * Manages default commit types and scopes.
@@ -63,8 +69,43 @@ internal class CCDefaultTokensService(private val project: Project) {
 
   /** Validates a file via the inputted absolute path. */
   fun validateDefaultsFile(filePath: String) {
-    Files.newBufferedReader(Paths.get(filePath), UTF_8).use {
+    Files.newBufferedReader(Path.of(filePath), UTF_8).use {
       defaultsSchema.validateJson(JSONObject(JSONTokener(it)))
+    }
+  }
+
+  /** Returns the user-defined co-authors. */
+  fun getCoAuthors(): CoAuthors {
+    val projectDir = project.guessProjectDir() ?: return emptyList()
+    val filePath = Path.of(projectDir.path, COAUTHORS_FILE)
+
+    try {
+      if (!Files.notExists(filePath) && Files.exists(filePath)) {
+        return Files.readAllLines(filePath, UTF_8)
+          .map(String::trim)
+          .filter(String::isNotEmpty)
+          .toSet()
+      }
+    } catch (e: IOException) {
+      logger.error(e)
+    }
+
+    return emptyList()
+  }
+
+  /**
+   * Persist the user-defined list of co-author.
+   * Note that the old list, if any, gets entirely replaced.
+   */
+  fun setCoAuthors(coAuthors: CoAuthors) {
+    val projectDir = project.guessProjectDir() ?: return
+
+    try {
+      val filePath = Path.of(projectDir.path, COAUTHORS_FILE)
+      Files.write(filePath, coAuthors, UTF_8)
+      LocalFileSystem.getInstance().refreshAndFindFileByIoFile(filePath.toFile())
+    } catch (e: IOException) {
+      logger.error(e)
     }
   }
 
@@ -79,7 +120,7 @@ internal class CCDefaultTokensService(private val project: Project) {
 
   /** Reads default commit types and scopes from a file in FS via its absolute path. */
   private fun readDefaultsFromFile(filePath: String): JsonDefaults =
-    Files.newBufferedReader(Paths.get(filePath), UTF_8).use(::readFile)
+    Files.newBufferedReader(Path.of(filePath), UTF_8).use(::readFile)
 
   /**
    * Reads a file using the inputted `Reader` and transforms the JSON content

@@ -51,6 +51,10 @@
     {
       "name": "Implements",
       "description": "The commit implements features"
+    },
+    {
+      "name": "Co-authored-by",
+      "description": "The commit is co-authored by another person (for multiple people use one line each)"
     }
   ]
 }

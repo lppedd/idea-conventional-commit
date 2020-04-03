@@ -3,7 +3,6 @@ package com.github.lppedd.cc.configuration.holders
 import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.DEFAULT_FILE
 import com.github.lppedd.cc.configuration.component.ActionLinkLabel
-import com.github.lppedd.cc.configuration.component.ComponentHolder
 import com.github.lppedd.cc.getResourceAsStream
 import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.fileChooser.FileChooserFactory

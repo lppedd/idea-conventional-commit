@@ -165,6 +165,19 @@ private class CommitCompletionContributor : CompletionContributor() {
             .forEach(rs::addElement)
         }
 
+        fun buildShowMoreLookupElement(prefix: String): CommitLookupElement {
+          val psiElement = CommitFooterPsiElement(project, CommitFooter("Show more"))
+          val lookupElement = ShowMoreCoAuthorsLookupElement(2000, psiElement, prefix)
+          val process = parameters.process
+
+          @Suppress("DEPRECATION")
+          if (process is CompletionProgressIndicator) {
+            process.lookup.addPrefixChangeListener(lookupElement, process)
+          }
+
+          return lookupElement
+        }
+
         fun fillResultSetWithFooterValues(context: FooterValueContext) {
           val prefix = context.value.trimStart()
           val rs = resultSet.withPrefixMatcher(FlatPrefixMatcher(prefix))
@@ -184,6 +197,10 @@ private class CommitCompletionContributor : CompletionContributor() {
             .mapIndexed { i, psi -> CommitFooterLookupElement(i, psi, prefix) }
             .distinctBy(CommitLookupElement::getLookupString)
             .forEach(rs::addElement)
+
+          if ("co-authored-by".equals(context.type, true)) {
+            rs.addElement(buildShowMoreLookupElement(prefix))
+          }
 
           rs.stopHere()
         }

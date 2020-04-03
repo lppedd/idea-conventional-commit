@@ -4,7 +4,6 @@ import com.github.lppedd.cc.*
 import com.github.lppedd.cc.psiElement.CommitBodyPsiElement
 import com.intellij.codeInsight.completion.InsertionContext
 import com.intellij.codeInsight.lookup.LookupElementPresentation
-import com.intellij.psi.PsiElement
 
 /**
  * @author Edoardo Luppi
@@ -16,7 +15,7 @@ internal class CommitBodyLookupElement(
 ) : CommitLookupElement() {
   override val weight: UInt = WEIGHT_BODY
 
-  override fun getPsiElement(): PsiElement =
+  override fun getPsiElement(): CommitBodyPsiElement =
     psiElement
 
   override fun getLookupString(): String =

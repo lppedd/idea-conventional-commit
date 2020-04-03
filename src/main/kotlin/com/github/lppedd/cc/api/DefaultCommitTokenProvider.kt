@@ -61,15 +61,26 @@ private class DefaultCommitTokenProvider(private val project: Project) :
       commitType: String?,
       commitScope: String?,
       commitSubject: String?,
-  ): Collection<CommitFooter> =
-    VcsConfiguration.getInstance(project)
+  ): Collection<CommitFooter> {
+    val isCoAuthoredBy = "co-authored-by".equals(footerType, true)
+    val lastN = if (isCoAuthoredBy) 5 else 15
+    val recentValues = VcsConfiguration.getInstance(project)
       .recentMessages
       .asReversed()
       .asSequence()
-      .take(15)
+      .take(lastN)
       .flatMap { message -> getFooterValues(footerType, message) }
       .map { CommitFooter(it) }
       .toList()
+
+    return if (isCoAuthoredBy) {
+      recentValues
+        .plus(defaultsService.getCoAuthors().take(3).map(::CommitFooter))
+        .distinctBy { it.text.toLowerCase() }
+    } else {
+      recentValues.distinctBy { it.text.toLowerCase() }
+    }
+  }
 
   private fun getFooterValues(footerType: String, message: String): Sequence<String> =
     message.replace(BEGIN_END_WS_REGEX, "")

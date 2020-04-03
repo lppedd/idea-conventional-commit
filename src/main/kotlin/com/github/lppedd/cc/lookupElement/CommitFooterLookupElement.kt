@@ -6,7 +6,6 @@ import com.github.lppedd.cc.parser.ValidToken
 import com.github.lppedd.cc.psiElement.CommitFooterPsiElement
 import com.intellij.codeInsight.completion.InsertionContext
 import com.intellij.codeInsight.lookup.LookupElementPresentation
-import com.intellij.psi.PsiElement
 
 /**
  * @author Edoardo Luppi
@@ -18,7 +17,7 @@ internal class CommitFooterLookupElement(
 ) : CommitLookupElement() {
   override val weight: UInt = WEIGHT_FOOTER
 
-  override fun getPsiElement(): PsiElement =
+  override fun getPsiElement(): CommitFooterPsiElement =
     psiElement
 
   override fun getLookupString(): String =

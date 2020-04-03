@@ -2,7 +2,6 @@ package com.github.lppedd.cc.configuration.holders
 
 import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.configuration.CCDefaultTokensService
-import com.github.lppedd.cc.configuration.component.ComponentHolder
 import com.github.lppedd.cc.gridConstraints
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.fileChooser.FileChooserDescriptor

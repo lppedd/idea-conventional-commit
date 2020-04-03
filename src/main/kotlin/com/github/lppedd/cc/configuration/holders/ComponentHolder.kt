@@ -1,4 +1,4 @@
-package com.github.lppedd.cc.configuration.component
+package com.github.lppedd.cc.configuration.holders
 
 import javax.swing.JComponent
 

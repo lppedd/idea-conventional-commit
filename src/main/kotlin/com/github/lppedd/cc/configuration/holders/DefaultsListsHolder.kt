@@ -6,7 +6,6 @@ import com.github.lppedd.cc.ICON_SCOPE
 import com.github.lppedd.cc.ICON_TYPE
 import com.github.lppedd.cc.configuration.CCDefaultTokensService.JsonCommitScope
 import com.github.lppedd.cc.configuration.CommitTypeMap
-import com.github.lppedd.cc.configuration.component.ComponentHolder
 import com.github.lppedd.cc.configuration.component.tokens.CommitTokenList
 import com.intellij.ui.IdeBorderFactory
 import com.intellij.ui.ListSpeedSearch
