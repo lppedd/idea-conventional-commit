@@ -41,7 +41,12 @@ internal class CoAuthorsDialog(project: Project) : DialogWrapper(project) {
     coAuthorsTableHolder.tableModel.selectedCoAuthors
 
   override fun doOKAction() {
-    defaultsService.setCoAuthors(coAuthorsTableHolder.table.model.coAuthors)
+    val updatedCoAuthors = coAuthorsTableHolder.tableModel.coAuthors
+
+    if (defaultsService.getCoAuthors().isNotEmpty() || updatedCoAuthors.isNotEmpty()) {
+      defaultsService.setCoAuthors(updatedCoAuthors)
+    }
+
     super.doOKAction()
   }
 
