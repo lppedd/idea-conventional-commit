@@ -184,6 +184,8 @@ private class CommitCompletionContributor : CompletionContributor() {
             .mapIndexed { i, psi -> CommitFooterLookupElement(i, psi, prefix) }
             .distinctBy(CommitLookupElement::getLookupString)
             .forEach(rs::addElement)
+
+          rs.stopHere()
         }
 
         val footerTokens = CCParser.parseFooter(lineUntilCaret)
