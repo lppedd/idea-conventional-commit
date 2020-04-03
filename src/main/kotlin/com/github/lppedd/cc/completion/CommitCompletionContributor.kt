@@ -166,7 +166,8 @@ private class CommitCompletionContributor : CompletionContributor() {
         }
 
         fun buildShowMoreLookupElement(prefix: String): CommitLookupElement {
-          val psiElement = CommitFooterPsiElement(project, CommitFooter("Show more"))
+          val commitFooter = CommitFooter("", CCBundle["cc.config.coAuthors.description"])
+          val psiElement = CommitFooterPsiElement(project, commitFooter)
           val lookupElement = ShowMoreCoAuthorsLookupElement(2000, psiElement, prefix)
           val process = parameters.process
 

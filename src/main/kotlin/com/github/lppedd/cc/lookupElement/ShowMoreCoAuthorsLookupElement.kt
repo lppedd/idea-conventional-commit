@@ -12,6 +12,8 @@ import com.intellij.openapi.command.CommandProcessor
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.psi.PsiDocumentManager
 
+private const val VALUE = "Show more"
+
 /**
  * @author Edoardo Luppi
  */
@@ -31,11 +33,11 @@ internal class ShowMoreCoAuthorsLookupElement(
     psiElement
 
   override fun getLookupString(): String =
-    "${psiElement.commitFooter.text}$changingLookupString"
+    "$VALUE$changingLookupString"
 
   override fun renderElement(presentation: LookupElementPresentation) {
     presentation.icon = ICON_FOOTER
-    presentation.itemText = psiElement.commitFooter.text
+    presentation.itemText = VALUE
     presentation.isTypeIconRightAligned = true
     presentation.isItemTextBold = true
   }

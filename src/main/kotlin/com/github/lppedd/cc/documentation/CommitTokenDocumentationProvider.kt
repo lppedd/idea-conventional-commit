@@ -40,29 +40,32 @@ private class CommitTokenDocumentationProvider : AbstractDocumentationProvider()
   }
 
   private fun generateDocForFooter(element: CommitFooter): String =
-    generateHtml(element.text, element.description)
+    generateHtml(element.text.trim(), element.description.trim())
 
   private fun generateDocForBody(element: CommitBody): String =
-    generateHtml(element.text, element.description)
+    generateHtml(element.text.trim(), element.description.trim())
 
   private fun generateHtml(text: String, description: String): String {
-    val sb = StringBuilder(text.length + description.length + 140)
+    val totalLength = text.length + description.length
+    val sb = StringBuilder(if (totalLength == 0) return "" else totalLength + 140)
 
-    if (description.isNotBlank()) {
+    if (description.isNotEmpty()) {
       sb.append(DocumentationMarkup.CONTENT_START)
         .append(description)
         .append(DocumentationMarkup.CONTENT_END)
     }
 
-    return sb
-      .append(DocumentationMarkup.SECTIONS_START)
-      .append(DocumentationMarkup.SECTION_HEADER_START)
-      .append("Text:")
-      .append(DocumentationMarkup.SECTION_SEPARATOR)
-      .append("<p>")
-      .append(LINE_SEPARATOR_REGEX.replace(text, "<p>"))
-      .append(DocumentationMarkup.SECTION_END)
-      .append(DocumentationMarkup.SECTIONS_END)
-      .toString()
+    if (text.isNotEmpty()) {
+      sb.append(DocumentationMarkup.SECTIONS_START)
+        .append(DocumentationMarkup.SECTION_HEADER_START)
+        .append("Text:")
+        .append(DocumentationMarkup.SECTION_SEPARATOR)
+        .append("<p>")
+        .append(LINE_SEPARATOR_REGEX.replace(text, "<p>"))
+        .append(DocumentationMarkup.SECTION_END)
+        .append(DocumentationMarkup.SECTIONS_END)
+    }
+
+    return "$sb"
   }
 }
