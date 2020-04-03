@@ -209,14 +209,8 @@ private class CommitCompletionContributor : CompletionContributor() {
         .withClassifier(CompletionSorterImpl.weighingFactory(weigher))
     }
 
-    private fun isInBodyOrFooterContext(editor: Editor): Boolean {
-      val lineAboveNumber = maxOf(0, editor.caretModel.logicalPosition.line - 1)
-      return when {
-        lineAboveNumber == 0 -> false
-        editor.document.getLine(lineAboveNumber).isBlank() -> true
-        else -> false
-      }
-    }
+    private fun isInBodyOrFooterContext(editor: Editor): Boolean =
+      editor.caretModel.logicalPosition.line > 1
 
     /**
      * This is a workaround to a standard behavior which allows the UI

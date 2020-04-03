@@ -31,7 +31,7 @@ internal object CCParser {
   private val footerRegExp = """
     |^(?<$FOOTER_TYPE>[ a-zA-Z0-9-]+)?
     |(?<$SEPARATOR>:)?
-    |(?<$FOOTER>(?<=:)(?:.|[\r\n](?![\r\n]))*)?
+    |(?<$FOOTER>(?<=:)(?:.|[\r\n](?![\r\n]|([a-zA-Z0-9-]+)?(:)?((?<=:))))*)?
   """
     .trimMargin()
     .replace("\n", "")
