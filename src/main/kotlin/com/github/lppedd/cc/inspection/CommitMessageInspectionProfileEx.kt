@@ -10,8 +10,13 @@ import com.intellij.vcs.commit.message.CommitMessageInspectionProfile
  */
 private class CommitMessageInspectionProfileEx(project: Project) : CommitMessageInspectionProfile(project) {
   override fun createTools(project: Project?): List<InspectionToolWrapper<*, *>> {
-    val standardTools = super.createTools(project)
-    val element = LocalInspectionToolWrapper(CommitFormatInspection())
-    return standardTools.plus(element)
+    val additionalInspections =
+      INSPECTION_EP.extensions
+        .asSequence()
+        .flatMap { it.getInspections().asSequence() }
+        .map(::LocalInspectionToolWrapper)
+        .toList()
+
+    return super.createTools(project).plus(additionalInspections)
   }
 }
