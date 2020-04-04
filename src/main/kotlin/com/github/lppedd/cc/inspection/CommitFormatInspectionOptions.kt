@@ -23,7 +23,7 @@ import kotlin.internal.InlineOnly
  * @author Edoardo Luppi
  */
 internal class CommitFormatInspectionOptions : ConfigurableUi<Project> {
-  private val charLabel = JBLabel(CCBundle["cc.inspection.nonStandardMessage.replaceWs.label"])
+  private val charLabel = JBLabel(CCBundle["cc.inspection.nonStdMessage.replaceWs.label"])
   private val charComboModel = CharEntryModel(
     listOf(
       CharEntry("-", "Dash"),

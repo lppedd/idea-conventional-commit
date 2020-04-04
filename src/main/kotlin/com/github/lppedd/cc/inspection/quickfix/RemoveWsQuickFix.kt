@@ -13,7 +13,7 @@ import com.intellij.openapi.project.Project
  * @author Edoardo Luppi
  */
 internal class RemoveWsQuickFix(private val toKeep: Int) :
-    ConventionalCommitBaseQuickFix(CCBundle["cc.inspection.nonStandardMessage.removeWs"]) {
+    ConventionalCommitBaseQuickFix(CCBundle["cc.inspection.nonStdMessage.removeWs"]) {
   override fun doApplyFix(project: Project, document: Document, descriptor: ProblemDescriptor?) {
     descriptor?.let {
       val (start, end) = it.textRangeInElement
