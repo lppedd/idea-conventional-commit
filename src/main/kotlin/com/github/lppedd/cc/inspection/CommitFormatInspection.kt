@@ -22,7 +22,7 @@ import com.intellij.psi.PsiFile
  */
 internal class CommitFormatInspection : ConventionalCommitBaseInspection() {
   override fun getDisplayName(): String =
-    CCBundle["cc.inspection.nonStandardMessage"]
+    CCBundle["cc.inspection.nonStdMessage.description"]
 
   override fun createOptionsConfigurable(): ConfigurableUi<Project> =
     CommitFormatInspectionOptions()
@@ -73,7 +73,7 @@ internal class CommitFormatInspection : ConventionalCommitBaseInspection() {
         manager.createProblemDescriptor(
           psiFile,
           TextRange(start, end),
-          CCBundle["cc.inspection.nonStandardMessage.ws"],
+          CCBundle["cc.inspection.nonStdMessage.text"],
           GENERIC_ERROR_OR_WARNING,
           true,
           RemoveWsQuickFix(1),
@@ -84,7 +84,7 @@ internal class CommitFormatInspection : ConventionalCommitBaseInspection() {
         manager.createProblemDescriptor(
           psiFile,
           TextRange(subject.range.first, subject.range.last),
-          CCBundle["cc.inspection.nonStandardMessage.ws"],
+          CCBundle["cc.inspection.nonStdMessage.text"],
           GENERIC_ERROR_OR_WARNING,
           true,
           AddWsQuickFix(1),
@@ -116,7 +116,7 @@ internal class CommitFormatInspection : ConventionalCommitBaseInspection() {
         manager.createProblemDescriptor(
           psiFile,
           it,
-          CCBundle["cc.inspection.nonStandardMessage.ws"],
+          CCBundle["cc.inspection.nonStdMessage.text"],
           GENERIC_ERROR_OR_WARNING,
           true,
           quickFix,

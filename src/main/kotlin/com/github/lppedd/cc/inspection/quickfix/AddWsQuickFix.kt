@@ -10,7 +10,7 @@ import com.intellij.openapi.project.Project
  * @author Edoardo Luppi
  */
 internal class AddWsQuickFix(private val toAdd: Int) :
-    ConventionalCommitBaseQuickFix(CCBundle["cc.inspection.nonStandardMessage.addWs"]) {
+    ConventionalCommitBaseQuickFix(CCBundle["cc.inspection.nonStdMessage.addWs"]) {
   override fun doApplyFix(project: Project, document: Document, descriptor: ProblemDescriptor?) {
     descriptor?.let {
       val start = it.textRangeInElement.startOffset
