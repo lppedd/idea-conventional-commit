@@ -76,4 +76,6 @@ private class CharEntryModel(items: List<CharEntry>) : MutableCollectionComboBox
 
 private class CharEntry(val char: String, val description: String) {
   override fun toString(): String = description
+  override fun hashCode(): Int = description.hashCode()
+  override fun equals(other: Any?): Boolean = description == (other as? CharEntry)?.description
 }
