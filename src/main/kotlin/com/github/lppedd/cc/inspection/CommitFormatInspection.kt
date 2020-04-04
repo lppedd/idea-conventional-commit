@@ -2,6 +2,7 @@ package com.github.lppedd.cc.inspection
 
 import com.github.lppedd.cc.*
 import com.github.lppedd.cc.configuration.CCConfigService
+import com.github.lppedd.cc.inspection.quickfix.AddWsQuickFix
 import com.github.lppedd.cc.inspection.quickfix.RemoveWsQuickFix
 import com.github.lppedd.cc.inspection.quickfix.ReplaceWsQuickFix
 import com.github.lppedd.cc.parser.CCParser
@@ -51,8 +52,8 @@ internal class CommitFormatInspection : ConventionalCommitBaseInspection() {
       problems += handleScope(scope, manager, psiFile)
     }
 
-    if (subject is ValidToken && subject.value.startsWith("  ")) {
-      problems += handleSubject(subject, manager, psiFile)
+    if (subject is ValidToken) {
+      handleSubject(subject, manager, psiFile)?.let { problems += it }
     }
 
     return problems
@@ -62,20 +63,36 @@ internal class CommitFormatInspection : ConventionalCommitBaseInspection() {
       subject: ValidToken,
       manager: InspectionManager,
       psiFile: PsiFile,
-  ): ProblemDescriptor {
-    val nonWsIndex = subject.value.indexOfFirst { !it.isWhitespace() }
-    val start = subject.range.first
-    val end = if (nonWsIndex < 0) subject.range.last else start + nonWsIndex
-    val range = TextRange(start, end)
-    return manager.createProblemDescriptor(
-      psiFile,
-      range,
-      CCBundle["cc.inspection.nonStandardMessage.ws"],
-      GENERIC_ERROR_OR_WARNING,
-      true,
-      RemoveWsQuickFix(1),
-      ConventionalCommitReformatQuickFix
-    )
+  ): ProblemDescriptor? {
+    val value = subject.value
+    return when {
+      value.startsWith("  ") -> {
+        val nonWsIndex = value.indexOfFirst { !it.isWhitespace() }
+        val start = subject.range.first
+        val end = if (nonWsIndex < 0) subject.range.last else start + nonWsIndex
+        manager.createProblemDescriptor(
+          psiFile,
+          TextRange(start, end),
+          CCBundle["cc.inspection.nonStandardMessage.ws"],
+          GENERIC_ERROR_OR_WARNING,
+          true,
+          RemoveWsQuickFix(1),
+          ConventionalCommitReformatQuickFix
+        )
+      }
+      value.isNotEmpty() && !value.firstIsWhitespace() -> {
+        manager.createProblemDescriptor(
+          psiFile,
+          TextRange(subject.range.first, subject.range.last),
+          CCBundle["cc.inspection.nonStandardMessage.ws"],
+          GENERIC_ERROR_OR_WARNING,
+          true,
+          AddWsQuickFix(1),
+          ConventionalCommitReformatQuickFix
+        )
+      }
+      else -> null
+    }
   }
 
   private fun handleScope(
@@ -92,8 +109,8 @@ internal class CommitFormatInspection : ConventionalCommitBaseInspection() {
           if (it.startOffset == start || it.endOffset == end) {
             RemoveWsQuickFix(0)
           } else {
-            ReplaceWsQuickFix(CCConfigService.getInstance(
-              manager.project).scopeReplaceChar)
+            val config = CCConfigService.getInstance(manager.project)
+            ReplaceWsQuickFix(config.scopeReplaceChar)
           }
 
         manager.createProblemDescriptor(
