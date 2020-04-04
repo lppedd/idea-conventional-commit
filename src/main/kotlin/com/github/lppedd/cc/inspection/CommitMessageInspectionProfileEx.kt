@@ -49,8 +49,9 @@ private class CommitMessageInspectionProfileEx(project: Project) : CommitMessage
   }
 }
 
-private class CommitInspectionToolSupplier(private val delegate: Supplier<List<InspectionToolWrapper<*, *>>>) :
-    Supplier<List<InspectionToolWrapper<*, *>>> {
+private class CommitInspectionToolSupplier(
+    private val delegate: Supplier<List<InspectionToolWrapper<*, *>>>,
+) : Supplier<List<InspectionToolWrapper<*, *>>> {
   override fun get(): List<InspectionToolWrapper<*, *>> {
     val additionalInspections =
       INSPECTION_EP.extensions
