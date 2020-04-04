@@ -24,6 +24,9 @@ internal class CommitFormatInspection : CommitBaseInspection() {
   override fun getDisplayName(): String =
     CCBundle["cc.inspection.nonStdMessage.description"]
 
+  override fun isEnabledByDefault(): Boolean =
+    true
+
   override fun createOptionsConfigurable(): ConfigurableUi<Project> =
     CommitFormatInspectionOptions()
 
