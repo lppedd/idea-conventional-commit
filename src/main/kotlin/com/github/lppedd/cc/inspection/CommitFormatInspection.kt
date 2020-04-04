@@ -20,7 +20,7 @@ import com.intellij.psi.PsiFile
 /**
  * @author Edoardo Luppi
  */
-internal class CommitFormatInspection : ConventionalCommitBaseInspection() {
+internal class CommitFormatInspection : CommitBaseInspection() {
   override fun getDisplayName(): String =
     CCBundle["cc.inspection.nonStdMessage.description"]
 
@@ -132,7 +132,7 @@ internal class CommitFormatInspection : ConventionalCommitBaseInspection() {
     val psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document) ?: return
     val problemsToQuickFixes =
       checkFile(psiFile, document, InspectionManager.getInstance(project), false)
-        .map { it to it.fixes?.filterIsInstance<ConventionalCommitBaseQuickFix>() }
+        .map { it to it.fixes?.filterIsInstance<CommitBaseQuickFix>() }
         .asReversed()
 
     for ((problemDescriptor, quickFixes) in problemsToQuickFixes) {

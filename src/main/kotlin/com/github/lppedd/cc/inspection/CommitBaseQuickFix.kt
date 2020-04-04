@@ -10,7 +10,7 @@ import com.intellij.psi.PsiElement
 /**
  * @author Edoardo Luppi
  */
-abstract class ConventionalCommitBaseQuickFix(name: String) : LocalQuickFixBase(name) {
+abstract class CommitBaseQuickFix(name: String) : LocalQuickFixBase(name) {
   final override fun applyFix(project: Project, descriptor: ProblemDescriptor) {
     doApplyFix(project, getDocument(descriptor.psiElement) ?: return, descriptor)
   }

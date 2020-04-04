@@ -10,5 +10,5 @@ internal val INSPECTION_EP = ExtensionPointName<CommitInspectionProvider>(
  * @author Edoardo Luppi
  */
 interface CommitInspectionProvider {
-  fun getInspections(): Collection<ConventionalCommitBaseInspection>
+  fun getInspections(): Collection<CommitBaseInspection>
 }
