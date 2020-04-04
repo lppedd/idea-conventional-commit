@@ -46,21 +46,22 @@ internal class CommitFormatInspectionOptions : ConfigurableUi<Project> {
   }
 
   override fun reset(project: Project) {
-    charComboModel.setSelectedItem(service(project).scopeReplaceChar)
+    charComboModel.setSelectedItem(config(project).scopeReplaceChar)
   }
 
   override fun isModified(project: Project): Boolean =
-    charComboModel.selected.char != service(project).scopeReplaceChar
+    charComboModel.selected.char != config(project).scopeReplaceChar
 
   override fun apply(project: Project) {
-    service(project).scopeReplaceChar = charComboModel.selected.char
+    config(project).scopeReplaceChar = charComboModel.selected.char
   }
 
   override fun getComponent(): JComponent =
     myMainPanel
 
   @InlineOnly
-  private inline fun service(project: Project) = CCConfigService.getInstance(project)
+  private inline fun config(project: Project) =
+    CCConfigService.getInstance(project)
 }
 
 private class CharEntryModel(items: List<CharEntry>) : MutableCollectionComboBoxModel<CharEntry>(items) {
