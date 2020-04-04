@@ -3,7 +3,13 @@ package com.github.lppedd.cc
 import com.intellij.uiDesigner.core.GridConstraints
 import com.intellij.uiDesigner.core.GridConstraints.*
 import java.awt.Dimension
+import javax.swing.BorderFactory
+import javax.swing.border.Border
 import kotlin.internal.InlineOnly
+
+@InlineOnly
+internal inline fun Border.concat(border: Border): Border =
+  BorderFactory.createCompoundBorder(this, border)
 
 @InlineOnly
 internal inline fun gridConstraints(

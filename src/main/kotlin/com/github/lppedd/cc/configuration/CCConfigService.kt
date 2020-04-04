@@ -29,6 +29,7 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
 
   var completionType: CompletionType = CompletionType.POPUP
   var customFilePath: String? = null
+  var scopeReplaceChar: String = "-"
 
   @XMap(
     propertyElementName = "commitTypes",

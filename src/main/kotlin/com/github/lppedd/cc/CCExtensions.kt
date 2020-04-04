@@ -172,7 +172,7 @@ internal inline operator fun StringBuilder.plusAssign(string: String) {
 // endregion
 // region CharSequence
 
-private val WHITESPACE_REGEX = "\\s+".toRegex()
+internal val WHITESPACE_REGEX: Regex = "\\s+".toRegex()
 
 @InlineOnly
 internal inline fun CharSequence.flattenWhitespaces(): String =
