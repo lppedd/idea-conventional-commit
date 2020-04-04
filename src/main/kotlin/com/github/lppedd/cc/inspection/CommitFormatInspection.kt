@@ -65,25 +65,25 @@ internal class CommitFormatInspection : ConventionalCommitBaseInspection() {
       psiFile: PsiFile,
   ): ProblemDescriptor? {
     val value = subject.value
+    val (start, end) = subject.range
     return when {
       value.startsWith("  ") -> {
         val nonWsIndex = value.indexOfFirst { !it.isWhitespace() }
-        val start = subject.range.first
-        val end = if (nonWsIndex < 0) subject.range.last else start + nonWsIndex
+        val newEnd = if (nonWsIndex < 0) end else start + nonWsIndex
         manager.createProblemDescriptor(
           psiFile,
-          TextRange(start, end),
+          TextRange(start + 1, newEnd),
           CCBundle["cc.inspection.nonStdMessage.text"],
           GENERIC_ERROR_OR_WARNING,
           true,
-          RemoveWsQuickFix(1),
+          RemoveWsQuickFix(0),
           ConventionalCommitReformatQuickFix
         )
       }
       value.isNotEmpty() && !value.firstIsWhitespace() -> {
         manager.createProblemDescriptor(
           psiFile,
-          TextRange(subject.range.first, subject.range.last),
+          TextRange(start, start + 1),
           CCBundle["cc.inspection.nonStdMessage.text"],
           GENERIC_ERROR_OR_WARNING,
           true,
