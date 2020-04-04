@@ -99,11 +99,19 @@
         name="commitFooterProvider"
         interface="com.github.lppedd.cc.api.CommitFooterProvider"
     />
+    <extensionPoint
+        name="commitInspectionProvider"
+        interface="com.github.lppedd.cc.inspection.CommitInspectionProvider"
+    />
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.github.lppedd.idea-conventional-commit">
     <commitTypeProvider order="first" implementation="com.github.lppedd.cc.api.DefaultCommitTokenProvider" />
     <commitScopeProvider order="first" implementation="com.github.lppedd.cc.api.DefaultCommitTokenProvider" />
     <commitFooterProvider order="first" implementation="com.github.lppedd.cc.api.DefaultCommitTokenProvider" />
+    <commitInspectionProvider
+        order="first"
+        implementation="com.github.lppedd.cc.inspection.DefaultInspectionProvider"
+    />
   </extensions>
 </idea-plugin>
