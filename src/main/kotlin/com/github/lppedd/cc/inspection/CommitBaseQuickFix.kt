@@ -15,7 +15,7 @@ abstract class CommitBaseQuickFix(name: String) : LocalQuickFixBase(name) {
     doApplyFix(project, getDocument(descriptor.psiElement) ?: return, descriptor)
   }
 
-  abstract fun doApplyFix(project: Project, document: Document, descriptor: ProblemDescriptor?)
+  abstract fun doApplyFix(project: Project, document: Document, descriptor: ProblemDescriptor)
 
   private fun getDocument(element: PsiElement): Document? =
     PsiDocumentManager

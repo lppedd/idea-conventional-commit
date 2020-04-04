@@ -13,10 +13,8 @@ import com.intellij.openapi.project.Project
  */
 internal class ReplaceWsQuickFix(private val replaceChar: String) :
     CommitBaseQuickFix(CCBundle["cc.inspection.nonStdMessage.replaceWs", replaceChar]) {
-  override fun doApplyFix(project: Project, document: Document, descriptor: ProblemDescriptor?) {
-    descriptor?.let {
-      val (start, end) = it.textRangeInElement
-      document.replaceString(start, end, replaceChar)
-    }
+  override fun doApplyFix(project: Project, document: Document, descriptor: ProblemDescriptor) {
+    val (start, end) = descriptor.textRangeInElement
+    document.replaceString(start, end, replaceChar)
   }
 }
