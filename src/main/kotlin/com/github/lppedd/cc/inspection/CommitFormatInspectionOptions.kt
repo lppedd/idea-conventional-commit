@@ -24,7 +24,14 @@ import kotlin.internal.InlineOnly
  */
 internal class CommitFormatInspectionOptions : ConfigurableUi<Project> {
   private val charLabel = JBLabel(CCBundle["cc.inspection.nonStandardMessage.replaceWs.label"])
-  private val charComboModel = CharEntryModel(listOf(CharEntry("-", "Dash"), CharEntry(":", "Colon")))
+  private val charComboModel = CharEntryModel(
+    listOf(
+      CharEntry("-", "Dash"),
+      CharEntry(":", "Colon"),
+      CharEntry("", "Remove"),
+    )
+  )
+
   private val charComboBox = ComboBox(charComboModel)
   private val myMainPanel: JPanel = JPanel().also {
     val borderColor = JBColor.namedColor("Group.separatorColor", JBColor(Gray.xCD, Gray.x51))
