@@ -8,6 +8,7 @@ import javax.swing.border.Border
 import kotlin.internal.InlineOnly
 
 @InlineOnly
+@Suppress("RedundantNotNullExtensionReceiverOfInline")
 internal inline fun Border.concat(border: Border): Border =
   BorderFactory.createCompoundBorder(this, border)
 
