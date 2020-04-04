@@ -78,7 +78,7 @@ internal object CCParser {
       endIndex--
     }
 
-    return ValidToken("$value".trim(), IntRange(startIndex, max(startIndex, endIndex)))
+    return ValidToken("$value", IntRange(startIndex, max(startIndex, endIndex)))
   }
 }
 
