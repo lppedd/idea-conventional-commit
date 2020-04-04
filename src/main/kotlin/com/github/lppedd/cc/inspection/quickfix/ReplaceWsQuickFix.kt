@@ -11,8 +11,9 @@ import com.intellij.openapi.project.Project
 /**
  * @author Edoardo Luppi
  */
-internal class ReplaceWsQuickFix(private val replaceChar: String) :
-    CommitBaseQuickFix(CCBundle["cc.inspection.nonStdMessage.replaceWs", replaceChar]) {
+internal class ReplaceWsQuickFix(
+    private val replaceChar: String,
+) : CommitBaseQuickFix(CCBundle["cc.inspection.nonStdMessage.replaceWs", replaceChar]) {
   override fun doApplyFix(project: Project, document: Document, descriptor: ProblemDescriptor) {
     val (start, end) = descriptor.textRangeInElement
     document.replaceString(start, end, replaceChar)
