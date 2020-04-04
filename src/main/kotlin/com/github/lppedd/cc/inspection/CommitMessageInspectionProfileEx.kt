@@ -1,5 +1,6 @@
 package com.github.lppedd.cc.inspection
 
+import com.github.lppedd.cc.api.INSPECTION_EP
 import com.intellij.codeInspection.ex.InspectionToolWrapper
 import com.intellij.codeInspection.ex.LocalInspectionToolWrapper
 import com.intellij.openapi.project.Project

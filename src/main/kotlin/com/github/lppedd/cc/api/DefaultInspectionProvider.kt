@@ -1,4 +1,7 @@
-package com.github.lppedd.cc.inspection
+package com.github.lppedd.cc.api
+
+import com.github.lppedd.cc.inspection.CommitBaseInspection
+import com.github.lppedd.cc.inspection.CommitFormatInspection
 
 /**
  * @author Edoardo Luppi
