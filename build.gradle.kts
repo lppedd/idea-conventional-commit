@@ -38,6 +38,8 @@ tasks {
   val kotlinSettings: KotlinCompile.() -> Unit = {
     kotlinOptions.jvmTarget = "1.8"
     kotlinOptions.freeCompilerArgs += listOf(
+      "-Xno-call-assertions",
+      "-Xno-receiver-assertions",
       "-Xno-param-assertions",
       "-Xjvm-default=enable",
       "-Xallow-kotlin-package",
