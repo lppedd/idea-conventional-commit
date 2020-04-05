@@ -91,7 +91,7 @@ private class CommitCompletionContributor : CompletionContributor() {
       }
 
       fun fillResultSetWithScopes(context: ScopeCommitContext) {
-        val rs = resultSet.withPrefixMatcher(context.scope.trimStart())
+        val rs = resultSet.withPrefixMatcher(context.scope.trim())
         safelyReleaseSemaphore(parameters.process)
 
         SCOPE_EP.getExtensions(project)
