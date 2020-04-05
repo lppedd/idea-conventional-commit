@@ -21,7 +21,7 @@ private class CommitMessageInspectionProfileEx(project: Project) : CommitMessage
   init {
     try {
       hackInspectionProfile()
-    } catch (e: Exception) {
+    } catch (ignored: Exception) {
       // Ouch, agent Smith caught me and I can't do anything about it :(
     }
   }
@@ -104,8 +104,8 @@ private class CommitInspectionToolSupplier(
 
 /**
  * Provides support for IDEA 2019.3 onward.
- * Using CGLIB (or other bytecode libraries) is required since we don't access
- * to new releases classes.
+ * Using CGLIB (or other bytecode libraries) is required as
+ * we don't have access to new releases classes.
  */
 private class InspectionToolSupplierInterceptor(private val delegate: Any) : MethodInterceptor {
   override fun intercept(obj: Any?, method: Method, args: Array<Any?>?, proxy: MethodProxy): Any? =
