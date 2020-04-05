@@ -7,10 +7,12 @@ import com.github.lppedd.cc.parser.CommitTokens
 import com.github.lppedd.cc.parser.ValidToken
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vcs.VcsConfiguration
+import org.jetbrains.annotations.ApiStatus
 
 /**
  * @author Edoardo Luppi
  */
+@ApiStatus.Internal
 private class DefaultVcsCommitSubjectProvider(private val project: Project) : CommitSubjectProvider {
   override fun getId(): String =
     DEFAULT_VCS_PROVIDER_ID

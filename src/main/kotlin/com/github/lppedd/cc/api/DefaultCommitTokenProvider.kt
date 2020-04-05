@@ -12,6 +12,7 @@ import com.github.lppedd.cc.parser.ValidToken
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vcs.VcsConfiguration
 import org.everit.json.schema.ValidationException
+import org.jetbrains.annotations.ApiStatus
 import kotlin.text.RegexOption.MULTILINE
 
 private val BEGIN_END_WS_REGEX = Regex("""^\s+|\s+$""")
@@ -20,6 +21,7 @@ private val BLANK_LINES_REGEX = Regex("""^\s*$""", MULTILINE)
 /**
  * @author Edoardo Luppi
  */
+@ApiStatus.Internal
 private class DefaultCommitTokenProvider(private val project: Project) :
     CommitTypeProvider,
     CommitScopeProvider,

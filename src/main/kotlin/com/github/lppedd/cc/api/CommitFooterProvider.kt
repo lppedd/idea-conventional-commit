@@ -1,6 +1,7 @@
 package com.github.lppedd.cc.api
 
 import com.intellij.openapi.extensions.ProjectExtensionPointName
+import org.jetbrains.annotations.ApiStatus
 
 internal val FOOTER_EP = ProjectExtensionPointName<CommitFooterProvider>(
   "com.github.lppedd.idea-conventional-commit.commitFooterProvider"
@@ -9,6 +10,8 @@ internal val FOOTER_EP = ProjectExtensionPointName<CommitFooterProvider>(
 /**
  * @author Edoardo Luppi
  */
+@ApiStatus.Experimental
+@ApiStatus.AvailableSince("0.8.0")
 interface CommitFooterProvider : CommitTokenProvider {
   fun getCommitFooterTypes(): Collection<CommitFooterType>
   fun getCommitFooters(
