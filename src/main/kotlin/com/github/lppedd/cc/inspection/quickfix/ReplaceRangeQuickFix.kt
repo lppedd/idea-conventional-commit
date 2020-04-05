@@ -11,7 +11,7 @@ import com.intellij.openapi.project.Project
 /**
  * @author Edoardo Luppi
  */
-internal class ReplaceWsQuickFix(
+internal class ReplaceRangeQuickFix(
     private val replaceChar: String,
     override val canReformat: Boolean = true,
 ) : CommitBaseQuickFix(CCBundle["cc.inspection.nonStdMessage.replaceWs", replaceChar]) {

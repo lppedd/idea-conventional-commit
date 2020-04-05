@@ -4,7 +4,7 @@ import com.github.lppedd.cc.*
 import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.inspection.quickfix.AddWsQuickFix
 import com.github.lppedd.cc.inspection.quickfix.RemoveRangeQuickFix
-import com.github.lppedd.cc.inspection.quickfix.ReplaceWsQuickFix
+import com.github.lppedd.cc.inspection.quickfix.ReplaceRangeQuickFix
 import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.ValidToken
 import com.intellij.codeInspection.InspectionManager
@@ -130,7 +130,7 @@ internal class CommitFormatInspection : CommitBaseInspection() {
             RemoveRangeQuickFix()
           } else {
             val config = CCConfigService.getInstance(manager.project)
-            ReplaceWsQuickFix(config.scopeReplaceChar)
+            ReplaceRangeQuickFix(config.scopeReplaceChar)
           }
 
         manager.createProblemDescriptor(
