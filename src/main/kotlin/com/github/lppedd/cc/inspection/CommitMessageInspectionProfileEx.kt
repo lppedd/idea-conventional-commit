@@ -51,7 +51,9 @@ private class CommitMessageInspectionProfileEx(project: Project) : CommitMessage
       @Suppress("UNCHECKED_CAST")
       val delegate = ideaToolSupplier as Supplier<List<InspectionToolWrapper<*, *>>>
       proxyToolSupplier = CommitInspectionToolSupplier(delegate)
-      inspectionProfileImpl = InspectionProfileImpl(myName, proxyToolSupplier, null)
+      inspectionProfileImpl = inspectionProfileImplClazz
+        .getConstructor(String::class.java, Supplier::class.java, inspectionProfileImplClazz)
+        .newInstance(myName, proxyToolSupplier, null)
     } else {
       val inspectionToolSupplierClazz = Class.forName(
         "com.intellij.codeInspection.ex.InspectionToolsSupplier",
