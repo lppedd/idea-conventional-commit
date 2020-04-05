@@ -3,7 +3,7 @@ package com.github.lppedd.cc.inspection
 import com.github.lppedd.cc.*
 import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.inspection.quickfix.AddWsQuickFix
-import com.github.lppedd.cc.inspection.quickfix.RemoveWsQuickFix
+import com.github.lppedd.cc.inspection.quickfix.RemoveRangeQuickFix
 import com.github.lppedd.cc.inspection.quickfix.ReplaceWsQuickFix
 import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.ValidToken
@@ -57,7 +57,7 @@ internal class CommitFormatInspection : CommitBaseInspection() {
     }
 
     if (scope is ValidToken) {
-      problems += handleScope(scope, manager, psiFile)
+      problems += handleScope(scope, manager, psiFile, firstLine)
     }
 
     if (subject is ValidToken) {
@@ -84,9 +84,9 @@ internal class CommitFormatInspection : CommitBaseInspection() {
       .map { TextRange(it.first, it.last + 1) }
       .map {
         val quickFixes = if (it.startOffset == 0) {
-          arrayOf(RemoveWsQuickFix(0), ConventionalCommitReformatQuickFix)
+          arrayOf(RemoveRangeQuickFix(), ConventionalCommitReformatQuickFix)
         } else {
-          arrayOf(RemoveWsQuickFix(0, false))
+          arrayOf(RemoveRangeQuickFix(false))
         }
 
         manager.createProblemDescriptor(
@@ -104,15 +104,30 @@ internal class CommitFormatInspection : CommitBaseInspection() {
       scope: ValidToken,
       manager: InspectionManager,
       psiFile: PsiFile,
+      firstLine: CharSequence,
   ): List<ProblemDescriptor> {
     val (start, end) = scope.range
-    return WHITESPACE_REGEX.findAll(scope.value)
+    val value = scope.value
+
+    if (value.isBlank() && ')' == firstLine.getOrNull(end)) {
+      return listOf(manager.createProblemDescriptor(
+        psiFile,
+        TextRange(start - 1, end + 1),
+        CCBundle["cc.inspection.nonStdMessage.emptyScope"],
+        GENERIC_ERROR_OR_WARNING,
+        true,
+        RemoveRangeQuickFix(message = CCBundle["cc.inspection.nonStdMessage.removeScope"]),
+        ConventionalCommitReformatQuickFix
+      ))
+    }
+
+    return WHITESPACE_REGEX.findAll(value)
       .map(MatchResult::range)
       .map { TextRange(start + it.first, start + it.last + 1) }
       .map {
         val quickFix =
           if (it.startOffset == start || it.endOffset == end) {
-            RemoveWsQuickFix(0)
+            RemoveRangeQuickFix()
           } else {
             val config = CCConfigService.getInstance(manager.project)
             ReplaceWsQuickFix(config.scopeReplaceChar)
@@ -147,7 +162,7 @@ internal class CommitFormatInspection : CommitBaseInspection() {
           CCBundle["cc.inspection.nonStdMessage.text"],
           GENERIC_ERROR_OR_WARNING,
           true,
-          RemoveWsQuickFix(0),
+          RemoveRangeQuickFix(),
           ConventionalCommitReformatQuickFix
         )
       }
