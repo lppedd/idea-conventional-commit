@@ -1,3 +1,4 @@
+<!--suppress PluginXmlValidity, PluginXmlDynamicPlugin -->
 <idea-plugin>
   <id>com.github.lppedd.idea-conventional-commit</id>
   <name>Conventional Commit</name>
