@@ -51,12 +51,23 @@ The plugin offers two completion modes.
     
   - #### Template based
     By firstly invoking the _type_ completion and confirming an item, a template will be
-    generated in place, and you'll be guided through each token (_scope_ and _subject).
+    generated in place, and you'll be guided through each token (_scope_ and _subject_).
     You can also go back (with `shift + tab`) and change your pick.
     
     Arbitrary characters' insertion is also allowed inside each template's range marker.
 
     <img src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_template.gif" alt="Template completion">
+
+### Inspections
+
+Inspections are bundled too, and they're **extensible**, which means a _Provider_ may contribute with
+additional ones.  
+The standard inspection warns you if you're not following the Conventional Commit standard.
+In case, just press `ctrl + alt + l` (on Windows) and the commit message will be formatted for you.
+
+<img src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_inspections.gif" alt="Inspections">  
+
+You may enable/disable inspections via _Settings > Version Control > Commit_
 
 ### Documentation
 
