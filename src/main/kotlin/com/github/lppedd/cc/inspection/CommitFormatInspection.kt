@@ -48,8 +48,13 @@ internal class CommitFormatInspection : CommitBaseInspection() {
       document: Document,
       manager: InspectionManager,
   ): List<ProblemDescriptor> {
-    val (_, scope, _, _, subject) = CCParser.parseHeader(document.getLine(0))
+    val firstLine = document.getLine(0)
+    val (type, scope, _, _, subject) = CCParser.parseHeader(firstLine)
     val problems = mutableListOf<ProblemDescriptor>()
+
+    if (type is ValidToken) {
+      handleType(type, manager, psiFile, firstLine).let { problems += it }
+    }
 
     if (scope is ValidToken) {
       problems += handleScope(scope, manager, psiFile)
@@ -60,6 +65,69 @@ internal class CommitFormatInspection : CommitBaseInspection() {
     }
 
     return problems
+  }
+
+  private fun handleType(
+      type: ValidToken,
+      manager: InspectionManager,
+      psiFile: PsiFile,
+      firstLine: CharSequence,
+  ): List<ProblemDescriptor> {
+    val start = type.range.first
+
+    if (start == 0) {
+      return emptyList()
+    }
+
+    return WHITESPACE_REGEX.findAll(firstLine.take(start))
+      .map(MatchResult::range)
+      .map { TextRange(it.first, it.last + 1) }
+      .map {
+        val quickFixes = if (it.startOffset == 0) {
+          arrayOf(RemoveWsQuickFix(0), ConventionalCommitReformatQuickFix)
+        } else {
+          arrayOf(RemoveWsQuickFix(0, false))
+        }
+
+        manager.createProblemDescriptor(
+          psiFile,
+          it,
+          CCBundle["cc.inspection.nonStdMessage.text"],
+          GENERIC_ERROR_OR_WARNING,
+          true,
+          *quickFixes
+        )
+      }.toList()
+  }
+
+  private fun handleScope(
+      scope: ValidToken,
+      manager: InspectionManager,
+      psiFile: PsiFile,
+  ): List<ProblemDescriptor> {
+    val (start, end) = scope.range
+    return WHITESPACE_REGEX.findAll(scope.value)
+      .map(MatchResult::range)
+      .map { TextRange(start + it.first, start + it.last + 1) }
+      .map {
+        val quickFix =
+          if (it.startOffset == start || it.endOffset == end) {
+            RemoveWsQuickFix(0)
+          } else {
+            val config = CCConfigService.getInstance(manager.project)
+            ReplaceWsQuickFix(config.scopeReplaceChar)
+          }
+
+        manager.createProblemDescriptor(
+          psiFile,
+          it,
+          CCBundle["cc.inspection.nonStdMessage.text"],
+          GENERIC_ERROR_OR_WARNING,
+          true,
+          quickFix,
+          ConventionalCommitReformatQuickFix
+        )
+      }.toList()
   }
 
   private fun handleSubject(
@@ -98,36 +166,6 @@ internal class CommitFormatInspection : CommitBaseInspection() {
     }
   }
 
-  private fun handleScope(
-      scope: ValidToken,
-      manager: InspectionManager,
-      psiFile: PsiFile,
-  ): List<ProblemDescriptor> {
-    val (start, end) = scope.range
-    return WHITESPACE_REGEX.findAll(scope.value)
-      .map(MatchResult::range)
-      .map { TextRange(start + it.first, start + it.last + 1) }
-      .map {
-        val quickFix =
-          if (it.startOffset == start || it.endOffset == end) {
-            RemoveWsQuickFix(0)
-          } else {
-            val config = CCConfigService.getInstance(manager.project)
-            ReplaceWsQuickFix(config.scopeReplaceChar)
-          }
-
-        manager.createProblemDescriptor(
-          psiFile,
-          it,
-          CCBundle["cc.inspection.nonStdMessage.text"],
-          GENERIC_ERROR_OR_WARNING,
-          true,
-          quickFix,
-          ConventionalCommitReformatQuickFix
-        )
-      }.toList()
-  }
-
   override fun canReformat(project: Project, document: Document): Boolean =
     hasProblems(project, document)
 
@@ -135,12 +173,15 @@ internal class CommitFormatInspection : CommitBaseInspection() {
     val psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document) ?: return
     val problemsToQuickFixes =
       checkFile(psiFile, document, InspectionManager.getInstance(project), false)
-        .map { it to it.fixes?.filterIsInstance<CommitBaseQuickFix>() }
-        .asReversed()
+        .map {
+          it to it.fixes
+            ?.filterIsInstance<CommitBaseQuickFix>()
+            ?.filter(CommitBaseQuickFix::canReformat)
+        }.asReversed()
 
     for ((problemDescriptor, quickFixes) in problemsToQuickFixes) {
       quickFixes?.asReversed()?.forEach {
-        it.doApplyFix(project, document, problemDescriptor)
+        it.applyFix(project, document, problemDescriptor)
       }
     }
   }
