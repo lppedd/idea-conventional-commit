@@ -36,7 +36,7 @@ internal class CommitBodyLookupElement(
       val tempAdditionalLength = lookupString.length - completionPrefix.length
       val removeTo = context.tailOffset
       val removeFrom = context.tailOffset - tempAdditionalLength
-      document.removeRange(removeFrom, removeTo)
+      document.deleteString(removeFrom, removeTo)
     }
 
     for (i in document.getLineNumber(caretOffset) until document.lineCount) {

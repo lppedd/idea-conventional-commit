@@ -44,11 +44,6 @@ internal fun Document.getLine(line: Int): CharSequence {
   return immutableCharSequence.subSequence(start, end)
 }
 
-@InlineOnly
-internal inline fun Document.removeRange(start: Int, end: Int) {
-  replaceString(start, end, "")
-}
-
 // endregion
 // region Editor
 

@@ -51,7 +51,7 @@ internal class ShowMoreCoAuthorsLookupElement(
     val startOffset = context.startOffset
     val removeTo = context.tailOffset
     val removeFrom = removeTo - lookupString.length
-    document.removeRange(removeFrom, removeTo - changingLookupString.length)
+    document.deleteString(removeFrom, removeTo - changingLookupString.length)
 
     invokeLaterOnEdt {
       handleCoAuthors(context, startOffset, commandGroupId, commandName)
