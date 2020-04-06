@@ -6,7 +6,7 @@ import com.github.lppedd.cc.parser.FooterContext.FooterValueContext
 /**
  * @author Edoardo Luppi
  */
-internal data class FooterTokens(
+data class FooterTokens(
     val type: FooterType = InvalidToken,
     val separator: Separator = Separator(false),
     val footer: Footer = InvalidToken,
@@ -24,7 +24,7 @@ internal data class FooterTokens(
   }
 }
 
-internal sealed class FooterContext {
+sealed class FooterContext {
   data class FooterTypeContext(val type: String) : FooterContext()
   data class FooterValueContext(val type: String, val value: String) : FooterContext()
 }

@@ -1,6 +1,7 @@
 package com.github.lppedd.cc.parser
 
 import com.intellij.openapi.util.TextRange
+import org.jetbrains.annotations.ApiStatus
 import kotlin.contracts.contract
 import kotlin.internal.InlineOnly
 import kotlin.math.max
@@ -8,7 +9,8 @@ import kotlin.math.max
 /**
  * @author Edoardo Luppi
  */
-internal object CCParser {
+@ApiStatus.Experimental
+object CCParser {
   private const val TYPE = "type"
   private const val SCOPE = "scope"
   private const val BRK_CHANGE = "brkChange"
@@ -83,34 +85,34 @@ internal object CCParser {
   }
 }
 
-internal interface Token
-internal interface Type : Token
-internal interface Scope : Token
-internal interface Subject : Token
-internal interface FooterType : Token
-internal interface Footer : Token
-internal inline class BreakingChange(val isPresent: Boolean)
-internal inline class Separator(val isPresent: Boolean)
-
-internal object InvalidToken :
-    Type,
-    Scope,
-    Subject,
-    FooterType,
-    Footer
-
-internal class ValidToken(val value: String, val range: TextRange) :
-    Type,
-    Scope,
-    Subject,
-    FooterType,
-    Footer
+@InlineOnly
+private inline fun IntRange.forCaretModel(): TextRange =
+  CCTextRange(first, maxOf(1, last + 1))
 
 internal fun Token.isInContext(offset: Int): Boolean {
   contract { returns(true) implies (this@isInContext is ValidToken) }
   return this is ValidToken && range.contains(offset)
 }
 
-@InlineOnly
-private inline fun IntRange.forCaretModel(): TextRange =
-  CCTextRange(first, maxOf(1, last + 1))
+interface Token
+interface Type : Token
+interface Scope : Token
+interface Subject : Token
+interface FooterType : Token
+interface Footer : Token
+inline class BreakingChange(val isPresent: Boolean)
+inline class Separator(val isPresent: Boolean)
+
+object InvalidToken :
+    Type,
+    Scope,
+    Subject,
+    FooterType,
+    Footer
+
+class ValidToken(val value: String, val range: TextRange) :
+    Type,
+    Scope,
+    Subject,
+    FooterType,
+    Footer

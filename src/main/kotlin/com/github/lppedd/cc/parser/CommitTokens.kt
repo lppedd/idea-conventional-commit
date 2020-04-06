@@ -5,7 +5,7 @@ import com.github.lppedd.cc.parser.CommitContext.*
 /**
  * @author Edoardo Luppi
  */
-internal data class CommitTokens(
+data class CommitTokens(
     val type: Type = InvalidToken,
     val scope: Scope = InvalidToken,
     val breakingChange: BreakingChange = BreakingChange(false),
@@ -27,7 +27,7 @@ internal data class CommitTokens(
   }
 }
 
-internal sealed class CommitContext {
+sealed class CommitContext {
   data class TypeCommitContext(val type: String) : CommitContext()
   data class ScopeCommitContext(val type: String, val scope: String) : CommitContext()
   data class SubjectCommitContext(val type: String, val scope: String, val subject: String) : CommitContext()
