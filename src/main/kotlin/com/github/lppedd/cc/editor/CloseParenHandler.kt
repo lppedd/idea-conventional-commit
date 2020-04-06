@@ -17,7 +17,7 @@ private class CloseParenHandler : BaseTypedHandler(')') {
     val textOffset = caretModel.offset
     val text = editor.document.immutableCharSequence
     return if (
-        lineOffset == (commitTokens.scope as ValidToken).range.last &&
+        lineOffset == (commitTokens.scope as ValidToken).range.endOffset &&
         textOffset < text.length && text[textOffset] == myChar) {
       // type(...|)
       editor.moveCaretRelatively(1)

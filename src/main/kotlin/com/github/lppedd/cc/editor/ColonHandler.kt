@@ -20,8 +20,8 @@ private class ColonHandler : BaseTypedHandler(':') {
     val scope = commitTokens.scope
     val lineOffset = editor.caretModel.logicalPosition.column
 
-    if (scope !is ValidToken && type.range.last == lineOffset ||
-        scope is ValidToken && scope.range.last == lineOffset - 1) {
+    if (scope !is ValidToken && type.range.endOffset == lineOffset ||
+        scope is ValidToken && scope.range.endOffset == lineOffset - 1) {
       doInsertColon(commitTokens.separator, commitTokens.subject, editor)
       return STOP
     }
@@ -32,8 +32,8 @@ private class ColonHandler : BaseTypedHandler(':') {
   override fun checkAutoPopup(commitTokens: CommitTokens, editor: Editor): Result {
     val lineOffset = editor.caretModel.logicalPosition.column
     return if (
-        (commitTokens.type as ValidToken).range.last == lineOffset ||
-        commitTokens.scope is ValidToken && commitTokens.scope.range.last == lineOffset - 1
+        (commitTokens.type as ValidToken).range.endOffset == lineOffset ||
+        commitTokens.scope is ValidToken && commitTokens.scope.range.endOffset == lineOffset - 1
     ) {
       editor.scheduleAutoPopup()
       STOP

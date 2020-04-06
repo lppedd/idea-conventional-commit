@@ -10,6 +10,7 @@ import com.intellij.codeInsight.lookup.LookupElementPresentation
 import com.intellij.codeInsight.lookup.impl.PrefixChangeListener
 import com.intellij.openapi.command.CommandProcessor
 import com.intellij.openapi.command.WriteCommandAction
+import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiDocumentManager
 
 private const val VALUE = "Show more"
@@ -74,18 +75,17 @@ internal class ShowMoreCoAuthorsLookupElement(
     val document = context.document
 
     val (lineStart, lineEnd) = document.getLineRangeByOffset(startOffset)
-    val footerText = document.getSegment(lineStart until document.textLength)
+    val footerText = document.getSegment(lineStart, lineEnd)
 
     val tokens = CCParser.parseFooter(footerText)
     val footerType = tokens.type
     val footer = tokens.footer
-    val footerRange = if (footerType is ValidToken && footer is ValidToken) {
-      val start = footerType.range.first
-      val end = footer.range.last
-      lineStart + start until lineStart + end
-    } else {
-      lineStart until lineEnd
-    }
+    val (footerStart, footerEnd) =
+      if (footerType is ValidToken && footer is ValidToken) {
+        TextRange(lineStart + footerType.range.startOffset, lineStart + footer.range.endOffset)
+      } else {
+        TextRange(lineStart, lineEnd)
+      }
 
     val text = dialog.getSelectedAuthors()
       .ifEmpty { return }
@@ -94,10 +94,16 @@ internal class ShowMoreCoAuthorsLookupElement(
 
     val psiFile = PsiDocumentManager.getInstance(context.project).getPsiFile(document)
     val toDo = {
-      document.replaceString(footerRange.first, footerRange.last + 1, text)
-      editor.moveCaretToOffset(footerRange.first + text.length)
+      document.replaceString(footerStart, footerEnd, text)
+      editor.moveCaretToOffset(footerStart + text.length)
     }
 
-    WriteCommandAction.runWriteCommandAction(context.project, commandName, commandGroupId, toDo, psiFile)
+    WriteCommandAction.runWriteCommandAction(
+      context.project,
+      commandName,
+      commandGroupId,
+      toDo,
+      psiFile
+    )
   }
 }

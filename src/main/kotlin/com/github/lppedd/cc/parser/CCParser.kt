@@ -1,5 +1,6 @@
 package com.github.lppedd.cc.parser
 
+import com.intellij.openapi.util.TextRange
 import kotlin.contracts.contract
 import kotlin.internal.InlineOnly
 import kotlin.math.max
@@ -78,7 +79,7 @@ internal object CCParser {
       endIndex--
     }
 
-    return ValidToken("$value", IntRange(startIndex, max(startIndex, endIndex)))
+    return ValidToken("$value", CCTextRange(startIndex, max(startIndex, endIndex)))
   }
 }
 
@@ -98,7 +99,7 @@ internal object InvalidToken :
     FooterType,
     Footer
 
-internal class ValidToken(val value: String, val range: IntRange) :
+internal class ValidToken(val value: String, val range: TextRange) :
     Type,
     Scope,
     Subject,
@@ -111,5 +112,5 @@ internal fun Token.isInContext(offset: Int): Boolean {
 }
 
 @InlineOnly
-private inline fun IntRange.forCaretModel(): IntRange =
-  IntRange(first, maxOf(1, last + 1))
+private inline fun IntRange.forCaretModel(): TextRange =
+  CCTextRange(first, maxOf(1, last + 1))

@@ -39,7 +39,7 @@ internal class CommitScopeLookupElement(
     val document = context.document
 
     val (lineStart, lineEnd) = editor.getCurrentLineRange()
-    val lineText = document.getSegment(lineStart until lineEnd)
+    val lineText = document.getSegment(lineStart, lineEnd)
     val (type, _, breakingChange, _, subject) = CCParser.parseHeader(lineText)
     val text = StringBuilder(150)
 
@@ -47,7 +47,7 @@ internal class CommitScopeLookupElement(
     // starting from the original position
     val typeStartOffset = if (type is ValidToken) {
       text += type.value
-      lineStart + type.range.first
+      lineStart + type.range.startOffset
     } else {
       lineStart
     }

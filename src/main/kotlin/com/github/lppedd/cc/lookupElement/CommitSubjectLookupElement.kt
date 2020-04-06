@@ -39,9 +39,9 @@ internal class CommitSubjectLookupElement(
     val document = context.document
 
     val (lineStart, lineEnd) = editor.getCurrentLineRange()
-    val line = document.getSegment(lineStart until lineEnd)
+    val line = document.getSegment(lineStart, lineEnd)
     val subject = CCParser.parseHeader(line).subject
-    val subjectStartOffset = lineStart + ((subject as? ValidToken)?.range?.first ?: 0)
+    val subjectStartOffset = lineStart + ((subject as? ValidToken)?.range?.startOffset ?: 0)
     val subjectText = " $lookupString"
 
     document.replaceString(subjectStartOffset, lineEnd, subjectText)

@@ -33,8 +33,8 @@ internal class CommitFooterTypeLookupElement(
     val editor = context.editor
     val document = context.document
 
-    val (lineStart, lineEnd) = editor.getCurrentLineRange()
-    val lineText = document.immutableCharSequence.subSequence(lineStart, lineEnd)
+    val range = editor.getCurrentLineRange()
+    val lineText = document.getText(range)
     val (footerType, separator, footerValue) = CCParser.parseFooter(lineText)
     val caretShift: Int
     val textToAdd: String
@@ -54,7 +54,7 @@ internal class CommitFooterTypeLookupElement(
       }
 
       val text = footerType.range.replace(lineText, lookupString)
-      document.replaceString(context.startOffset, lineEnd, "$text$textToAdd")
+      document.replaceString(context.startOffset, range.endOffset, "$text$textToAdd")
     } else {
       document.insertString(context.tailOffset, ": ")
       caretShift = 2

@@ -12,7 +12,6 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.EditorModificationUtil
 import com.intellij.openapi.editor.ex.util.EditorUtil
 import com.intellij.openapi.progress.ProgressManager
-import com.intellij.openapi.util.Couple
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiFile
@@ -30,8 +29,8 @@ internal inline val PsiFile.document: Document?
 // region Document
 
 @InlineOnly
-internal inline fun Document.getSegment(range: IntRange): CharSequence =
-  immutableCharSequence.subSequence(range)
+internal inline fun Document.getSegment(start: Int, end: Int): CharSequence =
+  immutableCharSequence.subSequence(start, end)
 
 internal fun Document.getLineRange(line: Int): TextRange =
   TextRange(getLineStartOffset(line), getLineEndOffset(line))
@@ -86,17 +85,8 @@ internal fun Editor.getCurrentLine(): CharSequence {
 internal fun Editor.getCurrentLineUntilCaret(): CharSequence {
   val logicalPosition = caretModel.logicalPosition
   val lineStartOffset = document.getLineStartOffset(logicalPosition.line)
-  return document.getSegment(lineStartOffset until lineStartOffset + logicalPosition.column)
+  return document.getSegment(lineStartOffset, lineStartOffset + logicalPosition.column)
 }
-
-// endregion
-// region Couple
-
-@InlineOnly
-internal inline operator fun <T> Couple<T>.component1(): T? = first
-
-@InlineOnly
-internal inline operator fun <T> Couple<T>.component2(): T? = second
 
 // endregion
 // region TextRange
@@ -109,26 +99,6 @@ internal inline operator fun TextRange.component2(): Int = endOffset
 
 @InlineOnly
 internal inline operator fun TextRange.component3(): Boolean = isEmpty
-
-// endregion
-// region IntProgression
-
-@InlineOnly
-internal inline operator fun IntProgression.component1(): Int = first
-
-@InlineOnly
-internal inline operator fun IntProgression.component2(): Int = last
-
-@InlineOnly
-internal inline val IntRange.isEmpty: Boolean
-  get() = first >= last
-
-@InlineOnly
-internal inline fun IntProgression.replace(
-    text: CharSequence,
-    rangeReplacement: CharSequence,
-): CharSequence =
-  text.replaceRange(first, last, rangeReplacement)
 
 // endregion
 // region LookupImpl

@@ -6,6 +6,7 @@ import com.github.lppedd.cc.parser.ValidToken
 import com.github.lppedd.cc.psiElement.CommitFooterPsiElement
 import com.intellij.codeInsight.completion.InsertionContext
 import com.intellij.codeInsight.lookup.LookupElementPresentation
+import com.intellij.openapi.util.TextRange
 
 /**
  * @author Edoardo Luppi
@@ -39,19 +40,19 @@ internal class CommitFooterLookupElement(
     val removeFrom = removeTo - tempAdditionalLength
     val oldFooterText =
       document
-        .getSegment(lineStart until document.textLength)
+        .getSegment(lineStart, document.textLength)
         .removeRange(removeFrom, removeTo)
 
     val footer = CCParser.parseFooter(oldFooterText).footer
     val footerText = " $lookupString"
-    val footerRange = if (footer is ValidToken) {
+    val (footerStart, footerEnd) = if (footer is ValidToken) {
       val (start, end) = footer.range
-      lineStart + start until lineStart + end + tempAdditionalLength
+      TextRange(lineStart + start, lineStart + end + tempAdditionalLength)
     } else {
-      lineStart until lineEnd
+      TextRange(lineStart, lineEnd)
     }
 
-    document.replaceString(footerRange.first, footerRange.last + 1, footerText)
-    editor.moveCaretToOffset(footerRange.first + footerText.length)
+    document.replaceString(footerStart, footerEnd, footerText)
+    editor.moveCaretToOffset(footerStart + footerText.length)
   }
 }

@@ -38,13 +38,13 @@ private class CommitTabAction : TabAction() {
 
       if (document.getUserData(CommitMessage.DATA_KEY) != null) {
         val (lineStart, lineEnd) = editor.getCurrentLineRange()
-        val lineText = document.getSegment(lineStart until lineEnd)
+        val lineText = document.getSegment(lineStart, lineEnd)
         val lineCaretOffset = editor.caretModel.offset - lineStart
         val scope = CCParser.parseHeader(lineText).scope
 
         if (scope is ValidToken && (
-                lineCaretOffset == scope.range.first - 1 ||
-                lineCaretOffset == scope.range.last)) {
+                lineCaretOffset == scope.range.startOffset - 1 ||
+                lineCaretOffset == scope.range.endOffset)) {
           document.putUserData(MOVE_CARET_KEY, Unit)
           return true
         }

@@ -1,7 +1,6 @@
 package com.github.lppedd.cc.editor
 
 import com.github.lppedd.cc.insertStringAtCaret
-import com.github.lppedd.cc.isEmpty
 import com.github.lppedd.cc.moveCaretRelatively
 import com.github.lppedd.cc.parser.CommitTokens
 import com.github.lppedd.cc.parser.ValidToken
@@ -18,7 +17,7 @@ private class OpenParenHandler : BaseTypedHandler('(') {
     val type = commitTokens.type as ValidToken
     val lineOffset = editor.caretModel.logicalPosition.column
 
-    if (type.range.last != lineOffset) {
+    if (type.range.endOffset != lineOffset) {
       return CONTINUE
     }
 
@@ -35,7 +34,7 @@ private class OpenParenHandler : BaseTypedHandler('(') {
 
   override fun checkAutoPopup(commitTokens: CommitTokens, editor: Editor): Result {
     val lineOffset = editor.caretModel.logicalPosition.column
-    return if ((commitTokens.type as ValidToken).range.last == lineOffset) {
+    return if ((commitTokens.type as ValidToken).range.endOffset == lineOffset) {
       editor.scheduleAutoPopup()
       STOP
     } else {

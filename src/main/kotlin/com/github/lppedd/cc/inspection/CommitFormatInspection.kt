@@ -73,7 +73,7 @@ internal class CommitFormatInspection : CommitBaseInspection() {
       psiFile: PsiFile,
       firstLine: CharSequence,
   ): List<ProblemDescriptor> {
-    val start = type.range.first
+    val start = type.range.startOffset
 
     if (start == 0) {
       return emptyList()
