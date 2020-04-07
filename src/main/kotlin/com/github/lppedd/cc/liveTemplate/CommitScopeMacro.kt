@@ -1,13 +1,12 @@
 package com.github.lppedd.cc.liveTemplate
 
-import com.github.lppedd.cc.api.SCOPE_EP
-import com.github.lppedd.cc.configuration.CCConfigService
+import com.github.lppedd.cc.completion.providers.ScopeCompletionProvider
+import com.github.lppedd.cc.completion.resultset.LookupResultSet
 import com.github.lppedd.cc.doWhileCalculating
 import com.github.lppedd.cc.getTemplateState
 import com.github.lppedd.cc.invokeLaterOnEdt
 import com.github.lppedd.cc.lookupElement.CommitNoScopeLookupElement
-import com.github.lppedd.cc.lookupElement.CommitScopeLookupElement
-import com.github.lppedd.cc.psiElement.CommitScopePsiElement
+import com.github.lppedd.cc.parser.CommitContext.ScopeCommitContext
 import com.intellij.codeInsight.completion.PrefixMatcher
 import com.intellij.codeInsight.lookup.LookupArranger.DefaultArranger
 import com.intellij.codeInsight.lookup.LookupElement
@@ -17,13 +16,13 @@ import com.intellij.codeInsight.lookup.LookupManager
 import com.intellij.codeInsight.lookup.impl.LookupImpl
 import com.intellij.codeInsight.lookup.impl.LookupImpl.FocusDegree
 import com.intellij.codeInsight.template.ExpressionContext
-import com.intellij.openapi.project.Project
 
 /**
  * @author Edoardo Luppi
  */
 private class CommitScopeMacro : CommitMacro() {
-  override fun getName() = "commitScope"
+  override fun getName() =
+    "commitScope"
 
   override fun getCommitTokens(context: ExpressionContext) {
     val editor = context.editor ?: return
@@ -48,21 +47,13 @@ private class CommitScopeMacro : CommitMacro() {
           }
         }
       })
-      lookup.doWhileCalculating { queryProviders(project, commitType, lookup) }
+      lookup.doWhileCalculating {
+        val provider = ScopeCompletionProvider(project, ScopeCommitContext(commitType, ""))
+        provider.complete(LookupResultSet(lookup))
+      }
       lookup.showLookup()
       lookup.refreshUi(true, true)
       lookup.ensureSelectionVisible(true)
     }
-  }
-
-  private fun queryProviders(project: Project, commitType: String, lookup: LookupImpl) {
-    SCOPE_EP.getExtensions(project)
-      .asSequence()
-      .sortedBy(CCConfigService.getInstance(project)::getProviderOrder)
-      .flatMap { it.getCommitScopes(commitType).asSequence() }
-      .map { CommitScopePsiElement(project, it) }
-      .mapIndexed(::CommitScopeLookupElement)
-      .distinctBy(CommitScopeLookupElement::getLookupString)
-      .forEach { lookup.addItem(it, PrefixMatcher.ALWAYS_TRUE) }
   }
 }

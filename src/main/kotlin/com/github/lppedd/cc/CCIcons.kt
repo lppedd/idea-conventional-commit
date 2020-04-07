@@ -13,3 +13,4 @@ import javax.swing.Icon
 @JvmField val ICON_BODY: Icon = IconLoader.getIcon("/icons/commitBody.svg")
 @JvmField val ICON_FOOTER: Icon = IconLoader.getIcon("/icons/commitFooter.svg")
 @JvmField val ICON_ARROW_RIGHT: Icon = IconLoader.getIcon("/icons/arrowRight.svg")
+@JvmField val ICON_DISABLED: Icon = IconLoader.getIcon("/icons/defaultPresentationDisabled.svg")
