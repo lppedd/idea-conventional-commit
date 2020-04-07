@@ -11,7 +11,8 @@ import com.intellij.codeInsight.template.*
 import com.intellij.openapi.project.Project
 
 internal abstract class CommitMacro : Macro() {
-  override fun getPresentableName() = "$name()"
+  override fun getPresentableName() =
+    "$name()"
 
   override fun calculateResult(
       params: Array<Expression>,

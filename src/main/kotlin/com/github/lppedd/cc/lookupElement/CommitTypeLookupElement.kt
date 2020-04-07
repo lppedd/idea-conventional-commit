@@ -16,6 +16,7 @@ internal open class CommitTypeLookupElement(
     private val psiElement: CommitTypePsiElement,
 ) : CommitLookupElement() {
   override val weight: UInt = WEIGHT_TYPE
+  override val sourceProviderId: String = psiElement.ownedBy
 
   override fun getPsiElement(): CommitTypePsiElement =
     psiElement

@@ -10,6 +10,7 @@ import com.intellij.openapi.application.ex.ApplicationUtil
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.EditorModificationUtil
+import com.intellij.openapi.editor.LogicalPosition
 import com.intellij.openapi.editor.ex.util.EditorUtil
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.util.TextRange
@@ -24,6 +25,15 @@ import kotlin.internal.InlineOnly
 internal inline val PsiFile.document: Document?
   @InlineOnly
   get() = PsiDocumentManager.getInstance(project).getDocument(this)
+
+// endregion
+// region LogicalPosition
+
+@InlineOnly
+internal inline operator fun LogicalPosition.component1() = line
+
+@InlineOnly
+internal inline operator fun LogicalPosition.component2() = column
 
 // endregion
 // region Document

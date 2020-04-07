@@ -16,6 +16,8 @@ repositories {
 }
 
 dependencies {
+  compileOnly(kotlin("stdlib-jdk8", "1.3.31"))
+
   implementation("cglib:cglib-nodep:3.3.0")
   implementation("org.json", "json", "20190722")
   implementation("com.github.everit-org.json-schema", "org.everit.json.schema", "1.12.1")
