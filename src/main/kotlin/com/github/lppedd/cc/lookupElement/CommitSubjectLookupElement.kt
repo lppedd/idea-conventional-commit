@@ -1,6 +1,7 @@
 package com.github.lppedd.cc.lookupElement
 
 import com.github.lppedd.cc.*
+import com.github.lppedd.cc.completion.providers.SubjectProviderWrapper
 import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.ValidToken
 import com.github.lppedd.cc.psiElement.CommitSubjectPsiElement
@@ -12,9 +13,10 @@ import com.intellij.codeInsight.lookup.LookupElementPresentation
  */
 internal class CommitSubjectLookupElement(
     override val index: Int,
+    override val provider: SubjectProviderWrapper,
     private val psiElement: CommitSubjectPsiElement,
 ) : CommitLookupElement() {
-  override val weight: UInt = WEIGHT_SUBJECT
+  override val baseWeight: Int = WEIGHT_SUBJECT
 
   override fun getPsiElement(): CommitSubjectPsiElement =
     psiElement

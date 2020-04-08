@@ -3,6 +3,7 @@
 package com.github.lppedd.cc.completion.providers
 
 import com.github.lppedd.cc.api.CommitScopeProvider
+import com.github.lppedd.cc.api.ProviderPresentation
 import com.github.lppedd.cc.api.SCOPE_EP
 import com.github.lppedd.cc.completion.resultset.ResultSet
 import com.github.lppedd.cc.configuration.CCConfigService
@@ -21,21 +22,35 @@ internal class ScopeCompletionProvider(
     private val project: Project,
     private val context: ScopeCommitContext,
 ) : CommitCompletionProvider<CommitScopeProvider> {
-  private val scopeProviders =
-    SCOPE_EP.getExtensions(project)
-      .asSequence()
-      .sortedBy(CCConfigService.getInstance(project)::getProviderOrder)
-
-  override val providers = scopeProviders.toList()
+  override val providers: List<CommitScopeProvider> = SCOPE_EP.getExtensions(project)
   override val stopHere = false
 
   override fun complete(resultSet: ResultSet) {
     val rs = resultSet.withPrefixMatcher(context.scope.trim())
-    scopeProviders
-      .flatMap { runWithCheckCanceled { it.getCommitScopes(context.type).asSequence() } }
-      .map { CommitScopePsiElement(project, it) }
-      .mapIndexed(::CommitScopeLookupElement)
+    providers.asSequence()
+      .flatMap { provider ->
+        runWithCheckCanceled {
+          val wrapper = ScopeProviderWrapper(provider)
+          provider.getCommitScopes(context.type)
+            .asSequence()
+            .take(200)
+            .map { wrapper to it }
+        }
+      }
+      .map { it.first to CommitScopePsiElement(project, it.second) }
+      .mapIndexed { i, (provider, psi) -> CommitScopeLookupElement(i, provider, psi) }
       .distinctBy(CommitScopeLookupElement::getLookupString)
       .forEach(rs::addElement)
   }
+}
+
+internal class ScopeProviderWrapper(private val provider: CommitScopeProvider) : ProviderWrapper {
+  override fun getId(): String =
+    provider.getId()
+
+  override fun getPresentation(): ProviderPresentation =
+    provider.getPresentation()
+
+  override fun getPriority(project: Project) =
+    Priority(CCConfigService.getInstance(project).getProviderOrder(provider))
 }

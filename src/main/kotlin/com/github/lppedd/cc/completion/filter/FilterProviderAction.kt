@@ -17,9 +17,9 @@ internal class FilterProviderAction(
     private val lookup: LookupImpl,
     private val provider: CommitTokenProvider,
 ) : AnAction("Provider: ${provider.getPresentation().name}") {
-  private val providerId: String = provider.getId()
+  private val providerId = provider.getId()
   private var isFiltered = false
-  private var backupItems: List<CommitLookupElement> = emptyList()
+  private var backupItems = emptyList<CommitLookupElement>()
 
   override fun actionPerformed(ignored: AnActionEvent) {
     isFiltered = !isFiltered
@@ -47,7 +47,7 @@ internal class FilterProviderAction(
     backupItems = lookup.items
       .asSequence()
       .filterIsInstance<CommitLookupElement>()
-      .filter { providerId == it.sourceProviderId }
+      .filter { providerId == it.provider.getId() }
       .onEach {
         val delegatePrefixMatcher = arranger.itemMatcher(it)
         val newPrefixMatcher = FilterPrefixMatcher(delegatePrefixMatcher)

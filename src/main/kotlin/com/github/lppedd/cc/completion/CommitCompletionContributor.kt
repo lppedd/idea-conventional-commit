@@ -8,6 +8,7 @@ import com.github.lppedd.cc.completion.providers.*
 import com.github.lppedd.cc.completion.resultset.WrapperCompletionResultSet
 import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.configuration.CCConfigService.CompletionType.TEMPLATE
+import com.github.lppedd.cc.noop.NoopList
 import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.CommitContext.*
 import com.github.lppedd.cc.parser.FooterContext.FooterTypeContext
@@ -16,6 +17,7 @@ import com.intellij.codeInsight.completion.*
 import com.intellij.codeInsight.completion.CompletionType.BASIC
 import com.intellij.codeInsight.completion.impl.CompletionSorterImpl
 import com.intellij.codeInsight.completion.impl.PreferStartMatching
+import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementWeigher
 import com.intellij.openapi.fileTypes.PlainTextLanguage
 import com.intellij.openapi.progress.ProgressManager
@@ -51,7 +53,7 @@ private class CommitCompletionContributor : CompletionContributor() {
     val resultSet = result
       .caseInsensitive()
       .withPrefixMatcher(FlatPrefixMatcher(parameters.getCompletionPrefix()))
-      .withRelevanceSorter(sorter(CommitLookupElementWeigher))
+      .withRelevanceSorter(sorter(CommitLookupElementWeigher(project)))
 
     val myResultSet = WrapperCompletionResultSet(resultSet)
 
@@ -101,7 +103,9 @@ private class CommitCompletionContributor : CompletionContributor() {
     if (providers.isNotEmpty()) {
       if (process is CompletionProgressIndicator) {
         ProgressManager.checkCanceled()
-        safelyReleaseSemaphore(process)
+
+        safelySetNoopListOnLookupArranger(process)
+        safelyReleaseProcessSemaphore(process)
 
         val filterableProviders = providers.flatMap { it.providers.take(3) }.take(6)
         MenuEnhancerLookupListener(process.lookup).setProviders(filterableProviders)
@@ -125,20 +129,51 @@ private class CommitCompletionContributor : CompletionContributor() {
   }
 
   /**
+   * This is a workaround for a standard behavior which stores some elements
+   * on the `CompletionLookupArrangerImpl#myFrozenItems` list.
+   * Lookup elements are treated bunch by bunch, and those frozen items are kept
+   * on the top of the popup `ListModel`. We don't want this, so we try to swap
+   * the standard list with a no-op list, as in this way no elements get ever stored.
+   */
+  private fun safelySetNoopListOnLookupArranger(process: CompletionProgressIndicator) {
+    try {
+      @Suppress("UNCHECKED_CAST")
+      process.getArranger().setFrozenItemsList(NoopList as MutableList<LookupElement?>)
+    } catch (ignored: Exception) {
+      // Let's just continue.
+      // Though elements won't be ordered as we'd like
+    }
+  }
+
+  /**
    * This is a workaround to a standard behavior which allows the UI
    * to freeze for about 2 seconds if the first `LookupElement` isn't
    * immediately added to the Lookup.
-   *
-   * This allow for auto-inserting a single element without confusing
-   * the user by showing it, but as our `LookupElement`s never auto-complete
+   * This standard behavior allows for auto-inserting a single element without
+   * confusing the user by showing it, but as our `LookupElement`s never auto-complete,
    * we can get rid of it.
    */
-  private fun safelyReleaseSemaphore(process: CompletionProgressIndicator) {
+  private fun safelyReleaseProcessSemaphore(process: CompletionProgressIndicator) {
     try {
       process.getFreezeSemaphore().up()
     } catch (ignored: Exception) {
       // Let's just continue
     }
+  }
+}
+
+@InlineOnly
+private inline fun CompletionProgressIndicator.getArranger(): CompletionLookupArrangerImpl =
+  javaClass.getDeclaredField("myArranger").let {
+    it.isAccessible = true
+    it.get(this) as CompletionLookupArrangerImpl
+  }
+
+@InlineOnly
+private inline fun CompletionLookupArrangerImpl.setFrozenItemsList(list: MutableList<LookupElement?>) {
+  javaClass.getDeclaredField("myFrozenItems").let {
+    it.isAccessible = true
+    it.set(this, list)
   }
 }
 

@@ -4,10 +4,10 @@ package com.github.lppedd.cc.completion.providers
 
 import com.github.lppedd.cc.api.CommitFooterProvider
 import com.github.lppedd.cc.api.FOOTER_EP
-import com.github.lppedd.cc.configuration.CCConfigService
+import com.github.lppedd.cc.api.ProviderPresentation
 import com.github.lppedd.cc.completion.resultset.ResultSet
+import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.lookupElement.CommitFooterTypeLookupElement
-import com.github.lppedd.cc.lookupElement.CommitLookupElement
 import com.github.lppedd.cc.parser.FooterContext.FooterTypeContext
 import com.github.lppedd.cc.psiElement.CommitFooterTypePsiElement
 import com.github.lppedd.cc.runWithCheckCanceled
@@ -22,21 +22,35 @@ internal class FooterTypeCompletionProvider(
     private val project: Project,
     private val context: FooterTypeContext,
 ) : CommitCompletionProvider<CommitFooterProvider> {
-  private val footerProviders =
-    FOOTER_EP.getExtensions(project)
-      .asSequence()
-      .sortedBy(CCConfigService.getInstance(project)::getProviderOrder)
-
-  override val providers = footerProviders.toList()
+  override val providers: List<CommitFooterProvider> = FOOTER_EP.getExtensions(project)
   override val stopHere = false
 
   override fun complete(resultSet: ResultSet) {
     val rs = resultSet.withPrefixMatcher(context.type)
-    footerProviders
-      .flatMap { runWithCheckCanceled { it.getCommitFooterTypes().asSequence() } }
-      .map { CommitFooterTypePsiElement(project, it) }
-      .mapIndexed(::CommitFooterTypeLookupElement)
-      .distinctBy(CommitLookupElement::getLookupString)
+    providers.asSequence()
+      .flatMap { provider ->
+        runWithCheckCanceled {
+          val wrapper = FooterTypeProviderWrapper(provider)
+          provider.getCommitFooterTypes()
+            .asSequence()
+            .take(200)
+            .map { wrapper to it }
+        }
+      }
+      .map { it.first to CommitFooterTypePsiElement(project, it.second) }
+      .mapIndexed { i, (provider, psi) -> CommitFooterTypeLookupElement(i, provider, psi) }
+      .distinctBy(CommitFooterTypeLookupElement::getLookupString)
       .forEach(rs::addElement)
   }
+}
+
+internal class FooterTypeProviderWrapper(private val provider: CommitFooterProvider) : ProviderWrapper {
+  override fun getId(): String =
+    provider.getId()
+
+  override fun getPresentation(): ProviderPresentation =
+    provider.getPresentation()
+
+  override fun getPriority(project: Project) =
+    Priority(CCConfigService.getInstance(project).getProviderOrder(provider))
 }

@@ -22,7 +22,7 @@ private val BLANK_LINES_REGEX = Regex("""^\s*$""", MULTILINE)
  * @author Edoardo Luppi
  */
 @ApiStatus.Internal
-private class DefaultCommitTokenProvider(private val project: Project) :
+internal class DefaultCommitTokenProvider(private val project: Project) :
     CommitTypeProvider,
     CommitScopeProvider,
     CommitFooterProvider {

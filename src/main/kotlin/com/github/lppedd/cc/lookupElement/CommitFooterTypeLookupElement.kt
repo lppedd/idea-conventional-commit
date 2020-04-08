@@ -1,6 +1,7 @@
 package com.github.lppedd.cc.lookupElement
 
 import com.github.lppedd.cc.*
+import com.github.lppedd.cc.completion.providers.FooterTypeProviderWrapper
 import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.ValidToken
 import com.github.lppedd.cc.psiElement.CommitFooterTypePsiElement
@@ -12,9 +13,10 @@ import com.intellij.codeInsight.lookup.LookupElementPresentation
  */
 internal class CommitFooterTypeLookupElement(
     override val index: Int,
+    override val provider: FooterTypeProviderWrapper,
     private val psiElement: CommitFooterTypePsiElement,
 ) : CommitLookupElement() {
-  override val weight: UInt = WEIGHT_FOOTER_TYPE
+  override val baseWeight: Int = WEIGHT_FOOTER_TYPE
 
   override fun getPsiElement(): CommitFooterTypePsiElement =
     psiElement

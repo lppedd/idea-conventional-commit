@@ -3,9 +3,10 @@
 package com.github.lppedd.cc.completion.providers
 
 import com.github.lppedd.cc.api.CommitTypeProvider
+import com.github.lppedd.cc.api.ProviderPresentation
 import com.github.lppedd.cc.api.TYPE_EP
-import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.completion.resultset.ResultSet
+import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.lookupElement.CommitTypeLookupElement
 import com.github.lppedd.cc.parser.CommitContext.TypeCommitContext
 import com.github.lppedd.cc.psiElement.CommitTypePsiElement
@@ -21,26 +22,35 @@ internal class TypeCompletionProvider(
     private val project: Project,
     private val context: TypeCommitContext,
 ) : CommitCompletionProvider<CommitTypeProvider> {
-  private val typeProviders =
-    TYPE_EP.getExtensions(project)
-      .asSequence()
-      .sortedBy(CCConfigService.getInstance(project)::getProviderOrder)
-
-  override val providers = typeProviders.toList()
+  override val providers: List<CommitTypeProvider> = TYPE_EP.getExtensions(project)
   override val stopHere = false
 
   override fun complete(resultSet: ResultSet) {
     val rs = resultSet.withPrefixMatcher(context.type)
-    typeProviders.flatMap {
+    providers.asSequence()
+      .flatMap { provider ->
         runWithCheckCanceled {
-          it.getCommitTypes(context.type)
+          val wrapper = TypeProviderWrapper(provider)
+          provider.getCommitTypes(context.type)
             .asSequence()
-            .map { v -> it to v }
+            .take(200)
+            .map { wrapper to it }
         }
       }
-      .map { CommitTypePsiElement(project, it.second, it.first.getId()) }
-      .mapIndexed(::CommitTypeLookupElement)
+      .map { it.first to CommitTypePsiElement(project, it.second) }
+      .mapIndexed { i, (provider, psi) -> CommitTypeLookupElement(i, provider, psi) }
       .distinctBy(CommitTypeLookupElement::getLookupString)
       .forEach(rs::addElement)
   }
+}
+
+internal class TypeProviderWrapper(private val provider: CommitTypeProvider) : ProviderWrapper {
+  override fun getId(): String =
+    provider.getId()
+
+  override fun getPresentation(): ProviderPresentation =
+    provider.getPresentation()
+
+  override fun getPriority(project: Project) =
+    Priority(CCConfigService.getInstance(project).getProviderOrder(provider))
 }
