@@ -1,4 +1,4 @@
-@file:Suppress("DEPRECATION")
+@file:Suppress("DEPRECATION", "UnstableApiUsage", "RedundantNotNullExtensionReceiverOfInline")
 
 package com.github.lppedd.cc.completion
 
@@ -23,7 +23,11 @@ import com.intellij.openapi.fileTypes.PlainTextLanguage
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.vcs.ui.CommitMessage
 import com.intellij.patterns.PlatformPatterns
+import com.intellij.util.ReflectionUtil.findField
 import com.intellij.util.concurrency.Semaphore
+import org.jetbrains.annotations.ApiStatus
+import java.lang.reflect.Field
+import kotlin.LazyThreadSafetyMode.PUBLICATION
 import kotlin.internal.InlineOnly
 
 private val PLAIN_TEXT_PATTERN = PlatformPatterns.psiElement().withLanguage(PlainTextLanguage.INSTANCE)
@@ -33,7 +37,20 @@ private val PLAIN_TEXT_PATTERN = PlatformPatterns.psiElement().withLanguage(Plai
  *
  * @author Edoardo Luppi
  */
-private class CommitCompletionContributor : CompletionContributor() {
+@ApiStatus.Internal
+private open class CommitCompletionContributor : CompletionContributor() {
+  private val myArrangerField: Field by lazy(PUBLICATION) {
+    findField(CompletionProgressIndicator::class.java, CompletionLookupArrangerImpl::class.java, "myArranger")
+  }
+
+  private val myFrozenItemsField: Field by lazy(PUBLICATION) {
+    findField(CompletionLookupArrangerImpl::class.java, List::class.java, "myFrozenItems")
+  }
+
+  private val myFreezeSemaphoreField: Field by lazy(PUBLICATION) {
+    findField(CompletionProgressIndicator::class.java, Semaphore::class.java, "myFreezeSemaphore")
+  }
+
   override fun fillCompletionVariants(parameters: CompletionParameters, result: CompletionResultSet) {
     if (parameters.completionType != BASIC || !PLAIN_TEXT_PATTERN.accepts(parameters.position)) {
       return
@@ -160,26 +177,17 @@ private class CommitCompletionContributor : CompletionContributor() {
       // Let's just continue
     }
   }
+
+  @InlineOnly
+  private inline fun CompletionProgressIndicator.getArranger(): CompletionLookupArrangerImpl =
+    myArrangerField.get(this) as CompletionLookupArrangerImpl
+
+  @InlineOnly
+  private inline fun CompletionLookupArrangerImpl.setFrozenItemsList(list: MutableList<LookupElement?>) {
+    myFrozenItemsField.set(this, list)
+  }
+
+  @InlineOnly
+  private inline fun CompletionProgressIndicator.getFreezeSemaphore(): Semaphore =
+    myFreezeSemaphoreField.get(this) as Semaphore
 }
-
-@InlineOnly
-private inline fun CompletionProgressIndicator.getArranger(): CompletionLookupArrangerImpl =
-  javaClass.getDeclaredField("myArranger").let {
-    it.isAccessible = true
-    it.get(this) as CompletionLookupArrangerImpl
-  }
-
-@InlineOnly
-private inline fun CompletionLookupArrangerImpl.setFrozenItemsList(list: MutableList<LookupElement?>) {
-  javaClass.getDeclaredField("myFrozenItems").let {
-    it.isAccessible = true
-    it.set(this, list)
-  }
-}
-
-@InlineOnly
-private inline fun CompletionProgressIndicator.getFreezeSemaphore(): Semaphore =
-  javaClass.getDeclaredField("myFreezeSemaphore").let {
-    it.isAccessible = true
-    it.get(this) as Semaphore
-  }

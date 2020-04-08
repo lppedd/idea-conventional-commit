@@ -40,8 +40,8 @@
 
     <completion.contributor
         id="commitTypeCompletion"
-        language="TEXT"
         order="first, before commitCompletion"
+        language="TEXT"
         implementationClass="com.github.lppedd.cc.completion.CommitCompletionContributor"
     />
 
