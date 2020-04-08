@@ -75,7 +75,7 @@ internal class ShowMoreCoAuthorsLookupElement(
     val document = context.document
 
     val (lineStart, lineEnd) = document.getLineRangeByOffset(startOffset)
-    val footerText = document.getSegment(lineStart, lineEnd)
+    val footerText = document.getSegment(lineStart, document.textLength)
 
     val tokens = CCParser.parseFooter(footerText)
     val footerType = tokens.type
