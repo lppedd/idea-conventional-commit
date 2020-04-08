@@ -1,5 +1,6 @@
 package com.github.lppedd.cc.lookupElement
 
+import com.github.lppedd.cc.completion.providers.ProviderWrapper
 import com.github.lppedd.cc.psiElement.CommitFakePsiElement
 import com.intellij.codeInsight.lookup.AutoCompletionPolicy
 import com.intellij.codeInsight.lookup.LookupElement
@@ -9,8 +10,8 @@ import com.intellij.codeInsight.lookup.LookupElement
  */
 internal abstract class CommitLookupElement : LookupElement() {
   abstract val index: Int
-  abstract val weight: UInt
-  open val sourceProviderId: String = ""
+  abstract val baseWeight: Int
+  abstract val provider: ProviderWrapper
 
   @Volatile
   var valid: Boolean = true

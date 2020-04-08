@@ -7,10 +7,7 @@ import com.intellij.psi.impl.FakePsiElement
 /**
  * @author Edoardo Luppi
  */
-internal abstract class CommitFakePsiElement(
-    private val project: Project,
-    val ownedBy: String = "",
-) : FakePsiElement() {
+internal abstract class CommitFakePsiElement(private val project: Project) : FakePsiElement() {
   private val psiManager by lazy { PsiManager.getInstance(project) }
 
   override fun getContainingFile() = null

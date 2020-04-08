@@ -1,6 +1,7 @@
 package com.github.lppedd.cc.lookupElement
 
 import com.github.lppedd.cc.*
+import com.github.lppedd.cc.completion.providers.BodyProviderWrapper
 import com.github.lppedd.cc.psiElement.CommitBodyPsiElement
 import com.intellij.codeInsight.completion.InsertionContext
 import com.intellij.codeInsight.lookup.LookupElementPresentation
@@ -10,10 +11,11 @@ import com.intellij.codeInsight.lookup.LookupElementPresentation
  */
 internal class CommitBodyLookupElement(
     override val index: Int,
+    override val provider: BodyProviderWrapper,
     private val psiElement: CommitBodyPsiElement,
     private val completionPrefix: String,
 ) : CommitLookupElement() {
-  override val weight: UInt = WEIGHT_BODY
+  override val baseWeight: Int = WEIGHT_BODY
 
   override fun getPsiElement(): CommitBodyPsiElement =
     psiElement

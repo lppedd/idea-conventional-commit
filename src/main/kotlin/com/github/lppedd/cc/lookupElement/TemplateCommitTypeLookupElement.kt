@@ -1,6 +1,7 @@
 package com.github.lppedd.cc.lookupElement
 
 import com.github.lppedd.cc.*
+import com.github.lppedd.cc.completion.providers.TypeProviderWrapper
 import com.github.lppedd.cc.psiElement.CommitTypePsiElement
 import com.intellij.codeInsight.completion.InsertionContext
 import com.intellij.codeInsight.template.Template
@@ -19,8 +20,9 @@ import com.intellij.openapi.application.runWriteAction
  */
 internal class TemplateCommitTypeLookupElement(
     index: Int,
+    provider: TypeProviderWrapper,
     psiElement: CommitTypePsiElement,
-) : CommitTypeLookupElement(index, psiElement) {
+) : CommitTypeLookupElement(index, provider, psiElement) {
   private val templateSettings = TemplateSettings.getInstance()
 
   /**

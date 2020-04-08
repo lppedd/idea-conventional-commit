@@ -1,6 +1,7 @@
 package com.github.lppedd.cc.configuration
 
 import com.github.lppedd.cc.DEFAULT_PROVIDER_ID
+import com.github.lppedd.cc.DEFAULT_VCS_PROVIDER_ID
 import com.github.lppedd.cc.STORAGE_FILE
 import com.github.lppedd.cc.api.*
 import com.intellij.openapi.components.PersistentStateComponent
@@ -11,6 +12,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.util.xmlb.XmlSerializerUtil
 import com.intellij.util.xmlb.annotations.XMap
 import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * @author Edoardo Luppi
@@ -21,8 +23,6 @@ import java.util.*
 )
 internal class CCConfigService : PersistentStateComponent<CCConfigService> {
   companion object {
-    private val DEFAULT_ENTRY = Pair(DEFAULT_PROVIDER_ID, 0)
-
     fun getInstance(project: Project): CCConfigService =
       ServiceManager.getService(project, CCConfigService::class.java)
   }
@@ -36,57 +36,79 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
     keyAttributeName = "providerId",
     valueAttributeName = "order"
   )
-  private var typeProvidersMap: Map<String, Int> = hashMapOf(DEFAULT_ENTRY)
+  private var typeProvidersMap: MutableMap<String, Int> = ConcurrentHashMap<String, Int>()
 
   @XMap(
     propertyElementName = "commitScopes",
     keyAttributeName = "providerId",
     valueAttributeName = "order"
   )
-  private var scopeProvidersMap: Map<String, Int> = hashMapOf(DEFAULT_ENTRY)
+  private var scopeProvidersMap: MutableMap<String, Int> = ConcurrentHashMap<String, Int>()
 
   @XMap(
     propertyElementName = "commitSubjects",
     keyAttributeName = "providerId",
     valueAttributeName = "order"
   )
-  private var subjectProvidersMap: Map<String, Int> = hashMapOf(DEFAULT_ENTRY)
+  private var subjectProvidersMap: MutableMap<String, Int> = ConcurrentHashMap<String, Int>()
 
   @XMap(
     propertyElementName = "commitFooters",
     keyAttributeName = "providerId",
     valueAttributeName = "order"
   )
-  private var footerProvidersMap: Map<String, Int> = hashMapOf(DEFAULT_ENTRY)
+  private var footerProvidersMap: MutableMap<String, Int> = ConcurrentHashMap<String, Int>()
 
   @XMap(
     propertyElementName = "commitBodies",
     keyAttributeName = "providerId",
     valueAttributeName = "order"
   )
-  private var bodyProvidersMap: Map<String, Int> = hashMapOf(DEFAULT_ENTRY)
+  private var bodyProvidersMap: MutableMap<String, Int> = ConcurrentHashMap<String, Int>()
 
-  fun getProviderOrder(provider: CommitTypeProvider) = typeProvidersMap[provider.getId()] ?: 0
-  fun getProviderOrder(provider: CommitScopeProvider) = scopeProvidersMap[provider.getId()] ?: 0
-  fun getProviderOrder(provider: CommitSubjectProvider) = subjectProvidersMap[provider.getId()] ?: 0
-  fun getProviderOrder(provider: CommitFooterProvider) = footerProvidersMap[provider.getId()] ?: 0
-  fun getProviderOrder(provider: CommitBodyProvider) = bodyProvidersMap[provider.getId()] ?: 0
+  init {
+    noStateLoaded()
+  }
+
+  fun getProviderOrder(provider: CommitTypeProvider) =
+    typeProvidersMap.computeIfAbsent(provider.getId()) { typeProvidersMap.size }
+
+  fun getProviderOrder(provider: CommitScopeProvider) =
+    scopeProvidersMap.computeIfAbsent(provider.getId()) { scopeProvidersMap.size }
+
+  fun getProviderOrder(provider: CommitSubjectProvider) =
+    subjectProvidersMap.computeIfAbsent(provider.getId()) { subjectProvidersMap.size }
+
+  fun getProviderOrder(provider: CommitFooterProvider) =
+    footerProvidersMap.computeIfAbsent(provider.getId()) { footerProvidersMap.size }
+
+  fun getProviderOrder(provider: CommitBodyProvider) =
+    bodyProvidersMap.computeIfAbsent(provider.getId()) { bodyProvidersMap.size }
 
   fun setTypeProvidersOrder(typeProvidersMap: Map<String, Int>) {
-    this.typeProvidersMap = typeProvidersMap
+    this.typeProvidersMap = ConcurrentHashMap(typeProvidersMap)
   }
 
   fun setScopeProvidersOrder(scopeProvidersMap: Map<String, Int>) {
-    this.scopeProvidersMap = scopeProvidersMap
+    this.scopeProvidersMap = ConcurrentHashMap(scopeProvidersMap)
   }
 
   fun setSubjectProvidersOrder(subjectProvidersMap: Map<String, Int>) {
-    this.subjectProvidersMap = subjectProvidersMap
+    this.subjectProvidersMap = ConcurrentHashMap(subjectProvidersMap)
   }
 
-  override fun getState() = this
+  override fun getState() =
+    this
+
   override fun loadState(state: CCConfigService) {
     XmlSerializerUtil.copyBean(state, this)
+    noStateLoaded()
+  }
+
+  override fun noStateLoaded() {
+    typeProvidersMap.putIfAbsent(DEFAULT_PROVIDER_ID, 0)
+    scopeProvidersMap.putIfAbsent(DEFAULT_PROVIDER_ID, 0)
+    subjectProvidersMap.putIfAbsent(DEFAULT_VCS_PROVIDER_ID, 0)
   }
 
   override fun equals(other: Any?): Boolean {

@@ -1,13 +1,11 @@
-@file:Suppress("DEPRECATION")
+@file:Suppress("DEPRECATION", "UnstableApiUsage")
 
 package com.github.lppedd.cc.completion.providers
 
 import com.github.lppedd.cc.CCBundle
-import com.github.lppedd.cc.api.CommitFooter
-import com.github.lppedd.cc.api.CommitFooterProvider
-import com.github.lppedd.cc.api.FOOTER_EP
-import com.github.lppedd.cc.configuration.CCConfigService
+import com.github.lppedd.cc.api.*
 import com.github.lppedd.cc.completion.resultset.ResultSet
+import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.lookupElement.CommitFooterLookupElement
 import com.github.lppedd.cc.lookupElement.CommitLookupElement
 import com.github.lppedd.cc.lookupElement.ShowMoreCoAuthorsLookupElement
@@ -31,31 +29,31 @@ internal class FooterValueCompletionProvider(
     private val commitTokens: CommitTokens,
     private val process: CompletionProcess,
 ) : CommitCompletionProvider<CommitFooterProvider> {
-  private val footerProviders =
-    FOOTER_EP.getExtensions(project)
-      .asSequence()
-      .sortedBy(CCConfigService.getInstance(project)::getProviderOrder)
-
-  override val providers = footerProviders.toList()
+  override val providers: List<CommitFooterProvider> = FOOTER_EP.getExtensions(project)
   override val stopHere = true
 
   override fun complete(resultSet: ResultSet) {
     val prefix = context.value.trimStart()
     val rs = resultSet.withPrefixMatcher(prefix)
 
-    footerProviders.flatMap {
+    providers.asSequence()
+      .flatMap { provider ->
         runWithCheckCanceled {
-          it.getCommitFooters(
-            context.type,
-            (commitTokens.type as? ValidToken)?.value,
-            (commitTokens.scope as? ValidToken)?.value,
-            (commitTokens.subject as? ValidToken)?.value
-          ).asSequence()
+          val wrapper = FooterProviderWrapper(provider)
+          provider.getCommitFooters(
+              context.type,
+              (commitTokens.type as? ValidToken)?.value,
+              (commitTokens.scope as? ValidToken)?.value,
+              (commitTokens.subject as? ValidToken)?.value
+            )
+            .asSequence()
+            .take(200)
+            .map { wrapper to it }
         }
       }
-      .map { CommitFooterPsiElement(project, it) }
-      .mapIndexed { i, psi -> CommitFooterLookupElement(i, psi, prefix) }
-      .distinctBy(CommitLookupElement::getLookupString)
+      .map { it.first to CommitFooterPsiElement(project, it.second) }
+      .mapIndexed { i, (provider, psi) -> CommitFooterLookupElement(i, provider, psi, prefix) }
+      .distinctBy(CommitFooterLookupElement::getLookupString)
       .forEach(rs::addElement)
 
     if ("co-authored-by".equals(context.type, true)) {
@@ -68,13 +66,25 @@ internal class FooterValueCompletionProvider(
   private fun buildShowMoreLookupElement(prefix: String): CommitLookupElement {
     val commitFooter = CommitFooter("", CCBundle["cc.config.coAuthors.description"])
     val psiElement = CommitFooterPsiElement(project, commitFooter)
-    val lookupElement = ShowMoreCoAuthorsLookupElement(2000, psiElement, prefix)
+    val provider = FOOTER_EP.findExtensionOrFail(DefaultCommitTokenProvider::class.java, project)
+    val wrapper = FooterProviderWrapper(provider)
+    val lookupElement = ShowMoreCoAuthorsLookupElement(2000, wrapper, psiElement, prefix)
 
-    @Suppress("DEPRECATION")
     if (process is CompletionProgressIndicator) {
       process.lookup.addPrefixChangeListener(lookupElement, process)
     }
 
     return lookupElement
   }
+}
+
+internal class FooterProviderWrapper(private val provider: CommitFooterProvider) : ProviderWrapper {
+  override fun getId(): String =
+    provider.getId()
+
+  override fun getPresentation(): ProviderPresentation =
+    provider.getPresentation()
+
+  override fun getPriority(project: Project) =
+    Priority(CCConfigService.getInstance(project).getProviderOrder(provider))
 }

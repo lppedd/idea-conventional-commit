@@ -5,7 +5,6 @@ package com.github.lppedd.cc.completion.providers
 import com.github.lppedd.cc.api.CommitTypeProvider
 import com.github.lppedd.cc.api.TYPE_EP
 import com.github.lppedd.cc.completion.resultset.ResultSet
-import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.lookupElement.TemplateCommitTypeLookupElement
 import com.github.lppedd.cc.parser.CommitContext.TypeCommitContext
 import com.github.lppedd.cc.psiElement.CommitTypePsiElement
@@ -21,20 +20,23 @@ internal class TemplateTypeCompletionProvider(
     private val project: Project,
     private val context: TypeCommitContext,
 ) : CommitCompletionProvider<CommitTypeProvider> {
-  private val typeProviders =
-    TYPE_EP.getExtensions(project)
-      .asSequence()
-      .sortedBy(CCConfigService.getInstance(project)::getProviderOrder)
-
-  override val providers = typeProviders.toList()
+  override val providers: List<CommitTypeProvider> = TYPE_EP.getExtensions(project)
   override val stopHere = false
 
   override fun complete(resultSet: ResultSet) {
     val rs = resultSet.withPrefixMatcher(context.type)
-    typeProviders
-      .flatMap { runWithCheckCanceled { it.getCommitTypes("") }.asSequence() }
-      .map { commitType -> CommitTypePsiElement(project, commitType) }
-      .mapIndexed(::TemplateCommitTypeLookupElement)
+    providers.asSequence()
+      .flatMap { provider ->
+        runWithCheckCanceled {
+          val wrapper = TypeProviderWrapper(provider)
+          provider.getCommitTypes("")
+            .asSequence()
+            .take(200)
+            .map { wrapper to it }
+        }
+      }
+      .map { it.first to CommitTypePsiElement(project, it.second) }
+      .mapIndexed { i, (provider, psi) -> TemplateCommitTypeLookupElement(i, provider, psi) }
       .distinctBy(TemplateCommitTypeLookupElement::getLookupString)
       .forEach(rs::addElement)
   }
