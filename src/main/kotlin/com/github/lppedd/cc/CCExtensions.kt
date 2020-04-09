@@ -203,6 +203,13 @@ internal fun String.abbreviate(max: Int, suffix: CharSequence = "..."): String {
 }
 
 // endregion
+// region Collections
+
+@InlineOnly
+internal inline fun <T> emptyCollection(): Collection<T> =
+  emptyList()
+
+// endregion
 // region Utilities
 
 @InlineOnly

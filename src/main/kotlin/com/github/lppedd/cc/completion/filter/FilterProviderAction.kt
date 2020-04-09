@@ -17,9 +17,13 @@ internal class FilterProviderAction(
     private val lookup: LookupImpl,
     private val provider: CommitTokenProvider,
 ) : AnAction("Provider: ${provider.getPresentation().name}") {
-  private val providerId = provider.getId()
   private var isFiltered = false
+  private val providerId = provider.getId()
   private var backupItems = emptyList<CommitLookupElement>()
+
+  fun reset() {
+    isFiltered = false
+  }
 
   override fun actionPerformed(ignored: AnActionEvent) {
     isFiltered = !isFiltered
