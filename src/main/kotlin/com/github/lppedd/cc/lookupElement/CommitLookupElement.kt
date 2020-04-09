@@ -1,5 +1,6 @@
 package com.github.lppedd.cc.lookupElement
 
+import com.github.lppedd.cc.completion.providers.Priority
 import com.github.lppedd.cc.completion.providers.ProviderWrapper
 import com.github.lppedd.cc.psiElement.CommitFakePsiElement
 import com.intellij.codeInsight.lookup.AutoCompletionPolicy
@@ -10,7 +11,7 @@ import com.intellij.codeInsight.lookup.LookupElement
  */
 internal abstract class CommitLookupElement : LookupElement() {
   abstract val index: Int
-  abstract val baseWeight: Int
+  abstract val priority: Priority
   abstract val provider: ProviderWrapper
 
   @Volatile

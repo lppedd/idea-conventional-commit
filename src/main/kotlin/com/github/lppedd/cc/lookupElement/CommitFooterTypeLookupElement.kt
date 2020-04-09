@@ -16,7 +16,7 @@ internal class CommitFooterTypeLookupElement(
     override val provider: FooterTypeProviderWrapper,
     private val psiElement: CommitFooterTypePsiElement,
 ) : CommitLookupElement() {
-  override val baseWeight: Int = WEIGHT_FOOTER_TYPE
+  override val priority = PRIORITY_FOOTER_TYPE
 
   override fun getPsiElement(): CommitFooterTypePsiElement =
     psiElement

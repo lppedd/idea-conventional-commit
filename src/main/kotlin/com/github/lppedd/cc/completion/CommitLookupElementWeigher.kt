@@ -11,11 +11,11 @@ import com.intellij.codeInsight.lookup.LookupElementWeigher
 internal object CommitLookupElementWeigher : LookupElementWeigher("commitLookupElementWeigher") {
   private const val ourMaxItemsPerProvider = MAX_ITEMS_PER_PROVIDER + 10
 
+  // Lower priority = lower weight = higher-up in the list
   override fun weigh(element: LookupElement): Comparable<*> =
     if (element is CommitLookupElement) {
-      // Lower priority = less weight = higher-up in the list
-      val priority = element.provider.getPriority()
-      element.baseWeight + (priority * ourMaxItemsPerProvider) + element.index
+      val providerPriority = element.provider.getPriority() * ourMaxItemsPerProvider
+      element.priority + providerPriority + element.index
     } else {
       0
     }

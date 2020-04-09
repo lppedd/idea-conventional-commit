@@ -17,7 +17,7 @@ internal open class CommitTypeLookupElement(
     override val provider: TypeProviderWrapper,
     private val psiElement: CommitTypePsiElement,
 ) : CommitLookupElement() {
-  override val baseWeight: Int = WEIGHT_TYPE
+  override val priority = PRIORITY_TYPE
 
   override fun getPsiElement(): CommitTypePsiElement =
     psiElement
