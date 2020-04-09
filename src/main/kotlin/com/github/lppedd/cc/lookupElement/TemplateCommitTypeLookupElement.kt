@@ -66,50 +66,50 @@ internal class TemplateCommitTypeLookupElement(
     // ...and we confirm it by navigating to the subject context
     editor.getTemplateState()?.nextTab()
   }
+}
 
-  object CCTemplateEditingListener : TemplateEditingAdapter() {
-    override fun beforeTemplateFinished(templateState: TemplateState, template: Template) {
-      val lastSegmentIndex = templateState.segmentsCount - 1
-      val currentSegmentIndex = templateState.currentVariableNumber
+private object CCTemplateEditingListener : TemplateEditingAdapter() {
+  override fun beforeTemplateFinished(templateState: TemplateState, template: Template) {
+    val lastSegmentIndex = templateState.segmentsCount - 1
+    val currentSegmentIndex = templateState.currentVariableNumber
 
-      if (currentSegmentIndex == lastSegmentIndex) {
-        repositionCursorAfterSubjectIfNeeded(templateState, lastSegmentIndex)
-      }
-
-      if (currentSegmentIndex > 0) {
-        deleteScopeParenthesesIfEmpty(templateState)
-      }
+    if (currentSegmentIndex == lastSegmentIndex) {
+      repositionCursorAfterSubjectIfNeeded(templateState, lastSegmentIndex)
     }
 
-    private fun repositionCursorAfterSubjectIfNeeded(templateState: TemplateState, lastSegmentIndex: Int) {
-      val (_, bodyEnd, isBodyEmpty) = templateState.getSegmentRange(lastSegmentIndex)
+    if (currentSegmentIndex > 0) {
+      deleteScopeParenthesesIfEmpty(templateState)
+    }
+  }
 
-      // If the body is empty it means the user didn't need to insert it,
-      // thus we can reposition the cursor at the end of the subject
-      if (isBodyEmpty) {
-        val newOffset = templateState.getSegmentRange(lastSegmentIndex - 1).endOffset
-        val editor = templateState.editor
+  private fun repositionCursorAfterSubjectIfNeeded(templateState: TemplateState, lastSegmentIndex: Int) {
+    val (_, bodyEnd, isBodyEmpty) = templateState.getSegmentRange(lastSegmentIndex)
 
-        runWriteAction {
-          editor.document.deleteString(newOffset, bodyEnd)
-          editor.moveCaretToOffset(newOffset)
-        }
+    // If the body is empty it means the user didn't need to insert it,
+    // thus we can reposition the cursor at the end of the subject
+    if (isBodyEmpty) {
+      val newOffset = templateState.getSegmentRange(lastSegmentIndex - 1).endOffset
+      val editor = templateState.editor
+
+      runWriteAction {
+        editor.document.deleteString(newOffset, bodyEnd)
+        editor.moveCaretToOffset(newOffset)
       }
     }
+  }
 
-    private fun deleteScopeParenthesesIfEmpty(templateState: TemplateState) {
-      val (scopeStart, scopeEnd, isScopeEmpty) = templateState.getSegmentRange(1)
+  private fun deleteScopeParenthesesIfEmpty(templateState: TemplateState) {
+    val (scopeStart, scopeEnd, isScopeEmpty) = templateState.getSegmentRange(1)
 
-      // If the scope is empty it means the user didn't need to insert it,
-      // thus we can remove it
-      if (isScopeEmpty) {
-        val document = templateState.editor.document
-        val startOffset = max(scopeStart - 1, 0)
-        val endOffset = min(scopeEnd + 1, document.textLength)
+    // If the scope is empty it means the user didn't need to insert it,
+    // thus we can remove it
+    if (isScopeEmpty) {
+      val document = templateState.editor.document
+      val startOffset = max(scopeStart - 1, 0)
+      val endOffset = min(scopeEnd + 1, document.textLength)
 
-        runWriteAction {
-          document.deleteString(startOffset, endOffset)
-        }
+      runWriteAction {
+        document.deleteString(startOffset, endOffset)
       }
     }
   }
