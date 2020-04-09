@@ -1,0 +1,25 @@
+<h3>0.12.0 (10/04/2020)</h3>
+<p>
+  Nineteenth alpha release.<br/>
+  Feature, fixes and refactoring
+</p>
+<ul>
+  <li>
+    In a mission to have parity of behavior for context and template completion, I've enhanced
+    the template completion with a step for body/footer types.<br>
+    You'll also notice the scope parentheses, if empty, aren't removed as soon as you complete them;
+    this change means you'll be able to go back and forth on all segments. Also,
+    after template's completion the core engine will reposition the cursor and delete the empty
+    scope's parentheses.<br>
+    You can follow <a href="https://github.com/lppedd/idea-conventional-commit/issues/25">issue 25</a>
+    for other future changes. The work to do is <strong>a lot!</strong>
+  </li>
+  <li>
+    Fixed the jerky new experimental on-the-fly filtering of completion elements. This took
+    an enormous effort, as I had to debug the completion mechanism and hook in the right places.<br>
+    The filtering behavior will for sure be enhanced again in the future, per your issues or requests
+  </li>
+  <li>
+    Used safe methods to submit work eligible for cancellation
+  </li>
+</ul>
