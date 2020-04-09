@@ -10,7 +10,7 @@
     <variable name="TYPE" expression="commitType()" defaultValue="" alwaysStopAt="true" />
     <variable name="SCOPE" expression="commitScope()" defaultValue="" alwaysStopAt="true" />
     <variable name="SUBJECT" expression="commitSubject()" defaultValue="" alwaysStopAt="true" />
-    <variable name="BODY" expression="commitBody()" defaultValue="" alwaysStopAt="true" />
+    <variable name="BODY" expression="commitBodyAndFooterType()" defaultValue="" alwaysStopAt="true" />
     <context>
       <option name="ACTION_SCRIPT" value="false" />
       <option name="ASPECTJ" value="false" />

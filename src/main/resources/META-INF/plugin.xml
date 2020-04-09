@@ -52,7 +52,7 @@
     <liveTemplateMacro implementation="com.github.lppedd.cc.liveTemplate.CommitTypeMacro" />
     <liveTemplateMacro implementation="com.github.lppedd.cc.liveTemplate.CommitScopeMacro" />
     <liveTemplateMacro implementation="com.github.lppedd.cc.liveTemplate.CommitSubjectMacro" />
-    <liveTemplateMacro implementation="com.github.lppedd.cc.liveTemplate.CommitBodyMacro" />
+    <liveTemplateMacro implementation="com.github.lppedd.cc.liveTemplate.CommitBodyAndFooterTypeMacro" />
     <defaultLiveTemplatesProvider implementation="com.github.lppedd.cc.liveTemplate.CCLiveTemplatesProvider" />
 
     <documentationProvider implementation="com.github.lppedd.cc.documentation.CommitTokenDocumentationProvider" />

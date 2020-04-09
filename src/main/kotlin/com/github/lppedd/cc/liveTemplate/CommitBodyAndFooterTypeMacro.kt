@@ -1,6 +1,7 @@
 package com.github.lppedd.cc.liveTemplate
 
 import com.github.lppedd.cc.completion.providers.BodyCompletionProvider
+import com.github.lppedd.cc.completion.providers.FooterTypeCompletionProvider
 import com.github.lppedd.cc.completion.resultset.LookupResultSet
 import com.github.lppedd.cc.parser.CommitTokens
 import com.github.lppedd.cc.parser.FooterContext.FooterTypeContext
@@ -10,12 +11,14 @@ import com.intellij.openapi.project.Project
 /**
  * @author Edoardo Luppi
  */
-private class CommitBodyMacro : CommitMacro() {
+private class CommitBodyAndFooterTypeMacro : CommitMacro() {
   override fun getName() =
-    "commitBody"
+    "commitBodyAndFooterType"
 
   override fun queryProviders(project: Project, lookup: LookupImpl) {
     val commitContext = FooterTypeContext("")
-    BodyCompletionProvider(project, commitContext, CommitTokens()).complete(LookupResultSet(lookup))
+    val resultSet = LookupResultSet(lookup)
+    BodyCompletionProvider(project, commitContext, CommitTokens()).complete(resultSet)
+    FooterTypeCompletionProvider(project, commitContext).complete(resultSet)
   }
 }
