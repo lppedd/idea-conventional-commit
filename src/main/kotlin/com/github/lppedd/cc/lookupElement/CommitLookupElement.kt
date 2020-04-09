@@ -1,6 +1,6 @@
 package com.github.lppedd.cc.lookupElement
 
-import com.github.lppedd.cc.completion.providers.Priority
+import com.github.lppedd.cc.completion.Priority
 import com.github.lppedd.cc.completion.providers.ProviderWrapper
 import com.github.lppedd.cc.psiElement.CommitFakePsiElement
 import com.intellij.codeInsight.lookup.AutoCompletionPolicy

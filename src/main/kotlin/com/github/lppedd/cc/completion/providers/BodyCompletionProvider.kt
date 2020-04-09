@@ -6,6 +6,7 @@ import com.github.lppedd.cc.MAX_ITEMS_PER_PROVIDER
 import com.github.lppedd.cc.api.BODY_EP
 import com.github.lppedd.cc.api.CommitBodyProvider
 import com.github.lppedd.cc.api.ProviderPresentation
+import com.github.lppedd.cc.completion.Priority
 import com.github.lppedd.cc.completion.resultset.ResultSet
 import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.lookupElement.CommitBodyLookupElement

@@ -2,7 +2,7 @@
 
 package com.github.lppedd.cc
 
-import com.github.lppedd.cc.completion.providers.Priority
+import com.github.lppedd.cc.completion.Priority
 
 const val APP_NAME: String = "ConventionalCommit"
 const val STORAGE_FILE: String = "conventionalCommit.xml"
