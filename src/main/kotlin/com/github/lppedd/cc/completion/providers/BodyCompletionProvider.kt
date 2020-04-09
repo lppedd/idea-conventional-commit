@@ -11,7 +11,7 @@ import com.github.lppedd.cc.parser.CommitTokens
 import com.github.lppedd.cc.parser.FooterContext.FooterTypeContext
 import com.github.lppedd.cc.parser.ValidToken
 import com.github.lppedd.cc.psiElement.CommitBodyPsiElement
-import com.github.lppedd.cc.runWithCheckCanceled
+import com.github.lppedd.cc.safeRunWithCheckCanceled
 import com.intellij.openapi.project.Project
 import org.jetbrains.annotations.ApiStatus
 
@@ -27,11 +27,11 @@ internal class BodyCompletionProvider(
   override val providers: List<CommitBodyProvider> = BODY_EP.getExtensions(project)
   override val stopHere = false
 
-  override fun complete(resultSet: ResultSet, shouldCheckCanceled: Boolean) {
+  override fun complete(resultSet: ResultSet) {
     val rs = resultSet.withPrefixMatcher(context.type)
     providers.asSequence()
       .flatMap { provider ->
-        runWithCheckCanceled(shouldCheckCanceled) {
+        safeRunWithCheckCanceled {
           val wrapper = BodyProviderWrapper(project, provider)
           provider.getCommitBodies(
               (commitTokens.type as? ValidToken)?.value,

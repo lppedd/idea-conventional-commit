@@ -213,18 +213,14 @@ internal inline fun <T> emptyCollection(): Collection<T> =
 // region Utilities
 
 @InlineOnly
-internal inline fun <T> safeRunWithCheckCanceled(noinline callable: () -> T): T =
-  ProgressManager.getInstance().progressIndicator?.let {
-    ApplicationUtil.runWithCheckCanceled(callable, it)
-  } ?: callable()
-
-@InlineOnly
-internal inline fun <T> runWithCheckCanceled(doCheckCanceled: Boolean, noinline callable: () -> T): T =
-  if (doCheckCanceled) {
-    safeRunWithCheckCanceled(callable)
+internal inline fun <T> safeRunWithCheckCanceled(noinline callable: () -> T): T {
+  val progressIndicator = ProgressManager.getInstance().progressIndicator
+  return if (progressIndicator != null) {
+    ApplicationUtil.runWithCheckCanceled(callable, progressIndicator)
   } else {
     callable()
   }
+}
 
 @InlineOnly
 internal inline fun invokeLaterOnEdt(noinline block: () -> Unit) {

@@ -9,7 +9,7 @@ import com.github.lppedd.cc.completion.resultset.ResultSet
 import com.github.lppedd.cc.lookupElement.CommitScopeLookupElement
 import com.github.lppedd.cc.parser.CommitContext.ScopeCommitContext
 import com.github.lppedd.cc.psiElement.CommitScopePsiElement
-import com.github.lppedd.cc.runWithCheckCanceled
+import com.github.lppedd.cc.safeRunWithCheckCanceled
 import com.intellij.openapi.project.Project
 import org.jetbrains.annotations.ApiStatus
 
@@ -24,11 +24,11 @@ internal class ScopeCompletionProvider(
   override val providers: List<CommitScopeProvider> = SCOPE_EP.getExtensions(project)
   override val stopHere = false
 
-  override fun complete(resultSet: ResultSet, shouldCheckCanceled: Boolean) {
+  override fun complete(resultSet: ResultSet) {
     val rs = resultSet.withPrefixMatcher(context.scope.trim())
     providers.asSequence()
       .flatMap { provider ->
-        runWithCheckCanceled(shouldCheckCanceled) {
+        safeRunWithCheckCanceled {
           val wrapper = ScopeProviderWrapper(project, provider)
           provider.getCommitScopes(context.type)
             .asSequence()

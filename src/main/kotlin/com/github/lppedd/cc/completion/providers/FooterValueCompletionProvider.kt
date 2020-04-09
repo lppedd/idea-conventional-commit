@@ -16,7 +16,7 @@ import com.github.lppedd.cc.parser.CommitTokens
 import com.github.lppedd.cc.parser.FooterContext.FooterValueContext
 import com.github.lppedd.cc.parser.ValidToken
 import com.github.lppedd.cc.psiElement.CommitFooterValuePsiElement
-import com.github.lppedd.cc.runWithCheckCanceled
+import com.github.lppedd.cc.safeRunWithCheckCanceled
 import com.intellij.codeInsight.completion.CompletionProcess
 import com.intellij.codeInsight.completion.CompletionProgressIndicator
 import com.intellij.openapi.project.Project
@@ -35,13 +35,13 @@ internal class FooterValueCompletionProvider(
   override val providers: List<CommitFooterValueProvider> = FOOTER_VALUE_EP.getExtensions(project)
   override val stopHere = true
 
-  override fun complete(resultSet: ResultSet, shouldCheckCanceled: Boolean) {
+  override fun complete(resultSet: ResultSet) {
     val prefix = context.value.trimStart()
     val rs = resultSet.withPrefixMatcher(prefix)
 
     providers.asSequence()
       .flatMap { provider ->
-        runWithCheckCanceled(shouldCheckCanceled) {
+        safeRunWithCheckCanceled {
           val wrapper = FooterValueProviderWrapper(project, provider)
           provider.getCommitFooterValues(
               context.type,

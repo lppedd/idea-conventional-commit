@@ -14,5 +14,5 @@ internal interface CompletionProvider<out T : CommitTokenProvider> {
   val providers: Collection<T>
   val stopHere: Boolean
 
-  fun complete(resultSet: ResultSet, shouldCheckCanceled: Boolean = true)
+  fun complete(resultSet: ResultSet)
 }

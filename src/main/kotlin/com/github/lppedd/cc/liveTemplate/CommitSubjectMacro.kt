@@ -15,6 +15,6 @@ private class CommitSubjectMacro : CommitMacro() {
 
   override fun queryProviders(project: Project, lookup: LookupImpl) {
     val commitContext = SubjectCommitContext("", "", "")
-    SubjectCompletionProvider(project, commitContext).complete(LookupResultSet(lookup), false)
+    SubjectCompletionProvider(project, commitContext).complete(LookupResultSet(lookup))
   }
 }

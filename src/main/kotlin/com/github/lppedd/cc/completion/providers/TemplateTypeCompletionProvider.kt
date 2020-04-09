@@ -9,7 +9,7 @@ import com.github.lppedd.cc.completion.resultset.ResultSet
 import com.github.lppedd.cc.lookupElement.TemplateCommitTypeLookupElement
 import com.github.lppedd.cc.parser.CommitContext.TypeCommitContext
 import com.github.lppedd.cc.psiElement.CommitTypePsiElement
-import com.github.lppedd.cc.runWithCheckCanceled
+import com.github.lppedd.cc.safeRunWithCheckCanceled
 import com.intellij.openapi.project.Project
 import org.jetbrains.annotations.ApiStatus
 
@@ -24,11 +24,11 @@ internal class TemplateTypeCompletionProvider(
   override val providers: List<CommitTypeProvider> = TYPE_EP.getExtensions(project)
   override val stopHere = false
 
-  override fun complete(resultSet: ResultSet, shouldCheckCanceled: Boolean) {
+  override fun complete(resultSet: ResultSet) {
     val rs = resultSet.withPrefixMatcher(context.type)
     providers.asSequence()
       .flatMap { provider ->
-        runWithCheckCanceled(shouldCheckCanceled) {
+        safeRunWithCheckCanceled {
           val wrapper = TypeProviderWrapper(project, provider)
           provider.getCommitTypes("")
             .asSequence()
