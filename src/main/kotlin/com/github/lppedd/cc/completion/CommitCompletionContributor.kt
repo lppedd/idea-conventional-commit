@@ -40,15 +40,15 @@ private val PLAIN_TEXT_PATTERN = PlatformPatterns.psiElement().withLanguage(Plai
 @ApiStatus.Internal
 private open class CommitCompletionContributor : CompletionContributor() {
   private val myArrangerField: Field by lazy(PUBLICATION) {
-    findField(CompletionProgressIndicator::class.java, CompletionLookupArrangerImpl::class.java, "myArranger")
+    findField(CompletionProgressIndicator::class.java, null, "myArranger")
   }
 
   private val myFrozenItemsField: Field by lazy(PUBLICATION) {
-    findField(CompletionLookupArrangerImpl::class.java, List::class.java, "myFrozenItems")
+    findField(CompletionLookupArrangerImpl::class.java, null, "myFrozenItems")
   }
 
   private val myFreezeSemaphoreField: Field by lazy(PUBLICATION) {
-    findField(CompletionProgressIndicator::class.java, Semaphore::class.java, "myFreezeSemaphore")
+    findField(CompletionProgressIndicator::class.java, null, "myFreezeSemaphore")
   }
 
   override fun fillCompletionVariants(parameters: CompletionParameters, result: CompletionResultSet) {
