@@ -25,7 +25,8 @@ private val BLANK_LINES_REGEX = Regex("""^\s*$""", MULTILINE)
 internal class DefaultCommitTokenProvider(private val project: Project) :
     CommitTypeProvider,
     CommitScopeProvider,
-    CommitFooterProvider {
+    CommitFooterTypeProvider,
+    CommitFooterValueProvider {
   private val configService = CCConfigService.getInstance(project)
   private val defaultsService = CCDefaultTokensService.getInstance(project)
   private val defaults
@@ -58,12 +59,12 @@ internal class DefaultCommitTokenProvider(private val project: Project) :
   override fun getCommitFooterTypes(): Collection<CommitFooterType> =
     defaults.footerTypes.map { CommitFooterType(it.name, it.description) }
 
-  override fun getCommitFooters(
+  override fun getCommitFooterValues(
       footerType: String,
       commitType: String?,
       commitScope: String?,
       commitSubject: String?,
-  ): Collection<CommitFooter> {
+  ): Collection<CommitFooterValue> {
     val isCoAuthoredBy = "co-authored-by".equals(footerType, true)
     val lastN = if (isCoAuthoredBy) 5 else 15
     val recentValues = VcsConfiguration.getInstance(project)
@@ -72,12 +73,12 @@ internal class DefaultCommitTokenProvider(private val project: Project) :
       .asSequence()
       .take(lastN)
       .flatMap { message -> getFooterValues(footerType, message) }
-      .map { CommitFooter(it) }
+      .map { CommitFooterValue(it) }
       .toList()
 
     return if (isCoAuthoredBy) {
       recentValues
-        .plus(defaultsService.getCoAuthors().take(3).map(::CommitFooter))
+        .plus(defaultsService.getCoAuthors().take(3).map(::CommitFooterValue))
         .distinctBy { it.value.toLowerCase() }
     } else {
       recentValues.distinctBy { it.value.toLowerCase() }

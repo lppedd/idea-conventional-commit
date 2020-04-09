@@ -4,7 +4,7 @@ import com.github.lppedd.cc.*
 import com.github.lppedd.cc.completion.providers.FooterValueProviderWrapper
 import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.ValidToken
-import com.github.lppedd.cc.psiElement.CommitFooterPsiElement
+import com.github.lppedd.cc.psiElement.CommitFooterValuePsiElement
 import com.intellij.codeInsight.completion.InsertionContext
 import com.intellij.codeInsight.lookup.LookupElementPresentation
 import com.intellij.openapi.util.TextRange
@@ -15,16 +15,16 @@ import com.intellij.openapi.util.TextRange
 internal class CommitFooterLookupElement(
     override val index: Int,
     override val provider: FooterValueProviderWrapper,
-    private val psiElement: CommitFooterPsiElement,
+    private val psiElement: CommitFooterValuePsiElement,
     private val completionPrefix: String,
 ) : CommitLookupElement() {
   override val priority = PRIORITY_FOOTER
 
-  override fun getPsiElement(): CommitFooterPsiElement =
+  override fun getPsiElement(): CommitFooterValuePsiElement =
     psiElement
 
   override fun getLookupString(): String =
-    psiElement.commitFooter.value
+    psiElement.commitFooterValue.value
 
   override fun renderElement(presentation: LookupElementPresentation) {
     presentation.icon = ICON_FOOTER

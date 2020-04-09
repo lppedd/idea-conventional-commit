@@ -1,7 +1,8 @@
 package com.github.lppedd.cc
 
 import com.github.lppedd.cc.api.BODY_EP
-import com.github.lppedd.cc.api.FOOTER_EP
+import com.github.lppedd.cc.api.FOOTER_TYPE_EP
+import com.github.lppedd.cc.api.FOOTER_VALUE_EP
 import com.github.lppedd.cc.api.SUBJECT_EP
 import com.github.lppedd.cc.provider.TestProvider
 import com.intellij.openapi.vcs.ui.CommitMessage
@@ -16,7 +17,8 @@ abstract class BaseTest : LightJavaCodeInsightFixtureTestCase() {
 
     SUBJECT_EP.getPoint(project).registerExtension(TestProvider, myFixture.testRootDisposable)
     BODY_EP.getPoint(project).registerExtension(TestProvider, myFixture.testRootDisposable)
-    FOOTER_EP.getPoint(project).registerExtension(TestProvider, myFixture.testRootDisposable)
+    FOOTER_TYPE_EP.getPoint(project).registerExtension(TestProvider, myFixture.testRootDisposable)
+    FOOTER_VALUE_EP.getPoint(project).registerExtension(TestProvider, myFixture.testRootDisposable)
   }
 
   protected fun testCompletionVariants(text: String, vararg variants: String) {

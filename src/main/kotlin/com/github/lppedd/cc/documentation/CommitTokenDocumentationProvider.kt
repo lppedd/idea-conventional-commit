@@ -1,7 +1,7 @@
 package com.github.lppedd.cc.documentation
 
 import com.github.lppedd.cc.api.CommitBody
-import com.github.lppedd.cc.api.CommitFooter
+import com.github.lppedd.cc.api.CommitFooterValue
 import com.github.lppedd.cc.lookupElement.CommitLookupElement
 import com.github.lppedd.cc.psiElement.*
 import com.intellij.lang.documentation.AbstractDocumentationProvider
@@ -22,7 +22,7 @@ private class CommitTokenDocumentationProvider : AbstractDocumentationProvider()
       is CommitScopePsiElement -> element.commitScope.description
       is CommitBodyPsiElement -> generateDocForBody(element.commitBody)
       is CommitFooterTypePsiElement -> element.commitFooterType.description
-      is CommitFooterPsiElement -> generateDocForFooter(element.commitFooter)
+      is CommitFooterValuePsiElement -> generateDocForFooter(element.commitFooterValue)
       else -> null
     }
 
@@ -39,7 +39,7 @@ private class CommitTokenDocumentationProvider : AbstractDocumentationProvider()
     super.getDocumentationElementForLookupItem(psiManager, obj, element)
   }
 
-  private fun generateDocForFooter(element: CommitFooter): String =
+  private fun generateDocForFooter(element: CommitFooterValue): String =
     generateHtml(element.value.trim(), element.description.trim())
 
   private fun generateDocForBody(element: CommitBody): String =

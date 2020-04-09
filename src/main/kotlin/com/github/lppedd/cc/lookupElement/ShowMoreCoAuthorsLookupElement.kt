@@ -5,7 +5,7 @@ import com.github.lppedd.cc.completion.providers.FooterValueProviderWrapper
 import com.github.lppedd.cc.configuration.component.CoAuthorsDialog
 import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.ValidToken
-import com.github.lppedd.cc.psiElement.CommitFooterPsiElement
+import com.github.lppedd.cc.psiElement.CommitFooterValuePsiElement
 import com.intellij.codeInsight.completion.InsertionContext
 import com.intellij.codeInsight.lookup.LookupElementPresentation
 import com.intellij.codeInsight.lookup.impl.PrefixChangeListener
@@ -22,7 +22,7 @@ private const val VALUE = "Show more"
 internal class ShowMoreCoAuthorsLookupElement(
     override val index: Int,
     override val provider: FooterValueProviderWrapper,
-    private val psiElement: CommitFooterPsiElement,
+    private val psiElement: CommitFooterValuePsiElement,
     completionPrefix: String,
 ) : CommitLookupElement(), PrefixChangeListener {
   private var changingLookupString = StringBuilder(50) + completionPrefix
@@ -32,7 +32,7 @@ internal class ShowMoreCoAuthorsLookupElement(
     changingLookupString += ch
   }
 
-  override fun getPsiElement(): CommitFooterPsiElement =
+  override fun getPsiElement(): CommitFooterValuePsiElement =
     psiElement
 
   override fun getLookupString(): String =

@@ -4,10 +4,10 @@ package com.github.lppedd.cc.completion.providers
 
 import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.MAX_ITEMS_PER_PROVIDER
-import com.github.lppedd.cc.api.CommitFooter
-import com.github.lppedd.cc.api.CommitFooterProvider
+import com.github.lppedd.cc.api.CommitFooterValue
+import com.github.lppedd.cc.api.CommitFooterValueProvider
 import com.github.lppedd.cc.api.DefaultCommitTokenProvider
-import com.github.lppedd.cc.api.FOOTER_EP
+import com.github.lppedd.cc.api.FOOTER_VALUE_EP
 import com.github.lppedd.cc.completion.resultset.ResultSet
 import com.github.lppedd.cc.lookupElement.CommitFooterLookupElement
 import com.github.lppedd.cc.lookupElement.CommitLookupElement
@@ -15,7 +15,7 @@ import com.github.lppedd.cc.lookupElement.ShowMoreCoAuthorsLookupElement
 import com.github.lppedd.cc.parser.CommitTokens
 import com.github.lppedd.cc.parser.FooterContext.FooterValueContext
 import com.github.lppedd.cc.parser.ValidToken
-import com.github.lppedd.cc.psiElement.CommitFooterPsiElement
+import com.github.lppedd.cc.psiElement.CommitFooterValuePsiElement
 import com.github.lppedd.cc.runWithCheckCanceled
 import com.intellij.codeInsight.completion.CompletionProcess
 import com.intellij.codeInsight.completion.CompletionProgressIndicator
@@ -31,8 +31,8 @@ internal class FooterValueCompletionProvider(
     private val context: FooterValueContext,
     private val commitTokens: CommitTokens,
     private val process: CompletionProcess,
-) : CompletionProvider<CommitFooterProvider> {
-  override val providers: List<CommitFooterProvider> = FOOTER_EP.getExtensions(project)
+) : CompletionProvider<CommitFooterValueProvider> {
+  override val providers: List<CommitFooterValueProvider> = FOOTER_VALUE_EP.getExtensions(project)
   override val stopHere = true
 
   override fun complete(resultSet: ResultSet) {
@@ -43,7 +43,7 @@ internal class FooterValueCompletionProvider(
       .flatMap { provider ->
         runWithCheckCanceled {
           val wrapper = FooterValueProviderWrapper(project, provider)
-          provider.getCommitFooters(
+          provider.getCommitFooterValues(
               context.type,
               (commitTokens.type as? ValidToken)?.value,
               (commitTokens.scope as? ValidToken)?.value,
@@ -54,7 +54,7 @@ internal class FooterValueCompletionProvider(
             .map { wrapper to it }
         }
       }
-      .map { it.first to CommitFooterPsiElement(project, it.second) }
+      .map { it.first to CommitFooterValuePsiElement(project, it.second) }
       .mapIndexed { i, (provider, psi) -> CommitFooterLookupElement(i, provider, psi, prefix) }
       .distinctBy(CommitFooterLookupElement::getLookupString)
       .forEach(rs::addElement)
@@ -67,9 +67,9 @@ internal class FooterValueCompletionProvider(
   }
 
   private fun buildShowMoreLookupElement(prefix: String): CommitLookupElement {
-    val commitFooter = CommitFooter("", CCBundle["cc.config.coAuthors.description"])
-    val psiElement = CommitFooterPsiElement(project, commitFooter)
-    val provider = FOOTER_EP.findExtensionOrFail(DefaultCommitTokenProvider::class.java, project)
+    val commitFooter = CommitFooterValue("", CCBundle["cc.config.coAuthors.description"])
+    val psiElement = CommitFooterValuePsiElement(project, commitFooter)
+    val provider = FOOTER_VALUE_EP.findExtensionOrFail(DefaultCommitTokenProvider::class.java, project)
     val wrapper = FooterValueProviderWrapper(project, provider)
     val lookupElement = ShowMoreCoAuthorsLookupElement(2000, wrapper, psiElement, prefix)
 
