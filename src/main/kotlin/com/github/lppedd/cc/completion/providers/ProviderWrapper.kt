@@ -1,7 +1,6 @@
 package com.github.lppedd.cc.completion.providers
 
 import com.github.lppedd.cc.api.CommitTokenProvider
-import com.intellij.openapi.project.Project
 import org.jetbrains.annotations.ApiStatus
 
 /**
@@ -9,7 +8,7 @@ import org.jetbrains.annotations.ApiStatus
  */
 @ApiStatus.Internal
 internal interface ProviderWrapper : CommitTokenProvider {
-  fun getPriority(project: Project): Priority
+  fun getPriority(): Priority
 }
 
 internal inline class Priority(val value: Int) : Comparable<Priority> {

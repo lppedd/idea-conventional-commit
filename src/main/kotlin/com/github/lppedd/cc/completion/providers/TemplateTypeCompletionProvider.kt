@@ -28,7 +28,7 @@ internal class TemplateTypeCompletionProvider(
     providers.asSequence()
       .flatMap { provider ->
         runWithCheckCanceled {
-          val wrapper = TypeProviderWrapper(provider)
+          val wrapper = TypeProviderWrapper(project, provider)
           provider.getCommitTypes("")
             .asSequence()
             .take(200)

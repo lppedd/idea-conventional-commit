@@ -30,7 +30,7 @@ internal class FooterTypeCompletionProvider(
     providers.asSequence()
       .flatMap { provider ->
         runWithCheckCanceled {
-          val wrapper = FooterTypeProviderWrapper(provider)
+          val wrapper = FooterTypeProviderWrapper(project, provider)
           provider.getCommitFooterTypes()
             .asSequence()
             .take(200)
@@ -44,13 +44,18 @@ internal class FooterTypeCompletionProvider(
   }
 }
 
-internal class FooterTypeProviderWrapper(private val provider: CommitFooterProvider) : ProviderWrapper {
+internal class FooterTypeProviderWrapper(
+    project: Project,
+    private val provider: CommitFooterProvider,
+) : ProviderWrapper {
+  private val config = CCConfigService.getInstance(project)
+
   override fun getId(): String =
     provider.getId()
 
   override fun getPresentation(): ProviderPresentation =
     provider.getPresentation()
 
-  override fun getPriority(project: Project) =
-    Priority(CCConfigService.getInstance(project).getProviderOrder(provider))
+  override fun getPriority() =
+    Priority(config.getProviderOrder(provider))
 }
