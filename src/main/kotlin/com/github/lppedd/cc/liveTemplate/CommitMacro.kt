@@ -14,10 +14,7 @@ internal abstract class CommitMacro : Macro() {
   override fun getPresentableName() =
     "$name()"
 
-  override fun calculateResult(
-      params: Array<Expression>,
-      context: ExpressionContext?,
-  ): Result? =
+  override fun calculateResult(params: Array<Expression>, context: ExpressionContext?): Result? =
     if (context != null) {
       InvokeActionResult(Runnable { getCommitTokens(context) })
     } else {
