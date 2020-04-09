@@ -74,7 +74,7 @@ internal class FooterValueCompletionProvider(
     val lookupElement = ShowMoreCoAuthorsLookupElement(2000, wrapper, psiElement, prefix)
 
     if (process is CompletionProgressIndicator) {
-      process.lookup.addPrefixChangeListener(lookupElement, process)
+      process.lookup.addPrefixChangeListener(lookupElement, process.lookup)
     }
 
     return lookupElement
