@@ -11,6 +11,8 @@ import com.intellij.codeInsight.template.impl.TemplateImpl
 import com.intellij.codeInsight.template.impl.TemplateSettings
 import com.intellij.codeInsight.template.impl.TemplateState
 import com.intellij.openapi.application.runWriteAction
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * @author Edoardo Luppi
@@ -66,47 +68,49 @@ internal class TemplateCommitTypeLookupElement(
   }
 
   object CCTemplateEditingListener : TemplateEditingAdapter() {
-    private val templateSettings = TemplateSettings.getInstance()
+    override fun beforeTemplateFinished(templateState: TemplateState, template: Template) {
+      val lastSegmentIndex = templateState.segmentsCount - 1
+      val currentSegmentIndex = templateState.currentVariableNumber
 
-    override fun templateFinished(template: Template, brokenOff: Boolean) {
-      // TODO: handle "no scope" insertion by deleting the empty parenthesis "()"
+      if (currentSegmentIndex == lastSegmentIndex) {
+        repositionCursorAfterSubjectIfNeeded(templateState, lastSegmentIndex)
+      }
+
+      if (currentSegmentIndex > 0) {
+        deleteScopeParenthesesIfEmpty(templateState)
+      }
     }
 
-    override fun templateCancelled(template: Template?) {
-      // TODO: handle "no scope" insertion by deleting the empty parenthesis "()"
+    private fun repositionCursorAfterSubjectIfNeeded(templateState: TemplateState, lastSegmentIndex: Int) {
+      val (_, bodyEnd, isBodyEmpty) = templateState.getSegmentRange(lastSegmentIndex)
+
+      // If the body is empty it means the user didn't need to insert it,
+      // thus we can reposition the cursor at the end of the subject
+      if (isBodyEmpty) {
+        val newOffset = templateState.getSegmentRange(lastSegmentIndex - 1).endOffset
+        val editor = templateState.editor
+
+        runWriteAction {
+          editor.document.deleteString(newOffset, bodyEnd)
+          editor.moveCaretToOffset(newOffset)
+        }
+      }
     }
 
-    override fun currentVariableChanged(
-        templateState: TemplateState,
-        template: Template?,
-        oldIndex: Int,
-        newIndex: Int,
-    ) {
-      // TODO: maybe remove deleting the empty parenthesis "()" immediately
-      //  in favor of doing it on template ending
-      if (oldIndex != 1 || newIndex != 2) {
-        return
+    private fun deleteScopeParenthesesIfEmpty(templateState: TemplateState) {
+      val (scopeStart, scopeEnd, isScopeEmpty) = templateState.getSegmentRange(1)
+
+      // If the scope is empty it means the user didn't need to insert it,
+      // thus we can remove it
+      if (isScopeEmpty) {
+        val document = templateState.editor.document
+        val startOffset = max(scopeStart - 1, 0)
+        val endOffset = min(scopeEnd + 1, document.textLength)
+
+        runWriteAction {
+          document.deleteString(startOffset, endOffset)
+        }
       }
-
-      val (scopeStart, scopeEnd, isEmpty) = templateState.getSegmentRange(1)
-
-      if (!isEmpty) {
-        return
-      }
-
-      val editor = templateState.editor
-
-      runWriteAction {
-        editor.document.deleteString(scopeStart - 1, scopeEnd + 1)
-      }
-
-      TemplateManager.getInstance(editor.project).startTemplate(
-        editor,
-        templateSettings.getTemplateById("ConventionalCommit-subject"),
-        true,
-        null,
-        this
-      )
     }
   }
 }
