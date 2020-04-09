@@ -4,11 +4,8 @@ package com.github.lppedd.cc.completion.providers
 
 import com.github.lppedd.cc.MAX_ITEMS_PER_PROVIDER
 import com.github.lppedd.cc.api.CommitTypeProvider
-import com.github.lppedd.cc.api.ProviderPresentation
 import com.github.lppedd.cc.api.TYPE_EP
-import com.github.lppedd.cc.completion.Priority
 import com.github.lppedd.cc.completion.resultset.ResultSet
-import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.lookupElement.CommitTypeLookupElement
 import com.github.lppedd.cc.parser.CommitContext.TypeCommitContext
 import com.github.lppedd.cc.psiElement.CommitTypePsiElement
@@ -23,7 +20,7 @@ import org.jetbrains.annotations.ApiStatus
 internal class TypeCompletionProvider(
     private val project: Project,
     private val context: TypeCommitContext,
-) : CommitCompletionProvider<CommitTypeProvider> {
+) : CompletionProvider<CommitTypeProvider> {
   override val providers: List<CommitTypeProvider> = TYPE_EP.getExtensions(project)
   override val stopHere = false
 
@@ -44,20 +41,4 @@ internal class TypeCompletionProvider(
       .distinctBy(CommitTypeLookupElement::getLookupString)
       .forEach(rs::addElement)
   }
-}
-
-internal class TypeProviderWrapper(
-    project: Project,
-    private val provider: CommitTypeProvider,
-) : ProviderWrapper {
-  private val config = CCConfigService.getInstance(project)
-
-  override fun getId(): String =
-    provider.getId()
-
-  override fun getPresentation(): ProviderPresentation =
-    provider.getPresentation()
-
-  override fun getPriority() =
-    Priority(config.getProviderOrder(provider))
 }

@@ -4,10 +4,11 @@ package com.github.lppedd.cc.completion.providers
 
 import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.MAX_ITEMS_PER_PROVIDER
-import com.github.lppedd.cc.api.*
-import com.github.lppedd.cc.completion.Priority
+import com.github.lppedd.cc.api.CommitFooter
+import com.github.lppedd.cc.api.CommitFooterProvider
+import com.github.lppedd.cc.api.DefaultCommitTokenProvider
+import com.github.lppedd.cc.api.FOOTER_EP
 import com.github.lppedd.cc.completion.resultset.ResultSet
-import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.lookupElement.CommitFooterLookupElement
 import com.github.lppedd.cc.lookupElement.CommitLookupElement
 import com.github.lppedd.cc.lookupElement.ShowMoreCoAuthorsLookupElement
@@ -30,7 +31,7 @@ internal class FooterValueCompletionProvider(
     private val context: FooterValueContext,
     private val commitTokens: CommitTokens,
     private val process: CompletionProcess,
-) : CommitCompletionProvider<CommitFooterProvider> {
+) : CompletionProvider<CommitFooterProvider> {
   override val providers: List<CommitFooterProvider> = FOOTER_EP.getExtensions(project)
   override val stopHere = true
 
@@ -41,7 +42,7 @@ internal class FooterValueCompletionProvider(
     providers.asSequence()
       .flatMap { provider ->
         runWithCheckCanceled {
-          val wrapper = FooterProviderWrapper(project, provider)
+          val wrapper = FooterValueProviderWrapper(project, provider)
           provider.getCommitFooters(
               context.type,
               (commitTokens.type as? ValidToken)?.value,
@@ -69,7 +70,7 @@ internal class FooterValueCompletionProvider(
     val commitFooter = CommitFooter("", CCBundle["cc.config.coAuthors.description"])
     val psiElement = CommitFooterPsiElement(project, commitFooter)
     val provider = FOOTER_EP.findExtensionOrFail(DefaultCommitTokenProvider::class.java, project)
-    val wrapper = FooterProviderWrapper(project, provider)
+    val wrapper = FooterValueProviderWrapper(project, provider)
     val lookupElement = ShowMoreCoAuthorsLookupElement(2000, wrapper, psiElement, prefix)
 
     if (process is CompletionProgressIndicator) {
@@ -78,20 +79,4 @@ internal class FooterValueCompletionProvider(
 
     return lookupElement
   }
-}
-
-internal class FooterProviderWrapper(
-    project: Project,
-    private val provider: CommitFooterProvider,
-) : ProviderWrapper {
-  private val config = CCConfigService.getInstance(project)
-
-  override fun getId(): String =
-    provider.getId()
-
-  override fun getPresentation(): ProviderPresentation =
-    provider.getPresentation()
-
-  override fun getPriority() =
-    Priority(config.getProviderOrder(provider))
 }

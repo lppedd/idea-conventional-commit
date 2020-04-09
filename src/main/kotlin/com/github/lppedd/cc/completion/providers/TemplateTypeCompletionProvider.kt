@@ -20,7 +20,7 @@ import org.jetbrains.annotations.ApiStatus
 internal class TemplateTypeCompletionProvider(
     private val project: Project,
     private val context: TypeCommitContext,
-) : CommitCompletionProvider<CommitTypeProvider> {
+) : CompletionProvider<CommitTypeProvider> {
   override val providers: List<CommitTypeProvider> = TYPE_EP.getExtensions(project)
   override val stopHere = false
 

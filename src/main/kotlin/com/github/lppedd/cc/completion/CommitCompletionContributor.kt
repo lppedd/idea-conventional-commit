@@ -5,6 +5,7 @@ package com.github.lppedd.cc.completion
 import com.github.lppedd.cc.*
 import com.github.lppedd.cc.completion.filter.MenuEnhancerLookupListener
 import com.github.lppedd.cc.completion.providers.*
+import com.github.lppedd.cc.completion.providers.CompletionProvider
 import com.github.lppedd.cc.completion.resultset.WrapperCompletionResultSet
 import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.configuration.CCConfigService.CompletionType.TEMPLATE
@@ -91,7 +92,7 @@ private open class CommitCompletionContributor : CompletionContributor() {
     val caretModel = editor.caretModel
     val (lineNumber, lineCaretOffset) = caretModel.logicalPosition
     val lineUntilCaret = editor.getCurrentLineUntilCaret()
-    val providers = mutableListOf<CommitCompletionProvider<*>>()
+    val providers = mutableListOf<CompletionProvider<*>>()
 
     // After the second line we are inside the body/footer context
     if (lineNumber > 1) {

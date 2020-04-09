@@ -10,7 +10,7 @@ import org.jetbrains.annotations.ApiStatus
  * @author Edoardo Luppi
  */
 @ApiStatus.Internal
-internal interface CommitCompletionProvider<out T : CommitTokenProvider> {
+internal interface CompletionProvider<out T : CommitTokenProvider> {
   val providers: Collection<T>
   val stopHere: Boolean
 

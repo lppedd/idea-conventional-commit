@@ -1,7 +1,7 @@
 package com.github.lppedd.cc.lookupElement
 
 import com.github.lppedd.cc.*
-import com.github.lppedd.cc.completion.providers.FooterProviderWrapper
+import com.github.lppedd.cc.completion.providers.FooterValueProviderWrapper
 import com.github.lppedd.cc.configuration.component.CoAuthorsDialog
 import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.ValidToken
@@ -21,7 +21,7 @@ private const val VALUE = "Show more"
  */
 internal class ShowMoreCoAuthorsLookupElement(
     override val index: Int,
-    override val provider: FooterProviderWrapper,
+    override val provider: FooterValueProviderWrapper,
     private val psiElement: CommitFooterPsiElement,
     completionPrefix: String,
 ) : CommitLookupElement(), PrefixChangeListener {
