@@ -70,7 +70,7 @@ private open class CommitCompletionContributor : CompletionContributor() {
     val resultSet = result
       .caseInsensitive()
       .withPrefixMatcher(FlatPrefixMatcher(parameters.getCompletionPrefix()))
-      .withRelevanceSorter(sorter(CommitLookupElementWeigher(project)))
+      .withRelevanceSorter(sorter(CommitLookupElementWeigher))
 
     val myResultSet = WrapperCompletionResultSet(resultSet)
 
