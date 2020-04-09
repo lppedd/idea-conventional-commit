@@ -12,6 +12,8 @@ import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.actionSystem.ex.AnActionListener
 import com.intellij.openapi.actionSystem.impl.ActionButton
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.command.CommandEvent
+import com.intellij.openapi.command.CommandListener
 import com.intellij.util.ReflectionUtil.getField
 import org.jetbrains.annotations.ApiStatus
 import java.util.concurrent.atomic.AtomicBoolean
@@ -22,7 +24,10 @@ private val IS_MENU_MODIFIED = AtomicBoolean(false)
  * @author Edoardo Luppi
  */
 @ApiStatus.Internal
-internal class MenuEnhancerLookupListener(private val lookup: LookupImpl) : LookupListener, AnActionListener {
+internal class MenuEnhancerLookupListener(private val lookup: LookupImpl) :
+    LookupListener,
+    AnActionListener,
+    CommandListener {
   private var shouldAcceptActionsChanges = true
   private var providers = emptyCollection<CommitTokenProvider>()
   private var actions = emptyCollection<FilterProviderAction>()
@@ -31,6 +36,7 @@ internal class MenuEnhancerLookupListener(private val lookup: LookupImpl) : Look
   init {
     lookup.addLookupListener(this)
     messageBus.subscribe(AnActionListener.TOPIC, this)
+    messageBus.subscribe(CommandListener.TOPIC, this)
   }
 
   fun setProviders(providers: Collection<CommitTokenProvider>) {
@@ -80,6 +86,18 @@ internal class MenuEnhancerLookupListener(private val lookup: LookupImpl) : Look
 
   override fun afterActionPerformed(action: AnAction, dataContext: DataContext, event: AnActionEvent) {
     if (action is FilterProviderAction) {
+      shouldAcceptActionsChanges = true
+    }
+  }
+
+  override fun commandStarted(event: CommandEvent) {
+    if ("Choose Lookup Item" == event.commandName) {
+      shouldAcceptActionsChanges = false
+    }
+  }
+
+  override fun commandFinished(event: CommandEvent) {
+    if ("Choose Lookup Item" == event.commandName) {
       shouldAcceptActionsChanges = true
     }
   }

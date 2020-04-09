@@ -69,7 +69,7 @@ internal class FilterProviderAction(
   private fun reinstallFilteredLookupElements() {
     val arranger = lookup.arranger
 
-    backupItems.firstOrNull()?.let {
+    arranger.matchingItems.firstOrNull()?.let {
       arranger.prefixReplaced(lookup, arranger.itemMatcher(it).prefix)
     }
 
