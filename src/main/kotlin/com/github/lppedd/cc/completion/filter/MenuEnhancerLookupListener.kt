@@ -5,20 +5,11 @@ import com.github.lppedd.cc.emptyCollection
 import com.intellij.codeInsight.lookup.LookupEvent
 import com.intellij.codeInsight.lookup.LookupListener
 import com.intellij.codeInsight.lookup.impl.LookupImpl
-import com.intellij.openapi.actionSystem.AnAction
-import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.DataContext
+import com.intellij.codeInsight.lookup.impl.PrefixChangeListener
 import com.intellij.openapi.actionSystem.DefaultActionGroup
-import com.intellij.openapi.actionSystem.ex.AnActionListener
 import com.intellij.openapi.actionSystem.impl.ActionButton
-import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.command.CommandEvent
-import com.intellij.openapi.command.CommandListener
 import com.intellij.util.ReflectionUtil.getField
 import org.jetbrains.annotations.ApiStatus
-import java.util.concurrent.atomic.AtomicBoolean
-
-private val IS_MENU_MODIFIED = AtomicBoolean(false)
 
 /**
  * @author Edoardo Luppi
@@ -26,47 +17,33 @@ private val IS_MENU_MODIFIED = AtomicBoolean(false)
 @ApiStatus.Internal
 internal class MenuEnhancerLookupListener(private val lookup: LookupImpl) :
     LookupListener,
-    AnActionListener,
-    CommandListener {
-  private var shouldAcceptActionsChanges = true
-  private var providers = emptyCollection<CommitTokenProvider>()
-  private var actions = emptyCollection<FilterProviderAction>()
-  private var messageBus = ApplicationManager.getApplication().messageBus.connect()
+    PrefixChangeListener {
+  @Volatile private var actions = emptyCollection<FilterProviderAction>()
 
   init {
     lookup.addLookupListener(this)
-    messageBus.subscribe(AnActionListener.TOPIC, this)
-    messageBus.subscribe(CommandListener.TOPIC, this)
+    lookup.addPrefixChangeListener(this, lookup)
   }
 
   fun setProviders(providers: Collection<CommitTokenProvider>) {
-    this.providers = providers
+    actions = providers.map { FilterProviderAction(lookup, it) }
   }
 
   override fun uiRefreshed() {
     try {
-      val myUi = getField<Any>(lookup.javaClass, lookup, null, "myUi")
-
-      if (myUi == null) {
-        IS_MENU_MODIFIED.set(false)
-        return
-      }
-
-      if (IS_MENU_MODIFIED.get() && lookup.isShown) {
-        if (shouldAcceptActionsChanges) {
-          actions.forEach(FilterProviderAction::reset)
-        }
-
-        return
-      }
-
-      IS_MENU_MODIFIED.compareAndSet(false, true)
-
+      // After much thoughts and trial-and-errors, keeping the Action list
+      // in memory and replacing each Action in the ActionGroup (the popup's menu)
+      // each time the UI is refreshed, is the only way to have a decent and consistent behavior.
+      // A positive side of this logic is that code is much simpler, and filters' state
+      // (filtered or not filtered) is maintained for all the Lookup lifecycle without any effort
+      val myUi = getField<Any>(lookup.javaClass, lookup, null, "myUi") ?: return
       val myMenuButton = getField<ActionButton>(myUi.javaClass, myUi, null, "myMenuButton")
       val menuActions = myMenuButton.action as DefaultActionGroup
 
-      actions = providers.map { FilterProviderAction(lookup, it) }
-      actions.forEach(menuActions::add)
+      actions.forEach {
+        menuActions.remove(it)
+        menuActions.add(it)
+      }
     } catch (ignored: ReflectiveOperationException) {
       // This should never happen, but in case I can't do anything about it,
       // so I'll just clean-up and let the user continue without applying any change
@@ -78,34 +55,15 @@ internal class MenuEnhancerLookupListener(private val lookup: LookupImpl) :
     cleanUp()
   }
 
-  override fun beforeActionPerformed(action: AnAction, dataContext: DataContext, event: AnActionEvent) {
-    if (action is FilterProviderAction) {
-      shouldAcceptActionsChanges = false
-    }
+  override fun beforeAppend(c: Char) {
+    actions.forEach(FilterProviderAction::reset)
   }
 
-  override fun afterActionPerformed(action: AnAction, dataContext: DataContext, event: AnActionEvent) {
-    if (action is FilterProviderAction) {
-      shouldAcceptActionsChanges = true
-    }
-  }
-
-  override fun commandStarted(event: CommandEvent) {
-    if ("Choose Lookup Item" == event.commandName) {
-      shouldAcceptActionsChanges = false
-    }
-  }
-
-  override fun commandFinished(event: CommandEvent) {
-    if ("Choose Lookup Item" == event.commandName) {
-      shouldAcceptActionsChanges = true
-    }
+  override fun beforeTruncate() {
+    actions.forEach(FilterProviderAction::reset)
   }
 
   private fun cleanUp() {
-    IS_MENU_MODIFIED.set(false)
-    providers = emptyCollection()
     lookup.removeLookupListener(this)
-    messageBus.disconnect()
   }
 }

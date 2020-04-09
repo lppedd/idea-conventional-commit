@@ -18,20 +18,28 @@ import com.intellij.codeInsight.completion.*
 import com.intellij.codeInsight.completion.CompletionType.BASIC
 import com.intellij.codeInsight.completion.impl.CompletionSorterImpl
 import com.intellij.codeInsight.completion.impl.PreferStartMatching
+import com.intellij.codeInsight.lookup.Lookup
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementWeigher
+import com.intellij.codeInsight.lookup.impl.LookupImpl
+import com.intellij.openapi.Disposable
 import com.intellij.openapi.fileTypes.PlainTextLanguage
 import com.intellij.openapi.progress.ProgressManager
+import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.vcs.ui.CommitMessage
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.util.ReflectionUtil.findField
 import com.intellij.util.concurrency.Semaphore
 import org.jetbrains.annotations.ApiStatus
 import java.lang.reflect.Field
+import java.util.*
+import java.util.Collections.synchronizedMap
 import kotlin.LazyThreadSafetyMode.PUBLICATION
 import kotlin.internal.InlineOnly
 
 private val PLAIN_TEXT_PATTERN = PlatformPatterns.psiElement().withLanguage(PlainTextLanguage.INSTANCE)
+private val MENU_ENHANCER_MAP = synchronizedMap(IdentityHashMap<Lookup, MenuEnhancerLookupListener>(16))
+private val LOOKUP_DISPOSER_MAP = synchronizedMap(IdentityHashMap<Lookup, Disposable>(16))
 
 /**
  * Provides context-based completion items inside the VCS commit dialog.
@@ -125,8 +133,8 @@ private open class CommitCompletionContributor : CompletionContributor() {
         safelySetNoopListOnLookupArranger(process)
         safelyReleaseProcessSemaphore(process)
 
-        val filterableProviders = providers.flatMap { it.providers.take(3) }.take(6)
-        MenuEnhancerLookupListener(process.lookup).setProviders(filterableProviders)
+        val menuEnhancer = installAndGetMenuEnhancer(process.lookup)
+        menuEnhancer?.setProviders(providers.flatMap { it.providers.take(3) }.take(6))
       }
     }
 
@@ -144,6 +152,21 @@ private open class CommitCompletionContributor : CompletionContributor() {
     return (CompletionSorter.emptySorter() as CompletionSorterImpl)
       .withClassifier(CompletionSorterImpl.weighingFactory(PreferStartMatching()))
       .withClassifier(CompletionSorterImpl.weighingFactory(weigher))
+  }
+
+  private fun installAndGetMenuEnhancer(lookup: LookupImpl): MenuEnhancerLookupListener? {
+    val disposable = LOOKUP_DISPOSER_MAP.computeIfAbsent(lookup) {
+      Disposable {
+        LOOKUP_DISPOSER_MAP.remove(lookup)
+        MENU_ENHANCER_MAP.remove(lookup)
+      }
+    }
+
+    if (Disposer.findRegisteredObject(lookup, disposable) == null) {
+      Disposer.register(lookup, disposable)
+    }
+
+    return MENU_ENHANCER_MAP.computeIfAbsent(lookup) { MenuEnhancerLookupListener(lookup) }
   }
 
   /**

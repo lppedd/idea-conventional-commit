@@ -8,6 +8,7 @@ import com.intellij.codeInsight.lookup.impl.LookupImpl
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import org.jetbrains.annotations.ApiStatus
+import java.util.*
 
 /**
  * @author Edoardo Luppi
@@ -83,4 +84,10 @@ internal class FilterProviderAction(
 
     backupItems = emptyList()
   }
+
+  override fun equals(other: Any?): Boolean =
+    other is FilterProviderAction && provider.getId() == other.provider.getId()
+
+  override fun hashCode(): Int =
+    Objects.hashCode(provider.getId())
 }
