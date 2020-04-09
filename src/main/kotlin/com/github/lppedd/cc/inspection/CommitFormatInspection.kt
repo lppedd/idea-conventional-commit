@@ -36,7 +36,7 @@ internal class CommitFormatInspection : CommitBaseInspection() {
       manager: InspectionManager,
       isOnTheFly: Boolean,
   ): Array<ProblemDescriptor> {
-    if (document.lineCount > 0) {
+    if (!isTemplateActive() && document.lineCount > 0) {
       return checkHeader(file, document, manager).toTypedArray()
     }
 
