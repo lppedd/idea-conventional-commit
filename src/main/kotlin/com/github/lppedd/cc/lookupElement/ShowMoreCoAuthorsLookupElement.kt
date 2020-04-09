@@ -26,7 +26,7 @@ internal class ShowMoreCoAuthorsLookupElement(
     completionPrefix: String,
 ) : CommitLookupElement(), PrefixChangeListener {
   private var changingLookupString = StringBuilder(50) + completionPrefix
-  override val baseWeight: Int = WEIGHT_FOOTER
+  override val priority = PRIORITY_FOOTER
 
   override fun beforeAppend(ch: Char) {
     changingLookupString += ch

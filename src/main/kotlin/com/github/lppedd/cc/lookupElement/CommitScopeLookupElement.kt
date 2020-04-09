@@ -16,7 +16,7 @@ internal class CommitScopeLookupElement(
     override val provider: ScopeProviderWrapper,
     private val psiElement: CommitScopePsiElement,
 ) : CommitLookupElement() {
-  override val baseWeight: Int = WEIGHT_SCOPE
+  override val priority = PRIORITY_SCOPE
 
   override fun getPsiElement(): CommitScopePsiElement =
     psiElement

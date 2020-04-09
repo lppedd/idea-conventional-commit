@@ -15,7 +15,7 @@ internal class CommitBodyLookupElement(
     private val psiElement: CommitBodyPsiElement,
     private val completionPrefix: String,
 ) : CommitLookupElement() {
-  override val baseWeight: Int = WEIGHT_BODY
+  override val priority = PRIORITY_BODY
 
   override fun getPsiElement(): CommitBodyPsiElement =
     psiElement

@@ -16,7 +16,7 @@ internal class CommitSubjectLookupElement(
     override val provider: SubjectProviderWrapper,
     private val psiElement: CommitSubjectPsiElement,
 ) : CommitLookupElement() {
-  override val baseWeight: Int = WEIGHT_SUBJECT
+  override val priority = PRIORITY_SUBJECT
 
   override fun getPsiElement(): CommitSubjectPsiElement =
     psiElement

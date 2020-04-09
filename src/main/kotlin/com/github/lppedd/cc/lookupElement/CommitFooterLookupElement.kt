@@ -18,7 +18,7 @@ internal class CommitFooterLookupElement(
     private val psiElement: CommitFooterPsiElement,
     private val completionPrefix: String,
 ) : CommitLookupElement() {
-  override val baseWeight: Int = WEIGHT_FOOTER
+  override val priority = PRIORITY_FOOTER
 
   override fun getPsiElement(): CommitFooterPsiElement =
     psiElement
