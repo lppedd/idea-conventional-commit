@@ -55,6 +55,12 @@ class TypingTest : BaseTest() {
     myFixture.checkResult("build()<caret>")
   }
 
+  fun test_closing_paren_insertion_inside_subject_without_scope() {
+    prepareFile("build: subj<caret>ect")
+    myFixture.type(")")
+    myFixture.checkResult("build: subj)<caret>ect")
+  }
+
   fun test_closing_paren_insertion_inside_complete_scope() {
     prepareFile("build(np<caret>m)")
     myFixture.type(")")
