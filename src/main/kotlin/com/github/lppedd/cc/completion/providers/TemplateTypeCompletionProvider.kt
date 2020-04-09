@@ -2,6 +2,7 @@
 
 package com.github.lppedd.cc.completion.providers
 
+import com.github.lppedd.cc.MAX_ITEMS_PER_PROVIDER
 import com.github.lppedd.cc.api.CommitTypeProvider
 import com.github.lppedd.cc.api.TYPE_EP
 import com.github.lppedd.cc.completion.resultset.ResultSet
@@ -31,7 +32,7 @@ internal class TemplateTypeCompletionProvider(
           val wrapper = TypeProviderWrapper(project, provider)
           provider.getCommitTypes("")
             .asSequence()
-            .take(200)
+            .take(MAX_ITEMS_PER_PROVIDER)
             .map { wrapper to it }
         }
       }

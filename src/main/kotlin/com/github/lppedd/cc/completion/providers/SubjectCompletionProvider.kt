@@ -2,6 +2,7 @@
 
 package com.github.lppedd.cc.completion.providers
 
+import com.github.lppedd.cc.MAX_ITEMS_PER_PROVIDER
 import com.github.lppedd.cc.api.CommitSubjectProvider
 import com.github.lppedd.cc.api.ProviderPresentation
 import com.github.lppedd.cc.api.SUBJECT_EP
@@ -33,7 +34,7 @@ internal class SubjectCompletionProvider(
           val wrapper = SubjectProviderWrapper(project, provider)
           provider.getCommitSubjects(context.type, context.scope)
             .asSequence()
-            .take(200)
+            .take(MAX_ITEMS_PER_PROVIDER)
             .map { wrapper to it }
         }
       }
