@@ -2,6 +2,7 @@
 
 package com.github.lppedd.cc.completion.providers
 
+import com.github.lppedd.cc.MAX_ITEMS_PER_PROVIDER
 import com.github.lppedd.cc.api.BODY_EP
 import com.github.lppedd.cc.api.CommitBodyProvider
 import com.github.lppedd.cc.api.ProviderPresentation
@@ -40,7 +41,7 @@ internal class BodyCompletionProvider(
               (commitTokens.subject as? ValidToken)?.value
             )
             .asSequence()
-            .take(200)
+            .take(MAX_ITEMS_PER_PROVIDER)
             .map { wrapper to it }
         }
       }

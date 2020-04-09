@@ -3,6 +3,7 @@
 package com.github.lppedd.cc.completion.providers
 
 import com.github.lppedd.cc.CCBundle
+import com.github.lppedd.cc.MAX_ITEMS_PER_PROVIDER
 import com.github.lppedd.cc.api.*
 import com.github.lppedd.cc.completion.resultset.ResultSet
 import com.github.lppedd.cc.configuration.CCConfigService
@@ -47,7 +48,7 @@ internal class FooterValueCompletionProvider(
               (commitTokens.subject as? ValidToken)?.value
             )
             .asSequence()
-            .take(200)
+            .take(MAX_ITEMS_PER_PROVIDER)
             .map { wrapper to it }
         }
       }
