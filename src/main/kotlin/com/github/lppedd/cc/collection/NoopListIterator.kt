@@ -1,4 +1,4 @@
-package com.github.lppedd.cc.noop
+package com.github.lppedd.cc.collection
 
 import org.jetbrains.annotations.ApiStatus
 

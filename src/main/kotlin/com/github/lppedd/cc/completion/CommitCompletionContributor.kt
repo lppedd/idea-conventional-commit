@@ -9,7 +9,7 @@ import com.github.lppedd.cc.completion.providers.CompletionProvider
 import com.github.lppedd.cc.completion.resultset.WrapperCompletionResultSet
 import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.configuration.CCConfigService.CompletionType.TEMPLATE
-import com.github.lppedd.cc.noop.NoopList
+import com.github.lppedd.cc.collection.NoopList
 import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.CommitContext.*
 import com.github.lppedd.cc.parser.FooterContext.FooterTypeContext
