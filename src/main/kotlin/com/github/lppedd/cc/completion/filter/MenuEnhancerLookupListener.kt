@@ -39,6 +39,13 @@ internal class MenuEnhancerLookupListener(private val lookup: LookupImpl) : Look
 
   override fun uiRefreshed() {
     try {
+      val myUi = getField<Any>(lookup.javaClass, lookup, null, "myUi")
+
+      if (myUi == null) {
+        IS_MENU_MODIFIED.set(false)
+        return
+      }
+
       if (IS_MENU_MODIFIED.get() && lookup.isShown) {
         if (shouldAcceptActionsChanges) {
           actions.forEach(FilterProviderAction::reset)
@@ -46,8 +53,6 @@ internal class MenuEnhancerLookupListener(private val lookup: LookupImpl) : Look
 
         return
       }
-
-      val myUi = getField<Any>(lookup.javaClass, lookup, null, "myUi") ?: return
 
       IS_MENU_MODIFIED.compareAndSet(false, true)
 
