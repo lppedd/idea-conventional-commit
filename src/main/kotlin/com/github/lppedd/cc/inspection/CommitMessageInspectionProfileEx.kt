@@ -5,6 +5,7 @@ import com.intellij.codeInspection.ex.InspectionProfileImpl
 import com.intellij.codeInspection.ex.InspectionToolWrapper
 import com.intellij.codeInspection.ex.LocalInspectionToolWrapper
 import com.intellij.openapi.project.Project
+import com.intellij.util.ReflectionUtil.findField
 import com.intellij.vcs.commit.message.CommitMessageInspectionProfile
 import net.sf.cglib.proxy.Enhancer
 import net.sf.cglib.proxy.MethodInterceptor
@@ -33,12 +34,8 @@ private class CommitMessageInspectionProfileEx(project: Project) : CommitMessage
    */
   private fun hackInspectionProfile() {
     val inspectionProfileImplClazz = InspectionProfileImpl::class.java
-
-    val myToolSupplierField = inspectionProfileImplClazz.getDeclaredField("myToolSupplier")
-    myToolSupplierField.isAccessible = true
-
-    val myBaseProfileField = inspectionProfileImplClazz.getDeclaredField("myBaseProfile")
-    myBaseProfileField.isAccessible = true
+    val myToolSupplierField = findField(inspectionProfileImplClazz, null, "myToolSupplier")
+    val myBaseProfileField = findField(inspectionProfileImplClazz, null, "myBaseProfile")
 
     // IDEA -193.3519 > Supplier<List<InspectionToolWrapper>>#get
     // IDEA 193.3519+ > InspectionToolsSupplier#createTools
@@ -77,13 +74,9 @@ private class CommitMessageInspectionProfileEx(project: Project) : CommitMessage
     myBaseProfileField.set(this, inspectionProfileImpl)
 
     // From here onwards it might not be needed, but hey, just that we are here...
-    val staticDEFAULTField = CommitMessageInspectionProfile::class.java.getDeclaredField("DEFAULT")
-    staticDEFAULTField.isAccessible = true
-
-    val modifiersField = Field::class.java.getDeclaredField("modifiers")
-    modifiersField.isAccessible = true
+    val staticDEFAULTField = findField(CommitMessageInspectionProfile::class.java, null, "DEFAULT")
+    val modifiersField = findField(Field::class.java, null, "modifiers")
     modifiersField.setInt(staticDEFAULTField, staticDEFAULTField.modifiers and Modifier.FINAL.inv())
-
     staticDEFAULTField.set(null, inspectionProfileImpl)
   }
 }

@@ -6,6 +6,7 @@ import com.intellij.codeInsight.lookup.LookupListener
 import com.intellij.codeInsight.lookup.impl.LookupImpl
 import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.actionSystem.impl.ActionButton
+import com.intellij.util.ReflectionUtil.getField
 import org.jetbrains.annotations.ApiStatus
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -32,17 +33,12 @@ internal class MenuEnhancerLookupListener(private val lookup: LookupImpl) : Look
         return
       }
 
-      val lookupUi = lookup.javaClass.getDeclaredField("myUi").let {
-        it.isAccessible = true
-        it.get(lookup) ?: return
-      }
+      val myUi = getField<Any>(lookup.javaClass, lookup, null, "myUi") ?: return
 
       IS_MENU_MODIFIED.compareAndSet(false, true)
 
-      val menuActions = lookupUi.javaClass.getDeclaredField("myMenuButton").let {
-        it.isAccessible = true
-        (it.get(lookupUi) as ActionButton).action as DefaultActionGroup
-      }
+      val myMenuButton = getField<ActionButton>(myUi.javaClass, myUi, null, "myMenuButton")
+      val menuActions = myMenuButton.action as DefaultActionGroup
 
       providers
         .map { FilterProviderAction(lookup, it) }
