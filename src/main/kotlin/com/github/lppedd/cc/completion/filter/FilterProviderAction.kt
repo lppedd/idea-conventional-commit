@@ -22,10 +22,24 @@ internal class FilterProviderAction(
   private var backupItems = emptyList<CommitLookupElement>()
 
   fun reset() {
-    isFiltered = false
+    if (isFiltered) {
+      performAction()
+    }
   }
 
   override fun actionPerformed(ignored: AnActionEvent) {
+    performAction()
+  }
+
+  override fun update(e: AnActionEvent) {
+    e.presentation.icon = if (isFiltered) {
+      ICON_DISABLED
+    } else {
+      provider.getPresentation().icon
+    }
+  }
+
+  private fun performAction() {
     isFiltered = !isFiltered
 
     if (isFiltered) {
@@ -35,14 +49,6 @@ internal class FilterProviderAction(
     }
 
     lookup.resort(false)
-  }
-
-  override fun update(e: AnActionEvent) {
-    e.presentation.icon = if (isFiltered) {
-      ICON_DISABLED
-    } else {
-      provider.getPresentation().icon
-    }
   }
 
   private fun filterLookupElements() {
