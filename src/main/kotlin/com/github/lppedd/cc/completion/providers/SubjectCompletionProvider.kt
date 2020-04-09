@@ -4,11 +4,8 @@ package com.github.lppedd.cc.completion.providers
 
 import com.github.lppedd.cc.MAX_ITEMS_PER_PROVIDER
 import com.github.lppedd.cc.api.CommitSubjectProvider
-import com.github.lppedd.cc.api.ProviderPresentation
 import com.github.lppedd.cc.api.SUBJECT_EP
-import com.github.lppedd.cc.completion.Priority
 import com.github.lppedd.cc.completion.resultset.ResultSet
-import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.lookupElement.CommitSubjectLookupElement
 import com.github.lppedd.cc.parser.CommitContext.SubjectCommitContext
 import com.github.lppedd.cc.psiElement.CommitSubjectPsiElement
@@ -23,7 +20,7 @@ import org.jetbrains.annotations.ApiStatus
 internal class SubjectCompletionProvider(
     private val project: Project,
     private val context: SubjectCommitContext,
-) : CommitCompletionProvider<CommitSubjectProvider> {
+) : CompletionProvider<CommitSubjectProvider> {
   override val providers: List<CommitSubjectProvider> = SUBJECT_EP.getExtensions(project)
   override val stopHere = false
 
@@ -44,20 +41,4 @@ internal class SubjectCompletionProvider(
       .distinctBy(CommitSubjectLookupElement::getLookupString)
       .forEach(rs::addElement)
   }
-}
-
-internal class SubjectProviderWrapper(
-    project: Project,
-    private val provider: CommitSubjectProvider,
-) : ProviderWrapper {
-  private val config = CCConfigService.getInstance(project)
-
-  override fun getId(): String =
-    provider.getId()
-
-  override fun getPresentation(): ProviderPresentation =
-    provider.getPresentation()
-
-  override fun getPriority() =
-    Priority(config.getProviderOrder(provider))
 }

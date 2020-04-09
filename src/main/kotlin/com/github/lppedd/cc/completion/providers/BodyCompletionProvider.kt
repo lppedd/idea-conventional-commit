@@ -5,10 +5,7 @@ package com.github.lppedd.cc.completion.providers
 import com.github.lppedd.cc.MAX_ITEMS_PER_PROVIDER
 import com.github.lppedd.cc.api.BODY_EP
 import com.github.lppedd.cc.api.CommitBodyProvider
-import com.github.lppedd.cc.api.ProviderPresentation
-import com.github.lppedd.cc.completion.Priority
 import com.github.lppedd.cc.completion.resultset.ResultSet
-import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.lookupElement.CommitBodyLookupElement
 import com.github.lppedd.cc.parser.CommitTokens
 import com.github.lppedd.cc.parser.FooterContext.FooterTypeContext
@@ -26,7 +23,7 @@ internal class BodyCompletionProvider(
     private val project: Project,
     private val context: FooterTypeContext,
     private val commitTokens: CommitTokens,
-) : CommitCompletionProvider<CommitBodyProvider> {
+) : CompletionProvider<CommitBodyProvider> {
   override val providers: List<CommitBodyProvider> = BODY_EP.getExtensions(project)
   override val stopHere = false
 
@@ -51,20 +48,4 @@ internal class BodyCompletionProvider(
       .distinctBy(CommitBodyLookupElement::getLookupString)
       .forEach(rs::addElement)
   }
-}
-
-internal class BodyProviderWrapper(
-    project: Project,
-    private val provider: CommitBodyProvider,
-) : ProviderWrapper {
-  private val config = CCConfigService.getInstance(project)
-
-  override fun getId(): String =
-    provider.getId()
-
-  override fun getPresentation(): ProviderPresentation =
-    provider.getPresentation()
-
-  override fun getPriority() =
-    Priority(config.getProviderOrder(provider))
 }

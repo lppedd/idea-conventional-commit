@@ -1,7 +1,7 @@
 package com.github.lppedd.cc.lookupElement
 
 import com.github.lppedd.cc.*
-import com.github.lppedd.cc.completion.providers.FooterProviderWrapper
+import com.github.lppedd.cc.completion.providers.FooterValueProviderWrapper
 import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.ValidToken
 import com.github.lppedd.cc.psiElement.CommitFooterPsiElement
@@ -14,7 +14,7 @@ import com.intellij.openapi.util.TextRange
  */
 internal class CommitFooterLookupElement(
     override val index: Int,
-    override val provider: FooterProviderWrapper,
+    override val provider: FooterValueProviderWrapper,
     private val psiElement: CommitFooterPsiElement,
     private val completionPrefix: String,
 ) : CommitLookupElement() {
