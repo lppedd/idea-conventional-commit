@@ -30,7 +30,7 @@ internal class SubjectCompletionProvider(
     providers.asSequence()
       .flatMap { provider ->
         runWithCheckCanceled {
-          val wrapper = SubjectProviderWrapper(provider)
+          val wrapper = SubjectProviderWrapper(project, provider)
           provider.getCommitSubjects(context.type, context.scope)
             .asSequence()
             .take(200)
@@ -44,13 +44,18 @@ internal class SubjectCompletionProvider(
   }
 }
 
-internal class SubjectProviderWrapper(private val provider: CommitSubjectProvider) : ProviderWrapper {
+internal class SubjectProviderWrapper(
+    project: Project,
+    private val provider: CommitSubjectProvider,
+) : ProviderWrapper {
+  private val config = CCConfigService.getInstance(project)
+
   override fun getId(): String =
     provider.getId()
 
   override fun getPresentation(): ProviderPresentation =
     provider.getPresentation()
 
-  override fun getPriority(project: Project) =
-    Priority(CCConfigService.getInstance(project).getProviderOrder(provider))
+  override fun getPriority() =
+    Priority(config.getProviderOrder(provider))
 }

@@ -30,7 +30,7 @@ internal class ScopeCompletionProvider(
     providers.asSequence()
       .flatMap { provider ->
         runWithCheckCanceled {
-          val wrapper = ScopeProviderWrapper(provider)
+          val wrapper = ScopeProviderWrapper(project, provider)
           provider.getCommitScopes(context.type)
             .asSequence()
             .take(200)
@@ -44,13 +44,18 @@ internal class ScopeCompletionProvider(
   }
 }
 
-internal class ScopeProviderWrapper(private val provider: CommitScopeProvider) : ProviderWrapper {
+internal class ScopeProviderWrapper(
+    project: Project,
+    private val provider: CommitScopeProvider,
+) : ProviderWrapper {
+  private val config = CCConfigService.getInstance(project)
+
   override fun getId(): String =
     provider.getId()
 
   override fun getPresentation(): ProviderPresentation =
     provider.getPresentation()
 
-  override fun getPriority(project: Project) =
-    Priority(CCConfigService.getInstance(project).getProviderOrder(provider))
+  override fun getPriority() =
+    Priority(config.getProviderOrder(provider))
 }

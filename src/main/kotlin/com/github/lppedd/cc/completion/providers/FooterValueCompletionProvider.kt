@@ -39,7 +39,7 @@ internal class FooterValueCompletionProvider(
     providers.asSequence()
       .flatMap { provider ->
         runWithCheckCanceled {
-          val wrapper = FooterProviderWrapper(provider)
+          val wrapper = FooterProviderWrapper(project, provider)
           provider.getCommitFooters(
               context.type,
               (commitTokens.type as? ValidToken)?.value,
@@ -67,7 +67,7 @@ internal class FooterValueCompletionProvider(
     val commitFooter = CommitFooter("", CCBundle["cc.config.coAuthors.description"])
     val psiElement = CommitFooterPsiElement(project, commitFooter)
     val provider = FOOTER_EP.findExtensionOrFail(DefaultCommitTokenProvider::class.java, project)
-    val wrapper = FooterProviderWrapper(provider)
+    val wrapper = FooterProviderWrapper(project, provider)
     val lookupElement = ShowMoreCoAuthorsLookupElement(2000, wrapper, psiElement, prefix)
 
     if (process is CompletionProgressIndicator) {
@@ -78,13 +78,18 @@ internal class FooterValueCompletionProvider(
   }
 }
 
-internal class FooterProviderWrapper(private val provider: CommitFooterProvider) : ProviderWrapper {
+internal class FooterProviderWrapper(
+    project: Project,
+    private val provider: CommitFooterProvider,
+) : ProviderWrapper {
+  private val config = CCConfigService.getInstance(project)
+
   override fun getId(): String =
     provider.getId()
 
   override fun getPresentation(): ProviderPresentation =
     provider.getPresentation()
 
-  override fun getPriority(project: Project) =
-    Priority(CCConfigService.getInstance(project).getProviderOrder(provider))
+  override fun getPriority() =
+    Priority(config.getProviderOrder(provider))
 }

@@ -30,7 +30,7 @@ internal class TypeCompletionProvider(
     providers.asSequence()
       .flatMap { provider ->
         runWithCheckCanceled {
-          val wrapper = TypeProviderWrapper(provider)
+          val wrapper = TypeProviderWrapper(project, provider)
           provider.getCommitTypes(context.type)
             .asSequence()
             .take(200)
@@ -44,13 +44,18 @@ internal class TypeCompletionProvider(
   }
 }
 
-internal class TypeProviderWrapper(private val provider: CommitTypeProvider) : ProviderWrapper {
+internal class TypeProviderWrapper(
+    project: Project,
+    private val provider: CommitTypeProvider,
+) : ProviderWrapper {
+  private val config = CCConfigService.getInstance(project)
+
   override fun getId(): String =
     provider.getId()
 
   override fun getPresentation(): ProviderPresentation =
     provider.getPresentation()
 
-  override fun getPriority(project: Project) =
-    Priority(CCConfigService.getInstance(project).getProviderOrder(provider))
+  override fun getPriority() =
+    Priority(config.getProviderOrder(provider))
 }

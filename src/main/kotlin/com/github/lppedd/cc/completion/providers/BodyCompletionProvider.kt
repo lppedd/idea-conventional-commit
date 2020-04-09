@@ -33,7 +33,7 @@ internal class BodyCompletionProvider(
     providers.asSequence()
       .flatMap { provider ->
         runWithCheckCanceled {
-          val wrapper = BodyProviderWrapper(provider)
+          val wrapper = BodyProviderWrapper(project, provider)
           provider.getCommitBodies(
               (commitTokens.type as? ValidToken)?.value,
               (commitTokens.scope as? ValidToken)?.value,
@@ -51,13 +51,18 @@ internal class BodyCompletionProvider(
   }
 }
 
-internal class BodyProviderWrapper(private val provider: CommitBodyProvider) : ProviderWrapper {
+internal class BodyProviderWrapper(
+    project: Project,
+    private val provider: CommitBodyProvider,
+) : ProviderWrapper {
+  private val config = CCConfigService.getInstance(project)
+
   override fun getId(): String =
     provider.getId()
 
   override fun getPresentation(): ProviderPresentation =
     provider.getPresentation()
 
-  override fun getPriority(project: Project) =
-    Priority(CCConfigService.getInstance(project).getProviderOrder(provider))
+  override fun getPriority() =
+    Priority(config.getProviderOrder(provider))
 }

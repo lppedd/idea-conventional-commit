@@ -21,7 +21,7 @@ internal class CommitLookupElementWeigher : LookupElementWeigher {
   override fun weigh(element: LookupElement): Comparable<*> =
     if (element is CommitLookupElement) {
       // Lower priority = less weight = higher-up in the list
-      val priority = element.provider.getPriority(project)
+      val priority = element.provider.getPriority()
       element.baseWeight + (priority * MAX_ELEMENTS_PER_PROVIDER) + element.index
     } else {
       0
