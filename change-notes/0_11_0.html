@@ -1,0 +1,39 @@
+<h3>0.11.0 (09/04/2020)</h3>
+<p>
+  Seventeenth alpha release.<br/>
+  New feature, refactoring and fix
+</p>
+<ul>
+  <li>
+    Provided a way to filter out a Provider's completion items directly from the
+    completion's popup.
+    <br>
+    <br>
+    <img
+        src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_filters.png"
+        alt="Popup filters"
+    >
+    <br>
+    <br>
+    <em>As of now, if you change the search term, the filters are going to be reset.</em>
+    <br>
+    <br>
+    This experimental feature brought a massive code update (+ 1300 LOC),
+    and laid the foundation for Provider's parallel execution. In fact the items are no more
+    ordered thanks to pre-ordering Provider's, but only thanks to a weighing system,
+    which updates them as they come in.
+    <br>
+    <br>
+    <strong>Try it out!</strong> Feedback is highly appreciated, and ideas are welcomed
+    <br>
+    <br>
+  </li>
+  <li>
+    Fixed the handling of the closing parenthesis, which couldn't be inserted
+    in certain situations
+  </li>
+  <li>
+    Aligned the behavior of overriding a footer value by completion item
+    and by author's dialog
+  </li>
+</ul>
