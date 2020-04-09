@@ -213,13 +213,15 @@ internal inline fun <T> emptyCollection(): Collection<T> =
 // region Utilities
 
 @InlineOnly
-internal inline fun <T> runWithCheckCanceled(noinline callable: () -> T): T =
-  ApplicationUtil.runWithCheckCanceled(callable, ProgressManager.getInstance().progressIndicator)
+internal inline fun <T> safeRunWithCheckCanceled(noinline callable: () -> T): T =
+  ProgressManager.getInstance().progressIndicator?.let {
+    ApplicationUtil.runWithCheckCanceled(callable, it)
+  } ?: callable()
 
 @InlineOnly
 internal inline fun <T> runWithCheckCanceled(doCheckCanceled: Boolean, noinline callable: () -> T): T =
   if (doCheckCanceled) {
-    ApplicationUtil.runWithCheckCanceled(callable, ProgressManager.getInstance().progressIndicator)
+    safeRunWithCheckCanceled(callable)
   } else {
     callable()
   }
