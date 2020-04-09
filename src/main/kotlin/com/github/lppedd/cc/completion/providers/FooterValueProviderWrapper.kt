@@ -1,6 +1,6 @@
 package com.github.lppedd.cc.completion.providers
 
-import com.github.lppedd.cc.api.CommitFooterProvider
+import com.github.lppedd.cc.api.CommitFooterValueProvider
 import com.github.lppedd.cc.api.ProviderPresentation
 import com.github.lppedd.cc.completion.Priority
 import com.github.lppedd.cc.configuration.CCConfigService
@@ -13,7 +13,7 @@ import org.jetbrains.annotations.ApiStatus
 @ApiStatus.Internal
 internal class FooterValueProviderWrapper(
     project: Project,
-    private val provider: CommitFooterProvider,
+    private val provider: CommitFooterValueProvider,
 ) : ProviderWrapper {
   private val config = CCConfigService.getInstance(project)
 

@@ -53,18 +53,25 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
   private var subjectProvidersMap: MutableMap<String, Int> = ConcurrentHashMap<String, Int>()
 
   @XMap(
-    propertyElementName = "commitFooters",
-    keyAttributeName = "providerId",
-    valueAttributeName = "order"
-  )
-  private var footerProvidersMap: MutableMap<String, Int> = ConcurrentHashMap<String, Int>()
-
-  @XMap(
     propertyElementName = "commitBodies",
     keyAttributeName = "providerId",
     valueAttributeName = "order"
   )
   private var bodyProvidersMap: MutableMap<String, Int> = ConcurrentHashMap<String, Int>()
+
+  @XMap(
+    propertyElementName = "commitFooterTypes",
+    keyAttributeName = "providerId",
+    valueAttributeName = "order"
+  )
+  private var footerTypeProvidersMap: MutableMap<String, Int> = ConcurrentHashMap<String, Int>()
+
+  @XMap(
+    propertyElementName = "commitFooterValues",
+    keyAttributeName = "providerId",
+    valueAttributeName = "order"
+  )
+  private var footerValueProvidersMap: MutableMap<String, Int> = ConcurrentHashMap<String, Int>()
 
   init {
     noStateLoaded()
@@ -79,11 +86,14 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
   fun getProviderOrder(provider: CommitSubjectProvider) =
     subjectProvidersMap.computeIfAbsent(provider.getId()) { subjectProvidersMap.size }
 
-  fun getProviderOrder(provider: CommitFooterProvider) =
-    footerProvidersMap.computeIfAbsent(provider.getId()) { footerProvidersMap.size }
-
   fun getProviderOrder(provider: CommitBodyProvider) =
     bodyProvidersMap.computeIfAbsent(provider.getId()) { bodyProvidersMap.size }
+
+  fun getProviderOrder(provider: CommitFooterTypeProvider) =
+    footerTypeProvidersMap.computeIfAbsent(provider.getId()) { footerTypeProvidersMap.size }
+
+  fun getProviderOrder(provider: CommitFooterValueProvider) =
+    footerValueProvidersMap.computeIfAbsent(provider.getId()) { footerValueProvidersMap.size }
 
   fun setTypeProvidersOrder(typeProvidersMap: Map<String, Int>) {
     this.typeProvidersMap = ConcurrentHashMap(typeProvidersMap)
@@ -109,6 +119,8 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
     typeProvidersMap.putIfAbsent(DEFAULT_PROVIDER_ID, 0)
     scopeProvidersMap.putIfAbsent(DEFAULT_PROVIDER_ID, 0)
     subjectProvidersMap.putIfAbsent(DEFAULT_VCS_PROVIDER_ID, 0)
+    footerTypeProvidersMap.putIfAbsent(DEFAULT_PROVIDER_ID, 0)
+    footerValueProvidersMap.putIfAbsent(DEFAULT_PROVIDER_ID, 0)
   }
 
   override fun equals(other: Any?): Boolean {

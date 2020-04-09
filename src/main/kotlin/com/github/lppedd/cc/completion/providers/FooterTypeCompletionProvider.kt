@@ -3,8 +3,8 @@
 package com.github.lppedd.cc.completion.providers
 
 import com.github.lppedd.cc.MAX_ITEMS_PER_PROVIDER
-import com.github.lppedd.cc.api.CommitFooterProvider
-import com.github.lppedd.cc.api.FOOTER_EP
+import com.github.lppedd.cc.api.CommitFooterTypeProvider
+import com.github.lppedd.cc.api.FOOTER_TYPE_EP
 import com.github.lppedd.cc.completion.resultset.ResultSet
 import com.github.lppedd.cc.lookupElement.CommitFooterTypeLookupElement
 import com.github.lppedd.cc.parser.FooterContext.FooterTypeContext
@@ -20,8 +20,8 @@ import org.jetbrains.annotations.ApiStatus
 internal class FooterTypeCompletionProvider(
     private val project: Project,
     private val context: FooterTypeContext,
-) : CompletionProvider<CommitFooterProvider> {
-  override val providers: List<CommitFooterProvider> = FOOTER_EP.getExtensions(project)
+) : CompletionProvider<CommitFooterTypeProvider> {
+  override val providers: List<CommitFooterTypeProvider> = FOOTER_TYPE_EP.getExtensions(project)
   override val stopHere = false
 
   override fun complete(resultSet: ResultSet) {
