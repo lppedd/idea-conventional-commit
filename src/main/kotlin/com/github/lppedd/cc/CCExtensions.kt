@@ -217,6 +217,14 @@ internal inline fun <T> runWithCheckCanceled(noinline callable: () -> T): T =
   ApplicationUtil.runWithCheckCanceled(callable, ProgressManager.getInstance().progressIndicator)
 
 @InlineOnly
+internal inline fun <T> runWithCheckCanceled(doCheckCanceled: Boolean, noinline callable: () -> T): T =
+  if (doCheckCanceled) {
+    ApplicationUtil.runWithCheckCanceled(callable, ProgressManager.getInstance().progressIndicator)
+  } else {
+    callable()
+  }
+
+@InlineOnly
 internal inline fun invokeLaterOnEdt(noinline block: () -> Unit) {
   ApplicationManager.getApplication().invokeLater(block)
 }

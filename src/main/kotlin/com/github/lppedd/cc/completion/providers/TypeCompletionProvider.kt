@@ -24,11 +24,11 @@ internal class TypeCompletionProvider(
   override val providers: List<CommitTypeProvider> = TYPE_EP.getExtensions(project)
   override val stopHere = false
 
-  override fun complete(resultSet: ResultSet) {
+  override fun complete(resultSet: ResultSet, shouldCheckCanceled: Boolean) {
     val rs = resultSet.withPrefixMatcher(context.type)
     providers.asSequence()
       .flatMap { provider ->
-        runWithCheckCanceled {
+        runWithCheckCanceled(shouldCheckCanceled) {
           val wrapper = TypeProviderWrapper(project, provider)
           provider.getCommitTypes(context.type)
             .asSequence()

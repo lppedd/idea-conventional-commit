@@ -24,11 +24,11 @@ internal class FooterTypeCompletionProvider(
   override val providers: List<CommitFooterTypeProvider> = FOOTER_TYPE_EP.getExtensions(project)
   override val stopHere = false
 
-  override fun complete(resultSet: ResultSet) {
+  override fun complete(resultSet: ResultSet, shouldCheckCanceled: Boolean) {
     val rs = resultSet.withPrefixMatcher(context.type)
     providers.asSequence()
       .flatMap { provider ->
-        runWithCheckCanceled {
+        runWithCheckCanceled(shouldCheckCanceled) {
           val wrapper = FooterTypeProviderWrapper(project, provider)
           provider.getCommitFooterTypes()
             .asSequence()

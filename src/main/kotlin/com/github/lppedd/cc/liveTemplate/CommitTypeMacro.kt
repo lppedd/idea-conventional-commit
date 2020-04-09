@@ -14,6 +14,7 @@ private class CommitTypeMacro : CommitMacro() {
     "commitType"
 
   override fun queryProviders(project: Project, lookup: LookupImpl) {
-    TypeCompletionProvider(project, TypeCommitContext("")).complete(LookupResultSet(lookup))
+    val commitContext = TypeCommitContext("")
+    TypeCompletionProvider(project, commitContext).complete(LookupResultSet(lookup), false)
   }
 }

@@ -35,13 +35,13 @@ internal class FooterValueCompletionProvider(
   override val providers: List<CommitFooterValueProvider> = FOOTER_VALUE_EP.getExtensions(project)
   override val stopHere = true
 
-  override fun complete(resultSet: ResultSet) {
+  override fun complete(resultSet: ResultSet, shouldCheckCanceled: Boolean) {
     val prefix = context.value.trimStart()
     val rs = resultSet.withPrefixMatcher(prefix)
 
     providers.asSequence()
       .flatMap { provider ->
-        runWithCheckCanceled {
+        runWithCheckCanceled(shouldCheckCanceled) {
           val wrapper = FooterValueProviderWrapper(project, provider)
           provider.getCommitFooterValues(
               context.type,

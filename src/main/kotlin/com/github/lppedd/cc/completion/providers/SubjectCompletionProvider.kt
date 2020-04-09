@@ -24,11 +24,11 @@ internal class SubjectCompletionProvider(
   override val providers: List<CommitSubjectProvider> = SUBJECT_EP.getExtensions(project)
   override val stopHere = false
 
-  override fun complete(resultSet: ResultSet) {
+  override fun complete(resultSet: ResultSet, shouldCheckCanceled: Boolean) {
     val rs = resultSet.withPrefixMatcher(context.subject.trimStart())
     providers.asSequence()
       .flatMap { provider ->
-        runWithCheckCanceled {
+        runWithCheckCanceled(shouldCheckCanceled) {
           val wrapper = SubjectProviderWrapper(project, provider)
           provider.getCommitSubjects(context.type, context.scope)
             .asSequence()

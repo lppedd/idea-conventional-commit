@@ -24,11 +24,11 @@ internal class ScopeCompletionProvider(
   override val providers: List<CommitScopeProvider> = SCOPE_EP.getExtensions(project)
   override val stopHere = false
 
-  override fun complete(resultSet: ResultSet) {
+  override fun complete(resultSet: ResultSet, shouldCheckCanceled: Boolean) {
     val rs = resultSet.withPrefixMatcher(context.scope.trim())
     providers.asSequence()
       .flatMap { provider ->
-        runWithCheckCanceled {
+        runWithCheckCanceled(shouldCheckCanceled) {
           val wrapper = ScopeProviderWrapper(project, provider)
           provider.getCommitScopes(context.type)
             .asSequence()

@@ -27,11 +27,11 @@ internal class BodyCompletionProvider(
   override val providers: List<CommitBodyProvider> = BODY_EP.getExtensions(project)
   override val stopHere = false
 
-  override fun complete(resultSet: ResultSet) {
+  override fun complete(resultSet: ResultSet, shouldCheckCanceled: Boolean) {
     val rs = resultSet.withPrefixMatcher(context.type)
     providers.asSequence()
       .flatMap { provider ->
-        runWithCheckCanceled {
+        runWithCheckCanceled(shouldCheckCanceled) {
           val wrapper = BodyProviderWrapper(project, provider)
           provider.getCommitBodies(
               (commitTokens.type as? ValidToken)?.value,

@@ -48,8 +48,9 @@ private class CommitScopeMacro : CommitMacro() {
         }
       })
       lookup.doWhileCalculating {
-        val provider = ScopeCompletionProvider(project, ScopeCommitContext(commitType, ""))
-        provider.complete(LookupResultSet(lookup))
+        val commitContext = ScopeCommitContext(commitType, "")
+        val provider = ScopeCompletionProvider(project, commitContext)
+        provider.complete(LookupResultSet(lookup), false)
       }
       lookup.showLookup()
       lookup.refreshUi(true, true)
