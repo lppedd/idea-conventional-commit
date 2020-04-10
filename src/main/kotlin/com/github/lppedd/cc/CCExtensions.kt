@@ -58,7 +58,7 @@ internal fun Document.getLine(line: Int): CharSequence {
 
 @InlineOnly
 internal inline fun Editor.scheduleAutoPopup() {
-  AutoPopupController.getInstance(project).scheduleAutoPopup(this)
+  AutoPopupController.getInstance(project ?: return).scheduleAutoPopup(this)
 }
 
 @InlineOnly
