@@ -11,6 +11,7 @@ import com.intellij.codeInsight.template.impl.TemplateImpl
 import com.intellij.codeInsight.template.impl.TemplateSettings
 import com.intellij.codeInsight.template.impl.TemplateState
 import com.intellij.openapi.application.runWriteAction
+import com.intellij.openapi.command.WriteCommandAction.runWriteCommandAction
 import com.intellij.openapi.util.TextRange
 import kotlin.math.max
 import kotlin.math.min
@@ -120,11 +121,12 @@ private object CCTemplateEditingListener : TemplateEditingAdapter() {
     // thus we can reposition the cursor at the end of the subject
     val newOffset = templateState.getSegmentRange(INDEX_SUBJECT).endOffset
     val editor = templateState.editor
-
-    runWriteAction {
+    val toDo = {
       editor.document.deleteString(newOffset, bodyOrFooterTypeRange.endOffset)
       editor.moveCaretToOffset(newOffset)
     }
+
+    runWriteCommandAction(editor.project, "Reposition cursor after subject", "", toDo)
   }
 
   private fun deleteScopeParenthesesIfEmpty(templateState: TemplateState) {
@@ -133,13 +135,15 @@ private object CCTemplateEditingListener : TemplateEditingAdapter() {
     // If the scope is empty it means the user didn't need to insert it,
     // thus we can remove it
     if (isScopeEmpty) {
-      val document = templateState.editor.document
+      val editor = templateState.editor
+      val document = editor.document
       val startOffset = max(scopeStart - 1, 0)
       val endOffset = min(scopeEnd + 1, document.textLength)
-
-      runWriteAction {
+      val toDo = {
         document.deleteString(startOffset, endOffset)
       }
+
+      runWriteCommandAction(editor.project, "Delete scope's parentheses", "", toDo)
     }
   }
 
