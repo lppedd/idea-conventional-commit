@@ -134,7 +134,13 @@ private class CommitCompletionContributor : CompletionContributor() {
 
       when (val context = commitTokens.getContext(lineCaretOffset)) {
         is TypeCommitContext -> providers.add(TypeCompletionProvider(project, context))
-        is ScopeCommitContext -> providers.add(ScopeCompletionProvider(project, context))
+        is ScopeCommitContext -> {
+          if (isTemplateActive) {
+            providers.add(NoScopeCompletionProvider(project))
+          }
+
+          providers.add(ScopeCompletionProvider(project, context))
+        }
         is SubjectCommitContext -> providers.add(SubjectCompletionProvider(project, context))
       }
     }

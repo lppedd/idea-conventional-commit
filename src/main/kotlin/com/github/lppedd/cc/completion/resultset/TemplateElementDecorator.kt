@@ -26,6 +26,7 @@ internal class TemplateElementDecorator(private val delegate: CommitLookupElemen
     val document = editor.document
 
     when (delegate) {
+      is CommitNoScopeLookupElement -> templateState.nextTab()
       is CommitFooterTypeLookupElement -> {
         val offset = templateState.getSegmentRange(INDEX_BODY_OR_FOOTER_TYPE).endOffset
         document.insertString(offset, ": ")
