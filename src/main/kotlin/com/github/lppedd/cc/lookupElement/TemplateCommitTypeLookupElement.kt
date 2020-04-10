@@ -87,7 +87,7 @@ private object CCTemplateEditingListener : TemplateEditingAdapter() {
       return
     }
 
-    if (oldIndex == INDEX_BODY_OR_FOOTER_TYPE) {
+    if (oldIndex == INDEX_BODY_OR_FOOTER_TYPE && newIndex > oldIndex) {
       if (templateState.getSegmentRange(INDEX_BODY_OR_FOOTER_TYPE).isEmpty) {
         deleteFooterValue(templateState)
         templateState.gotoEnd()
