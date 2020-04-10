@@ -4,7 +4,7 @@ package com.github.lppedd.cc.completion
 
 import com.github.lppedd.cc.*
 import com.github.lppedd.cc.collection.NoopList
-import com.github.lppedd.cc.completion.filter.MenuEnhancerLookupListener
+import com.github.lppedd.cc.completion.menu.MenuEnhancerLookupListener
 import com.github.lppedd.cc.completion.providers.*
 import com.github.lppedd.cc.completion.providers.CompletionProvider
 import com.github.lppedd.cc.completion.resultset.DelegateResultSet

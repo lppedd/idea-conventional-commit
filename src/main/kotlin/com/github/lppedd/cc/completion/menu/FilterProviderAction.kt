@@ -1,4 +1,4 @@
-package com.github.lppedd.cc.completion.filter
+package com.github.lppedd.cc.completion.menu
 
 import com.github.lppedd.cc.ICON_DISABLED
 import com.github.lppedd.cc.api.CommitTokenProvider
