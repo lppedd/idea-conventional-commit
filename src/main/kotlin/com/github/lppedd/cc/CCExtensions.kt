@@ -1,5 +1,6 @@
 package com.github.lppedd.cc
 
+import com.github.lppedd.cc.annotation.RequireEDT
 import com.intellij.codeInsight.AutoPopupController
 import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.codeInsight.lookup.impl.LookupImpl
@@ -82,11 +83,13 @@ internal inline fun Editor.insertStringAtCaret(string: String) {
 internal inline fun Editor.getTemplateState(): TemplateState? =
   TemplateManagerImpl.getTemplateState(this)
 
+@RequireEDT
 internal fun Editor.getCurrentLineRange(): TextRange {
   val mainCaretLine = EditorUtil.calcCaretLineRange(this).first.line
   return document.getLineRange(mainCaretLine)
 }
 
+@RequireEDT
 internal fun Editor.getCurrentLine(): CharSequence {
   val (start, end) = getCurrentLineRange()
   return document.immutableCharSequence.subSequence(start, end)
