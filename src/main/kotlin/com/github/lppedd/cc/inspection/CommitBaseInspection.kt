@@ -92,6 +92,7 @@ abstract class CommitBaseInspection : BaseCommitMessageInspection(), TemplateMan
 
   override fun dispose() {
     myMessageBus?.disconnect()
+    myMessageBus = null
   }
 
   @Suppress("EXPOSED_SUPER_CLASS")
