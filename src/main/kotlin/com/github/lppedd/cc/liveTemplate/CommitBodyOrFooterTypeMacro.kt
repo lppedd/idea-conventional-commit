@@ -3,7 +3,7 @@ package com.github.lppedd.cc.liveTemplate
 /**
  * @author Edoardo Luppi
  */
-private class CommitTypeMacro : CommitBaseCompleteMacro() {
+private class CommitBodyOrFooterTypeMacro : CommitBaseCompleteMacro() {
   override fun getName() =
-    "commitType"
+    "commitBodyOrFooterType"
 }

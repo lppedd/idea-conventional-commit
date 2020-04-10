@@ -39,7 +39,6 @@
     <iconProvider implementation="com.github.lppedd.cc.icon.CCConfigFileIconProvider" />
 
     <completion.contributor
-        id="commitTypeCompletion"
         order="first, before commitCompletion"
         language="TEXT"
         implementationClass="com.github.lppedd.cc.completion.CommitCompletionContributor"
@@ -52,7 +51,8 @@
     <liveTemplateMacro implementation="com.github.lppedd.cc.liveTemplate.CommitTypeMacro" />
     <liveTemplateMacro implementation="com.github.lppedd.cc.liveTemplate.CommitScopeMacro" />
     <liveTemplateMacro implementation="com.github.lppedd.cc.liveTemplate.CommitSubjectMacro" />
-    <liveTemplateMacro implementation="com.github.lppedd.cc.liveTemplate.CommitBodyAndFooterTypeMacro" />
+    <liveTemplateMacro implementation="com.github.lppedd.cc.liveTemplate.CommitBodyOrFooterTypeMacro" />
+    <liveTemplateMacro implementation="com.github.lppedd.cc.liveTemplate.CommitFooterValueMacro" />
     <defaultLiveTemplatesProvider implementation="com.github.lppedd.cc.liveTemplate.CCLiveTemplatesProvider" />
 
     <documentationProvider implementation="com.github.lppedd.cc.documentation.CommitTokenDocumentationProvider" />

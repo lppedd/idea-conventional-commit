@@ -7,7 +7,8 @@ import com.github.lppedd.cc.collection.NoopList
 import com.github.lppedd.cc.completion.filter.MenuEnhancerLookupListener
 import com.github.lppedd.cc.completion.providers.*
 import com.github.lppedd.cc.completion.providers.CompletionProvider
-import com.github.lppedd.cc.completion.resultset.WrapperCompletionResultSet
+import com.github.lppedd.cc.completion.resultset.DelegateResultSet
+import com.github.lppedd.cc.completion.resultset.TemplateDelegateResultSet
 import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.configuration.CCConfigService.CompletionType.TEMPLATE
 import com.github.lppedd.cc.parser.CCParser
@@ -22,6 +23,7 @@ import com.intellij.codeInsight.lookup.Lookup
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementWeigher
 import com.intellij.codeInsight.lookup.impl.LookupImpl
+import com.intellij.codeInsight.template.impl.TemplateManagerImpl
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.fileTypes.PlainTextLanguage
 import com.intellij.openapi.progress.ProgressManager
@@ -47,7 +49,7 @@ private val LOOKUP_DISPOSER_MAP = synchronizedMap(IdentityHashMap<Lookup, Dispos
  * @author Edoardo Luppi
  */
 @ApiStatus.Internal
-private open class CommitCompletionContributor : CompletionContributor() {
+private class CommitCompletionContributor : CompletionContributor() {
   private val myArrangerField: Field by lazy(PUBLICATION) {
     findField(CompletionProgressIndicator::class.java, null, "myArranger")
   }
@@ -81,21 +83,28 @@ private open class CommitCompletionContributor : CompletionContributor() {
       .withPrefixMatcher(FlatPrefixMatcher(parameters.getCompletionPrefix()))
       .withRelevanceSorter(sorter(CommitLookupElementWeigher))
 
-    val myResultSet = WrapperCompletionResultSet(resultSet)
+    val isTemplateActive = TemplateManagerImpl.getTemplateState(parameters.editor) != null
+    val myResultSet = if (isTemplateActive) {
+      TemplateDelegateResultSet(resultSet)
+    } else {
+      DelegateResultSet(resultSet)
+    }
+
+    val process = parameters.process
 
     // If the user configured commit messages to be completed via templates,
     // we provide special `LookupElement`s which programmatically initiate
     // a `Template` instance on insertion
-    if (configService.completionType == TEMPLATE) {
+    if (configService.completionType == TEMPLATE && !isTemplateActive) {
       if (!parameters.isAutoPopup) {
-        ProgressManager.checkCanceled()
-        TemplateTypeCompletionProvider(project, TypeCommitContext("")).complete(myResultSet)
+        val provider = TemplateTypeCompletionProvider(project, TypeCommitContext(""))
+        enhanceCompletionProcessIndicator(process, listOf(provider))
+        provider.complete(myResultSet)
       }
 
       return
     }
 
-    val process = parameters.process
     val editor = parameters.editor
     val caretModel = editor.caretModel
     val (lineNumber, lineCaretOffset) = caretModel.logicalPosition
@@ -103,7 +112,9 @@ private open class CommitCompletionContributor : CompletionContributor() {
     val providers = mutableListOf<CompletionProvider<*>>()
 
     // After the second line we are inside the body/footer context
-    if (lineNumber > 1) {
+    val isInBodyOrFooterContext = lineNumber > 1
+
+    if (isInBodyOrFooterContext) {
       val firstLineTokens = CCParser.parseHeader(editor.document.getLine(0))
       val footerTokens = CCParser.parseFooter(lineUntilCaret)
 
@@ -118,33 +129,31 @@ private open class CommitCompletionContributor : CompletionContributor() {
       }
     }
 
-    val commitTokens = CCParser.parseHeader(lineUntilCaret)
+    if (!isTemplateActive || !isInBodyOrFooterContext) {
+      val commitTokens = CCParser.parseHeader(lineUntilCaret)
 
-    when (val context = commitTokens.getContext(lineCaretOffset)) {
-      is TypeCommitContext -> providers.add(TypeCompletionProvider(project, context))
-      is ScopeCommitContext -> providers.add(ScopeCompletionProvider(project, context))
-      is SubjectCommitContext -> providers.add(SubjectCompletionProvider(project, context))
+      when (val context = commitTokens.getContext(lineCaretOffset)) {
+        is TypeCommitContext -> providers.add(TypeCompletionProvider(project, context))
+        is ScopeCommitContext -> providers.add(ScopeCompletionProvider(project, context))
+        is SubjectCommitContext -> providers.add(SubjectCompletionProvider(project, context))
+      }
     }
 
     if (providers.isNotEmpty()) {
-      if (process is CompletionProgressIndicator) {
-        ProgressManager.checkCanceled()
+      enhanceCompletionProcessIndicator(process, providers)
+    }
 
-        safelySetNoopListOnLookupArranger(process)
-        safelyReleaseProcessSemaphore(process)
+    for (provider in providers) {
+      ProgressManager.checkCanceled()
+      provider.complete(myResultSet)
 
-        val menuEnhancer = installAndGetMenuEnhancer(process.lookup)
-        menuEnhancer?.setProviders(providers.flatMap { it.providers.take(3) }.take(6))
+      if (provider.stopHere) {
+        break
       }
     }
 
-    providers.forEach {
-      ProgressManager.checkCanceled()
-      it.complete(myResultSet)
-
-      if (it.stopHere) {
-        return
-      }
+    if (isTemplateActive) {
+      myResultSet.stopHere()
     }
   }
 
@@ -152,6 +161,21 @@ private open class CommitCompletionContributor : CompletionContributor() {
     return (CompletionSorter.emptySorter() as CompletionSorterImpl)
       .withClassifier(CompletionSorterImpl.weighingFactory(PreferStartMatching()))
       .withClassifier(CompletionSorterImpl.weighingFactory(weigher))
+  }
+
+  private fun enhanceCompletionProcessIndicator(
+      process: CompletionProcess,
+      providers: Collection<CompletionProvider<*>>,
+  ) {
+    if (process is CompletionProgressIndicator) {
+      ProgressManager.checkCanceled()
+
+      safelySetNoopListOnLookupArranger(process)
+      safelyReleaseProcessSemaphore(process)
+
+      val menuEnhancer = installAndGetMenuEnhancer(process.lookup)
+      menuEnhancer?.setProviders(providers.flatMap { it.providers.take(3) }.take(6))
+    }
   }
 
   private fun installAndGetMenuEnhancer(lookup: LookupImpl): MenuEnhancerLookupListener? {

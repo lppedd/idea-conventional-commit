@@ -2,7 +2,7 @@
   <template
       id="ConventionalCommit-cs"
       name="cs"
-      value="$TYPE$($SCOPE$): $SUBJECT$&#10;&#10;$BODY$"
+      value="$TYPE$($SCOPE$): $SUBJECT$&#10;&#10;$BODY_OR_FOOTER_TYPE$$FOOTER_VALUE$"
       description="Conventional commit"
       toReformat="false"
       toShortenFQNames="true"
@@ -10,7 +10,8 @@
     <variable name="TYPE" expression="commitType()" defaultValue="" alwaysStopAt="true" />
     <variable name="SCOPE" expression="commitScope()" defaultValue="" alwaysStopAt="true" />
     <variable name="SUBJECT" expression="commitSubject()" defaultValue="" alwaysStopAt="true" />
-    <variable name="BODY" expression="commitBodyAndFooterType()" defaultValue="" alwaysStopAt="true" />
+    <variable name="BODY_OR_FOOTER_TYPE" expression="commitBodyOrFooterType()" defaultValue="" alwaysStopAt="true" />
+    <variable name="FOOTER_VALUE" expression="commitFooterValue()" defaultValue="" alwaysStopAt="true" />
     <context>
       <option name="ACTION_SCRIPT" value="false" />
       <option name="ASPECTJ" value="false" />

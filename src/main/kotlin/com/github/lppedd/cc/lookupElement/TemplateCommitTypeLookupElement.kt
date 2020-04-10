@@ -11,8 +11,14 @@ import com.intellij.codeInsight.template.impl.TemplateImpl
 import com.intellij.codeInsight.template.impl.TemplateSettings
 import com.intellij.codeInsight.template.impl.TemplateState
 import com.intellij.openapi.application.runWriteAction
+import com.intellij.openapi.util.TextRange
 import kotlin.math.max
 import kotlin.math.min
+
+internal const val INDEX_SCOPE = 1
+internal const val INDEX_SUBJECT = 2
+internal const val INDEX_BODY_OR_FOOTER_TYPE = 3
+internal const val INDEX_FOOTER_VALUE = 4
 
 /**
  * @author Edoardo Luppi
@@ -31,7 +37,8 @@ internal class TemplateCommitTypeLookupElement(
    * In autopopup context (see `CompletionAutoPopupHandler`),
    * avoid hiding the commit type when it matches entirely what the user typed.
    */
-  override fun isWorthShowingInAutoPopup() = true
+  override fun isWorthShowingInAutoPopup() =
+    true
 
   /**
    * When the user select the commit type a new template has to be initiated.
@@ -69,37 +76,59 @@ internal class TemplateCommitTypeLookupElement(
 }
 
 private object CCTemplateEditingListener : TemplateEditingAdapter() {
-  override fun beforeTemplateFinished(templateState: TemplateState, template: Template) {
-    val lastSegmentIndex = templateState.segmentsCount - 1
-    val currentSegmentIndex = templateState.currentVariableNumber
-
-    if (currentSegmentIndex == lastSegmentIndex) {
-      repositionCursorAfterSubjectIfNeeded(templateState, lastSegmentIndex)
+  override fun currentVariableChanged(
+      templateState: TemplateState,
+      template: Template?,
+      oldIndex: Int,
+      newIndex: Int,
+  ) {
+    if (newIndex < 0) {
+      return
     }
 
-    if (currentSegmentIndex > 0) {
+    if (oldIndex == INDEX_BODY_OR_FOOTER_TYPE) {
+      if (templateState.getSegmentRange(INDEX_BODY_OR_FOOTER_TYPE).isEmpty) {
+        deleteFooterValue(templateState)
+        templateState.gotoEnd()
+        return
+      }
+    }
+
+    val newOffset = templateState.getSegmentRange(newIndex).startOffset
+    val editor = templateState.editor
+    editor.moveCaretToOffset(newOffset)
+    editor.scheduleAutoPopup()
+  }
+
+  override fun beforeTemplateFinished(templateState: TemplateState, template: Template) {
+    val bodyOrFooterTypeRange = templateState.getSegmentRange(INDEX_BODY_OR_FOOTER_TYPE)
+
+    if (bodyOrFooterTypeRange.isEmpty) {
+      repositionCursorAfterSubjectAndCleanUp(templateState, bodyOrFooterTypeRange)
+    }
+
+    if (templateState.currentVariableNumber > 0) {
       deleteScopeParenthesesIfEmpty(templateState)
     }
   }
 
-  private fun repositionCursorAfterSubjectIfNeeded(templateState: TemplateState, lastSegmentIndex: Int) {
-    val (_, bodyEnd, isBodyEmpty) = templateState.getSegmentRange(lastSegmentIndex)
-
+  private fun repositionCursorAfterSubjectAndCleanUp(
+      templateState: TemplateState,
+      bodyOrFooterTypeRange: TextRange,
+  ) {
     // If the body is empty it means the user didn't need to insert it,
     // thus we can reposition the cursor at the end of the subject
-    if (isBodyEmpty) {
-      val newOffset = templateState.getSegmentRange(lastSegmentIndex - 1).endOffset
-      val editor = templateState.editor
+    val newOffset = templateState.getSegmentRange(INDEX_SUBJECT).endOffset
+    val editor = templateState.editor
 
-      runWriteAction {
-        editor.document.deleteString(newOffset, bodyEnd)
-        editor.moveCaretToOffset(newOffset)
-      }
+    runWriteAction {
+      editor.document.deleteString(newOffset, bodyOrFooterTypeRange.endOffset)
+      editor.moveCaretToOffset(newOffset)
     }
   }
 
   private fun deleteScopeParenthesesIfEmpty(templateState: TemplateState) {
-    val (scopeStart, scopeEnd, isScopeEmpty) = templateState.getSegmentRange(1)
+    val (scopeStart, scopeEnd, isScopeEmpty) = templateState.getSegmentRange(INDEX_SCOPE)
 
     // If the scope is empty it means the user didn't need to insert it,
     // thus we can remove it
@@ -110,6 +139,16 @@ private object CCTemplateEditingListener : TemplateEditingAdapter() {
 
       runWriteAction {
         document.deleteString(startOffset, endOffset)
+      }
+    }
+  }
+
+  private fun deleteFooterValue(templateState: TemplateState) {
+    val (start, end, isEmpty) = templateState.getSegmentRange(INDEX_FOOTER_VALUE)
+
+    if (!isEmpty) {
+      runWriteAction {
+        templateState.editor.document.deleteString(start, end)
       }
     }
   }
