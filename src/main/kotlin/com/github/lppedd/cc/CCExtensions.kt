@@ -95,6 +95,7 @@ internal fun Editor.getCurrentLine(): CharSequence {
   return document.immutableCharSequence.subSequence(start, end)
 }
 
+@Suppress("unused")
 internal fun Editor.getCurrentLineUntilCaret(): CharSequence {
   val logicalPosition = caretModel.logicalPosition
   val lineStartOffset = document.getLineStartOffset(logicalPosition.line)

@@ -11,6 +11,7 @@ import com.github.lppedd.cc.completion.resultset.DelegateResultSet
 import com.github.lppedd.cc.completion.resultset.TemplateDelegateResultSet
 import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.configuration.CCConfigService.CompletionType.TEMPLATE
+import com.github.lppedd.cc.lookupElement.INDEX_TYPE
 import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.CommitContext.*
 import com.github.lppedd.cc.parser.FooterContext.FooterTypeContext
@@ -76,20 +77,23 @@ private class CommitCompletionContributor : CompletionContributor() {
 
     ProgressManager.checkCanceled()
 
-    val project = file.project
-    val configService = CCConfigService.getInstance(project)
     val resultSet = result
       .caseInsensitive()
       .withPrefixMatcher(FlatPrefixMatcher(parameters.getCompletionPrefix()))
       .withRelevanceSorter(sorter(CommitLookupElementWeigher))
 
-    val isTemplateActive = TemplateManagerImpl.getTemplateState(parameters.editor) != null
+    val editor = parameters.editor
+    val templateState = TemplateManagerImpl.getTemplateState(editor)
+    val isTemplateActive = templateState != null
+
     val myResultSet = if (isTemplateActive) {
       TemplateDelegateResultSet(resultSet)
     } else {
       DelegateResultSet(resultSet)
     }
 
+    val project = file.project
+    val configService = CCConfigService.getInstance(project)
     val process = parameters.process
 
     // If the user configured commit messages to be completed via templates,
@@ -105,20 +109,33 @@ private class CommitCompletionContributor : CompletionContributor() {
       return
     }
 
-    val editor = parameters.editor
-    val caretModel = editor.caretModel
-    val (lineNumber, lineCaretOffset) = caretModel.logicalPosition
-    val lineUntilCaret = editor.getCurrentLineUntilCaret()
+    val document = editor.document
+    val caretLogicalPosition = editor.caretModel.logicalPosition
+    val caretLineNumber = caretLogicalPosition.line
+    var caretOffsetInLine = caretLogicalPosition.column
+    val lineStartOffset = document.getLineStartOffset(caretLineNumber)
+    val lineUntilCaret = if (templateState?.currentVariableNumber == INDEX_TYPE) {
+      // If we are completing a type with template, we need to consider only
+      // the part of the line after the range marker's start
+      val typeStartOffset = templateState.getSegmentRange(INDEX_TYPE).startOffset
+      val start = typeStartOffset - document.getLineRangeByOffset(typeStartOffset).startOffset
+
+      caretOffsetInLine -= typeStartOffset
+      document.getSegment(start, start + caretOffsetInLine)
+    } else {
+      document.getSegment(lineStartOffset, lineStartOffset + caretOffsetInLine)
+    }
+
     val providers = mutableListOf<CompletionProvider<*>>()
 
     // After the second line we are inside the body/footer context
-    val isInBodyOrFooterContext = lineNumber > 1
+    val isInBodyOrFooterContext = caretLineNumber > 1
 
     if (isInBodyOrFooterContext) {
-      val firstLineTokens = CCParser.parseHeader(editor.document.getLine(0))
+      val firstLineTokens = CCParser.parseHeader(document.getLine(0))
       val footerTokens = CCParser.parseFooter(lineUntilCaret)
 
-      when (val context = footerTokens.getContext(lineCaretOffset)) {
+      when (val context = footerTokens.getContext(caretOffsetInLine)) {
         is FooterTypeContext -> {
           providers.add(FooterTypeCompletionProvider(project, context))
           providers.add(BodyCompletionProvider(project, context, firstLineTokens))
@@ -132,7 +149,7 @@ private class CommitCompletionContributor : CompletionContributor() {
     if (!isTemplateActive || !isInBodyOrFooterContext) {
       val commitTokens = CCParser.parseHeader(lineUntilCaret)
 
-      when (val context = commitTokens.getContext(lineCaretOffset)) {
+      when (val context = commitTokens.getContext(caretOffsetInLine)) {
         is TypeCommitContext -> providers.add(TypeCompletionProvider(project, context))
         is ScopeCommitContext -> {
           if (isTemplateActive) {

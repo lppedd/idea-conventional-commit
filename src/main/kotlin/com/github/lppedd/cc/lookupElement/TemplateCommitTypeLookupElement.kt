@@ -16,6 +16,7 @@ import com.intellij.openapi.util.TextRange
 import kotlin.math.max
 import kotlin.math.min
 
+internal const val INDEX_TYPE = 0
 internal const val INDEX_SCOPE = 1
 internal const val INDEX_SUBJECT = 2
 internal const val INDEX_BODY_OR_FOOTER_TYPE = 3
