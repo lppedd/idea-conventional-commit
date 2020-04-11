@@ -1,11 +1,15 @@
 package com.github.lppedd.cc.completion.resultset
 
+import com.github.lppedd.cc.component1
+import com.github.lppedd.cc.component2
 import com.github.lppedd.cc.invokeLaterOnEdt
 import com.github.lppedd.cc.lookupElement.*
 import com.github.lppedd.cc.moveCaretToOffset
 import com.intellij.codeInsight.completion.InsertionContext
 import com.intellij.codeInsight.lookup.LookupElementPresentation
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl
+import com.intellij.codeInsight.template.impl.TemplateState
+import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.util.ClassConditionKey
 import com.intellij.openapi.util.Key
 import com.intellij.openapi.util.UserDataHolderBase
@@ -23,20 +27,27 @@ internal class TemplateElementDecorator(private val delegate: CommitLookupElemen
   override fun handleInsert(context: InsertionContext) {
     val editor = context.editor
     val templateState = TemplateManagerImpl.getTemplateState(editor) ?: return
-    val document = editor.document
 
     when (delegate) {
-      is CommitNoScopeLookupElement -> templateState.nextTab()
-      is CommitFooterTypeLookupElement -> {
-        val offset = templateState.getSegmentRange(INDEX_BODY_OR_FOOTER_TYPE).endOffset
-        document.insertString(offset, ": ")
-
-        invokeLaterOnEdt {
-          editor.moveCaretToOffset(offset + 2)
-        }
-      }
+      is CommitNoScopeLookupElement -> deleteScopeAndNext(editor, templateState)
+      is CommitFooterTypeLookupElement -> appendSeparatorOnFooterType(editor, templateState)
       is CommitBodyLookupElement -> templateState.gotoEnd()
       is ShowMoreCoAuthorsLookupElement -> delegate.handleInsert(context)
+    }
+  }
+
+  private fun deleteScopeAndNext(editor: Editor, templateState: TemplateState) {
+    val (start, end) = templateState.getSegmentRange(INDEX_SCOPE)
+    editor.document.deleteString(start, end)
+    templateState.nextTab()
+  }
+
+  private fun appendSeparatorOnFooterType(editor: Editor, templateState: TemplateState) {
+    val offset = templateState.getSegmentRange(INDEX_BODY_OR_FOOTER_TYPE).endOffset
+    editor.document.insertString(offset, ": ")
+
+    invokeLaterOnEdt {
+      editor.moveCaretToOffset(offset + 2)
     }
   }
 
