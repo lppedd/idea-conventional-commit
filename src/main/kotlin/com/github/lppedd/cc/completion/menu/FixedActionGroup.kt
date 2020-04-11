@@ -1,6 +1,7 @@
 package com.github.lppedd.cc.completion.menu
 
 import com.github.lppedd.cc.APP_NAME
+import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.configuration.CCConfigService.CompletionType.POPUP
 import com.github.lppedd.cc.configuration.CCConfigService.CompletionType.TEMPLATE
@@ -81,10 +82,12 @@ internal class FixedActionGroup(private val lookup: LookupImpl) : ActionGroup(""
 
     override fun update(e: AnActionEvent) {
       val current = config.providerFilterType
+      val hideSelected = CCBundle["cc.config.popup.hideSelected"]
+      val keepSelected = CCBundle["cc.config.popup.keepSelected"]
       e.presentation.text = if (current == HIDE_SELECTED) {
-        "Hide selected ${UIUtil.rightArrow()} Keep selected"
+        "$hideSelected ${UIUtil.rightArrow()} $keepSelected"
       } else {
-        "Keep selected ${UIUtil.rightArrow()} Hide selected"
+        "$keepSelected ${UIUtil.rightArrow()} $hideSelected"
       }
     }
   }
