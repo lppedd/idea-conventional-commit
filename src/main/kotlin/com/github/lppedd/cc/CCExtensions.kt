@@ -3,7 +3,6 @@ package com.github.lppedd.cc
 import com.github.lppedd.cc.annotation.RequireEDT
 import com.intellij.codeInsight.AutoPopupController
 import com.intellij.codeInsight.completion.CompletionParameters
-import com.intellij.codeInsight.lookup.impl.LookupImpl
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl
 import com.intellij.codeInsight.template.impl.TemplateState
 import com.intellij.openapi.application.ApplicationManager
@@ -113,16 +112,6 @@ internal inline operator fun TextRange.component2(): Int = endOffset
 
 @InlineOnly
 internal inline operator fun TextRange.component3(): Boolean = isEmpty
-
-// endregion
-// region LookupImpl
-
-@InlineOnly
-internal inline fun LookupImpl.doWhileCalculating(block: () -> Unit) {
-  isCalculating = true
-  block()
-  isCalculating = false
-}
 
 // endregion
 // region CompletionParameters
