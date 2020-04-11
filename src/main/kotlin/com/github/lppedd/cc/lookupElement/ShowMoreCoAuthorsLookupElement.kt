@@ -95,7 +95,7 @@ internal class ShowMoreCoAuthorsLookupElement(
       .dropLast(1)
 
     val psiFile = PsiDocumentManager.getInstance(context.project).getPsiFile(document)
-    val toDo = {
+    val toDo = Runnable {
       document.replaceString(footerStart, footerEnd, text)
       editor.moveCaretToOffset(footerStart + text.length)
     }

@@ -122,7 +122,7 @@ private object CCTemplateEditingListener : TemplateEditingAdapter() {
     // thus we can reposition the cursor at the end of the subject
     val newOffset = templateState.getSegmentRange(INDEX_SUBJECT).endOffset
     val editor = templateState.editor
-    val toDo = {
+    val toDo = Runnable {
       editor.document.deleteString(newOffset, bodyOrFooterTypeRange.endOffset)
       editor.moveCaretToOffset(newOffset)
     }
@@ -140,7 +140,7 @@ private object CCTemplateEditingListener : TemplateEditingAdapter() {
       val document = editor.document
       val startOffset = max(scopeStart - 1, 0)
       val endOffset = min(scopeEnd + 1, document.textLength)
-      val toDo = {
+      val toDo = Runnable {
         document.deleteString(startOffset, endOffset)
       }
 
