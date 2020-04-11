@@ -23,7 +23,7 @@ object CCParser {
     |(?:.*? |)??(?<$TYPE>[a-zA-Z0-9-]+)
     |(?<$SCOPE>(?:\([^()\r\n]*\)|\(.*(?=!)|\(.*(?=:))|\(.*(?=$))?
     |(?<$BRK_CHANGE>!)?
-    |(?<$SEPARATOR>:)? ?
+    |(?<$SEPARATOR>:)?
     |(?<$SUBJECT>(?<=:).+)?$
   """
     .trimMargin()
