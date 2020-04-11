@@ -13,6 +13,7 @@ import com.intellij.ui.MutableCollectionComboBoxModel
 import com.intellij.ui.components.JBLabel
 import com.intellij.util.ui.JBUI.Borders
 import java.awt.Dimension
+import java.util.*
 import javax.swing.Box
 import javax.swing.BoxLayout
 import javax.swing.JComponent
@@ -80,7 +81,7 @@ private class CharEntry(val char: String, val description: String) {
     description
 
   override fun hashCode(): Int =
-    description.hashCode()
+    Objects.hashCode(description)
 
   override fun equals(other: Any?): Boolean =
     description == (other as? CharEntry)?.description
