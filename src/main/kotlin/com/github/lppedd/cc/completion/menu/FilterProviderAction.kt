@@ -15,21 +15,24 @@ import java.util.*
  */
 @ApiStatus.Internal
 internal class FilterProviderAction(
+    private val enhancer: MenuEnhancerLookupListener,
     private val lookup: LookupImpl,
     private val provider: CommitTokenProvider,
-) : AnAction("Provider: ${provider.getPresentation().name}") {
+) : AnAction(provider.getPresentation().name) {
   private var isFiltered = false
   private val providerId = provider.getId()
   private var backupItems = emptyList<CommitLookupElement>()
 
   fun reset() {
     if (isFiltered) {
-      performAction()
+      doFilter(false)
     }
   }
 
   override fun actionPerformed(ignored: AnActionEvent) {
-    performAction()
+    if (enhancer.filterClicked(this)) {
+      doFilter(!isFiltered)
+    }
   }
 
   override fun update(e: AnActionEvent) {
@@ -40,10 +43,10 @@ internal class FilterProviderAction(
     }
   }
 
-  private fun performAction() {
-    isFiltered = !isFiltered
+  fun doFilter(shouldFilter: Boolean) {
+    isFiltered = shouldFilter
 
-    if (isFiltered) {
+    if (shouldFilter) {
       filterLookupElements()
     } else {
       reinstallFilteredLookupElements()

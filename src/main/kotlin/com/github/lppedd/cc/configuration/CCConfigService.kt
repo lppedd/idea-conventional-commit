@@ -28,6 +28,7 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
   }
 
   var completionType: CompletionType = CompletionType.POPUP
+  var providerFilterType: ProviderFilterType = ProviderFilterType.HIDE_SELECTED
   var customFilePath: String? = null
   var scopeReplaceChar: String = "-"
 
@@ -145,5 +146,10 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
   enum class CompletionType {
     TEMPLATE,
     POPUP
+  }
+
+  enum class ProviderFilterType {
+    KEEP_SELECTED,
+    HIDE_SELECTED
   }
 }
