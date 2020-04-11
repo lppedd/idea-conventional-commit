@@ -11,12 +11,10 @@ import com.github.lppedd.cc.parser.CommitContext.ScopeCommitContext
 import com.github.lppedd.cc.psiElement.CommitScopePsiElement
 import com.github.lppedd.cc.safeRunWithCheckCanceled
 import com.intellij.openapi.project.Project
-import org.jetbrains.annotations.ApiStatus
 
 /**
  * @author Edoardo Luppi
  */
-@ApiStatus.Internal
 internal class ScopeCompletionProvider(
     private val project: Project,
     private val context: ScopeCommitContext,

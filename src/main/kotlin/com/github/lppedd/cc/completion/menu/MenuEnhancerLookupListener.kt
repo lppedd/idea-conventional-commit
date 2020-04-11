@@ -13,12 +13,10 @@ import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.actionSystem.impl.ActionButton
 import com.intellij.util.ReflectionUtil.getField
-import org.jetbrains.annotations.ApiStatus
 
 /**
  * @author Edoardo Luppi
  */
-@ApiStatus.Internal
 internal class MenuEnhancerLookupListener(private val lookup: LookupImpl) :
     LookupListener,
     PrefixChangeListener {

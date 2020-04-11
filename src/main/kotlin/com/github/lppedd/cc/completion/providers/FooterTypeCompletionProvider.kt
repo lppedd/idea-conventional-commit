@@ -11,12 +11,10 @@ import com.github.lppedd.cc.parser.FooterContext.FooterTypeContext
 import com.github.lppedd.cc.psiElement.CommitFooterTypePsiElement
 import com.github.lppedd.cc.safeRunWithCheckCanceled
 import com.intellij.openapi.project.Project
-import org.jetbrains.annotations.ApiStatus
 
 /**
  * @author Edoardo Luppi
  */
-@ApiStatus.Internal
 internal class FooterTypeCompletionProvider(
     private val project: Project,
     private val context: FooterTypeContext,

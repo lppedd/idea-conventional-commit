@@ -1,11 +1,8 @@
 package com.github.lppedd.cc.collection
 
-import org.jetbrains.annotations.ApiStatus
-
 /**
  * @author Edoardo Luppi
  */
-@ApiStatus.Internal
 internal object NoopList : MutableList<Any?> {
   override val size: Int = 0
   override fun contains(element: Any?): Boolean = false

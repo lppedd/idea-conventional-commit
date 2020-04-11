@@ -8,12 +8,10 @@ import com.github.lppedd.cc.emptyCollection
 import com.github.lppedd.cc.lookupElement.CommitNoScopeLookupElement
 import com.intellij.codeInsight.completion.PrefixMatcher
 import com.intellij.openapi.project.Project
-import org.jetbrains.annotations.ApiStatus
 
 /**
  * @author Edoardo Luppi
  */
-@ApiStatus.Internal
 internal class NoScopeCompletionProvider(project: Project) : CompletionProvider<CommitScopeProvider> {
   private val commitNoScopeLookupElement = CommitNoScopeLookupElement(project)
 

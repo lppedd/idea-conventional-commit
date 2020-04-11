@@ -7,13 +7,11 @@ import com.intellij.codeInsight.completion.PlainPrefixMatcher
 import com.intellij.codeInsight.lookup.impl.LookupImpl
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
-import org.jetbrains.annotations.ApiStatus
 import java.util.*
 
 /**
  * @author Edoardo Luppi
  */
-@ApiStatus.Internal
 internal class FilterProviderAction(
     private val enhancer: MenuEnhancerLookupListener,
     private val lookup: LookupImpl,

@@ -20,12 +20,10 @@ import com.github.lppedd.cc.safeRunWithCheckCanceled
 import com.intellij.codeInsight.completion.CompletionProcess
 import com.intellij.codeInsight.completion.CompletionProgressIndicator
 import com.intellij.openapi.project.Project
-import org.jetbrains.annotations.ApiStatus
 
 /**
  * @author Edoardo Luppi
  */
-@ApiStatus.Internal
 internal class FooterValueCompletionProvider(
     private val project: Project,
     private val context: FooterValueContext,

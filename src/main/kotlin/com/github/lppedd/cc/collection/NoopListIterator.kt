@@ -1,11 +1,8 @@
 package com.github.lppedd.cc.collection
 
-import org.jetbrains.annotations.ApiStatus
-
 /**
  * @author Edoardo Luppi
  */
-@ApiStatus.Internal
 internal object NoopListIterator : MutableListIterator<Any?> {
   override fun hasNext(): Boolean = false
   override fun hasPrevious(): Boolean = false

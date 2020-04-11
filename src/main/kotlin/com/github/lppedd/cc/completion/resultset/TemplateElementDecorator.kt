@@ -13,12 +13,10 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.util.ClassConditionKey
 import com.intellij.openapi.util.Key
 import com.intellij.openapi.util.UserDataHolderBase
-import org.jetbrains.annotations.ApiStatus
 
 /**
  * @author Edoardo Luppi
  */
-@ApiStatus.Internal
 internal class TemplateElementDecorator(private val delegate: CommitLookupElement) : CommitLookupElement() {
   override val index = delegate.index
   override val priority = delegate.priority

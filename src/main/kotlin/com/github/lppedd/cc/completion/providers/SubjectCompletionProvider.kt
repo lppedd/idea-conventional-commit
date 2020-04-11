@@ -11,12 +11,10 @@ import com.github.lppedd.cc.parser.CommitContext.SubjectCommitContext
 import com.github.lppedd.cc.psiElement.CommitSubjectPsiElement
 import com.github.lppedd.cc.safeRunWithCheckCanceled
 import com.intellij.openapi.project.Project
-import org.jetbrains.annotations.ApiStatus
 
 /**
  * @author Edoardo Luppi
  */
-@ApiStatus.Internal
 internal class SubjectCompletionProvider(
     private val project: Project,
     private val context: SubjectCommitContext,

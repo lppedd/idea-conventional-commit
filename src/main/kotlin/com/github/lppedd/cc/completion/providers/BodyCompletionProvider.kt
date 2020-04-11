@@ -13,12 +13,10 @@ import com.github.lppedd.cc.parser.ValidToken
 import com.github.lppedd.cc.psiElement.CommitBodyPsiElement
 import com.github.lppedd.cc.safeRunWithCheckCanceled
 import com.intellij.openapi.project.Project
-import org.jetbrains.annotations.ApiStatus
 
 /**
  * @author Edoardo Luppi
  */
-@ApiStatus.Internal
 internal class BodyCompletionProvider(
     private val project: Project,
     private val context: FooterTypeContext,
