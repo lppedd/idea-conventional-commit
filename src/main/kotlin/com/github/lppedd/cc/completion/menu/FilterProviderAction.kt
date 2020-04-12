@@ -2,6 +2,7 @@ package com.github.lppedd.cc.completion.menu
 
 import com.github.lppedd.cc.ICON_DISABLED
 import com.github.lppedd.cc.api.CommitTokenProvider
+import com.github.lppedd.cc.completion.FilterPrefixMatcher
 import com.github.lppedd.cc.lookupElement.CommitLookupElement
 import com.intellij.codeInsight.completion.PlainPrefixMatcher
 import com.intellij.codeInsight.lookup.impl.LookupImpl

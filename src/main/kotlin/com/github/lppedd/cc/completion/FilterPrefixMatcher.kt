@@ -1,4 +1,4 @@
-package com.github.lppedd.cc.completion.menu
+package com.github.lppedd.cc.completion
 
 import com.intellij.codeInsight.completion.PrefixMatcher
 import com.intellij.codeInsight.lookup.LookupElement
