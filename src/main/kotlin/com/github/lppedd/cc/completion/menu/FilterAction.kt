@@ -57,9 +57,8 @@ internal class FilterAction(
 
     backupItems.forEach {
       it.valid = true
-      val delegate = arranger.itemMatcher(it)
-      val newPrefixMatcher = PlainPrefixMatcher(delegate.prefix)
-      arranger.registerMatcher(it, newPrefixMatcher)
+      val prefix = arranger.itemMatcher(it).prefix
+      val newPrefixMatcher = PlainPrefixMatcher(prefix)
       lookup.addItem(it, newPrefixMatcher)
     }
 
