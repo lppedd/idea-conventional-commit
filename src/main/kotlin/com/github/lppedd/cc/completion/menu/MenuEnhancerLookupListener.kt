@@ -12,20 +12,30 @@ import com.intellij.codeInsight.lookup.LookupEvent
 import com.intellij.codeInsight.lookup.LookupListener
 import com.intellij.codeInsight.lookup.impl.LookupImpl
 import com.intellij.codeInsight.lookup.impl.PrefixChangeListener
-import com.intellij.openapi.actionSystem.AnAction
-import com.intellij.openapi.actionSystem.DefaultActionGroup
+import com.intellij.openapi.Disposable
+import com.intellij.openapi.actionSystem.*
+import com.intellij.openapi.actionSystem.ex.ActionManagerEx
+import com.intellij.openapi.actionSystem.ex.ActionPopupMenuListener
+import com.intellij.openapi.actionSystem.ex.AnActionListener
 import com.intellij.openapi.actionSystem.impl.ActionButton
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.command.CommandProcessor
+import com.intellij.openapi.util.Disposer
 import com.intellij.util.ReflectionUtil.getField
+import java.awt.Robot
+import java.awt.event.KeyEvent
+
+private val ROBOT = Robot()
+private const val MENU_ACTION_FQN = "com.intellij.codeInsight.lookup.impl.LookupUi\$MenuAction"
 
 /**
  * @author Edoardo Luppi
  */
 internal class MenuEnhancerLookupListener(
     private val lookup: LookupImpl,
-) : LookupListener, PrefixChangeListener {
+) : LookupListener, PrefixChangeListener, AnActionListener {
   private val commandProcessor = CommandProcessor.getInstance()
+  private val actionManager = ActionManagerEx.getInstanceEx()
   private val config = CCConfigService.getInstance(lookup.project)
 
   @Volatile private var allActions = emptyCollection<AnAction>()
@@ -33,14 +43,17 @@ internal class MenuEnhancerLookupListener(
   @Volatile private var lastKeptAction: FilterAction? = null
   @Volatile private var menuButton: ActionButton? = null
   @Volatile private var reopenMenu = false
+  @Volatile private var closeMenu = false
 
   init {
     lookup.addLookupListener(this)
     lookup.addPrefixChangeListener(this, lookup)
+    lookup.project.messageBus.connect(lookup).subscribe(AnActionListener.TOPIC, this)
   }
 
   fun setProviders(providers: Collection<CommitTokenProvider>) {
     lastKeptAction = null
+    closeMenu = false
     filterActions = providers.map { FilterAction(this, lookup, it) }
     allActions = SettingsActions(this, lookup) + filterActions.toMutableList()
   }
@@ -91,18 +104,31 @@ internal class MenuEnhancerLookupListener(
 
   override fun lookupCanceled(event: LookupEvent) {
     lookup.removeLookupListener(this)
+    closeMenu = false
   }
 
   override fun beforeAppend(ch: Char) {
     lastKeptAction = null
     filterActions.forEach(FilterAction::reset)
-    lookup.hideLookup(true)
+
+    if (closeMenu) {
+      closeMenu = false
+      ROBOT.keyPress(KeyEvent.VK_ESCAPE)
+      ROBOT.keyRelease(KeyEvent.VK_ESCAPE)
+    }
   }
 
   override fun beforeTruncate() {
     lastKeptAction = null
     filterActions.forEach(FilterAction::reset)
-    lookup.hideLookup(true)
+  }
+
+  override fun beforeActionPerformed(action: AnAction, dataContext: DataContext, event: AnActionEvent) {
+    if (action.javaClass == Class.forName(MENU_ACTION_FQN, false, javaClass.classLoader)) {
+      val disposable = Disposer.newDisposable()
+      actionManager.addActionPopupMenuListener(LookupPopupMenuListener(disposable), disposable)
+      closeMenu = true
+    }
   }
 
   private fun keepOnlySelectedOrReset(filterAction: FilterAction) {
@@ -128,5 +154,12 @@ internal class MenuEnhancerLookupListener(
     }
 
     commandProcessor.executeCommand(project, command, "Invoke completion", APP_NAME)
+  }
+
+  private inner class LookupPopupMenuListener(private val disposable: Disposable) : ActionPopupMenuListener {
+    override fun actionPopupMenuReleased(menu: ActionPopupMenu) {
+      closeMenu = false
+      Disposer.dispose(disposable)
+    }
   }
 }
