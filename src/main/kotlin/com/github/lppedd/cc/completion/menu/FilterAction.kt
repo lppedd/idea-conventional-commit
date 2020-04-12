@@ -13,54 +13,37 @@ import java.util.*
 /**
  * @author Edoardo Luppi
  */
-internal class FilterProviderAction(
+internal class FilterAction(
     private val enhancer: MenuEnhancerLookupListener,
     private val lookup: LookupImpl,
     private val provider: CommitTokenProvider,
 ) : AnAction(provider.getPresentation().name) {
   private var isFiltered = false
-  private val providerId = provider.getId()
   private var backupItems = emptyList<CommitLookupElement>()
+
+  fun filterItems(doFilter: Boolean) {
+    isFiltered = doFilter
+
+    if (doFilter) {
+      removeLookupItems()
+    } else {
+      reinstallLookupItems()
+    }
+  }
 
   fun reset() {
     if (isFiltered) {
-      doFilter(false)
+      filterItems(false)
     }
   }
 
-  override fun actionPerformed(ignored: AnActionEvent) {
-    if (enhancer.filterClicked(this)) {
-      doFilter(!isFiltered)
-    }
-  }
-
-  override fun update(e: AnActionEvent) {
-    e.presentation.icon = if (isFiltered) {
-      ICON_DISABLED
-    } else {
-      provider.getPresentation().icon
-    }
-  }
-
-  fun doFilter(shouldFilter: Boolean) {
-    isFiltered = shouldFilter
-
-    if (shouldFilter) {
-      filterLookupElements()
-    } else {
-      reinstallFilteredLookupElements()
-    }
-
-    lookup.resort(false)
-  }
-
-  private fun filterLookupElements() {
+  private fun removeLookupItems() {
     val arranger = lookup.arranger
 
     backupItems = lookup.items
       .asSequence()
       .filterIsInstance<CommitLookupElement>()
-      .filter { providerId == it.provider.getId() }
+      .filter { provider.getId() == it.provider.getId() }
       .onEach {
         val delegatePrefixMatcher = arranger.itemMatcher(it)
         val newPrefixMatcher = FilterPrefixMatcher(delegatePrefixMatcher)
@@ -69,7 +52,7 @@ internal class FilterProviderAction(
       }.toList()
   }
 
-  private fun reinstallFilteredLookupElements() {
+  private fun reinstallLookupItems() {
     val arranger = lookup.arranger
 
     arranger.matchingItems.firstOrNull()?.let {
@@ -87,8 +70,23 @@ internal class FilterProviderAction(
     backupItems = emptyList()
   }
 
+  override fun actionPerformed(ignored: AnActionEvent) {
+    if (enhancer.filterSelected(this)) {
+      filterItems(!isFiltered)
+      lookup.resort(false)
+    }
+  }
+
+  override fun update(e: AnActionEvent) {
+    e.presentation.icon = if (isFiltered) {
+      ICON_DISABLED
+    } else {
+      provider.getPresentation().icon
+    }
+  }
+
   override fun equals(other: Any?): Boolean =
-    other is FilterProviderAction && provider.getId() == other.provider.getId()
+    other is FilterAction && provider.getId() == other.provider.getId()
 
   override fun hashCode(): Int =
     Objects.hashCode(provider.getId())
