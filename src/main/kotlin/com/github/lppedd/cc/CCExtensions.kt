@@ -17,6 +17,7 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiFile
 import com.intellij.ui.TextFieldWithAutoCompletionListProvider
+import java.awt.Robot
 import java.io.InputStream
 import kotlin.internal.InlineOnly
 
@@ -229,5 +230,16 @@ internal inline fun invokeLaterOnEdt(noinline block: () -> Unit) {
 @InlineOnly
 internal inline fun Any.getResourceAsStream(path: String): InputStream =
   javaClass.getResourceAsStream(path)!!
+
+@InlineOnly
+internal inline fun Robot.keyPressAndRelease(keyCode: Int, delay: Int = 0) {
+  keyPress(keyCode)
+
+  if (delay > 0) {
+    delay(delay)
+  }
+
+  keyRelease(keyCode)
+}
 
 // endregion

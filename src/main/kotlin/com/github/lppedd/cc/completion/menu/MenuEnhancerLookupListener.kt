@@ -5,6 +5,7 @@ import com.github.lppedd.cc.api.CommitTokenProvider
 import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.configuration.CCConfigService.ProviderFilterType.KEEP_SELECTED
 import com.github.lppedd.cc.emptyCollection
+import com.github.lppedd.cc.keyPressAndRelease
 import com.github.lppedd.cc.plus
 import com.intellij.codeInsight.completion.CodeCompletionHandlerBase
 import com.intellij.codeInsight.completion.CompletionType.BASIC
@@ -113,8 +114,7 @@ internal class MenuEnhancerLookupListener(
 
     if (closeMenu) {
       closeMenu = false
-      ROBOT.keyPress(KeyEvent.VK_ESCAPE)
-      ROBOT.keyRelease(KeyEvent.VK_ESCAPE)
+      ROBOT.keyPressAndRelease(KeyEvent.VK_ESCAPE)
     }
   }
 
