@@ -49,7 +49,7 @@ internal class SettingsActions(
       config.completionType =
         if (config.completionType == TEMPLATE) POPUP
         else TEMPLATE
-      enhancer.settingSelected()
+      enhancer.settingChanged()
     }
 
     override fun update(e: AnActionEvent) {
@@ -66,7 +66,7 @@ internal class SettingsActions(
       config.providerFilterType =
         if (config.providerFilterType == HIDE_SELECTED) KEEP_SELECTED
         else HIDE_SELECTED
-      enhancer.settingSelected()
+      enhancer.settingChanged()
     }
 
     override fun update(e: AnActionEvent) {

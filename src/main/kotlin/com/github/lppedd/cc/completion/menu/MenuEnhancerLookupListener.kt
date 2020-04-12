@@ -59,7 +59,7 @@ internal class MenuEnhancerLookupListener(
     allActions = SettingsActions(this, lookup) + filterActions.toMutableList()
   }
 
-  fun settingSelected() {
+  fun settingChanged() {
     invokeCompletion()
     reopenMenu = true
   }
