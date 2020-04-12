@@ -46,14 +46,14 @@ internal class SettingsActions(
 
   private inner class CompletionModeChangeAction : AnAction(Settings) {
     override fun actionPerformed(e: AnActionEvent) {
-      val current = config.completionType
-      config.completionType = if (current == TEMPLATE) POPUP else TEMPLATE
+      config.completionType =
+        if (config.completionType == TEMPLATE) POPUP
+        else TEMPLATE
       enhancer.settingSelected()
     }
 
     override fun update(e: AnActionEvent) {
-      val current = config.completionType
-      e.presentation.text = if (current == TEMPLATE) {
+      e.presentation.text = if (config.completionType == TEMPLATE) {
         "Template ${UIUtil.rightArrow()} Standard"
       } else {
         "Standard ${UIUtil.rightArrow()} Template"
@@ -63,16 +63,16 @@ internal class SettingsActions(
 
   private inner class FilterModeChangeAction : AnAction(Filter) {
     override fun actionPerformed(e: AnActionEvent) {
-      val current = config.providerFilterType
-      config.providerFilterType = if (current == HIDE_SELECTED) KEEP_SELECTED else HIDE_SELECTED
+      config.providerFilterType =
+        if (config.providerFilterType == HIDE_SELECTED) KEEP_SELECTED
+        else HIDE_SELECTED
       enhancer.settingSelected()
     }
 
     override fun update(e: AnActionEvent) {
-      val current = config.providerFilterType
       val hideSelected = CCBundle["cc.config.popup.hideSelected"]
       val keepSelected = CCBundle["cc.config.popup.keepSelected"]
-      e.presentation.text = if (current == HIDE_SELECTED) {
+      e.presentation.text = if (config.providerFilterType == HIDE_SELECTED) {
         "$hideSelected ${UIUtil.rightArrow()} $keepSelected"
       } else {
         "$keepSelected ${UIUtil.rightArrow()} $hideSelected"
