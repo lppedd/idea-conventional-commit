@@ -110,7 +110,7 @@ internal class MenuEnhancerLookupListener(
 
   override fun beforeAppend(ch: Char) {
     lastKeptAction = null
-    filterActions.forEach(FilterAction::reset)
+    filterActions.forEach { it.filterItems(false) }
 
     if (closeMenu) {
       closeMenu = false
@@ -120,7 +120,7 @@ internal class MenuEnhancerLookupListener(
 
   override fun beforeTruncate() {
     lastKeptAction = null
-    filterActions.forEach(FilterAction::reset)
+    filterActions.forEach { it.filterItems(false) }
   }
 
   override fun beforeActionPerformed(action: AnAction, dataContext: DataContext, event: AnActionEvent) {
@@ -134,7 +134,7 @@ internal class MenuEnhancerLookupListener(
   private fun keepOnlySelectedOrReset(filterAction: FilterAction) {
     if (filterAction === lastKeptAction) {
       lastKeptAction = null
-      filterActions.forEach(FilterAction::reset)
+      filterActions.forEach { it.filterItems(false) }
     } else {
       lastKeptAction = filterAction
       filterActions.forEach { it.filterItems(it !== filterAction) }

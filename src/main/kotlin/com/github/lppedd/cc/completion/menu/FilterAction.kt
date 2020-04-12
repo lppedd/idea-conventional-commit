@@ -22,18 +22,14 @@ internal class FilterAction(
   private var backupItems = emptyList<CommitLookupElement>()
 
   fun filterItems(doFilter: Boolean) {
-    isFiltered = doFilter
+    if (isFiltered != doFilter) {
+      isFiltered = doFilter
 
-    if (doFilter) {
-      removeLookupItems()
-    } else {
-      reinstallLookupItems()
-    }
-  }
-
-  fun reset() {
-    if (isFiltered) {
-      filterItems(false)
+      if (doFilter) {
+        removeLookupItems()
+      } else {
+        reinstallLookupItems()
+      }
     }
   }
 
