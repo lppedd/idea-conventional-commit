@@ -23,12 +23,6 @@
   </actions>
 
   <extensions defaultExtensionNs="com.intellij">
-    <projectService
-        overrides="true"
-        serviceInterface="com.intellij.vcs.commit.message.CommitMessageInspectionProfile"
-        serviceImplementation="com.github.lppedd.cc.inspection.CommitMessageInspectionProfileEx"
-    />
-
     <notification.parentGroup id="com.github.lppedd.cc.notifications" title="Conventional Commit" />
     <notification.group
         parentId="com.github.lppedd.cc.notifications"
@@ -71,6 +65,11 @@
       />
     </projectConfigurable>
 
+    <projectService
+        overrides="true"
+        serviceInterface="com.intellij.vcs.commit.message.CommitMessageInspectionProfile"
+        serviceImplementation="com.github.lppedd.cc.inspection.CommitMessageInspectionProfileEx"
+    />
     <projectService serviceImplementation="com.github.lppedd.cc.configuration.CCConfigService" />
     <projectService serviceImplementation="com.github.lppedd.cc.configuration.CCDefaultTokensService" />
   </extensions>

@@ -1,17 +1,17 @@
-@file:Suppress("DEPRECATION")
-
 package com.github.lppedd.cc.completion.providers
 
-import com.github.lppedd.cc.MAX_ITEMS_PER_PROVIDER
 import com.github.lppedd.cc.api.BODY_EP
+import com.github.lppedd.cc.api.CommitBody
 import com.github.lppedd.cc.api.CommitBodyProvider
 import com.github.lppedd.cc.completion.resultset.ResultSet
+import com.github.lppedd.cc.executeOnPooledThread
 import com.github.lppedd.cc.lookupElement.CommitBodyLookupElement
 import com.github.lppedd.cc.parser.CommitTokens
 import com.github.lppedd.cc.parser.FooterContext.FooterTypeContext
 import com.github.lppedd.cc.parser.ValidToken
 import com.github.lppedd.cc.psiElement.CommitBodyPsiElement
 import com.github.lppedd.cc.safeRunWithCheckCanceled
+import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.openapi.project.Project
 
 /**
@@ -27,23 +27,35 @@ internal class BodyCompletionProvider(
 
   override fun complete(resultSet: ResultSet) {
     val rs = resultSet.withPrefixMatcher(context.type)
-    providers.asSequence()
-      .flatMap { provider ->
+    providers.map {
         safeRunWithCheckCanceled {
-          val wrapper = BodyProviderWrapper(project, provider)
-          provider.getCommitBodies(
+          val provider = BodyProviderWrapper(project, it)
+          val futureData = executeOnPooledThread {
+            it.getCommitBodies(
               (commitTokens.type as? ValidToken)?.value,
               (commitTokens.scope as? ValidToken)?.value,
               (commitTokens.subject as? ValidToken)?.value
             )
-            .asSequence()
-            .take(MAX_ITEMS_PER_PROVIDER)
-            .map { wrapper to it }
+          }
+
+          provider with futureData
         }
       }
-      .map { it.first to CommitBodyPsiElement(project, it.second) }
-      .mapIndexed { i, (provider, psi) -> CommitBodyLookupElement(i, provider, psi, context.type) }
-      .distinctBy(CommitBodyLookupElement::getLookupString)
+      .asSequence()
+      .map { (provider, futureData) -> retrieveItems(provider, futureData) }
+      .sortedBy { (provider) -> provider.getPriority() }
+      .flatMap { (provider, types) -> buildLookupElements(provider, types, context.type) }
+      .distinctBy(LookupElement::getLookupString)
       .forEach(rs::addElement)
   }
+
+  private fun buildLookupElements(
+      provider: BodyProviderWrapper,
+      bodies: Collection<CommitBody>,
+      prefix: String,
+  ): Sequence<CommitBodyLookupElement> =
+    bodies.asSequence().mapIndexed { index, type ->
+      val psi = CommitBodyPsiElement(project, type)
+      CommitBodyLookupElement(index, provider, psi, prefix)
+    }
 }
