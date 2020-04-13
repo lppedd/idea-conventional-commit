@@ -26,7 +26,7 @@ dependencies {
 }
 
 intellij {
-  version = "IU-2019.2"
+  version = "IU-192.5728.98"
   downloadSources = true
   pluginName = "idea-conventional-commit"
   setPlugins("java")
@@ -56,7 +56,7 @@ tasks {
 
   patchPluginXml {
     version(project.version)
-    sinceBuild("192")
+    sinceBuild("192.5728")
     untilBuild("201.*")
     pluginDescription(File("plugin-description.html").readText(Charsets.UTF_8))
     changeNotes(File("change-notes/${version.replace('.', '_')}.html").readText(Charsets.UTF_8))
