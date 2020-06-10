@@ -5,7 +5,7 @@
 ### Available @ [JetBrains Plugins Repository][1]
 
 Looking for the latest **plugin binaries**? Get them [here][2] as `.zip`  
-<small>Supported IDE versions: `192.*` to `201.*` (both inclusive)</small> 
+<small>Supported IDE versions: `192.*` to `202.*` (both inclusive)</small> 
 
 <strong>Additional Providers</strong> are available by installing other lightweight plugins.  
 
