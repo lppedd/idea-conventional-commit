@@ -1,14 +1,14 @@
-@file:Suppress("DEPRECATION")
+@file:Suppress("DEPRECATION", "UnstableApiUsage")
 
 package com.github.lppedd.cc.completion.providers
 
 import com.github.lppedd.cc.CCBundle
+import com.github.lppedd.cc.MAX_ITEMS_PER_PROVIDER
 import com.github.lppedd.cc.api.CommitFooterValue
 import com.github.lppedd.cc.api.CommitFooterValueProvider
 import com.github.lppedd.cc.api.DefaultCommitTokenProvider
 import com.github.lppedd.cc.api.FOOTER_VALUE_EP
 import com.github.lppedd.cc.completion.resultset.ResultSet
-import com.github.lppedd.cc.executeOnPooledThread
 import com.github.lppedd.cc.lookupElement.CommitFooterLookupElement
 import com.github.lppedd.cc.lookupElement.CommitLookupElement
 import com.github.lppedd.cc.lookupElement.ShowMoreCoAuthorsLookupElement
@@ -19,7 +19,6 @@ import com.github.lppedd.cc.psiElement.CommitFooterValuePsiElement
 import com.github.lppedd.cc.safeRunWithCheckCanceled
 import com.intellij.codeInsight.completion.CompletionProcess
 import com.intellij.codeInsight.completion.CompletionProgressIndicator
-import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.openapi.project.Project
 
 /**
@@ -38,26 +37,24 @@ internal class FooterValueCompletionProvider(
     val prefix = context.value.trimStart()
     val rs = resultSet.withPrefixMatcher(prefix)
 
-    providers.map {
+    providers.asSequence()
+      .flatMap { provider ->
         safeRunWithCheckCanceled {
-          val provider = FooterValueProviderWrapper(project, it)
-          val futureData = executeOnPooledThread {
-            it.getCommitFooterValues(
+          val wrapper = FooterValueProviderWrapper(project, provider)
+          provider.getCommitFooterValues(
               context.type,
               (commitTokens.type as? ValidToken)?.value,
               (commitTokens.scope as? ValidToken)?.value,
               (commitTokens.subject as? ValidToken)?.value
             )
-          }
-
-          provider with futureData
+            .asSequence()
+            .take(MAX_ITEMS_PER_PROVIDER)
+            .map { wrapper to it }
         }
       }
-      .asSequence()
-      .map { (provider, futureData) -> retrieveItems(provider, futureData) }
-      .sortedBy { (provider) -> provider.getPriority() }
-      .flatMap { (provider, types) -> buildLookupElements(provider, types, prefix) }
-      .distinctBy(LookupElement::getLookupString)
+      .map { it.first to CommitFooterValuePsiElement(project, it.second) }
+      .mapIndexed { i, (provider, psi) -> CommitFooterLookupElement(i, provider, psi, prefix) }
+      .distinctBy(CommitFooterLookupElement::getLookupString)
       .forEach(rs::addElement)
 
     if ("co-authored-by".equals(context.type, true)) {
@@ -66,16 +63,6 @@ internal class FooterValueCompletionProvider(
 
     rs.stopHere()
   }
-
-  private fun buildLookupElements(
-      provider: FooterValueProviderWrapper,
-      footerValues: Collection<CommitFooterValue>,
-      prefix: String,
-  ): Sequence<CommitFooterLookupElement> =
-    footerValues.asSequence().mapIndexed { index, type ->
-      val psi = CommitFooterValuePsiElement(project, type)
-      CommitFooterLookupElement(index, provider, psi, prefix)
-    }
 
   private fun buildShowMoreLookupElement(prefix: String): CommitLookupElement {
     val commitFooter = CommitFooterValue("", CCBundle["cc.config.coAuthors.description"])

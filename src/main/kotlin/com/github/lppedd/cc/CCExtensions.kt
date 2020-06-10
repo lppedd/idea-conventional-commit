@@ -19,8 +19,6 @@ import com.intellij.psi.PsiFile
 import com.intellij.ui.TextFieldWithAutoCompletionListProvider
 import java.awt.Robot
 import java.io.InputStream
-import java.util.concurrent.Callable
-import java.util.concurrent.Future
 import kotlin.internal.InlineOnly
 
 // region PsiFile
@@ -223,10 +221,6 @@ internal inline fun <T> safeRunWithCheckCanceled(noinline callable: () -> T): T 
     callable()
   }
 }
-
-@InlineOnly
-internal inline fun <T> executeOnPooledThread(task: Callable<T>): Future<T> =
-  ApplicationManager.getApplication().executeOnPooledThread(task)
 
 @InlineOnly
 internal inline fun invokeLaterOnEdt(noinline block: () -> Unit) {

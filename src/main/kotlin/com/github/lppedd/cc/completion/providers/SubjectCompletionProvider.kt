@@ -1,15 +1,15 @@
+@file:Suppress("DEPRECATION")
+
 package com.github.lppedd.cc.completion.providers
 
-import com.github.lppedd.cc.api.CommitSubject
+import com.github.lppedd.cc.MAX_ITEMS_PER_PROVIDER
 import com.github.lppedd.cc.api.CommitSubjectProvider
 import com.github.lppedd.cc.api.SUBJECT_EP
 import com.github.lppedd.cc.completion.resultset.ResultSet
-import com.github.lppedd.cc.executeOnPooledThread
 import com.github.lppedd.cc.lookupElement.CommitSubjectLookupElement
 import com.github.lppedd.cc.parser.CommitContext.SubjectCommitContext
 import com.github.lppedd.cc.psiElement.CommitSubjectPsiElement
 import com.github.lppedd.cc.safeRunWithCheckCanceled
-import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.openapi.project.Project
 
 /**
@@ -24,27 +24,19 @@ internal class SubjectCompletionProvider(
 
   override fun complete(resultSet: ResultSet) {
     val rs = resultSet.withPrefixMatcher(context.subject.trimStart())
-    providers.map {
+    providers.asSequence()
+      .flatMap { provider ->
         safeRunWithCheckCanceled {
-          val provider = SubjectProviderWrapper(project, it)
-          val futureData = executeOnPooledThread { it.getCommitSubjects(context.type, context.scope) }
-          provider with futureData
+          val wrapper = SubjectProviderWrapper(project, provider)
+          provider.getCommitSubjects(context.type, context.scope)
+            .asSequence()
+            .take(MAX_ITEMS_PER_PROVIDER)
+            .map { wrapper to it }
         }
       }
-      .asSequence()
-      .map { (provider, futureData) -> retrieveItems(provider, futureData) }
-      .sortedBy { (provider) -> provider.getPriority() }
-      .flatMap { (provider, types) -> buildLookupElements(provider, types) }
-      .distinctBy(LookupElement::getLookupString)
+      .map { it.first to CommitSubjectPsiElement(project, it.second) }
+      .mapIndexed { i, (provider, psi) -> CommitSubjectLookupElement(i, provider, psi) }
+      .distinctBy(CommitSubjectLookupElement::getLookupString)
       .forEach(rs::addElement)
   }
-
-  private fun buildLookupElements(
-      provider: SubjectProviderWrapper,
-      subjects: Collection<CommitSubject>,
-  ): Sequence<CommitSubjectLookupElement> =
-    subjects.asSequence().mapIndexed { index, type ->
-      val psi = CommitSubjectPsiElement(project, type)
-      CommitSubjectLookupElement(index, provider, psi)
-    }
 }
