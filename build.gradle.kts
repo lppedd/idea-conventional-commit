@@ -2,12 +2,12 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
   java
-  id("org.jetbrains.intellij") version "0.4.18"
-  kotlin("jvm") version "1.4-M1"
+  id("org.jetbrains.intellij") version "0.4.21"
+  kotlin("jvm") version "1.4-M2"
 }
 
 group = "com.github.lppedd"
-version = "0.15.0"
+version = "0.15.1"
 
 repositories {
   maven("https://dl.bintray.com/kotlin/kotlin-eap")
@@ -57,7 +57,7 @@ tasks {
   patchPluginXml {
     version(project.version)
     sinceBuild("192.5728")
-    untilBuild("201.*")
+    untilBuild("202.*")
     pluginDescription(File("plugin-description.html").readText(Charsets.UTF_8))
     changeNotes(File("change-notes/${version.replace('.', '_')}.html").readText(Charsets.UTF_8))
   }
