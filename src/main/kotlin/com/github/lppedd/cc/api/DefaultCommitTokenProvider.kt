@@ -73,7 +73,7 @@ internal class DefaultCommitTokenProvider(private val project: Project) :
       .asSequence()
       .take(lastN)
       .flatMap { message -> getFooterValues(footerType, message) }
-      .map { CommitFooterValue(it) }
+      .map(::CommitFooterValue)
       .toList()
 
     return if (isCoAuthoredBy) {
