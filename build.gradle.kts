@@ -57,7 +57,7 @@ tasks {
   patchPluginXml {
     version(project.version)
     sinceBuild("192.5728")
-    untilBuild("202.*")
+    untilBuild("203.*")
     pluginDescription(File("plugin-description.html").readText(Charsets.UTF_8))
     changeNotes(File("change-notes/${version.replace('.', '_')}.html").readText(Charsets.UTF_8))
   }
