@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.github.lppedd"
-version = "0.15.1"
+version = "0.15.2"
 
 repositories {
   maven("https://dl.bintray.com/kotlin/kotlin-eap")
