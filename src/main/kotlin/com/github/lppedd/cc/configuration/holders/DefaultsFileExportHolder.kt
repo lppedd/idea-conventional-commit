@@ -7,6 +7,7 @@ import com.github.lppedd.cc.getResourceAsStream
 import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.fileChooser.FileChooserFactory
 import com.intellij.openapi.fileChooser.FileSaverDescriptor
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.VirtualFileWrapper
 import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBLabel
@@ -37,10 +38,10 @@ internal class DefaultsFileExportHolder : ComponentHolder, LinkListener<Any?> {
   }
 
   override fun getComponent(): JComponent = panel
-  override fun linkSelected(aSource: LinkLabel<*>?, aLinkData: Any?) {
+  override fun linkSelected(aSource: LinkLabel<Any?>, aLinkData: Any?) {
     val virtualFileWrapper = FileChooserFactory.getInstance()
       .createSaveFileDialog(FileSaverDescriptor(CCBundle["cc.config.exportDialog.title"], ""), null)
-      .save(null, DEFAULT_FILE)
+      .save(null as VirtualFile?, DEFAULT_FILE)
 
     try {
       writeFile(virtualFileWrapper)

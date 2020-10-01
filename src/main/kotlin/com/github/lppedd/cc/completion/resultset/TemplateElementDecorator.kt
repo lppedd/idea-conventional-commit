@@ -107,7 +107,7 @@ internal class TemplateElementDecorator(private val delegate: CommitLookupElemen
   override fun getAllLookupStrings(): MutableSet<String> =
     delegate.allLookupStrings
 
-  override fun <T : Any?> putUserDataIfAbsent(key: Key<T>, value: T) =
+  override fun <T : Any> putUserDataIfAbsent(key: Key<T>, value: T) =
     delegate.putUserDataIfAbsent(key, value)
 
   override fun <T : Any?> getUserData(key: Key<T>) =

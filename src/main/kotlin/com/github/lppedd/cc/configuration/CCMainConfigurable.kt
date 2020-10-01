@@ -44,7 +44,7 @@ private class CCMainConfigurable(project: Project) : SearchableConfigurable, NoS
     && (gui.completionType != configService.completionType ||
         gui.customFilePath != configService.customFilePath)
 
-  override fun createComponent(): JComponent? {
+  override fun createComponent(): JComponent {
     gui.completionType = configService.completionType
     gui.customFilePath = configService.customFilePath
 

@@ -28,7 +28,7 @@ internal class CommitProviderRenderer : DefaultTableCellRenderer() {
       hasFocus: Boolean,
       row: Int,
       column: Int,
-  ): Component? {
+  ): Component {
     super.getTableCellRendererComponent(table, value, isSelected, false, row, column)
     val paddingBorder = BorderFactory.createEmptyBorder(1, 3, 2, 3)
     val compoundBorder = BorderFactory.createCompoundBorder(border, paddingBorder)

@@ -22,7 +22,7 @@ internal class CoAuthorsTableModel(coAuthors: CoAuthors) : AbstractTableEditable
   override fun getColumnCount(): Int =
     2
 
-  override fun getValueAt(rowIndex: Int, columnIndex: Int): Any? =
+  override fun getValueAt(rowIndex: Int, columnIndex: Int): Any =
     coAuthorRows[rowIndex][columnIndex]
 
   override fun setValueAt(value: Any, rowIndex: Int, columnIndex: Int) {
@@ -47,7 +47,7 @@ internal class CoAuthorsTableModel(coAuthors: CoAuthors) : AbstractTableEditable
   }
 
   override fun getColumnClass(columnIndex: Int): Class<*>? =
-    if (coAuthorRows.isNotEmpty()) getValueAt(0, columnIndex)?.javaClass
+    if (coAuthorRows.isNotEmpty()) getValueAt(0, columnIndex).javaClass
     else null
 
   override fun isCellEditable(rowIndex: Int, columnIndex: Int): Boolean =
@@ -65,7 +65,7 @@ internal class CoAuthorsTableModel(coAuthors: CoAuthors) : AbstractTableEditable
 }
 
 private data class CoAuthorRow(var text: String = "", var isSelected: Boolean = false) {
-  operator fun get(columnIndex: Int): Any? =
+  operator fun get(columnIndex: Int): Any =
     when (columnIndex) {
       0 -> isSelected
       1 -> text

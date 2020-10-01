@@ -39,7 +39,7 @@ abstract class CommitBaseInspection : BaseCommitMessageInspection(), TemplateMan
       file: PsiFile,
       manager: InspectionManager,
       isOnTheFly: Boolean,
-  ): Array<ProblemDescriptor>? =
+  ): Array<ProblemDescriptor?>? =
     super.checkFile(file, manager, isOnTheFly)
 
   final override fun buildVisitor(

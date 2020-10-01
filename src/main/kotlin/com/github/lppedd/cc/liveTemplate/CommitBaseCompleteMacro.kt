@@ -23,8 +23,8 @@ internal abstract class CommitBaseCompleteMacro : Macro() {
   override fun getDefaultValue(): String =
     "a"
 
-  override fun calculateResult(params: Array<Expression?>, context: ExpressionContext): Result =
-    InvokeActionResult(Runnable { invokeCompletion(context) })
+  override fun calculateResult(params: Array<Expression>, context: ExpressionContext): Result =
+    InvokeActionResult { invokeCompletion(context) }
 
   private fun invokeCompletion(context: ExpressionContext) {
     val project = context.project

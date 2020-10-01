@@ -13,6 +13,7 @@ import com.intellij.openapi.command.CommandProcessor
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiDocumentManager
+import kotlin.test.assertNotNull
 
 private const val VALUE = "Show more"
 
@@ -94,7 +95,7 @@ internal class ShowMoreCoAuthorsLookupElement(
       .joinToString("") { "Co-authored-by: ${it.trim()}\n" }
       .dropLast(1)
 
-    val psiFile = PsiDocumentManager.getInstance(context.project).getPsiFile(document)
+    val psiFile = assertNotNull(PsiDocumentManager.getInstance(context.project).getPsiFile(document))
     val toDo = Runnable {
       document.replaceString(footerStart, footerEnd, text)
       editor.moveCaretToOffset(footerStart + text.length)
