@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
   java
   id("org.jetbrains.intellij") version "0.4.26"
-  kotlin("jvm") version "1.4-M2"
+  kotlin("jvm") version "1.4.20-M1"
 }
 
 group = "com.github.lppedd"
@@ -16,7 +16,7 @@ repositories {
 }
 
 dependencies {
-  compileOnly(kotlin("stdlib-jdk8", "1.3.31"))
+  implementation(kotlin("stdlib-jdk8", "1.4.20-M1"))
 
   implementation("cglib:cglib-nodep:3.3.0")
   implementation("org.json", "json", "20200518")
