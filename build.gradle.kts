@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
   java
-  id("org.jetbrains.intellij") version "0.4.21"
+  id("org.jetbrains.intellij") version "0.4.26"
   kotlin("jvm") version "1.4-M2"
 }
 
@@ -19,7 +19,7 @@ dependencies {
   compileOnly(kotlin("stdlib-jdk8", "1.3.31"))
 
   implementation("cglib:cglib-nodep:3.3.0")
-  implementation("org.json", "json", "20190722")
+  implementation("org.json", "json", "20200518")
   implementation("com.github.everit-org.json-schema", "org.everit.json.schema", "1.12.1")
 
   testImplementation("junit:junit:4.12")
