@@ -94,7 +94,7 @@ internal class DefaultCommitTokenProvider(private val project: Project) :
       .map { it.replace(BEGIN_END_WS_REGEX, "") }
       .filter(String::isNotBlank)
       .map(CCParser::parseFooter)
-      .filter { (it.type as ValidToken).value == footerType }
+      .filter { footerType == (it.type as? ValidToken)?.value }
       .map(FooterTokens::footer)
       .filterIsInstance<ValidToken>()
       .map(ValidToken::value)
