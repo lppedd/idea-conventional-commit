@@ -51,7 +51,7 @@ internal abstract class BaseTypedHandler(protected val myChar: Char) : TypedHand
       return null
     }
 
-    val line = editor.getCurrentLine()
+    val line = editor.getCurrentLine().trimEnd()
     val commitTokens = CCParser.parseHeader(line)
     return if (commitTokens.type is ValidToken) commitTokens else null
   }

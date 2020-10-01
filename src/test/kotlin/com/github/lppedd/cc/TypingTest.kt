@@ -7,10 +7,22 @@ class TypingTest : BaseTest() {
     myFixture.checkResult("build(<caret>)")
   }
 
+  fun test_opening_paren_insertion_after_type_with_trailing_spaces() {
+    prepareFile("build<caret>  ")
+    myFixture.type("(")
+    myFixture.checkResult("build(<caret>)  ")
+  }
+
   fun `test_opening_paren_insertion_before_(`() {
     prepareFile("build<caret>(")
     myFixture.type("(")
     myFixture.checkResult("build(<caret>)")
+  }
+
+  fun `test_opening_paren_insertion_before_(_with_trailing_spaces`() {
+    prepareFile("build<caret>(    ")
+    myFixture.type("(")
+    myFixture.checkResult("build(<caret>)    ")
   }
 
   fun `test_opening_paren_insertion_before_()`() {
@@ -35,6 +47,12 @@ class TypingTest : BaseTest() {
     prepareFile("build(<caret>")
     myFixture.type(")")
     myFixture.checkResult("build()<caret>")
+  }
+
+  fun test_closing_paren_insertion_inside_incomplete_scope_1_with_trailing_spaces() {
+    prepareFile("build(<caret>   ")
+    myFixture.type(")")
+    myFixture.checkResult("build()<caret>   ")
   }
 
   fun test_closing_paren_insertion_inside_incomplete_scope_2() {
@@ -113,6 +131,12 @@ class TypingTest : BaseTest() {
     prepareFile("build<caret>")
     myFixture.type(":")
     myFixture.checkResult("build: <caret>")
+  }
+
+  fun test_colon_insertion_after_type_with_trailing_spaces() {
+    prepareFile("build<caret>  ")
+    myFixture.type(":")
+    myFixture.checkResult("build: <caret>  ")
   }
 
   fun test_colon_insertion_in_subject() {
