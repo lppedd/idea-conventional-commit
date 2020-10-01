@@ -8,6 +8,7 @@ import com.github.lppedd.cc.inspection.quickfix.ReplaceRangeQuickFix
 import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.ValidToken
 import com.intellij.codeInspection.InspectionManager
+import com.intellij.codeInspection.LocalQuickFix
 import com.intellij.codeInspection.ProblemDescriptor
 import com.intellij.codeInspection.ProblemHighlightType.GENERIC_ERROR_OR_WARNING
 import com.intellij.openapi.editor.Document
@@ -83,7 +84,7 @@ internal class CommitFormatInspection : CommitBaseInspection() {
       .map(MatchResult::range)
       .map { TextRange(it.first, it.last + 1) }
       .map {
-        val quickFixes = if (it.startOffset == 0) {
+        val quickFixes: Array<LocalQuickFix> = if (it.startOffset == 0) {
           arrayOf(RemoveRangeQuickFix(), ConventionalCommitReformatQuickFix)
         } else {
           arrayOf(RemoveRangeQuickFix(false))
