@@ -19,6 +19,7 @@ import com.intellij.psi.PsiFile
 import com.intellij.ui.TextFieldWithAutoCompletionListProvider
 import java.awt.Robot
 import java.io.InputStream
+import javax.swing.ListSelectionModel
 import kotlin.internal.InlineOnly
 
 // region PsiFile
@@ -240,6 +241,31 @@ internal inline fun Robot.keyPressAndRelease(keyCode: Int, delay: Int = 0) {
   }
 
   keyRelease(keyCode)
+}
+
+@InlineOnly
+internal inline fun ListSelectionModel.selectedIndices(): IntArray {
+  val iMin = minSelectionIndex
+  val iMax = maxSelectionIndex
+
+  if (iMin < 0 || iMax < 0) {
+    return IntArray(0)
+  }
+
+  val rvTmp = IntArray(1 + (iMax - iMin))
+  var n = 0
+
+  @Suppress("LoopToCallChain")
+  for (i in iMin..iMax) {
+    if (isSelectedIndex(i)) {
+      rvTmp[n++] = i
+    }
+  }
+
+  val rv = IntArray(n)
+  System.arraycopy(rvTmp, 0, rv, 0, n)
+
+  return rv
 }
 
 // endregion

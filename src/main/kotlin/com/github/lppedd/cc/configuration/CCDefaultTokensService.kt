@@ -22,8 +22,8 @@ import java.io.IOException
 import java.io.InputStreamReader
 import java.io.Reader
 import java.nio.charset.StandardCharsets.UTF_8
+import java.nio.file.FileSystems
 import java.nio.file.Files
-import java.nio.file.Path
 
 internal typealias CommitTypeMap = Map<String, JsonCommitType>
 internal typealias CommitScopeList = Collection<JsonCommitScope>
@@ -69,7 +69,7 @@ internal class CCDefaultTokensService(private val project: Project) {
 
   /** Validates a file via the inputted absolute path. */
   fun validateDefaultsFile(filePath: String) {
-    Files.newBufferedReader(Path.of(filePath), UTF_8).use {
+    Files.newBufferedReader(FileSystems.getDefault().getPath(filePath), UTF_8).use {
       defaultsSchema.validateJson(JSONObject(JSONTokener(it)))
     }
   }
@@ -77,7 +77,7 @@ internal class CCDefaultTokensService(private val project: Project) {
   /** Returns the user-defined co-authors. */
   fun getCoAuthors(): CoAuthors {
     val projectDir = project.guessProjectDir() ?: return emptyList()
-    val filePath = Path.of(projectDir.path, COAUTHORS_FILE)
+    val filePath = FileSystems.getDefault().getPath(projectDir.path, COAUTHORS_FILE)
 
     try {
       if (!Files.notExists(filePath) && Files.exists(filePath)) {
@@ -101,7 +101,7 @@ internal class CCDefaultTokensService(private val project: Project) {
     val projectDir = project.guessProjectDir() ?: return
 
     try {
-      val filePath = Path.of(projectDir.path, COAUTHORS_FILE)
+      val filePath = FileSystems.getDefault().getPath(projectDir.path, COAUTHORS_FILE)
       Files.write(filePath, coAuthors, UTF_8)
       LocalFileSystem.getInstance().refreshAndFindFileByIoFile(filePath.toFile())
     } catch (e: IOException) {
@@ -120,7 +120,7 @@ internal class CCDefaultTokensService(private val project: Project) {
 
   /** Reads default commit types and scopes from a file in FS via its absolute path. */
   private fun readDefaultsFromFile(filePath: String): JsonDefaults =
-    Files.newBufferedReader(Path.of(filePath), UTF_8).use(::readFile)
+    Files.newBufferedReader(FileSystems.getDefault().getPath(filePath), UTF_8).use(::readFile)
 
   /**
    * Reads a file using the inputted `Reader` and transforms the JSON content

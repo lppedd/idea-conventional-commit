@@ -1,6 +1,7 @@
 package com.github.lppedd.cc.configuration.component.providers
 
 import com.github.lppedd.cc.CCBundle
+import com.github.lppedd.cc.selectedIndices
 import com.intellij.ui.ColoredTableCellRenderer
 import com.intellij.ui.speedSearch.SpeedSearchUtil
 import com.intellij.ui.table.JBTable
@@ -83,7 +84,7 @@ internal class CoAuthorsTable(tableModel: CoAuthorsTableModel) : JBTable(tableMo
   }
 
   private fun toggleSelectedRows() {
-    val selectedIndices = getSelectionModel().selectedIndices
+    val selectedIndices = getSelectionModel().selectedIndices()
 
     if (selectedIndices.isNotEmpty()) {
       val isFirstSelected = !(model.getValueAt(selectedIndices.first(), COLUMN_CHECKBOX) as Boolean)
