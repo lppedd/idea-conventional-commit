@@ -26,6 +26,7 @@ private class DefaultVcsCommitSubjectProvider(private val project: Project) : Co
       .asReversed()
       .asSequence()
       .take(30)
+      .map { it.lines().first(String::isNotBlank) }
       .map(CCParser::parseHeader)
       .map(CommitTokens::subject)
       .filterIsInstance<ValidToken>()
