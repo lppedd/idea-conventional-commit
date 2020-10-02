@@ -84,6 +84,11 @@ internal class CommitFormatInspection : CommitBaseInspection() {
       .map(MatchResult::range)
       .map { TextRange(it.first, it.last + 1) }
       .map {
+        // An explicit type is required for being compatible with IDE releases beyond 2019.
+        // In 2019.* BaseCommitMessageQuickFix extends LocalQuickFixBase, while starting
+        // from 2020.2 BaseCommitMessageQuickFix extends LocalQuickFix.
+        // With an implicit type ConventionalCommitReformatQuickFix would always be cast
+        // to LocalQuickFixBase, generating an exception
         val quickFixes: Array<LocalQuickFix> = if (it.startOffset == 0) {
           arrayOf(RemoveRangeQuickFix(), ConventionalCommitReformatQuickFix)
         } else {
