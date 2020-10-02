@@ -3,7 +3,6 @@ package com.github.lppedd.cc.configuration;
 import static com.intellij.uiDesigner.core.GridConstraints.*;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -21,12 +20,13 @@ import com.github.lppedd.cc.configuration.holders.DefaultsFileExportHolder;
 import com.github.lppedd.cc.configuration.holders.DefaultsFilePickerHolder;
 import com.github.lppedd.cc.configuration.holders.DefaultsListsHolder;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
-import com.intellij.serialization.PropertyMapping;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBRadioButton;
-import com.intellij.ui.components.labels.SwingActionLink;
+import com.intellij.ui.components.labels.ActionLink;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 
@@ -112,7 +112,7 @@ public class CCMainConfigurableGui {
       @NotNull final Project project,
       @NotNull final Disposable disposable) {
     infoPanel.add(Box.createHorizontalStrut(10));
-    infoPanel.add(new SwingActionLink(new LearnMoreAction()));
+    infoPanel.add(new ActionLink(CCBundle.get("cc.config.info.learnMore"), new LearnMoreAction()));
 
     group.add(isPopup);
     group.add(isTemplate);
@@ -150,16 +150,9 @@ public class CCMainConfigurableGui {
     defaultsPanel.add(defaultsListsHolder.getComponent(), gc);
   }
 
-  private static class LearnMoreAction extends AbstractAction {
-    private static final long serialVersionUID = 1L;
-
-    @PropertyMapping({})
-    LearnMoreAction() {
-      super(CCBundle.get("cc.config.info.learnMore"));
-    }
-
+  private static class LearnMoreAction extends AnAction {
     @Override
-    public void actionPerformed(final ActionEvent event) {
+    public void actionPerformed(@NotNull final AnActionEvent e) {
       try {
         Desktop.getDesktop().browse(new URI(CCBundle.get("cc.plugin.repository")));
       } catch (final IOException | URISyntaxException ignored) {
