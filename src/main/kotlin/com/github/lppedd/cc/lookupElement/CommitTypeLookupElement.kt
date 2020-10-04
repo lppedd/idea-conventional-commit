@@ -13,43 +13,43 @@ import com.intellij.codeInsight.lookup.LookupElementPresentation
  * @author Edoardo Luppi
  */
 internal open class CommitTypeLookupElement(
-    override val index: Int,
-    override val provider: TypeProviderWrapper,
+    index: Int,
+    provider: TypeProviderWrapper,
     private val psiElement: CommitTypePsiElement,
-) : CommitLookupElement() {
-  override val priority = PRIORITY_TYPE
+) : CommitLookupElement(index, PRIORITY_TYPE, provider) {
+  private val commitType = psiElement.commitType
 
   override fun getPsiElement(): CommitTypePsiElement =
     psiElement
 
   override fun getLookupString(): String =
-    psiElement.commitType.value
+    commitType.text
 
-  override fun renderElement(presentation: LookupElementPresentation) {
-    val commitType = psiElement.commitType
-    val rendering = commitType.getRendering()
-    presentation.itemText = commitType.value
-    presentation.icon = ICON_TYPE
-    presentation.isItemTextBold = rendering.bold
-    presentation.isItemTextItalic = rendering.italic
-    presentation.isStrikeout = rendering.strikeout
-    presentation.isTypeIconRightAligned = true
-    presentation.setTypeText(rendering.type, rendering.icon)
-  }
+  override fun renderElement(presentation: LookupElementPresentation) =
+    presentation.let {
+      it.icon = ICON_TYPE
+      it.itemText = lookupString
+      it.isTypeIconRightAligned = true
+
+      val rendering = commitType.getRendering()
+      it.isItemTextBold = rendering.bold
+      it.isItemTextItalic = rendering.italic
+      it.isStrikeout = rendering.strikeout
+      it.setTypeText(rendering.type, rendering.icon)
+    }
 
   override fun handleInsert(context: InsertionContext) {
-    val editor = context.editor
     val document = context.document
-
-    val (lineStart, lineEnd) = editor.getCurrentLineRange()
     val documentText = document.immutableCharSequence
+    val elementValue = commitType.getValue(context.toTokenContext())
+    val (lineStart, lineEnd) = context.editor.getCurrentLineRange()
+    val startingCaretOffset = context.tailOffset - lineStart - elementValue.length
     val lineText = documentText.subSequence(lineStart, lineEnd)
     val type = CCParser.parseHeader(lineText).type
-    val startingCaretOffset = context.tailOffset - lineStart - lookupString.length
 
     if (type is ValidToken && type.isInContext(startingCaretOffset)) {
-      if (type.value != lookupString) {
-        val text = type.range.replace("$lineText", lookupString)
+      if (type.value != elementValue) {
+        val text = type.range.replace("$lineText", elementValue)
         document.replaceString(lineStart, lineEnd, text)
       }
     } else {
@@ -57,7 +57,7 @@ internal open class CommitTypeLookupElement(
       document.replaceString(
         startOffset,
         maxOf(documentText.indexOf(' ', startOffset), 0),
-        lookupString
+        elementValue
       )
     }
   }

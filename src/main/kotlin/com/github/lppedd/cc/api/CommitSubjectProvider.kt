@@ -15,4 +15,4 @@ interface CommitSubjectProvider : CommitTokenProvider {
   fun getCommitSubjects(commitType: String?, commitScope: String?): Collection<CommitSubject>
 }
 
-open class CommitSubject(@get:JvmName("getText") val value: String) : CommitTokenElement()
+open class CommitSubject(text: String, value: String = text) : CommitTokenElement(text, "", value)

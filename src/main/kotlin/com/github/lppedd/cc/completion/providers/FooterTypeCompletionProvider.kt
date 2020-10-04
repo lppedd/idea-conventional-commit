@@ -34,8 +34,13 @@ internal class FooterTypeCompletionProvider(
             .map { wrapper to it }
         }
       }
-      .map { it.first to CommitFooterTypePsiElement(project, it.second) }
-      .mapIndexed { i, (provider, psi) -> CommitFooterTypeLookupElement(i, provider, psi) }
+      .mapIndexed { index, (provider, commitFooterType) ->
+        CommitFooterTypeLookupElement(
+          index,
+          provider,
+          CommitFooterTypePsiElement(project, commitFooterType),
+        )
+      }
       .distinctBy(CommitFooterTypeLookupElement::getLookupString)
       .forEach(rs::addElement)
   }

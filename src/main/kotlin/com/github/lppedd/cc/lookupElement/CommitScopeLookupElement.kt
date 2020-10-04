@@ -12,29 +12,30 @@ import com.intellij.codeInsight.lookup.LookupElementPresentation
  * @author Edoardo Luppi
  */
 internal class CommitScopeLookupElement(
-    override val index: Int,
-    override val provider: ScopeProviderWrapper,
+    index: Int,
+    provider: ScopeProviderWrapper,
     private val psiElement: CommitScopePsiElement,
-) : CommitLookupElement() {
-  override val priority = PRIORITY_SCOPE
+) : CommitLookupElement(index, PRIORITY_SCOPE, provider) {
+  private val commitScope = psiElement.commitScope
 
   override fun getPsiElement(): CommitScopePsiElement =
     psiElement
 
   override fun getLookupString(): String =
-    psiElement.commitScope.value
+    commitScope.text
 
-  override fun renderElement(presentation: LookupElementPresentation) {
-    val commitScope = psiElement.commitScope
-    val rendering = commitScope.getRendering()
-    presentation.itemText = commitScope.value
-    presentation.icon = ICON_SCOPE
-    presentation.isItemTextBold = rendering.bold
-    presentation.isItemTextItalic = rendering.italic
-    presentation.isStrikeout = rendering.strikeout
-    presentation.isTypeIconRightAligned = true
-    presentation.setTypeText(rendering.type, rendering.icon)
-  }
+  override fun renderElement(presentation: LookupElementPresentation) =
+    presentation.let {
+      it.icon = ICON_SCOPE
+      it.itemText = lookupString
+      it.isTypeIconRightAligned = true
+
+      val rendering = commitScope.getRendering()
+      it.isItemTextBold = rendering.bold
+      it.isItemTextItalic = rendering.italic
+      it.isStrikeout = rendering.strikeout
+      it.setTypeText(rendering.type, rendering.icon)
+    }
 
   override fun handleInsert(context: InsertionContext) {
     val editor = context.editor
@@ -55,7 +56,8 @@ internal class CommitScopeLookupElement(
     }
 
     // We insert the new scope
-    text += "($lookupString)"
+    val elementValue = commitScope.getValue(context.toTokenContext())
+    text += "($elementValue)"
 
     // If a breaking change indicator was present, we insert it back
     text += if (breakingChange.isPresent) "!:" else ":"

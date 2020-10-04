@@ -10,18 +10,18 @@ import com.intellij.codeInsight.lookup.LookupElementPresentation
  * @author Edoardo Luppi
  */
 internal class CommitBodyLookupElement(
-    override val index: Int,
-    override val provider: BodyProviderWrapper,
+    index: Int,
+    provider: BodyProviderWrapper,
     private val psiElement: CommitBodyPsiElement,
     private val completionPrefix: String,
-) : CommitLookupElement() {
-  override val priority = PRIORITY_BODY
+) : CommitLookupElement(index, PRIORITY_BODY, provider) {
+  private val commitBody = psiElement.commitBody
 
   override fun getPsiElement(): CommitBodyPsiElement =
     psiElement
 
   override fun getLookupString(): String =
-    psiElement.commitBody.value
+    commitBody.text
 
   override fun renderElement(presentation: LookupElementPresentation) {
     presentation.icon = ICON_BODY
@@ -33,9 +33,10 @@ internal class CommitBodyLookupElement(
     val document = context.document
     val caretOffset = context.startOffset
     val lineStart = document.getLineRangeByOffset(caretOffset).startOffset
+    val elementValue = commitBody.getValue(context.toTokenContext())
 
     if (completionPrefix.isNotEmpty()) {
-      val tempAdditionalLength = lookupString.length - completionPrefix.length
+      val tempAdditionalLength = elementValue.length - completionPrefix.length
       val removeTo = context.tailOffset
       val removeFrom = context.tailOffset - tempAdditionalLength
       document.deleteString(removeFrom, removeTo)
@@ -45,8 +46,8 @@ internal class CommitBodyLookupElement(
       val (_, end, isEmpty) = document.getLineRange(i)
 
       if (isEmpty) {
-        document.replaceString(lineStart, end - 1, lookupString)
-        context.editor.moveCaretToOffset(lineStart + lookupString.length)
+        document.replaceString(lineStart, end - 1, elementValue)
+        context.editor.moveCaretToOffset(lineStart + elementValue.length)
         return
       }
     }

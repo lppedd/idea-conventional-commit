@@ -40,10 +40,10 @@ private class CommitTokenDocumentationProvider : AbstractDocumentationProvider()
   }
 
   private fun generateDocForFooter(element: CommitFooterValue): String =
-    generateHtml(element.value.trim(), element.description.trim())
+    generateHtml(element.text.trim(), element.description.trim())
 
   private fun generateDocForBody(element: CommitBody): String =
-    generateHtml(element.value.trim(), element.description.trim())
+    generateHtml(element.text.trim(), element.description.trim())
 
   private fun generateHtml(text: String, description: String): String {
     val totalLength = text.length + description.length

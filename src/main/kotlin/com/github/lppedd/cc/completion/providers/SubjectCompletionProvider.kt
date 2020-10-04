@@ -34,8 +34,13 @@ internal class SubjectCompletionProvider(
             .map { wrapper to it }
         }
       }
-      .map { it.first to CommitSubjectPsiElement(project, it.second) }
-      .mapIndexed { i, (provider, psi) -> CommitSubjectLookupElement(i, provider, psi) }
+      .mapIndexed { index, (provider, commitSubject) ->
+        CommitSubjectLookupElement(
+          index,
+          provider,
+          CommitSubjectPsiElement(project, commitSubject),
+        )
+      }
       .distinctBy(CommitSubjectLookupElement::getLookupString)
       .forEach(rs::addElement)
   }

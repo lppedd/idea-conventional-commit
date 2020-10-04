@@ -68,8 +68,10 @@ internal class TemplateCommitTypeLookupElement(
     )
 
     // We populate the macro type context with the chosen commit type
+    val elementValue = psiElement.commitType.getValue(context.toTokenContext())
+
     runWriteAction {
-      editor.insertStringAtCaret(psiElement.commitType.value)
+      editor.insertStringAtCaret(elementValue)
     }
 
     // ...and we confirm it by navigating to the subject context

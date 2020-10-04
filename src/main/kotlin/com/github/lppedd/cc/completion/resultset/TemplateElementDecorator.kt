@@ -17,11 +17,12 @@ import com.intellij.openapi.util.UserDataHolderBase
 /**
  * @author Edoardo Luppi
  */
-internal class TemplateElementDecorator(private val delegate: CommitLookupElement) : CommitLookupElement() {
-  override val index = delegate.index
-  override val priority = delegate.priority
-  override val provider = delegate.provider
-
+internal class TemplateElementDecorator(private val delegate: CommitLookupElement) :
+    CommitLookupElement(
+      delegate.index,
+      delegate.priority,
+      delegate.provider
+    ) {
   override fun handleInsert(context: InsertionContext) {
     val editor = context.editor
     val templateState = TemplateManagerImpl.getTemplateState(editor) ?: return

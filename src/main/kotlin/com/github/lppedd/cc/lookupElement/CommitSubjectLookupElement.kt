@@ -12,29 +12,30 @@ import com.intellij.codeInsight.lookup.LookupElementPresentation
  * @author Edoardo Luppi
  */
 internal class CommitSubjectLookupElement(
-    override val index: Int,
-    override val provider: SubjectProviderWrapper,
+    index: Int,
+    provider: SubjectProviderWrapper,
     private val psiElement: CommitSubjectPsiElement,
-) : CommitLookupElement() {
-  override val priority = PRIORITY_SUBJECT
+) : CommitLookupElement(index, PRIORITY_SUBJECT, provider) {
+  private val commitSubject = psiElement.commitSubject
 
   override fun getPsiElement(): CommitSubjectPsiElement =
     psiElement
 
   override fun getLookupString(): String =
-    psiElement.commitSubject.value
+    commitSubject.text
 
-  override fun renderElement(presentation: LookupElementPresentation) {
-    val commitSubject = psiElement.commitSubject
-    val rendering = commitSubject.getRendering()
-    presentation.itemText = commitSubject.value
-    presentation.icon = ICON_SUBJECT
-    presentation.isItemTextBold = rendering.bold
-    presentation.isItemTextItalic = rendering.italic
-    presentation.isStrikeout = rendering.strikeout
-    presentation.isTypeIconRightAligned = true
-    presentation.setTypeText(rendering.type, rendering.icon)
-  }
+  override fun renderElement(presentation: LookupElementPresentation) =
+    presentation.let {
+      it.icon = ICON_SUBJECT
+      it.itemText = lookupString
+      it.isTypeIconRightAligned = true
+
+      val rendering = commitSubject.getRendering()
+      it.isItemTextBold = rendering.bold
+      it.isItemTextItalic = rendering.italic
+      it.isStrikeout = rendering.strikeout
+      it.setTypeText(rendering.type, rendering.icon)
+    }
 
   override fun handleInsert(context: InsertionContext) {
     val editor = context.editor
@@ -44,7 +45,8 @@ internal class CommitSubjectLookupElement(
     val line = document.getSegment(lineStart, lineEnd)
     val subject = CCParser.parseHeader(line).subject
     val subjectStartOffset = lineStart + ((subject as? ValidToken)?.range?.startOffset ?: 0)
-    val subjectText = " $lookupString"
+    val elementValue = commitSubject.getValue(context.toTokenContext())
+    val subjectText = " $elementValue"
 
     document.replaceString(subjectStartOffset, lineEnd, subjectText)
     editor.moveCaretToOffset(subjectStartOffset + subjectText.length)

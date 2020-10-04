@@ -15,19 +15,16 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiDocumentManager
 import kotlin.test.assertNotNull
 
-private const val VALUE = "Show more"
-
 /**
  * @author Edoardo Luppi
  */
 internal class ShowMoreCoAuthorsLookupElement(
-    override val index: Int,
-    override val provider: FooterValueProviderWrapper,
+    index: Int,
+    provider: FooterValueProviderWrapper,
     private val psiElement: CommitFooterValuePsiElement,
     completionPrefix: String,
-) : CommitLookupElement(), PrefixChangeListener {
+) : CommitLookupElement(index, PRIORITY_FOOTER_VALUE, provider), PrefixChangeListener {
   private var changingLookupString = StringBuilder(50) + completionPrefix
-  override val priority = PRIORITY_FOOTER
 
   override fun beforeAppend(ch: Char) {
     changingLookupString += ch
@@ -37,14 +34,15 @@ internal class ShowMoreCoAuthorsLookupElement(
     psiElement
 
   override fun getLookupString(): String =
-    "$VALUE$changingLookupString"
+    "Show more$changingLookupString"
 
-  override fun renderElement(presentation: LookupElementPresentation) {
-    presentation.icon = ICON_FOOTER
-    presentation.itemText = VALUE
-    presentation.isTypeIconRightAligned = true
-    presentation.isItemTextBold = true
-  }
+  override fun renderElement(presentation: LookupElementPresentation) =
+    presentation.let {
+      it.icon = ICON_FOOTER
+      it.itemText = "Show more"
+      it.isTypeIconRightAligned = true
+      it.isItemTextBold = true
+    }
 
   override fun handleInsert(context: InsertionContext) {
     val commandProcessor = CommandProcessor.getInstance()

@@ -22,7 +22,7 @@ interface CommitFooterValueProvider : CommitTokenProvider {
 }
 
 open class CommitFooterValue @JvmOverloads constructor(
-    @get:JvmName("getText")
-    val value: String,
-    val description: String = "",
-) : CommitTokenElement()
+    text: String,
+    description: String = "",
+    value: String = text,
+) : CommitTokenElement(text, description, value)

@@ -1,8 +1,10 @@
 package com.github.lppedd.cc
 
 import com.github.lppedd.cc.annotation.RequireEDT
+import com.github.lppedd.cc.api.CommitTokenElement.TokenContext
 import com.intellij.codeInsight.AutoPopupController
 import com.intellij.codeInsight.completion.CompletionParameters
+import com.intellij.codeInsight.completion.InsertionContext
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl
 import com.intellij.codeInsight.template.impl.TemplateState
 import com.intellij.openapi.application.ApplicationManager
@@ -27,6 +29,13 @@ import kotlin.internal.InlineOnly
 internal inline val PsiFile.document: Document?
   @InlineOnly
   get() = PsiDocumentManager.getInstance(project).getDocument(this)
+
+// endregion
+// region InsertionContext
+
+@InlineOnly
+internal inline fun InsertionContext.toTokenContext(): TokenContext =
+  TokenContext(completionChar, editor)
 
 // endregion
 // region LogicalPosition

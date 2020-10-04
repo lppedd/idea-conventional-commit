@@ -15,7 +15,7 @@ const val MAX_ITEMS_PER_PROVIDER: Int = 200
 
 internal val PRIORITY_SCOPE = Priority(10_000)
 internal val PRIORITY_SUBJECT = Priority(20_000)
-internal val PRIORITY_FOOTER = Priority(10_000)
+internal val PRIORITY_FOOTER_VALUE = Priority(10_000)
 
 // Those three could appear in the same completion invocation
 internal val PRIORITY_FOOTER_TYPE = Priority(10_000)

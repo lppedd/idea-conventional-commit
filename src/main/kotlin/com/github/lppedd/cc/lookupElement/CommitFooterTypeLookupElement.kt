@@ -12,17 +12,17 @@ import com.intellij.codeInsight.lookup.LookupElementPresentation
  * @author Edoardo Luppi
  */
 internal class CommitFooterTypeLookupElement(
-    override val index: Int,
-    override val provider: FooterTypeProviderWrapper,
+    index: Int,
+    provider: FooterTypeProviderWrapper,
     private val psiElement: CommitFooterTypePsiElement,
-) : CommitLookupElement() {
-  override val priority = PRIORITY_FOOTER_TYPE
+) : CommitLookupElement(index, PRIORITY_FOOTER_TYPE, provider) {
+  private val commitFooterType = psiElement.commitFooterType
 
   override fun getPsiElement(): CommitFooterTypePsiElement =
     psiElement
 
   override fun getLookupString(): String =
-    psiElement.commitFooterType.value
+    commitFooterType.text
 
   override fun renderElement(presentation: LookupElementPresentation) {
     presentation.icon = ICON_FOOTER
@@ -55,7 +55,8 @@ internal class CommitFooterTypeLookupElement(
         textToAdd = ": "
       }
 
-      val text = footerType.range.replace(lineText, lookupString)
+      val elementValue = commitFooterType.getValue(context.toTokenContext())
+      val text = footerType.range.replace(lineText, elementValue)
       document.replaceString(context.startOffset, range.endOffset, "$text$textToAdd")
     } else {
       document.insertString(context.tailOffset, ": ")

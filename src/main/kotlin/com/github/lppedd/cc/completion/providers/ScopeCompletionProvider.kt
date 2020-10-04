@@ -34,8 +34,13 @@ internal class ScopeCompletionProvider(
             .map { wrapper to it }
         }
       }
-      .map { it.first to CommitScopePsiElement(project, it.second) }
-      .mapIndexed { i, (provider, psi) -> CommitScopeLookupElement(i, provider, psi) }
+      .mapIndexed { index, (provider, commitScope) ->
+        CommitScopeLookupElement(
+          index,
+          provider,
+          CommitScopePsiElement(project, commitScope),
+        )
+      }
       .distinctBy(CommitScopeLookupElement::getLookupString)
       .forEach(rs::addElement)
   }

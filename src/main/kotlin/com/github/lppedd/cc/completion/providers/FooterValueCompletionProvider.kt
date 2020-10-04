@@ -9,7 +9,7 @@ import com.github.lppedd.cc.api.CommitFooterValueProvider
 import com.github.lppedd.cc.api.DefaultCommitTokenProvider
 import com.github.lppedd.cc.api.FOOTER_VALUE_EP
 import com.github.lppedd.cc.completion.resultset.ResultSet
-import com.github.lppedd.cc.lookupElement.CommitFooterLookupElement
+import com.github.lppedd.cc.lookupElement.CommitFooterValueLookupElement
 import com.github.lppedd.cc.lookupElement.CommitLookupElement
 import com.github.lppedd.cc.lookupElement.ShowMoreCoAuthorsLookupElement
 import com.github.lppedd.cc.parser.CommitTokens
@@ -52,9 +52,15 @@ internal class FooterValueCompletionProvider(
             .map { wrapper to it }
         }
       }
-      .map { it.first to CommitFooterValuePsiElement(project, it.second) }
-      .mapIndexed { i, (provider, psi) -> CommitFooterLookupElement(i, provider, psi, prefix) }
-      .distinctBy(CommitFooterLookupElement::getLookupString)
+      .mapIndexed { index, (provider, commitFooterValue) ->
+        CommitFooterValueLookupElement(
+          index,
+          provider,
+          CommitFooterValuePsiElement(project, commitFooterValue),
+          prefix,
+        )
+      }
+      .distinctBy(CommitFooterValueLookupElement::getLookupString)
       .forEach(rs::addElement)
 
     if ("co-authored-by".equals(context.type, true)) {

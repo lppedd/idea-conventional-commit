@@ -12,19 +12,19 @@ import com.intellij.openapi.util.TextRange
 /**
  * @author Edoardo Luppi
  */
-internal class CommitFooterLookupElement(
-    override val index: Int,
-    override val provider: FooterValueProviderWrapper,
+internal class CommitFooterValueLookupElement(
+    index: Int,
+    provider: FooterValueProviderWrapper,
     private val psiElement: CommitFooterValuePsiElement,
     private val completionPrefix: String,
-) : CommitLookupElement() {
-  override val priority = PRIORITY_FOOTER
+) : CommitLookupElement(index, PRIORITY_FOOTER_VALUE, provider) {
+  private val commitFooterValue = psiElement.commitFooterValue
 
   override fun getPsiElement(): CommitFooterValuePsiElement =
     psiElement
 
   override fun getLookupString(): String =
-    psiElement.commitFooterValue.value
+    commitFooterValue.text
 
   override fun renderElement(presentation: LookupElementPresentation) {
     presentation.icon = ICON_FOOTER
@@ -33,11 +33,10 @@ internal class CommitFooterLookupElement(
   }
 
   override fun handleInsert(context: InsertionContext) {
-    val editor = context.editor
     val document = context.document
-
     val (lineStart, lineEnd) = document.getLineRangeByOffset(context.startOffset)
-    val tempAdditionalLength = lookupString.length - completionPrefix.length
+    val elementValue = commitFooterValue.getValue(context.toTokenContext())
+    val tempAdditionalLength = elementValue.length - completionPrefix.length
     val removeTo = context.tailOffset - lineStart
     val removeFrom = removeTo - tempAdditionalLength
     val oldFooterText =
@@ -46,7 +45,7 @@ internal class CommitFooterLookupElement(
         .removeRange(removeFrom, removeTo)
 
     val footer = CCParser.parseFooter(oldFooterText).footer
-    val footerText = " $lookupString"
+    val footerText = " $elementValue"
     val (footerStart, footerEnd) = if (footer is ValidToken) {
       val (start, end) = footer.range
       TextRange(lineStart + start, lineStart + end + tempAdditionalLength)
@@ -55,6 +54,6 @@ internal class CommitFooterLookupElement(
     }
 
     document.replaceString(footerStart, footerEnd, footerText)
-    editor.moveCaretToOffset(footerStart + footerText.length)
+    context.editor.moveCaretToOffset(footerStart + footerText.length)
   }
 }

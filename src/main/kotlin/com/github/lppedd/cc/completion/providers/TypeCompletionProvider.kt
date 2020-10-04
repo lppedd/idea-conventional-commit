@@ -34,8 +34,13 @@ internal class TypeCompletionProvider(
             .map { wrapper to it }
         }
       }
-      .map { it.first to CommitTypePsiElement(project, it.second) }
-      .mapIndexed { i, (provider, psi) -> CommitTypeLookupElement(i, provider, psi) }
+      .mapIndexed { index, (provider, commitType) ->
+        CommitTypeLookupElement(
+          index,
+          provider,
+          CommitTypePsiElement(project, commitType),
+        )
+      }
       .distinctBy(CommitTypeLookupElement::getLookupString)
       .forEach(rs::addElement)
   }

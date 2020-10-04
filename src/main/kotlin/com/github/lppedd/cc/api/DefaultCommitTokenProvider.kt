@@ -79,9 +79,9 @@ internal class DefaultCommitTokenProvider(private val project: Project) :
     return if (isCoAuthoredBy) {
       recentValues
         .plus(defaultsService.getCoAuthors().take(3).map(::CommitFooterValue))
-        .distinctBy { it.value.toLowerCase() }
+        .distinctBy { it.text.toLowerCase() }
     } else {
-      recentValues.distinctBy { it.value.toLowerCase() }
+      recentValues.distinctBy { it.text.toLowerCase() }
     }
   }
 

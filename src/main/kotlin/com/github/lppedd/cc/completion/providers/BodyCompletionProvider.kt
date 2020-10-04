@@ -41,8 +41,14 @@ internal class BodyCompletionProvider(
             .map { wrapper to it }
         }
       }
-      .map { it.first to CommitBodyPsiElement(project, it.second) }
-      .mapIndexed { i, (provider, psi) -> CommitBodyLookupElement(i, provider, psi, context.type) }
+      .mapIndexed { index, (provider, commitBody) ->
+        CommitBodyLookupElement(
+          index,
+          provider,
+          CommitBodyPsiElement(project, commitBody),
+          context.type,
+        )
+      }
       .distinctBy(CommitBodyLookupElement::getLookupString)
       .forEach(rs::addElement)
   }
