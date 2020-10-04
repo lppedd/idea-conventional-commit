@@ -26,11 +26,18 @@ internal class CommitFooterValueLookupElement(
   override fun getLookupString(): String =
     commitFooterValue.text
 
-  override fun renderElement(presentation: LookupElementPresentation) {
-    presentation.icon = ICON_FOOTER
-    presentation.itemText = lookupString.flattenWhitespaces().abbreviate(100)
-    presentation.isTypeIconRightAligned = true
-  }
+  override fun renderElement(presentation: LookupElementPresentation) =
+    presentation.let {
+      it.icon = ICON_FOOTER
+      it.itemText = lookupString.flattenWhitespaces().abbreviate(100)
+      it.isTypeIconRightAligned = true
+
+      val rendering = commitFooterValue.getRendering()
+      it.isItemTextBold = rendering.bold
+      it.isItemTextItalic = rendering.italic
+      it.isStrikeout = rendering.strikeout
+      it.setTypeText(rendering.type, rendering.icon)
+    }
 
   override fun handleInsert(context: InsertionContext) {
     val document = context.document
