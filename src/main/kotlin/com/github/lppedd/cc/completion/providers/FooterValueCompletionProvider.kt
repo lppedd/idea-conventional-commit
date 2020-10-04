@@ -1,4 +1,4 @@
-@file:Suppress("DEPRECATION", "UnstableApiUsage")
+@file:Suppress("DEPRECATION")
 
 package com.github.lppedd.cc.completion.providers
 

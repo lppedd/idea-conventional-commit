@@ -1,5 +1,3 @@
-@file:Suppress("DEPRECATION")
-
 package com.github.lppedd.cc.completion.providers
 
 import com.github.lppedd.cc.api.CommitScopeProvider
