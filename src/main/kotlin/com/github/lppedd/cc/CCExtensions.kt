@@ -9,21 +9,33 @@ import com.intellij.codeInsight.template.impl.TemplateManagerImpl
 import com.intellij.codeInsight.template.impl.TemplateState
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ex.ApplicationUtil
-import com.intellij.openapi.editor.Document
-import com.intellij.openapi.editor.Editor
-import com.intellij.openapi.editor.EditorModificationUtil
-import com.intellij.openapi.editor.LogicalPosition
+import com.intellij.openapi.editor.*
 import com.intellij.openapi.editor.ex.util.EditorUtil
 import com.intellij.openapi.progress.ProgressManager
+import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiFile
 import com.intellij.ui.TextFieldWithAutoCompletionListProvider
 import java.awt.Robot
 import java.io.InputStream
+import javax.swing.AbstractAction
 import javax.swing.ListSelectionModel
 import kotlin.internal.InlineOnly
 
+// region AbstractAction
+
+@InlineOnly
+internal inline fun AbstractAction.setName(name: String) {
+  putValue("Name", name)
+}
+
+@InlineOnly
+internal inline fun AbstractAction.setFocused(focused: Boolean = true) {
+  putValue(DialogWrapper.FOCUSED_ACTION, focused)
+}
+
+// endregion
 // region PsiFile
 
 internal inline val PsiFile.document: Document?

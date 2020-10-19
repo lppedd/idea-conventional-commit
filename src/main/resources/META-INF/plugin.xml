@@ -16,6 +16,12 @@
 
   <actions>
     <action
+        id="WhatsNewInConventionalCommitAction"
+        class="com.github.lppedd.cc.whatsnew.WhatsNewAction"
+    >
+      <add-to-group group-id="HelpMenu" anchor="after" relative-to-action="WhatsNewAction" />
+    </action>
+    <action
         id="EditorTab"
         overrides="true"
         class="com.github.lppedd.cc.editor.CommitTabAction"
@@ -73,6 +79,11 @@
 
     <projectService serviceImplementation="com.github.lppedd.cc.configuration.CCConfigService" />
     <projectService serviceImplementation="com.github.lppedd.cc.configuration.CCDefaultTokensService" />
+
+    <postStartupActivity
+        id="PluginChangelogStartupActivity"
+        implementation="com.github.lppedd.cc.whatsnew.WhatsNewStartupActivity"
+    />
   </extensions>
 
   <extensionPoints>
@@ -109,6 +120,10 @@
     <extensionPoint
         name="commitInspectionProvider"
         interface="com.github.lppedd.cc.api.CommitInspectionProvider"
+    />
+    <extensionPoint
+        name="whatsNewProvider"
+        interface="com.github.lppedd.cc.api.WhatsNewProvider"
     />
   </extensionPoints>
 
