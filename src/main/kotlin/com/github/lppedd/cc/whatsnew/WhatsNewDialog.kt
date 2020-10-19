@@ -116,7 +116,6 @@ internal class WhatsNewDialog(project: Project) : CCDialogWrapper(project) {
         dialog.dispose()
       }
 
-
       dialog = WhatsNewDialog(project)
       sharedDialog = dialog
       dialog.show()
