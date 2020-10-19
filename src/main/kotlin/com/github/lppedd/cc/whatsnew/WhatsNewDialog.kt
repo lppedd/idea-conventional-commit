@@ -75,34 +75,30 @@ internal class WhatsNewDialog(project: Project) : CCDialogWrapper(project) {
     myPreferredFocusedComponent
 
   private fun updateActions() {
+    val currentVersion = whatsNewPanel.currentVersion()
     val hasNewer = whatsNewPanel.hasNewer()
-    newerAction.isEnabled = hasNewer
-
-    if (hasNewer) {
-      val newerVersion = whatsNewPanel.newerVersion()
-
-      if (newerVersion == null) {
-        newerAction.setName(CCBundle["cc.whatsnew.dialog.newer"])
-      } else {
-        newerAction.setName("${CCBundle["cc.whatsnew.dialog.newer"]} - $newerVersion")
-      }
-    } else {
-      whatsNewPanel.currentVersion()?.let {
-        newerAction.setName("${CCBundle["cc.whatsnew.dialog.newer"]} - $it")
-      }
-    }
-
     val hasOlder = whatsNewPanel.hasOlder()
+    newerAction.isEnabled = hasNewer
     olderAction.isEnabled = hasOlder
 
-    if (hasOlder) {
-      val olderVersion = whatsNewPanel.olderVersion()
+    if (hasNewer) {
+      updateActionName(newerAction, CCBundle["cc.whatsnew.dialog.newer"], whatsNewPanel.newerVersion())
+    } else {
+      updateActionName(newerAction, CCBundle["cc.whatsnew.dialog.newer"], currentVersion)
+    }
 
-      if (olderVersion == null) {
-        olderAction.setName(CCBundle["cc.whatsnew.dialog.older"])
-      } else {
-        olderAction.setName("${CCBundle["cc.whatsnew.dialog.older"]} - $olderVersion")
-      }
+    if (hasOlder) {
+      updateActionName(olderAction, CCBundle["cc.whatsnew.dialog.older"], whatsNewPanel.olderVersion())
+    } else {
+      updateActionName(olderAction, CCBundle["cc.whatsnew.dialog.older"], currentVersion)
+    }
+  }
+
+  private fun updateActionName(action: AbstractAction, baseName: String, version: String?) {
+    if (version == null) {
+      action.setName(baseName)
+    } else {
+      action.setName("$baseName - $version")
     }
   }
 
