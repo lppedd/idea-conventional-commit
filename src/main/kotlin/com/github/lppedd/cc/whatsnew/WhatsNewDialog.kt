@@ -41,6 +41,8 @@ internal class WhatsNewDialog(project: Project) : CCDialogWrapper(project) {
     }
 
     WHATS_NEW_EP.extensions
+      .asSequence()
+      .sortedWith(WhatsNewProviderComparator)
       .filter { it.files.fileDescriptions.isNotEmpty() }
       .forEach { provider ->
         tabSelectedHandlers[tabbedPane.tabCount] = {
@@ -134,5 +136,17 @@ internal class WhatsNewDialog(project: Project) : CCDialogWrapper(project) {
       whatsNewPanel.newerChangelog()
       updateActions()
     }
+  }
+
+  /**
+   * Ensure the core plugin provider's tab is always displayed as first.
+   */
+  private object WhatsNewProviderComparator : Comparator<WhatsNewProvider> {
+    override fun compare(p1: WhatsNewProvider?, p2: WhatsNewProvider?): Int =
+      when {
+        p1 is DefaultWhatsNewProvider -> -1
+        p2 is DefaultWhatsNewProvider -> 1
+        else -> 0
+      }
   }
 }

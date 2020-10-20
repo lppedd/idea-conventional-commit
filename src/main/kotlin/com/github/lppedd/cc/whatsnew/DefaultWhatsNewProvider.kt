@@ -13,7 +13,7 @@ import kotlin.math.max
  *
  * @author Edoardo Luppi
  */
-private class DefaultWhatsNewProvider : WhatsNewProvider() {
+internal class DefaultWhatsNewProvider : WhatsNewProvider() {
   private val versionPropertyName = "com.github.lppedd.cc.version"
 
   override fun displayName(): String =
