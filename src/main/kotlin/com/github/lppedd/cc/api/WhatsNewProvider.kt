@@ -10,14 +10,37 @@ internal val WHATS_NEW_EP = ExtensionPointName<WhatsNewProvider>(
 )
 
 /**
+ * An entry point to provide your own "what's new" pages for the What's New dialog.
+ * The provided pages will be displayed in a separate tab named after [displayName].
+ *
+ * Example usage:
+ * ```
+ * <whatsNewProvider implementation="my.package.MyWhatsNewProvider">
+ *   <files>
+ *     <name version="0.16.0">0_16_0.html</name>
+ *     <name version="0.15.3">0_15_3.html</name>
+ *   </files>
+ * </whatsNewProvider>
+ * ```
+ *
  * @author Edoardo Luppi
+ * @see com.github.lppedd.cc.whatsnew.WhatsNewDialog
  */
 @ApiStatus.Experimental
 abstract class WhatsNewProvider : AbstractExtensionPointBean() {
   @Property(surroundWithTag = false)
   var files: WhatsNewFiles = WhatsNewFiles()
 
+  /**
+   * The name for the dialog's tab.
+   */
   abstract fun displayName(): String
+
+  /**
+   * States if the "what's new" pages should be displayed at IDE startup,
+   * and thus states if the What's New dialog should be shown.
+   * Typically the dialog should be shown every plugin update.
+   */
   abstract fun shouldDisplay(): Boolean
 
   @Tag("files")
