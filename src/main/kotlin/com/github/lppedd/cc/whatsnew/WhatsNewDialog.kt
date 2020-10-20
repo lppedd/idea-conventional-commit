@@ -83,17 +83,11 @@ internal class WhatsNewDialog(project: Project) : CCDialogWrapper(project) {
     newerAction.isEnabled = hasNewer
     olderAction.isEnabled = hasOlder
 
-    if (hasNewer) {
-      updateActionName(newerAction, CCBundle["cc.whatsnew.dialog.newer"], whatsNewPanel.newerVersion())
-    } else {
-      updateActionName(newerAction, CCBundle["cc.whatsnew.dialog.newer"], currentVersion)
-    }
+    val newerVersion = if (hasNewer) whatsNewPanel.newerVersion() else currentVersion
+    updateActionName(newerAction, CCBundle["cc.whatsnew.dialog.newer"], newerVersion)
 
-    if (hasOlder) {
-      updateActionName(olderAction, CCBundle["cc.whatsnew.dialog.older"], whatsNewPanel.olderVersion())
-    } else {
-      updateActionName(olderAction, CCBundle["cc.whatsnew.dialog.older"], currentVersion)
-    }
+    val olderVersion = if (hasOlder) whatsNewPanel.olderVersion() else currentVersion
+    updateActionName(olderAction, CCBundle["cc.whatsnew.dialog.older"], olderVersion)
   }
 
   private fun updateActionName(action: AbstractAction, baseName: String, version: String?) {
