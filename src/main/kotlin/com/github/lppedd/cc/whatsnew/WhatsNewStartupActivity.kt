@@ -15,7 +15,12 @@ import com.intellij.util.concurrency.EdtScheduledExecutorService
  */
 private class WhatsNewStartupActivity : StartupActivity, DumbAware {
   override fun runActivity(project: Project) {
-    if (WHATS_NEW_EP.extensions.any(WhatsNewProvider::shouldDisplay)) {
+    val shouldDisplay = WHATS_NEW_EP.extensions
+      .asSequence()
+      .filter(WhatsNewProvider::shouldDisplay)
+      .any { it.files.fileDescriptions.isNotEmpty() }
+
+    if (shouldDisplay) {
       EdtScheduledExecutorService.getInstance().execute {
         if (!project.isDisposed) {
           WhatsNewDialog.showForProject(project)

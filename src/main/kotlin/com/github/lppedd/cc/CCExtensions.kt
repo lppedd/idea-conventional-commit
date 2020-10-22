@@ -19,19 +19,19 @@ import com.intellij.psi.PsiFile
 import com.intellij.ui.TextFieldWithAutoCompletionListProvider
 import java.awt.Robot
 import java.io.InputStream
-import javax.swing.AbstractAction
+import javax.swing.Action
 import javax.swing.ListSelectionModel
 import kotlin.internal.InlineOnly
 
-// region AbstractAction
+// region Action
 
 @InlineOnly
-internal inline fun AbstractAction.setName(name: String) {
+internal inline fun Action.setName(name: String) {
   putValue("Name", name)
 }
 
 @InlineOnly
-internal inline fun AbstractAction.setFocused(focused: Boolean = true) {
+internal inline fun Action.setFocused(focused: Boolean = true) {
   putValue(DialogWrapper.FOCUSED_ACTION, focused)
 }
 

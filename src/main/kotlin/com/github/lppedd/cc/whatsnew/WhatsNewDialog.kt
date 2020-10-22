@@ -26,6 +26,11 @@ internal class WhatsNewDialog(project: Project) : CCDialogWrapper(project) {
   private val olderAction = OlderAction()
   private val newerAction = NewerAction()
   private val tabSelectedHandlers = mutableMapOf<Int, () -> Unit>()
+  private val providers = WHATS_NEW_EP.extensions
+    .asSequence()
+    .sortedWith(WhatsNewProviderComparator)
+    .filter { it.files.fileDescriptions.isNotEmpty() }
+    .toList()
 
   init {
     isModal = false
@@ -35,29 +40,36 @@ internal class WhatsNewDialog(project: Project) : CCDialogWrapper(project) {
     init()
   }
 
-  override fun createNorthPanel(): JComponent {
+  override fun createNorthPanel(): JComponent? {
+    if (providers.isEmpty()) {
+      cancelAction.setFocused()
+      return null
+    }
+
+    olderAction.setFocused()
+
     val tabbedPane = NoContentTabbedPaneWrapper(myDisposable).also {
       it.addChangeListener { _ -> tabSelectedHandlers[it.selectedIndex]?.invoke() }
     }
 
-    WHATS_NEW_EP.extensions
-      .asSequence()
-      .sortedWith(WhatsNewProviderComparator)
-      .filter { it.files.fileDescriptions.isNotEmpty() }
-      .forEach { provider ->
-        tabSelectedHandlers[tabbedPane.tabCount] = {
-          whatsNewPanel.setProvider(provider)
-          updateActions()
-        }
-
-        tabbedPane.addTab(provider.displayName())
+    providers.forEach { provider ->
+      tabSelectedHandlers[tabbedPane.tabCount] = {
+        whatsNewPanel.setProvider(provider)
+        updateActions()
       }
+
+      tabbedPane.addTab(provider.displayName())
+    }
 
     return tabbedPane.component
   }
 
   override fun createCenterPanel(): JComponent =
-    whatsNewPanel
+    if (providers.isEmpty()) {
+      WhatsNewEmptyPanel()
+    } else {
+      whatsNewPanel
+    }
 
   override fun createSouthPanel(): JComponent =
     super.createSouthPanel().also {
@@ -116,7 +128,7 @@ internal class WhatsNewDialog(project: Project) : CCDialogWrapper(project) {
 
   private inner class OlderAction : AbstractAction(CCBundle["cc.whatsnew.dialog.older"]) {
     init {
-      setFocused()
+      isEnabled = false
     }
 
     override fun actionPerformed(actionEvent: ActionEvent) {
@@ -126,6 +138,10 @@ internal class WhatsNewDialog(project: Project) : CCDialogWrapper(project) {
   }
 
   private inner class NewerAction : AbstractAction(CCBundle["cc.whatsnew.dialog.newer"]) {
+    init {
+      isEnabled = false
+    }
+
     override fun actionPerformed(actionEvent: ActionEvent) {
       whatsNewPanel.newerChangelog()
       updateActions()
