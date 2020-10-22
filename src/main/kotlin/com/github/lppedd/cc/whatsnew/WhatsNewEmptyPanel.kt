@@ -28,16 +28,11 @@ internal class WhatsNewEmptyPanel : JPanel() {
       it.setPaintUnderline(false)
     }
 
-    val innerPanel = JPanel().also {
-      it.layout = BoxLayout(it, BoxLayout.Y_AXIS)
-      it.add(label)
-      it.add(link)
-    }
-
-    layout = BoxLayout(this, BoxLayout.X_AXIS)
-    add(Box.createHorizontalGlue())
-    add(innerPanel)
-    add(Box.createHorizontalGlue())
+    layout = BoxLayout(this, BoxLayout.Y_AXIS)
+    add(Box.createVerticalGlue())
+    add(label)
+    add(link)
+    add(Box.createVerticalGlue())
   }
 
   private class VisitPageAction : AnAction() {
