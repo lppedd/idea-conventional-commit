@@ -1,9 +1,6 @@
 package com.github.lppedd.cc.configuration.holders
 
-import com.github.lppedd.cc.CCBundle
-import com.github.lppedd.cc.ICON_ARROW_RIGHT
-import com.github.lppedd.cc.ICON_SCOPE
-import com.github.lppedd.cc.ICON_TYPE
+import com.github.lppedd.cc.*
 import com.github.lppedd.cc.configuration.CCDefaultTokensService.JsonCommitScope
 import com.github.lppedd.cc.configuration.CommitTypeMap
 import com.github.lppedd.cc.configuration.component.tokens.CommitTokenList
@@ -71,13 +68,9 @@ internal class DefaultsListsHolder : ComponentHolder {
   }
 
   private fun createTokensPanel(list: JList<String>, title: String): JPanel {
-    val border = BorderFactory.createCompoundBorder(
-      IdeBorderFactory.createBorder(SideBorder.ALL),
-      BorderFactory.createEmptyBorder(0, 1, 1, 1)
-    )
-
     val scrollablePanel = JBScrollPane(list)
-    scrollablePanel.border = border
+    scrollablePanel.preferredSize = list.minimumSize
+    scrollablePanel.border = IdeBorderFactory.createBorder().wrap(BorderFactory.createEmptyBorder(0, 1, 1, 1))
 
     val panel = JPanel(BorderLayout())
     panel.border = IdeBorderFactory.createTitledBorder(title, false, JBUI.insetsTop(7))
