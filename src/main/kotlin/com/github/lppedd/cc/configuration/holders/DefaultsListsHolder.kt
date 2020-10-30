@@ -6,7 +6,6 @@ import com.github.lppedd.cc.configuration.CommitTypeMap
 import com.github.lppedd.cc.configuration.component.tokens.CommitTokenList
 import com.intellij.ui.IdeBorderFactory
 import com.intellij.ui.ListSpeedSearch
-import com.intellij.ui.SideBorder
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.util.ui.JBDimension
 import com.intellij.util.ui.JBUI
@@ -22,7 +21,6 @@ import javax.swing.JPanel
  */
 internal class DefaultsListsHolder : ComponentHolder {
   private lateinit var latestTokens: CommitTypeMap
-  private val panel = JPanel(BorderLayout())
   private val scopeList = CommitTokenList(ICON_SCOPE)
   private val typeList = CommitTokenList(ICON_TYPE).apply {
     addListSelectionListener { onCommitTypeChanged() }
@@ -52,9 +50,7 @@ internal class DefaultsListsHolder : ComponentHolder {
     innerTokensPanel.add(createTokensPanel(typeList, CCBundle["cc.config.types"]))
     innerTokensPanel.add(createTokensPanel(scopeList, CCBundle["cc.config.scopes"]))
 
-    return panel.apply {
-      add(innerTokensPanel)
-    }
+    return innerTokensPanel
   }
 
   private fun onCommitTypeChanged() {
