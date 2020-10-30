@@ -19,7 +19,7 @@ import javax.swing.JPanel
 /**
  * @author Edoardo Luppi
  */
-internal class DefaultTokensPanel : JPanel(JBGridLayout(1, 1, 30, 1)) {
+internal class DefaultTokensPanel : JPanel(JBGridLayout(1, 1, 24, 1)) {
   private var latestTokens: CommitTypeMap = emptyMap()
   private val scopeList = CommitTokenList(ICON_SCOPE)
   private val typeList = CommitTokenList(ICON_TYPE).also {
