@@ -70,7 +70,7 @@ internal class DefaultsListsHolder : ComponentHolder {
 
     val panel = JPanel(BorderLayout())
     panel.border = IdeBorderFactory.createTitledBorder(title, false, JBUI.insetsTop(7))
-    panel.minimumSize = JBDimension(130, 150)
+    panel.minimumSize = JBDimension(130, 250)
     panel.add(scrollablePanel)
 
     return panel
