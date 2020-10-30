@@ -5,6 +5,7 @@ import com.github.lppedd.cc.api.CommitScopeProvider
 import com.github.lppedd.cc.api.CommitSubjectProvider
 import com.github.lppedd.cc.api.CommitTypeProvider
 import com.github.lppedd.cc.configuration.component.providers.CommitProviderTable
+import com.github.lppedd.cc.ui.JBGridLayout
 import com.intellij.ui.TableSpeedSearch
 import com.intellij.ui.ToolbarDecorator
 import com.intellij.ui.components.JBLabel
@@ -61,7 +62,7 @@ internal class CCProvidersConfigurableGui {
     TableSpeedSearch(scopes, Convertor { (it as CommitScopeProvider).getPresentation().name })
     TableSpeedSearch(subjects, Convertor { (it as CommitSubjectProvider).getPresentation().name })
 
-    val providersPanel = JPanel(GridLayout(3, 1, 0, 10)).also {
+    val providersPanel = JPanel(JBGridLayout(3, 1, 0, 10)).also {
       it.add(
         ToolbarDecorator
           .createDecorator(types)

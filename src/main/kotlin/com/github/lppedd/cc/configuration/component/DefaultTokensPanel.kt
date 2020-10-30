@@ -4,6 +4,7 @@ import com.github.lppedd.cc.*
 import com.github.lppedd.cc.configuration.CCDefaultTokensService.JsonCommitScope
 import com.github.lppedd.cc.configuration.CommitTypeMap
 import com.github.lppedd.cc.configuration.component.tokens.CommitTokenList
+import com.github.lppedd.cc.ui.JBGridLayout
 import com.intellij.ui.IdeBorderFactory
 import com.intellij.ui.ListSpeedSearch
 import com.intellij.ui.components.JBScrollPane
@@ -11,7 +12,6 @@ import com.intellij.util.ui.JBDimension
 import com.intellij.util.ui.JBUI
 import java.awt.BorderLayout
 import java.awt.Graphics
-import java.awt.GridLayout
 import javax.swing.BorderFactory
 import javax.swing.JList
 import javax.swing.JPanel
@@ -19,7 +19,7 @@ import javax.swing.JPanel
 /**
  * @author Edoardo Luppi
  */
-internal class DefaultTokensPanel : JPanel(GridLayout(1, 1, 30, 1)) {
+internal class DefaultTokensPanel : JPanel(JBGridLayout(1, 1, 30, 1)) {
   private var latestTokens: CommitTypeMap = emptyMap()
   private val scopeList = CommitTokenList(ICON_SCOPE)
   private val typeList = CommitTokenList(ICON_TYPE).also {
