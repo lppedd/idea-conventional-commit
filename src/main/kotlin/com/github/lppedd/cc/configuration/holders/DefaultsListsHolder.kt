@@ -12,6 +12,7 @@ import com.intellij.ui.ListSpeedSearch
 import com.intellij.ui.SideBorder
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.util.ui.JBDimension
+import com.intellij.util.ui.JBUI
 import java.awt.BorderLayout
 import java.awt.Graphics
 import java.awt.GridLayout
@@ -79,7 +80,7 @@ internal class DefaultsListsHolder : ComponentHolder {
     scrollablePanel.border = border
 
     val panel = JPanel(BorderLayout())
-    panel.border = IdeBorderFactory.createTitledBorder(title, false)
+    panel.border = IdeBorderFactory.createTitledBorder(title, false, JBUI.insetsTop(7))
     panel.minimumSize = JBDimension(130, 150)
     panel.add(scrollablePanel)
 

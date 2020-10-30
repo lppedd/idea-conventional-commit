@@ -29,6 +29,7 @@ import com.intellij.ui.components.JBRadioButton;
 import com.intellij.ui.components.labels.ActionLink;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
+import com.intellij.util.ui.JBUI;
 
 /**
  * @author Edoardo Luppi
@@ -125,7 +126,8 @@ public class CCMainConfigurableGui {
     defaultsPanel.setBorder(
         IdeBorderFactory.createTitledBorder(
             CCBundle.get("cc.config.defaults"),
-            false
+            false,
+            JBUI.insetsTop(7)
         )
     );
 
