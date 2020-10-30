@@ -18,7 +18,7 @@ import com.github.lppedd.cc.configuration.CCConfigService.CompletionType;
 import com.github.lppedd.cc.configuration.CCDefaultTokensService.JsonCommitType;
 import com.github.lppedd.cc.configuration.holders.DefaultsFileExportHolder;
 import com.github.lppedd.cc.configuration.holders.DefaultsFilePickerHolder;
-import com.github.lppedd.cc.configuration.holders.DefaultsListsHolder;
+import com.github.lppedd.cc.configuration.component.DefaultTokensPanel;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -46,7 +46,7 @@ public class CCMainConfigurableGui {
 
   private JPanel defaultsPanel;
   private DefaultsFilePickerHolder defaultsFilePickerHolder;
-  private final DefaultsListsHolder defaultsListsHolder = new DefaultsListsHolder();
+  private final DefaultTokensPanel defaultTokensPanel = new DefaultTokensPanel();
 
   public CCMainConfigurableGui(
       @NotNull final Project project,
@@ -98,7 +98,7 @@ public class CCMainConfigurableGui {
   }
 
   public void setTokens(@NotNull final Map<String, JsonCommitType> tokens) {
-    defaultsListsHolder.setTokens(tokens);
+    defaultTokensPanel.setTokens(tokens);
   }
 
   public boolean isValid() {
@@ -149,7 +149,7 @@ public class CCMainConfigurableGui {
 
     // noinspection ConstantExpression
     gc.setVSizePolicy(SIZEPOLICY_CAN_SHRINK | SIZEPOLICY_CAN_GROW | SIZEPOLICY_WANT_GROW);
-    defaultsPanel.add(defaultsListsHolder.getComponent(), gc);
+    defaultsPanel.add(defaultTokensPanel, gc);
   }
 
   private static class LearnMoreAction extends AnAction {
