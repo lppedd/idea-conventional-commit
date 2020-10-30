@@ -7,9 +7,8 @@ import com.github.lppedd.cc.configuration.holders.CoAuthorsTableHolder
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.ValidationInfo
-import com.intellij.ui.scale.JBUIScale
+import com.intellij.util.ui.JBDimension
 import java.awt.BorderLayout
-import java.awt.Dimension
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
 import javax.swing.JComponent
@@ -25,7 +24,7 @@ internal class CoAuthorsDialog(project: Project) : DialogWrapper(project) {
   init {
     init()
     title = CCBundle["cc.config.coAuthorsDialog.title"]
-    contentPane.preferredSize = Dimension(JBUIScale.scale(400), JBUIScale.scale(500))
+    contentPane.preferredSize = JBDimension(400, 500)
 
     // It's good the dialog dimensions get saved, but it's better
     // to always display it in the center of the commit dialog
