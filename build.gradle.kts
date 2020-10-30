@@ -37,7 +37,16 @@ configure<JavaPluginConvention> {
   targetCompatibility = JavaVersion.VERSION_1_8
 }
 
+/** Points to the Java executable (usually `java.exe`) of a DCEVM-enabled JVM. */
+val dcevmExecutable: String? by project
+
 tasks {
+  runIde {
+    if (project.property("dcevm") == true) {
+      dcevmExecutable?.let(::setExecutable)
+    }
+  }
+
   val kotlinSettings: KotlinCompile.() -> Unit = {
     kotlinOptions.jvmTarget = "1.8"
     kotlinOptions.freeCompilerArgs += listOf(
