@@ -1,9 +1,10 @@
-package com.github.lppedd.cc.configuration.holders
+package com.github.lppedd.cc.configuration.component
 
 import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.configuration.CCDefaultTokensService
 import com.github.lppedd.cc.gridConstraints
 import com.intellij.openapi.Disposable
+import com.intellij.openapi.components.service
 import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.ComponentValidator
@@ -27,21 +28,37 @@ import javax.swing.event.DocumentEvent
 /**
  * @author Edoardo Luppi
  */
-internal class DefaultsFilePickerHolder(
-    project: Project,
-    private val disposable: Disposable,
-) : ComponentHolder {
-  private val panel = JPanel(GridLayoutManager(2, 1, JBUI.emptyInsets(), 0, 10))
-  private val isCustomFile = JBCheckBox(CCBundle["cc.config.defaults.customDefaults"])
+internal class DefaultTokensFilePickerPanel(
+  private val project: Project,
+  private val disposable: Disposable,
+) : JPanel(GridLayoutManager(2, 1, JBUI.emptyInsets(), 0, JBUI.scale(10))) {
+  private val isCustomFile = JBCheckBox(CCBundle["cc.config.defaults.customDefaults"]).also {
+    it.addItemListener { event ->
+      when (event.stateChange) {
+        ItemEvent.SELECTED -> customFileChecked()
+        ItemEvent.DESELECTED -> customFileUnchecked()
+      }
+    }
+  }
+
   private val customFile = TextFieldWithBrowseButton()
-  private var isValid = true
-  private val defaultsService = CCDefaultTokensService.getInstance(project)
+  private var isComponentValid = true
 
-  override fun getComponent() = buildComponents()
+  init {
+    installValidationOnFilePicker()
+    customFile.addBrowseFolderListener(TextBrowseFolderListener(DefaultsFileChooserDescriptor()))
+    setEmptyText(customFile.textField, CCBundle["cc.config.customFilePicker.disabled"])
 
-  fun getCustomFilePath() =
-    if (isCustomFile.isSelected) customFile.text
-    else null
+    add(isCustomFile, gridConstraints(row = 0, fill = FILL_HORIZONTAL))
+    add(customFile, gridConstraints(row = 1, fill = FILL_HORIZONTAL))
+  }
+
+  fun getCustomFilePath(): String? =
+    if (isCustomFile.isSelected) {
+      customFile.text
+    } else {
+      null
+    }
 
   fun setCustomFilePath(path: String?) {
     if (path != null) {
@@ -58,50 +75,26 @@ internal class DefaultsFilePickerHolder(
     }
   }
 
-  fun isValid() = isValid
+  fun isComponentValid(): Boolean =
+    isComponentValid
 
-  fun revalidate() {
+  fun revalidateComponent() {
     ComponentValidator.getInstance(customFile)
       .get()
       .revalidate()
   }
 
-  private fun buildComponents(): JPanel {
-    installValidationOnFilePicker()
+  private fun customFileChecked() {
+    isComponentValid = false
+    customFile.isEnabled = true
+    customFile.requestFocus()
+    setEmptyText(customFile.textField, CCBundle["cc.config.customFilePicker.enabled"])
+  }
 
-    customFile.addBrowseFolderListener(TextBrowseFolderListener(DefaultsFileChooserDescriptor()))
-
-    setEmptyText(
-      customFile.textField,
-      CCBundle["cc.config.customFilePicker.disabled"]
-    )
-
-    isCustomFile.addItemListener {
-      when (it.stateChange) {
-        ItemEvent.SELECTED -> {
-          isValid = false
-          customFile.isEnabled = true
-          customFile.requestFocus()
-          setEmptyText(
-            customFile.textField,
-            CCBundle["cc.config.customFilePicker.enabled"]
-          )
-        }
-        ItemEvent.DESELECTED -> {
-          isValid = true
-          customFile.isEnabled = false
-          setEmptyText(
-            customFile.textField,
-            CCBundle["cc.config.customFilePicker.disabled"]
-          )
-        }
-      }
-    }
-
-    return panel.apply {
-      add(isCustomFile, gridConstraints(row = 0, fill = FILL_HORIZONTAL))
-      add(customFile, gridConstraints(row = 1, fill = FILL_HORIZONTAL))
-    }
+  private fun customFileUnchecked() {
+    isComponentValid = true
+    customFile.isEnabled = false
+    setEmptyText(customFile.textField, CCBundle["cc.config.customFilePicker.disabled"])
   }
 
   private fun installValidationOnFilePicker() {
@@ -122,28 +115,28 @@ internal class DefaultsFilePickerHolder(
 
   private fun customFileValidator(): ValidationInfo? {
     if (!isCustomFile.isSelected) {
-      isValid = true
+      isComponentValid = true
       return null
     }
 
     val path = customFile.text.trim()
 
     if (path.isEmpty()) {
-      isValid = false
+      isComponentValid = false
       return ValidationInfo(CCBundle["cc.config.filePicker.error.empty"], customFile)
     }
 
     if (!path.endsWith("json", true)) {
-      isValid = false
+      isComponentValid = false
       return ValidationInfo(CCBundle["cc.config.filePicker.error.path"], customFile)
     }
 
     return try {
-      defaultsService.validateDefaultsFile(path)
-      isValid = true
+      project.service<CCDefaultTokensService>().validateDefaultsFile(path)
+      isComponentValid = true
       null
     } catch (e: Exception) {
-      isValid = false
+      isComponentValid = false
 
       val error = if (e is ValidationException) {
         val messages = e.allMessages.joinToString("<br />", ":<br />")

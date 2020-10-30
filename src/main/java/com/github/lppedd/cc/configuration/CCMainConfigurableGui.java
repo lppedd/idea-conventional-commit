@@ -16,9 +16,9 @@ import org.jetbrains.annotations.Nullable;
 import com.github.lppedd.cc.CCBundle;
 import com.github.lppedd.cc.configuration.CCConfigService.CompletionType;
 import com.github.lppedd.cc.configuration.CCDefaultTokensService.JsonCommitType;
-import com.github.lppedd.cc.configuration.holders.DefaultsFileExportHolder;
-import com.github.lppedd.cc.configuration.holders.DefaultsFilePickerHolder;
 import com.github.lppedd.cc.configuration.component.DefaultTokensPanel;
+import com.github.lppedd.cc.configuration.component.DefaultTokensFilePickerPanel;
+import com.github.lppedd.cc.configuration.holders.DefaultsFileExportHolder;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -45,7 +45,7 @@ public class CCMainConfigurableGui {
   private JBRadioButton isTemplate;
 
   private JPanel defaultsPanel;
-  private DefaultsFilePickerHolder defaultsFilePickerHolder;
+  private DefaultTokensFilePickerPanel defaultTokensFilePickerPanel;
   private final DefaultTokensPanel defaultTokensPanel = new DefaultTokensPanel();
 
   public CCMainConfigurableGui(
@@ -77,7 +77,7 @@ public class CCMainConfigurableGui {
 
   @Nullable
   public String getCustomFilePath() {
-    return defaultsFilePickerHolder.getCustomFilePath();
+    return defaultTokensFilePickerPanel.getCustomFilePath();
   }
 
   public void setCompletionType(@NotNull final CompletionType completionType) {
@@ -94,7 +94,7 @@ public class CCMainConfigurableGui {
   }
 
   public void setCustomFilePath(@Nullable final String path) {
-    defaultsFilePickerHolder.setCustomFilePath(path);
+    defaultTokensFilePickerPanel.setCustomFilePath(path);
   }
 
   public void setTokens(@NotNull final Map<String, JsonCommitType> tokens) {
@@ -102,11 +102,11 @@ public class CCMainConfigurableGui {
   }
 
   public boolean isValid() {
-    return defaultsFilePickerHolder.isValid();
+    return defaultTokensFilePickerPanel.isComponentValid();
   }
 
   public void revalidate() {
-    defaultsFilePickerHolder.revalidate();
+    defaultTokensFilePickerPanel.revalidateComponent();
   }
 
   private void finishUpComponents(
@@ -140,9 +140,9 @@ public class CCMainConfigurableGui {
     defaultsPanel.add(new DefaultsFileExportHolder().getComponent(), gc);
 
     gc.setRow(1);
-    defaultsFilePickerHolder = new DefaultsFilePickerHolder(project, disposable);
-    defaultsPanel.add(defaultsFilePickerHolder.getComponent(), gc);
-    defaultsFilePickerHolder.revalidate();
+    defaultTokensFilePickerPanel = new DefaultTokensFilePickerPanel(project, disposable);
+    defaultsPanel.add(defaultTokensFilePickerPanel, gc);
+    defaultTokensFilePickerPanel.revalidateComponent();
 
     gc.setRow(2);
     gc.setIndent(0);
