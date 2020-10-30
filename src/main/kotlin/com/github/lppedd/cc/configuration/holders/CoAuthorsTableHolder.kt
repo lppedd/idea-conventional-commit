@@ -4,6 +4,7 @@ import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.configuration.CCDefaultTokensService
 import com.github.lppedd.cc.configuration.component.providers.CoAuthorsTable
 import com.github.lppedd.cc.configuration.component.providers.CoAuthorsTableModel
+import com.intellij.openapi.actionSystem.ActionToolbarPosition
 import com.intellij.openapi.ui.ValidationInfo
 import com.intellij.ui.TableSpeedSearch
 import com.intellij.ui.ToolbarDecorator
@@ -19,6 +20,7 @@ internal class CoAuthorsTableHolder(service: CCDefaultTokensService) {
   private val panel = table.run {
     TableSpeedSearch(this) { value, cell -> if (cell.column == 1) value as String else null }
     ToolbarDecorator.createDecorator(this)
+      .setToolbarPosition(ActionToolbarPosition.RIGHT)
       .setRemoveAction { removeSelectedRows() }
       .setAddAction { addRow() }
       .setAddActionUpdater { !isEditing }
