@@ -2,8 +2,8 @@
 package com.github.lppedd.cc.inspection
 
 import com.github.lppedd.cc.CCBundle
-import com.github.lppedd.cc.concat
 import com.github.lppedd.cc.configuration.CCConfigService
+import com.github.lppedd.cc.wrap
 import com.intellij.openapi.options.ConfigurableUi
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.ComboBox
@@ -38,8 +38,9 @@ internal class CommitFormatInspectionOptions : ConfigurableUi<Project> {
     val borderColor = JBColor.namedColor("Group.separatorColor", JBColor(Gray.xCD, Gray.x51))
     it.border =
       Borders.emptyTop(5)
-        .concat(Borders.customLine(borderColor, 1, 0, 0, 0))
-        .concat(Borders.emptyTop(5))
+        .wrap(Borders.customLine(borderColor, 1, 0, 0, 0))
+        .wrap(Borders.emptyTop(5))
+
     it.layout = BoxLayout(it, BoxLayout.X_AXIS)
     it.add(charLabel)
     it.add(Box.createRigidArea(Dimension(10, 0)))

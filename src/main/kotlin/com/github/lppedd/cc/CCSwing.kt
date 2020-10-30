@@ -9,7 +9,7 @@ import kotlin.internal.InlineOnly
 
 @InlineOnly
 @Suppress("RedundantNotNullExtensionReceiverOfInline")
-internal inline fun Border.concat(border: Border): Border =
+internal inline fun Border.wrap(border: Border): Border =
   BorderFactory.createCompoundBorder(this, border)
 
 @InlineOnly
