@@ -1,8 +1,7 @@
-package com.github.lppedd.cc.configuration.holders
+package com.github.lppedd.cc.configuration.component
 
 import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.DEFAULT_FILE
-import com.github.lppedd.cc.configuration.component.ActionLinkLabel
 import com.github.lppedd.cc.getResourceAsStream
 import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.fileChooser.FileChooserFactory
@@ -17,16 +16,18 @@ import com.intellij.uiDesigner.core.GridConstraints
 import com.intellij.uiDesigner.core.GridLayoutManager
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
-import javax.swing.JComponent
 import javax.swing.JPanel
 
 /**
  * @author Edoardo Luppi
  */
-internal class DefaultsFileExportHolder : ComponentHolder, LinkListener<Any?> {
+internal class DefaultTokensFileExportPanel
+  : JPanel(GridLayoutManager(1, 2, JBUI.insets(0, 1, 6, 0), JBUI.scale(20), 0)),
+    LinkListener<Any?> {
   private val exportAction = ActionLinkLabel(CCBundle["cc.config.defaults.exportToPath"], this)
   private val exportInfo = JBLabel()
-  private val panel = JPanel(GridLayoutManager(1, 2, JBUI.insets(0, 1, 6, 0), 20, 0)).apply {
+
+  init {
     val gc = GridConstraints()
     gc.fill = GridConstraints.FILL_HORIZONTAL
     gc.hSizePolicy = GridConstraints.SIZEPOLICY_FIXED
@@ -37,7 +38,6 @@ internal class DefaultsFileExportHolder : ComponentHolder, LinkListener<Any?> {
     add(exportInfo, gc)
   }
 
-  override fun getComponent(): JComponent = panel
   override fun linkSelected(aSource: LinkLabel<Any?>, aLinkData: Any?) {
     val virtualFileWrapper = FileChooserFactory.getInstance()
       .createSaveFileDialog(FileSaverDescriptor(CCBundle["cc.config.exportDialog.title"], ""), null)

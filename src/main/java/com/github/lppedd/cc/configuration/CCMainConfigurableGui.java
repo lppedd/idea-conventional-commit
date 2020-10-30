@@ -16,9 +16,9 @@ import org.jetbrains.annotations.Nullable;
 import com.github.lppedd.cc.CCBundle;
 import com.github.lppedd.cc.configuration.CCConfigService.CompletionType;
 import com.github.lppedd.cc.configuration.CCDefaultTokensService.JsonCommitType;
-import com.github.lppedd.cc.configuration.component.DefaultTokensPanel;
 import com.github.lppedd.cc.configuration.component.DefaultTokensFilePickerPanel;
-import com.github.lppedd.cc.configuration.holders.DefaultsFileExportHolder;
+import com.github.lppedd.cc.configuration.component.DefaultTokensPanel;
+import com.github.lppedd.cc.configuration.component.DefaultTokensFileExportPanel;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -137,7 +137,7 @@ public class CCMainConfigurableGui {
 
     // noinspection ConstantExpression
     gc.setHSizePolicy(SIZEPOLICY_CAN_SHRINK | SIZEPOLICY_CAN_GROW | SIZEPOLICY_WANT_GROW);
-    defaultsPanel.add(new DefaultsFileExportHolder().getComponent(), gc);
+    defaultsPanel.add(new DefaultTokensFileExportPanel(), gc);
 
     gc.setRow(1);
     defaultTokensFilePickerPanel = new DefaultTokensFilePickerPanel(project, disposable);
