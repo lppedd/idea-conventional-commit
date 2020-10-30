@@ -12,27 +12,25 @@ import javax.swing.JPanel
 /**
  * @author Edoardo Luppi
  */
-internal class CoAuthorsTableHolder(service: CCDefaultTokensService) : ComponentHolder, Validatable {
+internal class CoAuthorsTableHolder(service: CCDefaultTokensService) {
   val tableModel = CoAuthorsTableModel(service.getCoAuthors())
   val table = CoAuthorsTable(tableModel)
 
-  private val panel by lazy {
-    table.run {
-      TableSpeedSearch(this) { value, cell -> if (cell.column == 1) value as String else null }
-      ToolbarDecorator.createDecorator(this)
-        .setRemoveAction { removeSelectedRows() }
-        .setAddAction { addRow() }
-        .setAddActionUpdater { !isEditing }
-        .setMoveUpActionUpdater { !isEditing }
-        .setMoveDownActionUpdater { !isEditing }
-        .createPanel()
-    }
+  private val panel = table.run {
+    TableSpeedSearch(this) { value, cell -> if (cell.column == 1) value as String else null }
+    ToolbarDecorator.createDecorator(this)
+      .setRemoveAction { removeSelectedRows() }
+      .setAddAction { addRow() }
+      .setAddActionUpdater { !isEditing }
+      .setMoveUpActionUpdater { !isEditing }
+      .setMoveDownActionUpdater { !isEditing }
+      .createPanel()
   }
 
-  override fun getComponent(): JPanel =
+  fun getComponent(): JPanel =
     panel
 
-  override fun validate(): Collection<ValidationInfo> =
+  fun validate(): Collection<ValidationInfo> =
     if (tableModel.coAuthors.indexOfFirst(String::isBlank) >= 0) {
       listOf(ValidationInfo(CCBundle["cc.config.coAuthorsDialog.error"]))
     } else {
