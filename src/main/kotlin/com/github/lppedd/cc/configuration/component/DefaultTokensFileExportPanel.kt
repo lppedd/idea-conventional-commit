@@ -22,7 +22,7 @@ import javax.swing.JPanel
  * @author Edoardo Luppi
  */
 internal class DefaultTokensFileExportPanel
-  : JPanel(GridLayoutManager(1, 2, JBUI.insets(0, 1, 6, 0), JBUI.scale(20), 0)),
+  : JPanel(GridLayoutManager(1, 2, JBUI.insets(0, 2, 12, 0), JBUI.scale(20), 0)),
     LinkListener<Any?> {
   private val exportAction = ActionLinkLabel(CCBundle["cc.config.defaults.exportToPath"], this)
   private val exportInfo = JBLabel()
