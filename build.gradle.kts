@@ -42,7 +42,7 @@ val dcevmExecutable: String? by project
 
 tasks {
   runIde {
-    if (project.property("dcevm") == true) {
+    if (project.hasProperty("dcevm")) {
       dcevmExecutable?.let(::setExecutable)
     }
   }
