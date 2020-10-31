@@ -29,9 +29,9 @@ import javax.swing.event.DocumentEvent
  * @author Edoardo Luppi
  */
 internal class DefaultTokensFilePickerPanel(
-  private val project: Project,
-  private val disposable: Disposable,
-) : JPanel(GridLayoutManager(2, 1, JBUI.emptyInsets(), 0, JBUI.scale(10))) {
+    private val project: Project,
+    private val disposable: Disposable,
+) : JPanel(GridLayoutManager(2, 1, JBUI.emptyInsets(), 0, JBUI.scale(5))) {
   private val isCustomFile = JBCheckBox(CCBundle["cc.config.defaults.customDefaults"]).also {
     it.addItemListener { event ->
       when (event.stateChange) {
@@ -67,9 +67,7 @@ internal class DefaultTokensFilePickerPanel(
       isCustomFile.isSelected = true
       customFile.isEnabled = true
       customFile.text = FileUtil.toSystemDependentName(path)
-      ComponentValidator
-        .getInstance(customFile)
-        .ifPresent(ComponentValidator::revalidate)
+      ComponentValidator.getInstance(customFile).ifPresent(ComponentValidator::revalidate)
     } else {
       isCustomFile.isSelected = false
       customFile.isEnabled = false
@@ -81,9 +79,7 @@ internal class DefaultTokensFilePickerPanel(
     isComponentValid
 
   fun revalidateComponent() {
-    ComponentValidator.getInstance(customFile)
-      .get()
-      .revalidate()
+    ComponentValidator.getInstance(customFile).get().revalidate()
   }
 
   private fun customFileChecked() {
@@ -166,7 +162,7 @@ internal class DefaultTokensFilePickerPanel(
 
   private object MyFileChooserDescriptor : FileChooserDescriptor(true, false, false, false, false, false) {
     init {
-      withFileFilter { file: VirtualFile -> file.isValid && "json".equals(file.extension, true) }
+      withFileFilter { file -> file.isValid && "json".equals(file.extension, true) }
       withTitle(CCBundle["cc.config.fileDialog.title"])
       withDescription(CCBundle["cc.config.fileDialog.description"])
     }
