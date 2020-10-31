@@ -41,14 +41,16 @@ internal class DefaultTokensFilePickerPanel(
     }
   }
 
-  private val customFile = TextFieldWithBrowseButton()
+  private val customFile = TextFieldWithBrowseButton().also {
+    it.isEnabled = false
+    it.addBrowseFolderListener(TextBrowseFolderListener(MyFileChooserDescriptor))
+  }
+
   private var isComponentValid = true
 
   init {
     installValidationOnFilePicker()
-    customFile.addBrowseFolderListener(TextBrowseFolderListener(DefaultsFileChooserDescriptor()))
     setEmptyText(customFile.textField, CCBundle["cc.config.customFilePicker.disabled"])
-
     add(isCustomFile, gridConstraints(row = 0, fill = FILL_HORIZONTAL))
     add(customFile, gridConstraints(row = 1, fill = FILL_HORIZONTAL))
   }
@@ -162,7 +164,7 @@ internal class DefaultTokensFilePickerPanel(
     }
   }
 
-  private class DefaultsFileChooserDescriptor : FileChooserDescriptor(true, true, true, true, false, false) {
+  private object MyFileChooserDescriptor : FileChooserDescriptor(true, false, false, false, false, false) {
     init {
       withFileFilter { file: VirtualFile -> file.isValid && "json".equals(file.extension, true) }
       withTitle(CCBundle["cc.config.fileDialog.title"])
