@@ -16,3 +16,11 @@ private val THIS_CLASS = Class.forName("com.github.lppedd.cc.CCIcons")
 @JvmField val ICON_FOOTER: Icon = getIcon("/icons/commitFooter.svg", THIS_CLASS)
 @JvmField val ICON_ARROW_RIGHT: Icon = getIcon("/icons/arrowRight.svg", THIS_CLASS)
 @JvmField val ICON_DISABLED: Icon = getIcon("/icons/defaultPresentationDisabled.svg", THIS_CLASS)
+
+object CCIconsEx {
+  object FileTypes {
+    @JvmField val Generic: Icon = getIcon("/icons/fileTypes/generic.svg", CCIconsEx::class.java)
+    @JvmField val Json: Icon = getIcon("/icons/fileTypes/json.svg", CCIconsEx::class.java)
+    @JvmField val CoAuthors: Icon = getIcon("/icons/fileTypes/coauthors.svg", CCIconsEx::class.java)
+  }
+}

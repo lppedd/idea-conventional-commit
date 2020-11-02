@@ -1,17 +1,18 @@
 package com.github.lppedd.cc.configuration.component
 
 import com.github.lppedd.cc.CCBundle
+import com.github.lppedd.cc.CCIconsEx
 import com.github.lppedd.cc.configuration.CCDefaultTokensService
 import com.github.lppedd.cc.gridConstraints
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.service
-import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.ComponentValidator
 import com.intellij.openapi.ui.TextBrowseFolderListener
 import com.intellij.openapi.ui.TextFieldWithBrowseButton
 import com.intellij.openapi.ui.ValidationInfo
 import com.intellij.openapi.util.io.FileUtil
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.DocumentAdapter
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL
@@ -170,9 +171,15 @@ internal class DefaultTokensFilePickerPanel(
     }
   }
 
-  private object MyFileChooserDescriptor : FileChooserDescriptor(true, false, false, false, false, false) {
+  private object MyFileChooserDescriptor : CCFileChooserDescriptor() {
+    override val okActionName = "Select file"
+    override val validFileIcon = CCIconsEx.FileTypes.Json
+    override val validFileTest: (VirtualFile) -> Boolean = {
+      it.isValid && "json".equals(it.extension, true)
+    }
+
     init {
-      withFileFilter { file -> file.isValid && "json".equals(file.extension, true) }
+      withFileFilter(validFileTest)
       withTitle(CCBundle["cc.config.fileDialog.title"])
       withDescription(CCBundle["cc.config.fileDialog.description"])
     }
