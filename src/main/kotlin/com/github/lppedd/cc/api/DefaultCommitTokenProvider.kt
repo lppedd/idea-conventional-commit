@@ -3,7 +3,6 @@ package com.github.lppedd.cc.api
 import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.CCIcons
 import com.github.lppedd.cc.CCNotificationService
-import com.github.lppedd.cc.DEFAULT_PROVIDER_ID
 import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.configuration.CCDefaultTokensService
 import com.github.lppedd.cc.parser.CCParser
@@ -37,8 +36,7 @@ internal class DefaultCommitTokenProvider(private val project: Project) :
       defaultsService.getBuiltInDefaults()
     }
 
-  override fun getId(): String =
-    DEFAULT_PROVIDER_ID
+  override fun getId(): String = ID
 
   override fun getPresentation(): ProviderPresentation =
     ProviderPresentation("Default", CCIcons.Logo)
@@ -109,5 +107,9 @@ internal class DefaultCommitTokenProvider(private val project: Project) :
          ?.joinToString("<br />", " <br />") ?: "")
 
     CCNotificationService.createErrorNotification(message).notify(project)
+  }
+
+  companion object {
+    const val ID: String = "e9d4e8de-79a0-48b8-b1ba-b4161e2572c0"
   }
 }

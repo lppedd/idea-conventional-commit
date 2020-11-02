@@ -1,6 +1,5 @@
 package com.github.lppedd.cc.configuration
 
-import com.github.lppedd.cc.DEFAULT_PROVIDER_ID
 import com.github.lppedd.cc.STORAGE_FILE
 import com.github.lppedd.cc.api.*
 import com.intellij.openapi.components.PersistentStateComponent
@@ -116,11 +115,11 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
   }
 
   override fun noStateLoaded() {
-    typeProvidersMap.putIfAbsent(DEFAULT_PROVIDER_ID, 0)
-    scopeProvidersMap.putIfAbsent(DEFAULT_PROVIDER_ID, 0)
+    typeProvidersMap.putIfAbsent(DefaultCommitTokenProvider.ID, 0)
+    scopeProvidersMap.putIfAbsent(DefaultCommitTokenProvider.ID, 0)
     subjectProvidersMap.putIfAbsent(DefaultVcsCommitSubjectProvider.ID, 0)
-    footerTypeProvidersMap.putIfAbsent(DEFAULT_PROVIDER_ID, 0)
-    footerValueProvidersMap.putIfAbsent(DEFAULT_PROVIDER_ID, 0)
+    footerTypeProvidersMap.putIfAbsent(DefaultCommitTokenProvider.ID, 0)
+    footerValueProvidersMap.putIfAbsent(DefaultCommitTokenProvider.ID, 0)
   }
 
   override fun equals(other: Any?): Boolean {
