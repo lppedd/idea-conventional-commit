@@ -34,11 +34,11 @@ internal class ShowMoreCoAuthorsLookupElement(
     psiElement
 
   override fun getLookupString(): String =
-    "Show more$changingLookupString"
+    "${CCBundle["cc.completion.showMore"]}$changingLookupString"
 
   override fun renderElement(presentation: LookupElementPresentation) =
     presentation.let {
-      it.itemText = "Show more"
+      it.itemText = CCBundle["cc.completion.showMore"]
       it.isTypeIconRightAligned = true
       it.isItemTextBold = true
     }
