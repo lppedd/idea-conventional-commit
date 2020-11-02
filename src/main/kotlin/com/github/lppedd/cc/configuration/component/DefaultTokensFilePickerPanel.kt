@@ -12,13 +12,13 @@ import com.intellij.openapi.ui.TextBrowseFolderListener
 import com.intellij.openapi.ui.TextFieldWithBrowseButton
 import com.intellij.openapi.ui.ValidationInfo
 import com.intellij.openapi.util.io.FileUtil
-import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.DocumentAdapter
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL
 import com.intellij.uiDesigner.core.GridLayoutManager
 import com.intellij.util.ui.ComponentWithEmptyText
 import com.intellij.util.ui.JBUI
+import com.intellij.util.ui.UI
 import org.everit.json.schema.ValidationException
 import java.awt.event.ItemEvent
 import javax.swing.JComponent
@@ -32,7 +32,7 @@ internal class DefaultTokensFilePickerPanel(
     private val project: Project,
     private val disposable: Disposable,
 ) : JPanel(GridLayoutManager(2, 1, JBUI.emptyInsets(), 0, JBUI.scale(5))) {
-  private val isCustomFile = JBCheckBox(CCBundle["cc.config.defaults.customDefaults"]).also {
+  private val isCustomFile = JBCheckBox(CCBundle["cc.config.customFile"]).also {
     it.addItemListener { event ->
       when (event.stateChange) {
         ItemEvent.SELECTED -> customFileChecked()
@@ -51,8 +51,8 @@ internal class DefaultTokensFilePickerPanel(
   init {
     installValidationOnFilePicker()
     setEmptyText(customFile.textField, CCBundle["cc.config.customFilePicker.disabled"])
-    add(isCustomFile, gridConstraints(row = 0, fill = FILL_HORIZONTAL))
-    add(customFile, gridConstraints(row = 1, fill = FILL_HORIZONTAL))
+    add(buildIsCustomFilePanel(), gridConstraints(row = 0, fill = FILL_HORIZONTAL))
+    add(buildCustomFilePanel(), gridConstraints(row = 1, fill = FILL_HORIZONTAL))
   }
 
   fun getCustomFilePath(): String? =
@@ -110,6 +110,16 @@ internal class DefaultTokensFilePickerPanel(
       }
     })
   }
+
+  private fun buildIsCustomFilePanel(): JPanel =
+    UI.PanelFactory.panel(isCustomFile)
+      .withTooltip(CCBundle["cc.config.defaults.customFile.tooltip"])
+      .createPanel()
+
+  private fun buildCustomFilePanel(): JPanel =
+    UI.PanelFactory.panel(customFile)
+      .withComment(CCBundle["cc.config.defaults.customFile.comment"])
+      .createPanel()
 
   private fun customFileValidator(): ValidationInfo? {
     if (!isCustomFile.isSelected) {
