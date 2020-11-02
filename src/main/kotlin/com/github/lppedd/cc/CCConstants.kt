@@ -1,10 +1,6 @@
-@file:JvmName("CCConstants")
-
 package com.github.lppedd.cc
 
 import com.github.lppedd.cc.completion.Priority
-import com.intellij.ui.JBColor
-import com.intellij.util.ui.UIUtil
 
 const val APP_NAME: String = "ConventionalCommit"
 const val STORAGE_FILE: String = "conventionalCommit.xml"
@@ -21,19 +17,3 @@ internal val PRIORITY_FOOTER_VALUE = Priority(10_000)
 internal val PRIORITY_FOOTER_TYPE = Priority(10_000)
 internal val PRIORITY_BODY = Priority(1_000_000)
 internal val PRIORITY_TYPE = Priority(100_000_000)
-
-internal val LIST_BACKGROUND_COLOR = JBColor {
-  if (JBColor.isBright()) {
-    UIUtil.getListBackground()
-  } else {
-    UIUtil.getListBackground().brighter(0.95)
-  }
-}
-
-internal val BORDER_COLOR = JBColor {
-  if (JBColor.isBright()) {
-    JBColor.border()
-  } else {
-    UIUtil.getListBackground().brighter(0.75)
-  }
-}

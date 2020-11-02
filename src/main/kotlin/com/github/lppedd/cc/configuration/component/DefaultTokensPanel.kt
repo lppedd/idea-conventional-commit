@@ -1,8 +1,8 @@
 package com.github.lppedd.cc.configuration.component
 
-import com.github.lppedd.cc.BORDER_COLOR
 import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.CCIcons
+import com.github.lppedd.cc.CCUI
 import com.github.lppedd.cc.configuration.CCDefaultTokensService.JsonCommitScope
 import com.github.lppedd.cc.configuration.CommitTypeMap
 import com.github.lppedd.cc.configuration.component.tokens.CommitTokenList
@@ -57,7 +57,7 @@ internal class DefaultTokensPanel : JPanel(JBGridLayout(1, 1, 24, 1)) {
   private fun createTokenListPanel(list: JList<String>, title: String): JPanel {
     val scrollPane = JBScrollPane(list).also {
       it.preferredSize = list.minimumSize
-      it.border = IdeBorderFactory.createBorder(BORDER_COLOR).wrap(JBUI.Borders.empty(0, 1, 1, 1))
+      it.border = IdeBorderFactory.createBorder(CCUI.BorderColor).wrap(JBUI.Borders.empty(0, 1, 1, 1))
     }
 
     return JPanel(BorderLayout()).also {
