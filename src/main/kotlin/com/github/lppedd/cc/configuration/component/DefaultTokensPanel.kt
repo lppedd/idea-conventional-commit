@@ -1,10 +1,13 @@
 package com.github.lppedd.cc.configuration.component
 
-import com.github.lppedd.cc.*
+import com.github.lppedd.cc.BORDER_COLOR
+import com.github.lppedd.cc.CCBundle
+import com.github.lppedd.cc.CCIcons
 import com.github.lppedd.cc.configuration.CCDefaultTokensService.JsonCommitScope
 import com.github.lppedd.cc.configuration.CommitTypeMap
 import com.github.lppedd.cc.configuration.component.tokens.CommitTokenList
 import com.github.lppedd.cc.ui.JBGridLayout
+import com.github.lppedd.cc.wrap
 import com.intellij.ui.IdeBorderFactory
 import com.intellij.ui.ListSpeedSearch
 import com.intellij.ui.components.JBScrollPane
@@ -20,8 +23,8 @@ import javax.swing.JPanel
  */
 internal class DefaultTokensPanel : JPanel(JBGridLayout(1, 1, 24, 1)) {
   private var latestTokens: CommitTypeMap = emptyMap()
-  private val scopeList = CommitTokenList(ICON_SCOPE)
-  private val typeList = CommitTokenList(ICON_TYPE).also {
+  private val scopeList = CommitTokenList(CCIcons.Tokens.Scope)
+  private val typeList = CommitTokenList(CCIcons.Tokens.Type).also {
     it.addListSelectionListener {
       onCommitTypeChanged()
     }
@@ -69,8 +72,9 @@ internal class DefaultTokensPanel : JPanel(JBGridLayout(1, 1, 24, 1)) {
 
   override fun paint(g: Graphics) {
     super.paint(g)
-    val x = (width - ICON_ARROW_RIGHT.iconWidth) / 2
-    val y = (height - ICON_ARROW_RIGHT.iconHeight + 20) / 2
-    ICON_ARROW_RIGHT.paintIcon(this, g, x, y)
+    val icon = CCIcons.General.ArrowRight
+    val x = (width - icon.iconWidth) / 2
+    val y = (height - icon.iconHeight + 20) / 2
+    icon.paintIcon(this, g, x, y)
   }
 }

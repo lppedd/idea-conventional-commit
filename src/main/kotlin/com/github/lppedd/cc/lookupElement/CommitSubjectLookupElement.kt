@@ -26,7 +26,7 @@ internal class CommitSubjectLookupElement(
 
   override fun renderElement(presentation: LookupElementPresentation) =
     presentation.let {
-      it.icon = ICON_SUBJECT
+      it.icon = CCIcons.Tokens.Subject
       it.itemText = lookupString
       it.isTypeIconRightAligned = true
 

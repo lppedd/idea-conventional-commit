@@ -28,7 +28,7 @@ internal class CommitFooterValueLookupElement(
 
   override fun renderElement(presentation: LookupElementPresentation) =
     presentation.let {
-      it.icon = ICON_FOOTER
+      it.icon = CCIcons.Tokens.Footer
       it.itemText = lookupString.flattenWhitespaces().abbreviate(100)
       it.isTypeIconRightAligned = true
 

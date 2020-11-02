@@ -1,6 +1,6 @@
 package com.github.lppedd.cc.whatsnew
 
-import com.github.lppedd.cc.ICON_DEFAULT_PRESENTATION
+import com.github.lppedd.cc.CCIcons
 import com.intellij.ide.ui.UISettings
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
@@ -75,7 +75,7 @@ internal class CCDialogWrapperPeer(
   }
 
   private fun scaleAndGetIcon(): Icon {
-    val scale = 16 * UISettings.defFontScale / ICON_DEFAULT_PRESENTATION.iconWidth
-    return IconUtil.scale(ICON_DEFAULT_PRESENTATION, null, scale)
+    val scale = 16 * UISettings.defFontScale / CCIcons.Logo.iconWidth
+    return IconUtil.scale(CCIcons.Logo, null, scale)
   }
 }

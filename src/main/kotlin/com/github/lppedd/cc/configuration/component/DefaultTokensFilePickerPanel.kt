@@ -1,7 +1,7 @@
 package com.github.lppedd.cc.configuration.component
 
 import com.github.lppedd.cc.CCBundle
-import com.github.lppedd.cc.CCIconsEx
+import com.github.lppedd.cc.CCIcons
 import com.github.lppedd.cc.configuration.CCDefaultTokensService
 import com.github.lppedd.cc.gridConstraints
 import com.intellij.openapi.Disposable
@@ -173,7 +173,7 @@ internal class DefaultTokensFilePickerPanel(
 
   private object MyFileChooserDescriptor : CCFileChooserDescriptor() {
     override val okActionName = "Select file"
-    override val validFileIcon = CCIconsEx.FileTypes.Json
+    override val validFileIcon = CCIcons.FileTypes.Json
     override val validFileTest: (VirtualFile) -> Boolean = {
       it.isValid && "json".equals(it.extension, true)
     }

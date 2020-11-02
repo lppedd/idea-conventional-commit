@@ -1,6 +1,6 @@
 package com.github.lppedd.cc.provider
 
-import com.github.lppedd.cc.ICON_DEFAULT_PRESENTATION
+import com.github.lppedd.cc.CCIcons
 import com.github.lppedd.cc.api.*
 
 internal object TestProvider :
@@ -44,6 +44,5 @@ internal object TestProvider :
     "test-body-provider"
 
   override fun getPresentation(): ProviderPresentation =
-    ProviderPresentation("com.github.lppedd.cc.provider.TestBodyProvider",
-      ICON_DEFAULT_PRESENTATION)
+    ProviderPresentation("com.github.lppedd.cc.provider.TestBodyProvider", CCIcons.Logo)
 }

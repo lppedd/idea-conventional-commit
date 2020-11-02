@@ -1,6 +1,6 @@
 package com.github.lppedd.cc.configuration.component.providers
 
-import com.github.lppedd.cc.ICON_UNKNOWN_PROVIDER
+import com.github.lppedd.cc.CCIcons
 import com.github.lppedd.cc.api.CommitTokenProvider
 import com.github.lppedd.cc.wrap
 import com.intellij.openapi.application.ApplicationInfo
@@ -55,7 +55,7 @@ internal class CommitProviderRenderer : DefaultTableCellRenderer() {
     } else {
       // The icon doesn't match the size prerequisite.
       // Thus we display a generic one
-      ICON_UNKNOWN_PROVIDER
+      CCIcons.Provider.Unknown
     }
   }
 }

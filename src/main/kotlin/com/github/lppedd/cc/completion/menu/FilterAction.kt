@@ -1,6 +1,6 @@
 package com.github.lppedd.cc.completion.menu
 
-import com.github.lppedd.cc.ICON_DISABLED
+import com.github.lppedd.cc.CCIcons
 import com.github.lppedd.cc.api.CommitTokenProvider
 import com.github.lppedd.cc.completion.FilterPrefixMatcher
 import com.github.lppedd.cc.lookupElement.CommitLookupElement
@@ -74,7 +74,7 @@ internal class FilterAction(
 
   override fun update(e: AnActionEvent) {
     e.presentation.icon = if (isFiltered) {
-      ICON_DISABLED
+      CCIcons.Provider.Disabled
     } else {
       provider.getPresentation().icon
     }

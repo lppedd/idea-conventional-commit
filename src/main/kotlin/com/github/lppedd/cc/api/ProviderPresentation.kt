@@ -1,6 +1,6 @@
 package com.github.lppedd.cc.api
 
-import com.github.lppedd.cc.ICON_DISABLED
+import com.github.lppedd.cc.CCIcons
 import javax.swing.Icon
 
 /**
@@ -9,5 +9,5 @@ import javax.swing.Icon
 data class ProviderPresentation @JvmOverloads constructor(
     val name: String,
     val icon: Icon,
-    val disabledIcon: Icon = ICON_DISABLED,
+    val disabledIcon: Icon = CCIcons.Provider.Disabled,
 )

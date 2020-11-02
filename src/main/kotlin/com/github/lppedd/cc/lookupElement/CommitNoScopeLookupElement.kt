@@ -1,6 +1,6 @@
 package com.github.lppedd.cc.lookupElement
 
-import com.github.lppedd.cc.ICON_DEFAULT_PRESENTATION
+import com.github.lppedd.cc.CCIcons
 import com.github.lppedd.cc.PRIORITY_SCOPE
 import com.github.lppedd.cc.api.ProviderPresentation
 import com.github.lppedd.cc.completion.Priority
@@ -19,7 +19,7 @@ internal class CommitNoScopeLookupElement(project: Project) :
       object : ProviderWrapper {
         override fun getPriority() = Priority(0)
         override fun getId() = ""
-        override fun getPresentation() = ProviderPresentation("Default", ICON_DEFAULT_PRESENTATION)
+        override fun getPresentation() = ProviderPresentation("Default", CCIcons.Logo)
       },
     ) {
   private val psiElement = object : CommitFakePsiElement(project) {}

@@ -25,9 +25,9 @@ internal open class CommitTypeLookupElement(
   override fun getLookupString(): String =
     commitType.text
 
-  override fun renderElement(presentation: LookupElementPresentation) =
-    presentation.let {
-      it.icon = ICON_TYPE
+  override fun renderElement(presentation: LookupElementPresentation) {
+    presentation.also {
+      it.icon = CCIcons.Tokens.Type
       it.itemText = lookupString
       it.isTypeIconRightAligned = true
 
@@ -37,6 +37,7 @@ internal open class CommitTypeLookupElement(
       it.isStrikeout = rendering.strikeout
       it.setTypeText(rendering.type, rendering.icon)
     }
+  }
 
   override fun handleInsert(context: InsertionContext) {
     val document = context.document

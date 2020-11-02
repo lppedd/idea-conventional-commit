@@ -1,6 +1,6 @@
 package com.github.lppedd.cc.configuration.component
 
-import com.github.lppedd.cc.CCIconsEx
+import com.github.lppedd.cc.CCIcons
 import com.github.lppedd.cc.isSymlink
 import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.fileChooser.FileElement
@@ -44,8 +44,8 @@ internal open class CCFileChooserDescriptor(
       test(file) -> icon
       FileElement.isFileHidden(file) ->
         if (file.isDirectory) super.getIcon(file)
-        else IconLoader.getTransparentIcon(CCIconsEx.FileTypes.Generic)
-      file.isDirectory.not() -> IconLoader.getTransparentIcon(CCIconsEx.FileTypes.Generic, 0.82F)
+        else IconLoader.getTransparentIcon(CCIcons.FileTypes.Generic)
+      file.isDirectory.not() -> IconLoader.getTransparentIcon(CCIcons.FileTypes.Generic, 0.82F)
       else -> IconLoader.getTransparentIcon(super.getIcon(file), 0.82F)
     }
   }

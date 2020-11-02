@@ -1,7 +1,7 @@
 package com.github.lppedd.cc.api
 
+import com.github.lppedd.cc.CCIcons
 import com.github.lppedd.cc.DEFAULT_VCS_PROVIDER_ID
-import com.github.lppedd.cc.ICON_DEFAULT_PRESENTATION
 import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.CommitTokens
 import com.github.lppedd.cc.parser.ValidToken
@@ -18,7 +18,7 @@ private class DefaultVcsCommitSubjectProvider(private val project: Project) : Co
     DEFAULT_VCS_PROVIDER_ID
 
   override fun getPresentation(): ProviderPresentation =
-    ProviderPresentation("Default - VCS", ICON_DEFAULT_PRESENTATION)
+    ProviderPresentation("Default - VCS", CCIcons.Logo)
 
   override fun getCommitSubjects(commitType: String?, commitScope: String?): Collection<CommitSubject> =
     VcsConfiguration.getInstance(project)
