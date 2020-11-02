@@ -3,7 +3,6 @@ package com.github.lppedd.cc.configuration.component
 import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.CCIcons
 import com.github.lppedd.cc.configuration.CCDefaultTokensService
-import com.github.lppedd.cc.gridConstraints
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
@@ -15,6 +14,7 @@ import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.DocumentAdapter
 import com.intellij.ui.components.JBCheckBox
+import com.intellij.uiDesigner.core.GridConstraints
 import com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL
 import com.intellij.uiDesigner.core.GridLayoutManager
 import com.intellij.util.ui.ComponentWithEmptyText
@@ -52,8 +52,13 @@ internal class DefaultTokensFilePickerPanel(
   init {
     installValidationOnFilePicker()
     setEmptyText(customFile.textField, CCBundle["cc.config.customFilePicker.disabled"])
-    add(buildIsCustomFilePanel(), gridConstraints(row = 0, fill = FILL_HORIZONTAL))
-    add(buildCustomFilePanel(), gridConstraints(row = 1, fill = FILL_HORIZONTAL))
+
+    val gc = GridConstraints()
+    gc.fill = FILL_HORIZONTAL
+    add(buildIsCustomFilePanel(), gc)
+
+    gc.row = 1
+    add(buildCustomFilePanel(), gc)
   }
 
   fun getCustomFilePath(): String? =
