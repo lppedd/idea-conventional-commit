@@ -305,7 +305,7 @@
       <option name="IGNORE_UNCHECKED_OVERRIDING" value="false" />
     </inspection_tool>
     <inspection_tool class="UnnecessarilyQualifiedInnerClassAccess" enabled="true" level="WARNING" enabled_by_default="true">
-      <option name="ignoreReferencesNeedingImport" value="false" />
+      <option name="ignoreReferencesNeedingImport" value="true" />
     </inspection_tool>
     <inspection_tool class="UnnecessarilyQualifiedStaticUsage" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="m_ignoreStaticFieldAccesses" value="false" />
