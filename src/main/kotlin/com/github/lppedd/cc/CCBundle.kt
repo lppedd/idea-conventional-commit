@@ -21,6 +21,9 @@ object CCBundle {
   }
 
   @JvmStatic
+  @Suppress("UnstableApiUsage")
   operator fun get(@PropertyKey(resourceBundle = BUNDLE) key: String, vararg params: Any): String =
+    /* We cannot use anything else but BundleBase to be compatible
+     * with all IDE versions and to avoid deprecated methods */
     BundleBase.message(bundle, key, *params)
 }
