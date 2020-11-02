@@ -9,7 +9,7 @@ import com.github.lppedd.cc.ui.NoContentTabbedPaneWrapper
 import com.intellij.CommonBundle
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper.DialogStyle.COMPACT
-import com.intellij.util.ui.JBUI.Borders
+import com.intellij.util.ui.JBUI
 import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
 import javax.swing.Action
@@ -73,7 +73,7 @@ internal class WhatsNewDialog(project: Project) : CCDialogWrapper(project) {
 
   override fun createSouthPanel(): JComponent =
     super.createSouthPanel().also {
-      it.border = Borders.empty(8, 12)
+      it.border = JBUI.Borders.empty(8, 12)
     }
 
   override fun createActions(): Array<Action> =

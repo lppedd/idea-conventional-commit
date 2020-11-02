@@ -12,7 +12,7 @@ import com.intellij.ui.JBColor
 import com.intellij.ui.ScrollPaneFactory
 import com.intellij.util.ResourceUtil
 import com.intellij.util.ui.JBDimension
-import com.intellij.util.ui.JBUI.Borders
+import com.intellij.util.ui.JBUI
 import java.awt.BorderLayout
 import java.awt.Dimension
 import javax.swing.JPanel
@@ -28,9 +28,9 @@ internal class WhatsNewPanel : JPanel(BorderLayout()), DoNotAskOption {
   private var nameIndex = 0
 
   init {
-    browser.component.border = Borders.empty(8, 12)
+    browser.component.border = JBUI.Borders.empty(8, 12)
     val scrollPane = ScrollPaneFactory.createScrollPane(browser.component, true)
-    scrollPane.border = Borders.customLine(JBColor(0xd9d9d9, 0x515151), 0, 0, 1, 0)
+    scrollPane.border = JBUI.Borders.customLine(JBColor(0xd9d9d9, 0x515151), 0, 0, 1, 0)
     add(scrollPane, BorderLayout.CENTER)
   }
 

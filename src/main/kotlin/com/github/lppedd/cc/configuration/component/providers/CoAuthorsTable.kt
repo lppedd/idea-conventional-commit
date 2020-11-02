@@ -6,7 +6,6 @@ import com.intellij.ui.ColoredTableCellRenderer
 import com.intellij.ui.speedSearch.SpeedSearchUtil
 import com.intellij.ui.table.JBTable
 import com.intellij.util.ui.JBUI
-import com.intellij.util.ui.JBUI.Borders
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import java.util.*
@@ -72,10 +71,11 @@ internal class CoAuthorsTable(tableModel: CoAuthorsTableModel) : JBTable(tableMo
   override fun processKeyBinding(ks: KeyStroke?, e: KeyEvent?, condition: Int, pressed: Boolean): Boolean {
     val result = super.processKeyBinding(ks, e, condition, pressed)
     return if (
-        !isEditing &&
-        ks?.isOnKeyRelease == true &&
-        ks.keyCode == KeyEvent.VK_SPACE &&
-        ks.modifiers == 0) {
+      !isEditing &&
+      ks?.isOnKeyRelease == true &&
+      ks.keyCode == KeyEvent.VK_SPACE &&
+      ks.modifiers == 0
+    ) {
       toggleSelectedRows()
       true
     } else {
@@ -151,7 +151,7 @@ private class CoAuthorCellRenderer : ColoredTableCellRenderer() {
       columnIndex: Int,
   ) {
     ipad = JBUI.insetsLeft(5)
-    border = Borders.empty(1, 3, 2, 3)
+    border = JBUI.Borders.empty(1, 3, 2, 3)
 
     append(value as String)
     SpeedSearchUtil.applySpeedSearchHighlighting(table, this, true, isSelected)

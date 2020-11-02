@@ -11,8 +11,8 @@ import com.intellij.ui.Gray
 import com.intellij.ui.JBColor
 import com.intellij.ui.MutableCollectionComboBoxModel
 import com.intellij.ui.components.JBLabel
-import com.intellij.util.ui.JBUI.Borders
-import java.awt.Dimension
+import com.intellij.util.ui.JBDimension
+import com.intellij.util.ui.JBUI
 import java.util.*
 import javax.swing.Box
 import javax.swing.BoxLayout
@@ -37,13 +37,13 @@ internal class CommitFormatInspectionOptions : ConfigurableUi<Project> {
   private val myMainPanel: JPanel = JPanel().also {
     val borderColor = JBColor.namedColor("Group.separatorColor", JBColor(Gray.xCD, Gray.x51))
     it.border =
-      Borders.emptyTop(5)
-        .wrap(Borders.customLine(borderColor, 1, 0, 0, 0))
-        .wrap(Borders.emptyTop(5))
+      JBUI.Borders.emptyTop(5)
+        .wrap(JBUI.Borders.customLine(borderColor, 1, 0, 0, 0))
+        .wrap(JBUI.Borders.emptyTop(5))
 
     it.layout = BoxLayout(it, BoxLayout.X_AXIS)
     it.add(charLabel)
-    it.add(Box.createRigidArea(Dimension(10, 0)))
+    it.add(Box.createRigidArea(JBDimension(10, 0)))
     it.add(charComboBox)
   }
 
