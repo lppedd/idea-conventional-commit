@@ -1,16 +1,12 @@
 package com.github.lppedd.cc
 
 import com.intellij.uiDesigner.core.GridConstraints
-import com.intellij.uiDesigner.core.GridConstraints.*
+import com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER
+import com.intellij.uiDesigner.core.GridConstraints.FILL_NONE
+import com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW
+import com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK
 import java.awt.Dimension
-import javax.swing.BorderFactory
-import javax.swing.border.Border
 import kotlin.internal.InlineOnly
-
-@InlineOnly
-@Suppress("RedundantNotNullExtensionReceiverOfInline")
-internal inline fun Border.wrap(border: Border): Border =
-  BorderFactory.createCompoundBorder(this, border)
 
 @InlineOnly
 internal inline fun gridConstraints(

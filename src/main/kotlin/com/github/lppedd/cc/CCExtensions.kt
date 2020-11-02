@@ -23,7 +23,9 @@ import java.awt.Color
 import java.awt.Robot
 import java.io.InputStream
 import javax.swing.Action
+import javax.swing.BorderFactory
 import javax.swing.ListSelectionModel
+import javax.swing.border.Border
 import kotlin.internal.InlineOnly
 import kotlin.math.max
 import kotlin.math.min
@@ -75,6 +77,14 @@ internal fun Color.brighter(factor: Double): Color {
     alpha
   )
 }
+
+// endregion
+// region Border
+
+@InlineOnly
+@Suppress("RedundantNotNullExtensionReceiverOfInline")
+internal inline fun Border.wrap(border: Border): Border =
+  BorderFactory.createCompoundBorder(this, border)
 
 // endregion
 // region VirtualFile
