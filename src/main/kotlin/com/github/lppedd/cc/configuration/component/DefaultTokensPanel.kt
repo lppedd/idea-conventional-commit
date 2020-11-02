@@ -59,7 +59,10 @@ internal class DefaultTokensPanel : JPanel(JBGridLayout(1, 1, 24, 1)) {
     }
 
     return JPanel(BorderLayout()).also {
-      it.border = IdeBorderFactory.createTitledBorder(title, false, JBUI.insetsTop(7))
+      val border = IdeBorderFactory.createTitledBorder(title, false, JBUI.insetsTop(7))
+      border.setShowLine(false)
+
+      it.border = border
       it.minimumSize = JBDimension(130, 250)
       it.add(scrollPane)
     }
