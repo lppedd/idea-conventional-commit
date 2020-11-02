@@ -184,6 +184,7 @@
           <package name="" alias="true" withSubpackages="true" />
         </value>
       </option>
+      <option name="NAME_COUNT_TO_USE_STAR_IMPORT_FOR_MEMBERS" value="5" />
       <option name="IMPORT_NESTED_CLASSES" value="true" />
       <option name="CONTINUATION_INDENT_IN_PARAMETER_LISTS" value="true" />
       <option name="CONTINUATION_INDENT_IN_SUPERTYPE_LISTS" value="true" />
