@@ -137,7 +137,7 @@ public class CCMainConfigurableGui {
 
     // noinspection ConstantExpression
     gc.setHSizePolicy(SIZEPOLICY_CAN_SHRINK | SIZEPOLICY_CAN_GROW | SIZEPOLICY_WANT_GROW);
-    defaultsPanel.add(new DefaultTokensFileExportPanel(), gc);
+    defaultsPanel.add(JBUI.Borders.empty(0, 1, 16, 0).wrap(new DefaultTokensFileExportPanel()), gc);
 
     gc.setRow(1);
     defaultTokensFilePickerPanel = new DefaultTokensFilePickerPanel(project, disposable);
