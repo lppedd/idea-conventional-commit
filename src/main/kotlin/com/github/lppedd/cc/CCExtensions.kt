@@ -14,6 +14,8 @@ import com.intellij.openapi.editor.ex.util.EditorUtil
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.util.TextRange
+import com.intellij.openapi.vfs.VFileProperty
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiFile
 import com.intellij.ui.TextFieldWithAutoCompletionListProvider
@@ -73,6 +75,17 @@ internal fun Color.brighter(factor: Double): Color {
     alpha
   )
 }
+
+// endregion
+// region VirtualFile
+
+@InlineOnly
+internal inline val VirtualFile.isHidden: Boolean
+  get() = `is`(VFileProperty.HIDDEN)
+
+@InlineOnly
+internal inline val VirtualFile.isSymlink: Boolean
+  get() = `is`(VFileProperty.SYMLINK)
 
 // endregion
 // region PsiFile
