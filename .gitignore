@@ -73,6 +73,7 @@ out/
 ######################
 # Gradle
 ######################
+gradle.properties
 .gradle/
 /build/
 
