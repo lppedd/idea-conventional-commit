@@ -1,8 +1,8 @@
 package com.github.lppedd.cc.configuration.component.tokens
 
 import com.github.lppedd.cc.CCBundle
+import com.github.lppedd.cc.LIST_BACKGROUND_COLOR
 import com.intellij.ui.components.JBList
-import java.awt.Dimension
 import javax.swing.Icon
 import javax.swing.ListSelectionModel
 
@@ -14,7 +14,7 @@ internal class CommitTokenList(icon: Icon) : JBList<String>() {
 
   init {
     setModel(model)
-    minimumSize = Dimension(130, 150)
+    background = LIST_BACKGROUND_COLOR
     cellRenderer = CommitTokenCellRenderer(icon)
     selectionMode = ListSelectionModel.SINGLE_SELECTION
     emptyText.text = CCBundle["cc.config.defaults.empty"]

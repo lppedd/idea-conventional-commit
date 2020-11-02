@@ -17,11 +17,14 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiFile
 import com.intellij.ui.TextFieldWithAutoCompletionListProvider
+import java.awt.Color
 import java.awt.Robot
 import java.io.InputStream
 import javax.swing.Action
 import javax.swing.ListSelectionModel
 import kotlin.internal.InlineOnly
+import kotlin.math.max
+import kotlin.math.min
 
 // region Action
 
@@ -33,6 +36,42 @@ internal inline fun Action.setName(name: String) {
 @InlineOnly
 internal inline fun Action.setFocused(focused: Boolean = true) {
   putValue(DialogWrapper.FOCUSED_ACTION, focused)
+}
+
+// endregion
+// region Color
+
+@Suppress("unused")
+internal fun Color.darker(factor: Double): Color =
+  Color(
+    max((red * factor).toInt(), 0),
+    max((green * factor).toInt(), 0),
+    max((blue * factor).toInt(), 0),
+    alpha
+  )
+
+@Suppress("ConvertTwoComparisonsToRangeCheck")
+internal fun Color.brighter(factor: Double): Color {
+  var r = red
+  var g = green
+  var b = blue
+  val alpha = alpha
+  val i = (1.0 / (1.0 - factor)).toInt()
+
+  if (r == 0 && g == 0 && b == 0) {
+    return Color(i, i, i, alpha)
+  }
+
+  if (r > 0 && r < i) r = i
+  if (g > 0 && g < i) g = i
+  if (b > 0 && b < i) b = i
+
+  return Color(
+    min((r / factor).toInt(), 255),
+    min((g / factor).toInt(), 255),
+    min((b / factor).toInt(), 255),
+    alpha
+  )
 }
 
 // endregion

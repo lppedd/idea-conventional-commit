@@ -55,7 +55,7 @@ internal class DefaultTokensPanel : JPanel(JBGridLayout(1, 1, 24, 1)) {
   private fun createTokenListPanel(list: JList<String>, title: String): JPanel {
     val scrollPane = JBScrollPane(list).also {
       it.preferredSize = list.minimumSize
-      it.border = IdeBorderFactory.createBorder().wrap(BorderFactory.createEmptyBorder(0, 1, 1, 1))
+      it.border = IdeBorderFactory.createBorder(BORDER_COLOR).wrap(BorderFactory.createEmptyBorder(0, 1, 1, 1))
     }
 
     return JPanel(BorderLayout()).also {
