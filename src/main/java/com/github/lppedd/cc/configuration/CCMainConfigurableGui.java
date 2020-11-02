@@ -2,10 +2,6 @@ package com.github.lppedd.cc.configuration;
 
 import static com.intellij.uiDesigner.core.GridConstraints.*;
 
-import java.awt.*;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Map;
 
 import javax.swing.*;
@@ -16,17 +12,14 @@ import org.jetbrains.annotations.Nullable;
 import com.github.lppedd.cc.CCBundle;
 import com.github.lppedd.cc.configuration.CCConfigService.CompletionType;
 import com.github.lppedd.cc.configuration.CCDefaultTokensService.JsonCommitType;
+import com.github.lppedd.cc.configuration.component.DefaultTokensFileExportPanel;
 import com.github.lppedd.cc.configuration.component.DefaultTokensFilePickerPanel;
 import com.github.lppedd.cc.configuration.component.DefaultTokensPanel;
-import com.github.lppedd.cc.configuration.component.DefaultTokensFileExportPanel;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBRadioButton;
-import com.intellij.ui.components.labels.ActionLink;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.util.ui.JBUI;
@@ -35,14 +28,16 @@ import com.intellij.util.ui.JBUI;
  * @author Edoardo Luppi
  */
 public class CCMainConfigurableGui {
-  private JPanel rootPanel;
+  private static final int INDENT = 10;
 
+  private JPanel rootPanel;
   private JPanel infoPanel;
   private JBLabel info;
 
+  private JPanel completionTypePanel;
   private final ButtonGroup group = new ButtonGroup();
-  private JBRadioButton isPopup;
-  private JBRadioButton isTemplate;
+  private final JBRadioButton isPopup = new JBRadioButton(CCBundle.get("cc.config.popup"));
+  private final JBRadioButton isTemplate = new JBRadioButton(CCBundle.get("cc.config.template"));
 
   private JPanel defaultsPanel;
   private DefaultTokensFilePickerPanel defaultTokensFilePickerPanel;
@@ -113,15 +108,21 @@ public class CCMainConfigurableGui {
   private void finishUpComponents(
       @NotNull final Project project,
       @NotNull final Disposable disposable) {
-    infoPanel.add(Box.createHorizontalStrut(10));
-    infoPanel.add(new ActionLink(CCBundle.get("cc.config.info.learnMore"), new LearnMoreAction()));
+    completionTypePanel.setLayout(
+        new GridLayoutManager(2, 1, JBUI.insetsLeft(INDENT), 0, JBUI.scale(5))
+    );
+
+    final GridConstraints gcCtp = new GridConstraints();
+    gcCtp.setFill(FILL_HORIZONTAL);
+    completionTypePanel.add(isPopup, gcCtp);
+
+    gcCtp.setRow(1);
+    completionTypePanel.add(isTemplate, gcCtp);
 
     group.add(isPopup);
     group.add(isTemplate);
 
     info.setText(CCBundle.get("cc.config.info"));
-    isPopup.setText(CCBundle.get("cc.config.popup"));
-    isTemplate.setText(CCBundle.get("cc.config.template"));
 
     defaultsPanel.setLayout(new GridLayoutManager(3, 1));
     defaultsPanel.setBorder(
@@ -147,16 +148,5 @@ public class CCMainConfigurableGui {
     gc.setIndent(0);
     gc.setVSizePolicy(SIZEPOLICY_CAN_SHRINK | SIZEPOLICY_CAN_GROW | SIZEPOLICY_WANT_GROW);
     defaultsPanel.add(defaultTokensPanel, gc);
-  }
-
-  private static class LearnMoreAction extends AnAction {
-    @Override
-    public void actionPerformed(@NotNull final AnActionEvent e) {
-      try {
-        Desktop.getDesktop().browse(new URI(CCBundle.get("cc.plugin.repository")));
-      } catch (final IOException | URISyntaxException ignored) {
-        // Ignored for now
-      }
-    }
   }
 }
