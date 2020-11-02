@@ -7,12 +7,17 @@
   </defs>
   <g>
     <circle
-        id="svg_1"
-        r="5.8"
+        r="5.82"
         cy="8"
         cx="8.5"
         stroke="#fff"
-        stroke-width="0.9"
+        stroke-width="2.14"
+        stroke-opacity="0.85"
+    />
+    <circle
+        r="5.82"
+        cy="8"
+        cx="8.5"
         fill="url(#circle_bg_gradient)"
         fill-opacity="100"
     />
