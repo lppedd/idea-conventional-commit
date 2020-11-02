@@ -12,7 +12,6 @@ import com.intellij.util.ui.JBDimension
 import com.intellij.util.ui.JBUI
 import java.awt.BorderLayout
 import java.awt.Graphics
-import javax.swing.BorderFactory
 import javax.swing.JList
 import javax.swing.JPanel
 
@@ -55,7 +54,7 @@ internal class DefaultTokensPanel : JPanel(JBGridLayout(1, 1, 24, 1)) {
   private fun createTokenListPanel(list: JList<String>, title: String): JPanel {
     val scrollPane = JBScrollPane(list).also {
       it.preferredSize = list.minimumSize
-      it.border = IdeBorderFactory.createBorder(BORDER_COLOR).wrap(BorderFactory.createEmptyBorder(0, 1, 1, 1))
+      it.border = IdeBorderFactory.createBorder(BORDER_COLOR).wrap(JBUI.Borders.empty(0, 1, 1, 1))
     }
 
     return JPanel(BorderLayout()).also {

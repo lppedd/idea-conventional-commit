@@ -2,10 +2,11 @@ package com.github.lppedd.cc.configuration.component.providers
 
 import com.github.lppedd.cc.ICON_UNKNOWN_PROVIDER
 import com.github.lppedd.cc.api.CommitTokenProvider
+import com.github.lppedd.cc.wrap
 import com.intellij.openapi.application.ApplicationInfo
 import com.intellij.ui.scale.JBUIScale
+import com.intellij.util.ui.JBUI
 import java.awt.Component
-import javax.swing.BorderFactory
 import javax.swing.Icon
 import javax.swing.JTable
 import javax.swing.table.DefaultTableCellRenderer
@@ -30,8 +31,8 @@ internal class CommitProviderRenderer : DefaultTableCellRenderer() {
       column: Int,
   ): Component {
     super.getTableCellRendererComponent(table, value, isSelected, false, row, column)
-    val paddingBorder = BorderFactory.createEmptyBorder(1, 3, 2, 3)
-    val compoundBorder = BorderFactory.createCompoundBorder(border, paddingBorder)
+    val paddingBorder = JBUI.Borders.empty(1, 3, 2, 3)
+    val compoundBorder = border.wrap(paddingBorder)
     border = compoundBorder
     return this
   }
