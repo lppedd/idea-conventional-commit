@@ -1,9 +1,9 @@
 package com.github.lppedd.cc.configuration
 
-import com.github.lppedd.cc.COAUTHORS_FILE
-import com.github.lppedd.cc.DEFAULT_FILE
-import com.github.lppedd.cc.DEFAULT_SCHEMA
-import com.github.lppedd.cc.configuration.CCDefaultTokensService.*
+import com.github.lppedd.cc.CC
+import com.github.lppedd.cc.configuration.CCDefaultTokensService.JsonCommitFooterType
+import com.github.lppedd.cc.configuration.CCDefaultTokensService.JsonCommitScope
+import com.github.lppedd.cc.configuration.CCDefaultTokensService.JsonCommitType
 import com.github.lppedd.cc.configuration.component.providers.CoAuthors
 import com.github.lppedd.cc.getResourceAsStream
 import com.intellij.openapi.components.ServiceManager
@@ -46,7 +46,7 @@ internal class CCDefaultTokensService(private val project: Project) {
 
   /** JSON Schema used to validate the default commit types and scopes JSON file. */
   private val defaultsSchema by lazy {
-    val schemaInputStream = getResourceAsStream("/defaults/${DEFAULT_SCHEMA}")
+    val schemaInputStream = getResourceAsStream("/defaults/${CC.Tokens.SchemaFile}")
     val schemaReader = BufferedReader(InputStreamReader(schemaInputStream, UTF_8))
     val schemaJson = JSONObject(JSONTokener(schemaReader))
     SchemaLoader.load(schemaJson)
@@ -54,7 +54,7 @@ internal class CCDefaultTokensService(private val project: Project) {
 
   /** Built-in default commit types and scopes. */
   private val builtInDefaultTokens by lazy {
-    val inputStream = getResourceAsStream("/defaults/${DEFAULT_FILE}")
+    val inputStream = getResourceAsStream("/defaults/${CC.Tokens.File}")
     val reader = BufferedReader(InputStreamReader(inputStream, UTF_8))
     reader.use(::readFile)
   }
@@ -77,7 +77,7 @@ internal class CCDefaultTokensService(private val project: Project) {
   /** Returns the user-defined co-authors. */
   fun getCoAuthors(): CoAuthors {
     val projectDir = project.guessProjectDir() ?: return emptyList()
-    val filePath = FileSystems.getDefault().getPath(projectDir.path, COAUTHORS_FILE)
+    val filePath = FileSystems.getDefault().getPath(projectDir.path, CC.CoAuthors.File)
 
     try {
       if (!Files.notExists(filePath) && Files.exists(filePath)) {
@@ -101,7 +101,7 @@ internal class CCDefaultTokensService(private val project: Project) {
     val projectDir = project.guessProjectDir() ?: return
 
     try {
-      val filePath = FileSystems.getDefault().getPath(projectDir.path, COAUTHORS_FILE)
+      val filePath = FileSystems.getDefault().getPath(projectDir.path, CC.CoAuthors.File)
       Files.write(filePath, coAuthors, UTF_8)
       LocalFileSystem.getInstance().refreshAndFindFileByIoFile(filePath.toFile())
     } catch (e: IOException) {
@@ -115,7 +115,7 @@ internal class CCDefaultTokensService(private val project: Project) {
    */
   private fun findDefaultFilePathFromProjectRoot(): String? =
     project.guessProjectDir()
-      ?.findChild(DEFAULT_FILE)
+      ?.findChild(CC.Tokens.File)
       ?.path
 
   /** Reads default commit types and scopes from a file in FS via its absolute path. */

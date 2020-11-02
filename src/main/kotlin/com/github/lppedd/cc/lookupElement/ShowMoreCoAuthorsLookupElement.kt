@@ -23,7 +23,7 @@ internal class ShowMoreCoAuthorsLookupElement(
     provider: FooterValueProviderWrapper,
     private val psiElement: CommitFooterValuePsiElement,
     completionPrefix: String,
-) : CommitLookupElement(index, PRIORITY_FOOTER_VALUE, provider), PrefixChangeListener {
+) : CommitLookupElement(index, CC.Tokens.PriorityFooterValue, provider), PrefixChangeListener {
   private var changingLookupString = StringBuilder(50) + completionPrefix
 
   override fun beforeAppend(ch: Char) {

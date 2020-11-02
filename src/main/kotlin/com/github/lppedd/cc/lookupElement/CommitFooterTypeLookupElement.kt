@@ -15,7 +15,7 @@ internal class CommitFooterTypeLookupElement(
     index: Int,
     provider: FooterTypeProviderWrapper,
     private val psiElement: CommitFooterTypePsiElement,
-) : CommitLookupElement(index, PRIORITY_FOOTER_TYPE, provider) {
+) : CommitLookupElement(index, CC.Tokens.PriorityFooterType, provider) {
   private val commitFooterType = psiElement.commitFooterType
 
   override fun getPsiElement(): CommitFooterTypePsiElement =

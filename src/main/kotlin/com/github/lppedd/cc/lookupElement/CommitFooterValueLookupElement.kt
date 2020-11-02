@@ -17,7 +17,7 @@ internal class CommitFooterValueLookupElement(
     provider: FooterValueProviderWrapper,
     private val psiElement: CommitFooterValuePsiElement,
     private val completionPrefix: String,
-) : CommitLookupElement(index, PRIORITY_FOOTER_VALUE, provider) {
+) : CommitLookupElement(index, CC.Tokens.PriorityFooterValue, provider) {
   private val commitFooterValue = psiElement.commitFooterValue
 
   override fun getPsiElement(): CommitFooterValuePsiElement =

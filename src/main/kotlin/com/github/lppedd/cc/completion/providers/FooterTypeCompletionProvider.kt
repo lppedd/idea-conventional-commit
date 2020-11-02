@@ -1,6 +1,6 @@
 package com.github.lppedd.cc.completion.providers
 
-import com.github.lppedd.cc.MAX_ITEMS_PER_PROVIDER
+import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.api.CommitFooterTypeProvider
 import com.github.lppedd.cc.api.FOOTER_TYPE_EP
 import com.github.lppedd.cc.completion.resultset.ResultSet
@@ -28,7 +28,7 @@ internal class FooterTypeCompletionProvider(
           val wrapper = FooterTypeProviderWrapper(project, provider)
           provider.getCommitFooterTypes()
             .asSequence()
-            .take(MAX_ITEMS_PER_PROVIDER)
+            .take(CC.Provider.MaxItems)
             .map { wrapper to it }
         }
       }

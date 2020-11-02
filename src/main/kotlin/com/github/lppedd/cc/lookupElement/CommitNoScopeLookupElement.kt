@@ -1,7 +1,7 @@
 package com.github.lppedd.cc.lookupElement
 
+import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.CCIcons
-import com.github.lppedd.cc.PRIORITY_SCOPE
 import com.github.lppedd.cc.api.ProviderPresentation
 import com.github.lppedd.cc.completion.Priority
 import com.github.lppedd.cc.completion.providers.ProviderWrapper
@@ -15,7 +15,7 @@ import com.intellij.openapi.project.Project
 internal class CommitNoScopeLookupElement(project: Project) :
     CommitLookupElement(
       -1,
-      PRIORITY_SCOPE,
+      CC.Tokens.PriorityScope,
       object : ProviderWrapper {
         override fun getPriority() = Priority(0)
         override fun getId() = ""

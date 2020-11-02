@@ -1,7 +1,7 @@
 package com.github.lppedd.cc.configuration.component
 
 import com.github.lppedd.cc.CCBundle
-import com.github.lppedd.cc.DEFAULT_FILE
+import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.getResourceAsStream
 import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.fileChooser.FileChooserFactory
@@ -41,7 +41,7 @@ internal class DefaultTokensFileExportPanel
   override fun linkSelected(aSource: LinkLabel<Any?>, aLinkData: Any?) {
     val virtualFileWrapper = FileChooserFactory.getInstance()
       .createSaveFileDialog(FileSaverDescriptor(CCBundle["cc.config.exportDialog.title"], ""), null)
-      .save(null as VirtualFile?, DEFAULT_FILE)
+      .save(null as VirtualFile?, CC.Tokens.File)
 
     try {
       writeFile(virtualFileWrapper)
@@ -66,7 +66,7 @@ internal class DefaultTokensFileExportPanel
       return
     }
 
-    getResourceAsStream("/defaults/${DEFAULT_FILE}").use {
+    getResourceAsStream("/defaults/${CC.Tokens.File}").use {
       runWriteAction {
         virtualFile.setBinaryContent(it.readBytes())
       }

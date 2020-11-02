@@ -16,7 +16,7 @@ internal open class CommitTypeLookupElement(
     index: Int,
     provider: TypeProviderWrapper,
     private val psiElement: CommitTypePsiElement,
-) : CommitLookupElement(index, PRIORITY_TYPE, provider) {
+) : CommitLookupElement(index, CC.Tokens.PriorityType, provider) {
   private val commitType = psiElement.commitType
 
   override fun getPsiElement(): CommitTypePsiElement =

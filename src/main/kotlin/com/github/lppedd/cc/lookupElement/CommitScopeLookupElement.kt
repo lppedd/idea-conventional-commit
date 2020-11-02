@@ -15,7 +15,7 @@ internal class CommitScopeLookupElement(
     index: Int,
     provider: ScopeProviderWrapper,
     private val psiElement: CommitScopePsiElement,
-) : CommitLookupElement(index, PRIORITY_SCOPE, provider) {
+) : CommitLookupElement(index, CC.Tokens.PriorityScope, provider) {
   private val commitScope = psiElement.commitScope
 
   override fun getPsiElement(): CommitScopePsiElement =

@@ -1,6 +1,6 @@
 package com.github.lppedd.cc.completion.menu
 
-import com.github.lppedd.cc.APP_NAME
+import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.api.CommitTokenProvider
 import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.configuration.CCConfigService.ProviderFilterType.KEEP_SELECTED
@@ -153,7 +153,7 @@ internal class MenuEnhancerLookupListener(
         .invokeCompletion(project, editor, 1)
     }
 
-    commandProcessor.executeCommand(project, command, "Invoke completion", APP_NAME)
+    commandProcessor.executeCommand(project, command, "Invoke completion", CC.AppName)
   }
 
   private inner class LookupPopupMenuListener(private val disposable: Disposable) : ActionPopupMenuListener {

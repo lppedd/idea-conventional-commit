@@ -1,10 +1,8 @@
 package com.github.lppedd.cc.configuration
 
-import com.github.lppedd.cc.APP_NAME
 import com.github.lppedd.cc.CCBundle
-import com.github.lppedd.cc.api.SCOPE_EP
-import com.github.lppedd.cc.api.SUBJECT_EP
-import com.github.lppedd.cc.api.TYPE_EP
+import com.github.lppedd.cc.CC
+import com.github.lppedd.cc.api.*
 import com.intellij.openapi.options.Configurable.NoScroll
 import com.intellij.openapi.options.SearchableConfigurable
 import com.intellij.openapi.project.Project
@@ -24,7 +22,7 @@ private class CCProvidersConfigurable(project: Project) : SearchableConfigurable
     )
   }
 
-  override fun getId() = "preferences.${APP_NAME}.providers"
+  override fun getId() = "preferences.${CC.AppName}.providers"
   override fun getDisplayName() = CCBundle["cc.config.providers"]
 
   override fun apply() {

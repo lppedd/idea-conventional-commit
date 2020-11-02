@@ -14,7 +14,7 @@ internal class CommitBodyLookupElement(
     provider: BodyProviderWrapper,
     private val psiElement: CommitBodyPsiElement,
     private val completionPrefix: String,
-) : CommitLookupElement(index, PRIORITY_BODY, provider) {
+) : CommitLookupElement(index, CC.Tokens.PriorityBody, provider) {
   private val commitBody = psiElement.commitBody
 
   override fun getPsiElement(): CommitBodyPsiElement =

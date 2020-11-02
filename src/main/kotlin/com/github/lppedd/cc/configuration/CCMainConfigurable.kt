@@ -1,7 +1,7 @@
 package com.github.lppedd.cc.configuration
 
-import com.github.lppedd.cc.APP_NAME
 import com.github.lppedd.cc.CCBundle
+import com.github.lppedd.cc.CC
 import com.intellij.openapi.options.SearchableConfigurable
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
@@ -16,7 +16,7 @@ private class CCMainConfigurable(project: Project) : SearchableConfigurable {
   private val defaultsService = CCDefaultTokensService.getInstance(project)
   private val configService = CCConfigService.getInstance(project)
 
-  override fun getId() = "preferences.${APP_NAME}"
+  override fun getId() = "preferences.${CC.AppName}"
   override fun getDisplayName() = CCBundle["cc.plugin.name"]
 
   override fun apply() {

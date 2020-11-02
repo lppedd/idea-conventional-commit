@@ -1,6 +1,6 @@
 package com.github.lppedd.cc.configuration
 
-import com.github.lppedd.cc.STORAGE_FILE
+import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.api.*
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.ServiceManager
@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap
  */
 @State(
   name = "general",
-  storages = [Storage(STORAGE_FILE)]
+  storages = [Storage(CC.Settings.File)]
 )
 internal class CCConfigService : PersistentStateComponent<CCConfigService> {
   companion object {
