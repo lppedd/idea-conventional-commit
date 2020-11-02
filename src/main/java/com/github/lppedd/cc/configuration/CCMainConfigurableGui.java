@@ -109,6 +109,7 @@ public class CCMainConfigurableGui {
     defaultTokensFilePickerPanel.revalidateComponent();
   }
 
+  @SuppressWarnings("ConstantExpression")
   private void finishUpComponents(
       @NotNull final Project project,
       @NotNull final Disposable disposable) {
@@ -134,8 +135,6 @@ public class CCMainConfigurableGui {
     final GridConstraints gc = new GridConstraints();
     gc.setIndent(1);
     gc.setFill(FILL_BOTH);
-
-    // noinspection ConstantExpression
     gc.setHSizePolicy(SIZEPOLICY_CAN_SHRINK | SIZEPOLICY_CAN_GROW | SIZEPOLICY_WANT_GROW);
     defaultsPanel.add(JBUI.Borders.empty(0, 1, 16, 0).wrap(new DefaultTokensFileExportPanel()), gc);
 
@@ -146,8 +145,6 @@ public class CCMainConfigurableGui {
 
     gc.setRow(2);
     gc.setIndent(0);
-
-    // noinspection ConstantExpression
     gc.setVSizePolicy(SIZEPOLICY_CAN_SHRINK | SIZEPOLICY_CAN_GROW | SIZEPOLICY_WANT_GROW);
     defaultsPanel.add(defaultTokensPanel, gc);
   }
