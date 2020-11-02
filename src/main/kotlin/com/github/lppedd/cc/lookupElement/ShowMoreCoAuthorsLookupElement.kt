@@ -38,7 +38,6 @@ internal class ShowMoreCoAuthorsLookupElement(
 
   override fun renderElement(presentation: LookupElementPresentation) =
     presentation.let {
-      it.icon = CCIcons.Tokens.Footer
       it.itemText = "Show more"
       it.isTypeIconRightAligned = true
       it.isItemTextBold = true
