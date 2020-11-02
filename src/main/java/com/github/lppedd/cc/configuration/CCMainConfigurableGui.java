@@ -124,17 +124,16 @@ public class CCMainConfigurableGui {
 
     info.setText(CCBundle.get("cc.config.info"));
 
-    defaultsPanel.setLayout(new GridLayoutManager(3, 1));
+    defaultsPanel.setLayout(new GridLayoutManager(3, 1, JBUI.insetsLeft(INDENT), 0, 0));
     defaultsPanel.setBorder(
         IdeBorderFactory.createTitledBorder(
             CCBundle.get("cc.config.defaults"),
             false,
-            JBUI.insetsTop(7)
+            JBUI.insetsTop(3)
         )
     );
 
     final GridConstraints gc = new GridConstraints();
-    gc.setIndent(1);
     gc.setFill(FILL_BOTH);
     gc.setHSizePolicy(SIZEPOLICY_CAN_SHRINK | SIZEPOLICY_CAN_GROW | SIZEPOLICY_WANT_GROW);
     defaultsPanel.add(JBUI.Borders.empty(0, 1, 16, 0).wrap(new DefaultTokensFileExportPanel()), gc);
@@ -145,7 +144,6 @@ public class CCMainConfigurableGui {
     defaultTokensFilePickerPanel.revalidateComponent();
 
     gc.setRow(2);
-    gc.setIndent(0);
     gc.setVSizePolicy(SIZEPOLICY_CAN_SHRINK | SIZEPOLICY_CAN_GROW | SIZEPOLICY_WANT_GROW);
     defaultsPanel.add(defaultTokensPanel, gc);
   }
