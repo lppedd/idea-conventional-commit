@@ -1,6 +1,3 @@
-### Hacktoberfest
-Only **meaningful** pull requests will be accepted, which for this repository means code and in-code documentation changes which contribute to features, fixes and code clarity. 
-
 <img align="left" width="85" height="85" src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_logo.png" alt="Plugin logo">
 
 # Conventional Commit
