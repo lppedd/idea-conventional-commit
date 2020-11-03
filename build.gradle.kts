@@ -18,6 +18,10 @@ repositories {
 dependencies {
   implementation(kotlin("stdlib-jdk8", "1.4.20-RC"))
 
+  implementation("commons-validator", "commons-validator", "1.7") {
+    exclude("commons-beanutils", "commons-beanutils")
+  }
+
   implementation("cglib:cglib-nodep:3.3.0")
   implementation("org.json", "json", "20200518")
   implementation("com.github.everit-org.json-schema", "org.everit.json.schema", "1.12.1")

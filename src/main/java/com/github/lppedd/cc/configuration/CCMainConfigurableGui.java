@@ -1,11 +1,14 @@
 package com.github.lppedd.cc.configuration;
 
 import static com.intellij.uiDesigner.core.GridConstraints.*;
+import static org.apache.commons.validator.routines.UrlValidator.NO_FRAGMENTS;
 
+import java.awt.*;
 import java.util.Map;
 
 import javax.swing.*;
 
+import org.apache.commons.validator.routines.UrlValidator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,12 +20,16 @@ import com.github.lppedd.cc.configuration.component.DefaultTokensFilePickerPanel
 import com.github.lppedd.cc.configuration.component.DefaultTokensPanel;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
+import com.intellij.ui.HyperlinkLabel;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBRadioButton;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.util.ui.JBUI;
+import com.intellij.util.ui.UI;
+import com.intellij.util.ui.UIUtil;
+import com.intellij.util.ui.UIUtil.FontSize;
 
 /**
  * @author Edoardo Luppi
@@ -122,6 +129,13 @@ public class CCMainConfigurableGui {
     group.add(isPopup);
     group.add(isTemplate);
 
+    final HyperlinkLabel translatorLabel = buildTranslatorLabel();
+
+    if (translatorLabel != null) {
+      infoPanel.add(translatorLabel, BorderLayout.LINE_END);
+    }
+
+    JBUI.Borders.emptyBottom(5).wrap(infoPanel);
     info.setText(CCBundle.get("cc.config.info"));
 
     defaultsPanel.setLayout(new GridLayoutManager(3, 1, JBUI.insetsLeft(INDENT), 0, 0));
@@ -146,5 +160,35 @@ public class CCMainConfigurableGui {
     gc.setRow(2);
     gc.setVSizePolicy(SIZEPOLICY_CAN_SHRINK | SIZEPOLICY_CAN_GROW | SIZEPOLICY_WANT_GROW);
     defaultsPanel.add(defaultTokensPanel, gc);
+  }
+
+  @Nullable
+  private HyperlinkLabel buildTranslatorLabel() {
+    final String name = CCBundle.getWithDefault("cc.translation.translator.name", "");
+
+    if (name.isEmpty()) {
+      return null;
+    }
+
+    final HyperlinkLabel label = new HyperlinkLabel();
+    label.setForeground(UIUtil.getContextHelpForeground());
+    label.setFontSize(FontSize.SMALL);
+
+    final String url = CCBundle.getWithDefault("cc.translation.translator.url", "");
+
+    if (url.isEmpty()) {
+      label.setHyperlinkText(CCBundle.get("cc.translation.text") + " " + name, "", "");
+    } else {
+      if (new UrlValidator(new String[] {"http", "https"}, NO_FRAGMENTS).isValid(url)) {
+        label.setHyperlinkText(CCBundle.get("cc.translation.text") + " ", name, "");
+        label.setHyperlinkTarget(url);
+      } else {
+        label.setHyperlinkText(CCBundle.get("cc.translation.text") + " " + name, "", "");
+      }
+    }
+
+    // Keep this here or it will be overwritten
+    label.setIcon(null);
+    return label;
   }
 }

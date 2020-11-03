@@ -9,6 +9,7 @@ import java.util.*
 /**
  * @author Edoardo Luppi
  */
+@Suppress("UnstableApiUsage")
 object CCBundle {
   private const val BUNDLE = "messages.ConventionalCommitBundle"
 
@@ -21,9 +22,17 @@ object CCBundle {
   }
 
   @JvmStatic
-  @Suppress("UnstableApiUsage")
   operator fun get(@PropertyKey(resourceBundle = BUNDLE) key: String, vararg params: Any): String =
     /* We cannot use anything else but BundleBase to be compatible
      * with all IDE versions and to avoid deprecated methods */
     BundleBase.message(bundle, key, *params)
+
+  @JvmStatic
+  @Suppress("SameParameterValue")
+  fun getWithDefault(
+      @PropertyKey(resourceBundle = BUNDLE) key: String,
+      defaultValue: String? = null,
+      vararg params: Any,
+  ): String =
+    BundleBase.messageOrDefault(bundle, key, defaultValue, *params)
 }

@@ -26,7 +26,7 @@
         <border type="none"/>
         <children/>
       </grid>
-      <grid id="6f383" binding="infoPanel" layout-manager="FlowLayout" hgap="0" vgap="5" flow-align="0">
+      <grid id="6f383" binding="infoPanel" layout-manager="BorderLayout" hgap="10" vgap="0">
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -34,7 +34,7 @@
         <border type="none"/>
         <children>
           <component id="be6f1" class="com.intellij.ui.components.JBLabel" binding="info">
-            <constraints/>
+            <constraints border-constraint="Center"/>
             <properties/>
           </component>
         </children>
