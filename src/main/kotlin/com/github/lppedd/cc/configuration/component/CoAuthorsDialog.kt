@@ -2,7 +2,6 @@ package com.github.lppedd.cc.configuration.component
 
 import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.configuration.CCDefaultTokensService
-import com.github.lppedd.cc.configuration.component.providers.CoAuthors
 import com.github.lppedd.cc.configuration.holders.CoAuthorsTableHolder
 import com.github.lppedd.cc.readableMessage
 import com.intellij.openapi.components.service
@@ -38,7 +37,7 @@ internal class CoAuthorsDialog(project: Project) : DialogWrapper(project) {
       })
   }
 
-  fun getSelectedAuthors(): CoAuthors =
+  fun getSelectedAuthors(): Collection<String> =
     coAuthorsTableHolder.tableModel.selectedCoAuthors
 
   override fun doOKAction() {

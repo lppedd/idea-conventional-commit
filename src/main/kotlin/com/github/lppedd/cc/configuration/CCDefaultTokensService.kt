@@ -4,7 +4,6 @@ import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.configuration.CCDefaultTokensService.JsonCommitFooterType
 import com.github.lppedd.cc.configuration.CCDefaultTokensService.JsonCommitScope
 import com.github.lppedd.cc.configuration.CCDefaultTokensService.JsonCommitType
-import com.github.lppedd.cc.configuration.component.providers.CoAuthors
 import com.github.lppedd.cc.getResourceAsStream
 import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.Logger
@@ -69,7 +68,7 @@ internal class CCDefaultTokensService(private val project: Project) {
   }
 
   /** Returns the user-defined co-authors. */
-  fun getCoAuthors(): CoAuthors {
+  fun getCoAuthors(): Collection<String> {
     val customCoAuthorsFilePath = project.service<CCConfigService>().customCoAuthorsFilePath
     val fileSystem = FileSystems.getDefault()
     val filePath = if (customCoAuthorsFilePath == null) {
@@ -97,7 +96,7 @@ internal class CCDefaultTokensService(private val project: Project) {
    * Persist the user-defined list of co-author.
    * Note that the old list, if any, gets entirely replaced.
    */
-  fun setCoAuthors(coAuthors: CoAuthors) {
+  fun setCoAuthors(coAuthors: Collection<String>) {
     val customCoAuthorsFilePath = project.service<CCConfigService>().customCoAuthorsFilePath
     val fileSystem = FileSystems.getDefault()
     val filePath = if (customCoAuthorsFilePath == null) {

@@ -2,18 +2,16 @@ package com.github.lppedd.cc.configuration.component.providers
 
 import com.github.lppedd.cc.configuration.component.AbstractTableEditableModel
 
-internal typealias CoAuthors = Collection<String>
-
 /**
  * @author Edoardo Luppi
  */
-internal class CoAuthorsTableModel(coAuthors: CoAuthors) : AbstractTableEditableModel() {
+internal class CoAuthorsTableModel(coAuthors: Collection<String>) : AbstractTableEditableModel() {
   private val coAuthorRows = coAuthors.map(::CoAuthorRow).toMutableList()
 
-  val coAuthors: CoAuthors
+  val coAuthors: Collection<String>
     get() = coAuthorRows.map(CoAuthorRow::text)
 
-  val selectedCoAuthors: CoAuthors
+  val selectedCoAuthors: Collection<String>
     get() = coAuthorRows.filter(CoAuthorRow::isSelected).map(CoAuthorRow::text)
 
   override fun getRowCount(): Int =
