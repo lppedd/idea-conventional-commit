@@ -26,6 +26,7 @@ import com.intellij.codeInsight.lookup.LookupElementWeigher
 import com.intellij.codeInsight.lookup.impl.LookupImpl
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl
 import com.intellij.openapi.Disposable
+import com.intellij.openapi.components.service
 import com.intellij.openapi.fileTypes.PlainTextLanguage
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.util.Disposer
@@ -93,7 +94,7 @@ private class CommitCompletionContributor : CompletionContributor() {
     }
 
     val project = file.project
-    val configService = CCConfigService.getInstance(project)
+    val configService = project.service<CCConfigService>()
     val process = parameters.process
 
     // If the user configured commit messages to be completed via templates,

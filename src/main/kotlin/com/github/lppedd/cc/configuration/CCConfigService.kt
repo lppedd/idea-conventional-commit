@@ -3,10 +3,8 @@ package com.github.lppedd.cc.configuration
 import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.api.*
 import com.intellij.openapi.components.PersistentStateComponent
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
-import com.intellij.openapi.project.Project
 import com.intellij.util.xmlb.XmlSerializerUtil
 import com.intellij.util.xmlb.annotations.XMap
 import java.util.*
@@ -20,11 +18,6 @@ import java.util.concurrent.ConcurrentHashMap
   storages = [Storage(CC.Settings.File)]
 )
 internal class CCConfigService : PersistentStateComponent<CCConfigService> {
-  companion object {
-    fun getInstance(project: Project): CCConfigService =
-      ServiceManager.getService(project, CCConfigService::class.java)
-  }
-
   var completionType: CompletionType = CompletionType.POPUP
   var providerFilterType: ProviderFilterType = ProviderFilterType.HIDE_SELECTED
   var customFilePath: String? = null

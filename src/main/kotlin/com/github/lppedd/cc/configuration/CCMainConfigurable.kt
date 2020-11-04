@@ -2,6 +2,7 @@ package com.github.lppedd.cc.configuration
 
 import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.CCBundle
+import com.intellij.openapi.components.service
 import com.intellij.openapi.options.SearchableConfigurable
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
@@ -13,8 +14,8 @@ import javax.swing.JComponent
 private class CCMainConfigurable(project: Project) : SearchableConfigurable {
   private val disposable = Disposer.newDisposable()
   private val gui = CCMainConfigurableGui(project, disposable)
-  private val defaultsService = CCDefaultTokensService.getInstance(project)
-  private val configService = CCConfigService.getInstance(project)
+  private val defaultsService = project.service<CCDefaultTokensService>()
+  private val configService = project.service<CCConfigService>()
 
   override fun getId() = "preferences.${CC.AppName}"
   override fun getDisplayName() = CCBundle["cc.plugin.name"]

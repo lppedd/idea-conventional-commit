@@ -4,6 +4,7 @@ package com.github.lppedd.cc.inspection
 import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.wrap
+import com.intellij.openapi.components.service
 import com.intellij.openapi.options.ConfigurableUi
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.ComboBox
@@ -63,7 +64,7 @@ internal class CommitFormatInspectionOptions : ConfigurableUi<Project> {
 
   @InlineOnly
   private inline fun config(project: Project) =
-    CCConfigService.getInstance(project)
+    project.service<CCConfigService>()
 }
 
 private class CharEntryModel(items: List<CharEntry>) : MutableCollectionComboBoxModel<CharEntry>(items) {

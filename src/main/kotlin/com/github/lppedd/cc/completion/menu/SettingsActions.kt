@@ -13,6 +13,7 @@ import com.intellij.openapi.actionSystem.ActionGroup
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.Separator
+import com.intellij.openapi.components.service
 import com.intellij.openapi.project.DumbAware
 import com.intellij.util.ui.UIUtil
 import java.util.*
@@ -27,7 +28,7 @@ internal class SettingsActions(
     private val enhancer: MenuEnhancerLookupListener,
     private val lookup: LookupImpl,
 ) : ActionGroup("", false), DumbAware {
-  private val config = CCConfigService.getInstance(lookup.project)
+  private val config = lookup.project.service<CCConfigService>()
   private val actions = arrayOf(
     Separator.create(),
     CompletionModeChangeAction(),

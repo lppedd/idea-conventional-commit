@@ -3,6 +3,7 @@ package com.github.lppedd.cc.configuration
 import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.api.*
+import com.intellij.openapi.components.service
 import com.intellij.openapi.options.Configurable.NoScroll
 import com.intellij.openapi.options.SearchableConfigurable
 import com.intellij.openapi.project.Project
@@ -12,7 +13,7 @@ import com.intellij.openapi.project.Project
  */
 private class CCProvidersConfigurable(project: Project) : SearchableConfigurable, NoScroll {
   private val gui = CCProvidersConfigurableGui()
-  private val configService = CCConfigService.getInstance(project)
+  private val configService = project.service<CCConfigService>()
 
   init {
     gui.setProviders(

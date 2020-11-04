@@ -5,6 +5,7 @@ import com.github.lppedd.cc.configuration.CCDefaultTokensService
 import com.github.lppedd.cc.configuration.component.providers.CoAuthors
 import com.github.lppedd.cc.configuration.holders.CoAuthorsTableHolder
 import com.github.lppedd.cc.readableMessage
+import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.ValidationInfo
@@ -19,7 +20,7 @@ import javax.swing.JPanel
  * @author Edoardo Luppi
  */
 internal class CoAuthorsDialog(project: Project) : DialogWrapper(project) {
-  private val defaultsService = CCDefaultTokensService.getInstance(project)
+  private val defaultsService = project.service<CCDefaultTokensService>()
   private val coAuthorsTableHolder = CoAuthorsTableHolder(defaultsService)
 
   init {

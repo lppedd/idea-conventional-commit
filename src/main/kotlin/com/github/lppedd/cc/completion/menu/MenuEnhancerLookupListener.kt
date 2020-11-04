@@ -21,6 +21,7 @@ import com.intellij.openapi.actionSystem.ex.AnActionListener
 import com.intellij.openapi.actionSystem.impl.ActionButton
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.command.CommandProcessor
+import com.intellij.openapi.components.service
 import com.intellij.openapi.util.Disposer
 import com.intellij.util.ReflectionUtil.getField
 import java.awt.Robot
@@ -37,7 +38,7 @@ internal class MenuEnhancerLookupListener(
 ) : LookupListener, PrefixChangeListener, AnActionListener {
   private val commandProcessor = CommandProcessor.getInstance()
   private val actionManager = ActionManagerEx.getInstanceEx()
-  private val config = CCConfigService.getInstance(lookup.project)
+  private val config = lookup.project.service<CCConfigService>()
 
   @Volatile private var allActions = emptyCollection<AnAction>()
   @Volatile private var filterActions = emptyCollection<FilterAction>()

@@ -6,7 +6,6 @@ import com.github.lppedd.cc.configuration.CCDefaultTokensService.JsonCommitScope
 import com.github.lppedd.cc.configuration.CCDefaultTokensService.JsonCommitType
 import com.github.lppedd.cc.configuration.component.providers.CoAuthors
 import com.github.lppedd.cc.getResourceAsStream
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
@@ -39,11 +38,6 @@ private val logger = Logger.getInstance(CCDefaultTokensService::class.java)
  * @author Edoardo Luppi
  */
 internal class CCDefaultTokensService(private val project: Project) {
-  companion object {
-    fun getInstance(project: Project): CCDefaultTokensService =
-      ServiceManager.getService(project, CCDefaultTokensService::class.java)
-  }
-
   /** JSON Schema used to validate the default commit types and scopes JSON file. */
   private val defaultsSchema by lazy {
     val schemaInputStream = getResourceAsStream("/defaults/${CC.Tokens.SchemaFile}")

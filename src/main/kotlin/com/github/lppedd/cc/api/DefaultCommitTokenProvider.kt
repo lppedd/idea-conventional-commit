@@ -8,6 +8,7 @@ import com.github.lppedd.cc.configuration.CCDefaultTokensService
 import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.FooterTokens
 import com.github.lppedd.cc.parser.ValidToken
+import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vcs.VcsConfiguration
 import org.everit.json.schema.ValidationException
@@ -26,8 +27,8 @@ internal class DefaultCommitTokenProvider(private val project: Project) :
     CommitScopeProvider,
     CommitFooterTypeProvider,
     CommitFooterValueProvider {
-  private val configService = CCConfigService.getInstance(project)
-  private val defaultsService = CCDefaultTokensService.getInstance(project)
+  private val configService = project.service<CCConfigService>()
+  private val defaultsService = project.service<CCDefaultTokensService>()
   private val defaults
     get() = try {
       defaultsService.getDefaultsFromCustomFile(configService.customFilePath)

@@ -11,6 +11,7 @@ import com.intellij.codeInspection.InspectionManager
 import com.intellij.codeInspection.LocalQuickFix
 import com.intellij.codeInspection.ProblemDescriptor
 import com.intellij.codeInspection.ProblemHighlightType.GENERIC_ERROR_OR_WARNING
+import com.intellij.openapi.components.service
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.options.ConfigurableUi
 import com.intellij.openapi.project.Project
@@ -135,7 +136,7 @@ internal class CommitFormatInspection : CommitBaseInspection() {
           if (it.startOffset == start || it.endOffset == end) {
             RemoveRangeQuickFix()
           } else {
-            val config = CCConfigService.getInstance(manager.project)
+            val config = manager.project.service<CCConfigService>()
             ReplaceRangeQuickFix(config.scopeReplaceChar)
           }
 
