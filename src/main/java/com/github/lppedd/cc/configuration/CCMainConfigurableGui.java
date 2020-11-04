@@ -15,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import com.github.lppedd.cc.CCBundle;
 import com.github.lppedd.cc.configuration.CCConfigService.CompletionType;
 import com.github.lppedd.cc.configuration.CCDefaultTokensService.JsonCommitType;
+import com.github.lppedd.cc.configuration.component.CoAuthorsFilePickerPanel;
 import com.github.lppedd.cc.configuration.component.DefaultTokensFileExportPanel;
 import com.github.lppedd.cc.configuration.component.DefaultTokensFilePickerPanel;
 import com.github.lppedd.cc.configuration.component.DefaultTokensPanel;
@@ -46,9 +47,11 @@ public class CCMainConfigurableGui {
   private final JBRadioButton isPopup = new JBRadioButton(CCBundle.get("cc.config.popup"));
   private final JBRadioButton isTemplate = new JBRadioButton(CCBundle.get("cc.config.template"));
 
+  private JPanel coAuthorsPanel;
   private JPanel defaultsPanel;
   private DefaultTokensFilePickerPanel defaultTokensFilePickerPanel;
   private final DefaultTokensPanel defaultTokensPanel = new DefaultTokensPanel();
+  private CoAuthorsFilePickerPanel coAuthorsFilePickerPanel;
 
   public CCMainConfigurableGui(
       @NotNull final Project project,
@@ -78,7 +81,12 @@ public class CCMainConfigurableGui {
   }
 
   @Nullable
-  public String getCustomFilePath() {
+  public String getCustomCoAuthorsFilePath() {
+    return coAuthorsFilePickerPanel.getCustomFilePath();
+  }
+
+  @Nullable
+  public String getCustomTokensFilePath() {
     return defaultTokensFilePickerPanel.getCustomFilePath();
   }
 
@@ -95,7 +103,11 @@ public class CCMainConfigurableGui {
     }
   }
 
-  public void setCustomFilePath(@Nullable final String path) {
+  public void setCustomCoAuthorsFilePath(@Nullable final String path) {
+    coAuthorsFilePickerPanel.setCustomFilePath(path);
+  }
+
+  public void setCustomTokensFilePath(@Nullable final String path) {
     defaultTokensFilePickerPanel.setCustomFilePath(path);
   }
 
@@ -104,10 +116,12 @@ public class CCMainConfigurableGui {
   }
 
   public boolean isValid() {
-    return defaultTokensFilePickerPanel.isComponentValid();
+    return coAuthorsFilePickerPanel.isComponentValid() &&
+           defaultTokensFilePickerPanel.isComponentValid();
   }
 
   public void revalidate() {
+    coAuthorsFilePickerPanel.revalidateComponent();
     defaultTokensFilePickerPanel.revalidateComponent();
   }
 
@@ -138,6 +152,19 @@ public class CCMainConfigurableGui {
     JBUI.Borders.emptyBottom(5).wrap(infoPanel);
     info.setText(CCBundle.get("cc.config.info"));
 
+    coAuthorsPanel.setLayout(new BorderLayout());
+    coAuthorsPanel.setBorder(
+        IdeBorderFactory.createTitledBorder(
+            "Co-authors",
+            false,
+            JBUI.insetsTop(10)
+        )
+    );
+
+    coAuthorsPanel.add(Box.createHorizontalStrut(UI.scale(INDENT)), BorderLayout.LINE_START);
+    coAuthorsFilePickerPanel = new CoAuthorsFilePickerPanel(project, disposable);
+    coAuthorsPanel.add(coAuthorsFilePickerPanel, BorderLayout.CENTER);
+
     defaultsPanel.setLayout(new GridLayoutManager(3, 1, JBUI.insetsLeft(INDENT), 0, 0));
     defaultsPanel.setBorder(
         IdeBorderFactory.createTitledBorder(
@@ -163,6 +190,7 @@ public class CCMainConfigurableGui {
   }
 
   @Nullable
+  @SuppressWarnings("deprecation")
   private HyperlinkLabel buildTranslatorLabel() {
     final String name = CCBundle.getWithDefault("cc.translation.translator.name", "");
 

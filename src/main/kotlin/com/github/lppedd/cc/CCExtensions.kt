@@ -351,4 +351,7 @@ internal inline fun ListSelectionModel.selectedIndices(): IntArray {
   return rv
 }
 
+internal fun Throwable.readableMessage(): String =
+  (this::class.simpleName ?: "Anonymous object") + (localizedMessage?.let { " - $it" } ?: "")
+
 // endregion

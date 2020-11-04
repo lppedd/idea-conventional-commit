@@ -1,7 +1,7 @@
 package com.github.lppedd.cc.configuration
 
-import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.CC
+import com.github.lppedd.cc.CCBundle
 import com.intellij.openapi.options.SearchableConfigurable
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
@@ -21,7 +21,8 @@ private class CCMainConfigurable(project: Project) : SearchableConfigurable {
 
   override fun apply() {
     configService.completionType = gui.completionType
-    configService.customFilePath = gui.customFilePath
+    configService.customCoAuthorsFilePath = gui.customCoAuthorsFilePath
+    configService.customFilePath = gui.customTokensFilePath
 
     val tokens = try {
       defaultsService.getDefaultsFromCustomFile(configService.customFilePath)
@@ -35,17 +36,20 @@ private class CCMainConfigurable(project: Project) : SearchableConfigurable {
 
   override fun reset() {
     gui.completionType = configService.completionType
-    gui.customFilePath = configService.customFilePath
+    gui.customCoAuthorsFilePath = configService.customCoAuthorsFilePath
+    gui.customTokensFilePath = configService.customFilePath
   }
 
   override fun isModified() =
     gui.isValid
     && (gui.completionType != configService.completionType ||
-        gui.customFilePath != configService.customFilePath)
+        gui.customCoAuthorsFilePath != configService.customCoAuthorsFilePath ||
+        gui.customTokensFilePath != configService.customFilePath)
 
   override fun createComponent(): JComponent {
     gui.completionType = configService.completionType
-    gui.customFilePath = configService.customFilePath
+    gui.customTokensFilePath = configService.customFilePath
+    gui.customCoAuthorsFilePath = configService.customCoAuthorsFilePath
 
     val tokens = try {
       defaultsService.getDefaultsFromCustomFile(configService.customFilePath)

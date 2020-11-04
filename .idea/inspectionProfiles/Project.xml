@@ -270,6 +270,7 @@
           <option value="ConstantConditions" />
           <option value="SimplifiableIfStatement" />
           <option value="ConstantExpression" />
+          <option value="deprecation" />
         </list>
       </option>
     </inspection_tool>

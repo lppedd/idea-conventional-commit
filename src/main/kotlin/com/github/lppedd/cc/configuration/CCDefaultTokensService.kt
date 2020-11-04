@@ -7,9 +7,9 @@ import com.github.lppedd.cc.configuration.CCDefaultTokensService.JsonCommitType
 import com.github.lppedd.cc.configuration.component.providers.CoAuthors
 import com.github.lppedd.cc.getResourceAsStream
 import com.intellij.openapi.components.ServiceManager
+import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.vfs.LocalFileSystem
 import org.everit.json.schema.Schema
 import org.everit.json.schema.Validator
@@ -76,8 +76,14 @@ internal class CCDefaultTokensService(private val project: Project) {
 
   /** Returns the user-defined co-authors. */
   fun getCoAuthors(): CoAuthors {
-    val projectDir = project.guessProjectDir() ?: return emptyList()
-    val filePath = FileSystems.getDefault().getPath(projectDir.path, CC.CoAuthors.File)
+    val customCoAuthorsFilePath = project.service<CCConfigService>().customCoAuthorsFilePath
+    val fileSystem = FileSystems.getDefault()
+    val filePath = if (customCoAuthorsFilePath == null) {
+      val projectBasePath = project.basePath ?: return emptyList()
+      fileSystem.getPath(projectBasePath, CC.CoAuthors.File)
+    } else {
+      fileSystem.getPath(customCoAuthorsFilePath)
+    }
 
     try {
       if (!Files.notExists(filePath) && Files.exists(filePath)) {
@@ -98,12 +104,18 @@ internal class CCDefaultTokensService(private val project: Project) {
    * Note that the old list, if any, gets entirely replaced.
    */
   fun setCoAuthors(coAuthors: CoAuthors) {
-    val projectDir = project.guessProjectDir() ?: return
+    val customCoAuthorsFilePath = project.service<CCConfigService>().customCoAuthorsFilePath
+    val fileSystem = FileSystems.getDefault()
+    val filePath = if (customCoAuthorsFilePath == null) {
+      val projectBasePath = project.basePath ?: return
+      fileSystem.getPath(projectBasePath, CC.CoAuthors.File)
+    } else {
+      fileSystem.getPath(customCoAuthorsFilePath)
+    }
 
     try {
-      val filePath = FileSystems.getDefault().getPath(projectDir.path, CC.CoAuthors.File)
-      Files.write(filePath, coAuthors, UTF_8)
-      LocalFileSystem.getInstance().refreshAndFindFileByIoFile(filePath.toFile())
+      Files.write(filePath, coAuthors, Charsets.UTF_8)
+      LocalFileSystem.getInstance().refreshAndFindFileByIoFile(filePath.toFile())?.refresh(true, true)
     } catch (e: IOException) {
       logger.error(e)
       throw e

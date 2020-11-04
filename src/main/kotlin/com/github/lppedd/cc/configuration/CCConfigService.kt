@@ -28,6 +28,7 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
   var completionType: CompletionType = CompletionType.POPUP
   var providerFilterType: ProviderFilterType = ProviderFilterType.HIDE_SELECTED
   var customFilePath: String? = null
+  var customCoAuthorsFilePath: String? = null
   var scopeReplaceChar: String = "-"
 
   @XMap(
@@ -127,6 +128,7 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
     if (other !is CCConfigService) return false
     return Objects.equals(completionType, other.completionType) &&
            Objects.equals(customFilePath, other.customFilePath) &&
+           Objects.equals(customCoAuthorsFilePath, other.customCoAuthorsFilePath) &&
            Objects.equals(typeProvidersMap, other.typeProvidersMap) &&
            Objects.equals(scopeProvidersMap, other.scopeProvidersMap) &&
            Objects.equals(subjectProvidersMap, other.subjectProvidersMap)
@@ -136,6 +138,7 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
     Objects.hash(
       completionType,
       customFilePath,
+      customCoAuthorsFilePath,
       typeProvidersMap,
       scopeProvidersMap,
       subjectProvidersMap

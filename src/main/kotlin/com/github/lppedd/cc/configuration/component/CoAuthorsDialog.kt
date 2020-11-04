@@ -4,6 +4,7 @@ import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.configuration.CCDefaultTokensService
 import com.github.lppedd.cc.configuration.component.providers.CoAuthors
 import com.github.lppedd.cc.configuration.holders.CoAuthorsTableHolder
+import com.github.lppedd.cc.readableMessage
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.ValidationInfo
@@ -44,7 +45,7 @@ internal class CoAuthorsDialog(project: Project) : DialogWrapper(project) {
       defaultsService.setCoAuthors(coAuthorsTableHolder.tableModel.coAuthors)
       super.doOKAction()
     } catch (e: Exception) {
-      setErrorText(CCBundle["cc.config.coAuthorsDialog.saveError", e.message ?: "unknown"])
+      setErrorText(CCBundle["cc.config.coAuthorsDialog.saveError", e.readableMessage()])
     }
   }
 
