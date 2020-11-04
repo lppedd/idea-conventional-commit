@@ -106,6 +106,7 @@ internal class CCDefaultTokensService(private val project: Project) {
       LocalFileSystem.getInstance().refreshAndFindFileByIoFile(filePath.toFile())
     } catch (e: IOException) {
       logger.error(e)
+      throw e
     }
   }
 

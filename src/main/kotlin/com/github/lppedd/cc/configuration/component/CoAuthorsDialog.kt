@@ -40,20 +40,16 @@ internal class CoAuthorsDialog(project: Project) : DialogWrapper(project) {
     coAuthorsTableHolder.tableModel.selectedCoAuthors
 
   override fun doOKAction() {
-    val updatedCoAuthors = coAuthorsTableHolder.tableModel.coAuthors
-
-    if (defaultsService.getCoAuthors().isNotEmpty() || updatedCoAuthors.isNotEmpty()) {
-      defaultsService.setCoAuthors(updatedCoAuthors)
+    try {
+      defaultsService.setCoAuthors(coAuthorsTableHolder.tableModel.coAuthors)
+      super.doOKAction()
+    } catch (e: Exception) {
+      setErrorText(CCBundle["cc.config.coAuthorsDialog.saveError", e.message ?: "unknown"])
     }
-
-    super.doOKAction()
   }
 
   override fun doValidate(): ValidationInfo? =
     coAuthorsTableHolder.validate().firstOrNull()
-
-  override fun postponeValidation(): Boolean =
-    false
 
   override fun getDimensionServiceKey(): String =
     "#com.github.lppedd.cc.CoAuthorsDialog"
