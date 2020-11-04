@@ -114,10 +114,12 @@ internal class CCDefaultTokensService(private val project: Project) {
    * Returns the full path of the default tokens file located
    * in the project root directory, or `null`.
    */
-  private fun findDefaultFilePathFromProjectRoot(): String? =
-    project.guessProjectDir()
+  private fun findDefaultFilePathFromProjectRoot(): String? {
+    val projectBasePath = project.basePath ?: return null
+    return LocalFileSystem.getInstance().refreshAndFindFileByPath(projectBasePath)
       ?.findChild(CC.Tokens.File)
       ?.path
+  }
 
   /** Reads default commit types and scopes from a file in FS via its absolute path. */
   private fun readDefaultsFromFile(filePath: String): JsonDefaults =
