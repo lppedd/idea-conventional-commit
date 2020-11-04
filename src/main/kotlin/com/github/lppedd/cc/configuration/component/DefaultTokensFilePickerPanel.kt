@@ -47,7 +47,8 @@ internal class DefaultTokensFilePickerPanel(
     it.addBrowseFolderListener(TextBrowseFolderListener(MyFileChooserDescriptor))
   }
 
-  private var isComponentValid = true
+  var isComponentValid = true
+    private set
 
   init {
     installValidationOnFilePicker()
@@ -62,11 +63,7 @@ internal class DefaultTokensFilePickerPanel(
   }
 
   fun getCustomFilePath(): String? =
-    if (isCustomFile.isSelected) {
-      customFile.text
-    } else {
-      null
-    }
+    customFile.text.takeIf { isCustomFile.isSelected }
 
   fun setCustomFilePath(path: String?) {
     if (path != null) {
@@ -80,9 +77,6 @@ internal class DefaultTokensFilePickerPanel(
       customFile.text = ""
     }
   }
-
-  fun isComponentValid(): Boolean =
-    isComponentValid
 
   fun revalidateComponent() {
     ComponentValidator.getInstance(customFile).get().revalidate()
