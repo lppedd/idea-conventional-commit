@@ -352,6 +352,10 @@ internal inline fun ListSelectionModel.selectedIndices(): IntArray {
 }
 
 internal fun Throwable.readableMessage(): String =
-  (this::class.simpleName ?: "Anonymous object") + (localizedMessage?.let { " - $it" } ?: "")
+  if (localizedMessage?.isNotBlank() == true) {
+    localizedMessage
+  } else {
+    this::class.simpleName ?: "Anonymous exception object"
+  }
 
 // endregion
