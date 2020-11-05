@@ -1,3 +1,5 @@
+### Join the [Slack workspace][10] to discuss features and issues!
+
 <img align="left" width="85" height="85" src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_logo.png" alt="Plugin logo">
 
 # Conventional Commit
@@ -163,3 +165,4 @@ are going to be automatically filtered by the core engine.
 [7]: https://plugins.jetbrains.com/plugin/13405-angular-conventional-commit
 [8]: https://github.com/lppedd/idea-conventional-commit-commitlint
 [9]: https://plugins.jetbrains.com/plugin/14046-commitlint-conventional-commit
+[10]: https://join.slack.com/t/ideaconventio-1ts8697/shared_invite/zt-iuztsuth-pr_5wjvZGqITHCz3OOUxgQ
