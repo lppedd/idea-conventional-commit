@@ -30,9 +30,6 @@ internal class DefaultTokensPanel : JPanel(JBGridLayout(1, 1, 24, 1)) {
   }
 
   init {
-    ListSpeedSearch(typeList)
-    ListSpeedSearch(scopeList)
-
     add(createTokenListPanel(typeList, CCBundle["cc.config.types"]))
     add(createTokenListPanel(scopeList, CCBundle["cc.config.scopes"]))
   }
@@ -54,6 +51,8 @@ internal class DefaultTokensPanel : JPanel(JBGridLayout(1, 1, 24, 1)) {
   }
 
   private fun createTokenListPanel(list: JList<String>, title: String): JPanel {
+    ListSpeedSearch(list)
+
     val scrollPane = JBScrollPane(list).also {
       it.preferredSize = list.minimumSize
       it.border = JBUI.Borders.customLine(CCUI.BorderColor).wrap(JBUI.Borders.empty(0, 1, 1, 1))
@@ -68,7 +67,8 @@ internal class DefaultTokensPanel : JPanel(JBGridLayout(1, 1, 24, 1)) {
     super.paint(g)
     val icon = CCIcons.General.ArrowRight
     val x = (width - icon.iconWidth) / 2
-    val y = (height - icon.iconHeight + 20) / 2
+    // 32 is a magic constant found by trial and error
+    val y = (height - icon.iconHeight + JBUI.scale(32)) / 2
     icon.paintIcon(this, g, x, y)
   }
 }
