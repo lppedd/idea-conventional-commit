@@ -1,5 +1,6 @@
 package com.github.lppedd.cc
 
+import com.intellij.ui.ColorUtil.isDark
 import com.intellij.ui.JBColor
 import com.intellij.util.ui.UIUtil
 import java.awt.Color
@@ -13,7 +14,8 @@ object CCUI {
     if (JBColor.isBright()) {
       JBColor.border()
     } else {
-      UIUtil.getListBackground().brighter(0.75)
+      val borderColor = JBColor.border()
+      if (isDark(borderColor)) UIUtil.getListBackground().brighter(0.75) else borderColor
     }
   }
 
@@ -22,7 +24,7 @@ object CCUI {
     if (JBColor.isBright()) {
       UIUtil.getListBackground()
     } else {
-      UIUtil.getListBackground().brighter(0.95)
+      UIUtil.getListBackground().brighter(0.96)
     }
   }
 }
