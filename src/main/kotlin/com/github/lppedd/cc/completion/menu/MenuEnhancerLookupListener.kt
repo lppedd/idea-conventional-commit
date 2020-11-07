@@ -31,6 +31,9 @@ private val ROBOT = Robot()
 private const val MENU_ACTION_FQN = "com.intellij.codeInsight.lookup.impl.LookupUi\$MenuAction"
 
 /**
+ * Known issues:
+ * - the menu retains focus after opening, see [IDEA-254427](https://youtrack.jetbrains.com/issue/IDEA-254427)
+ *
  * @author Edoardo Luppi
  */
 internal class MenuEnhancerLookupListener(
