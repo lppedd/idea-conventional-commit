@@ -65,6 +65,7 @@ internal class DefaultTokensFilePickerPanel(
   fun getCustomFilePath(): String? =
     customFile.text.takeIf { isCustomFile.isSelected }
 
+  @Suppress("DuplicatedCode")
   fun setCustomFilePath(path: String?) {
     if (path != null) {
       isCustomFile.isSelected = true

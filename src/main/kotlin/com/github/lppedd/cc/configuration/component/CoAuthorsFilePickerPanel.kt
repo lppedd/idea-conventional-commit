@@ -25,7 +25,6 @@ import javax.swing.event.DocumentEvent
 /**
  * @author Edoardo Luppi
  */
-@Suppress("DuplicatedCode")
 internal class CoAuthorsFilePickerPanel(
     private val project: Project,
     private val disposable: Disposable,
@@ -62,6 +61,7 @@ internal class CoAuthorsFilePickerPanel(
   fun getCustomFilePath(): String? =
     customFile.text.takeIf { isCustomFile.isSelected }
 
+  @Suppress("DuplicatedCode")
   fun setCustomFilePath(path: String?) {
     if (path != null) {
       isCustomFile.isSelected = true
