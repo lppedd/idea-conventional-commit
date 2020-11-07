@@ -1,34 +1,31 @@
 package com.github.lppedd.cc.configuration.component.providers
 
 import com.github.lppedd.cc.CCBundle
+import com.github.lppedd.cc.CCUI
 import com.github.lppedd.cc.api.CommitTokenProvider
 import com.intellij.ui.table.JBTable
 
 /**
  * @author Edoardo Luppi
  */
-internal class CommitProviderTable<T : CommitTokenProvider>(title: String) : JBTable() {
+internal class CommitProviderTable<T : CommitTokenProvider> : JBTable() {
   companion object {
     const val COLUMN_PROVIDER = 0
   }
 
-  private val model = CommitProviderModel<T>(title)
+  private val model = CommitProviderModel<T>()
   private var latest = emptyList<T>()
 
   init {
     setModel(model)
-
-    isStriped = true
     emptyText.text = CCBundle["cc.config.providers.empty"]
 
-    getTableHeader().apply {
-      resizingAllowed = false
-      reorderingAllowed = false
-    }
-
-    getColumnModel().getColumn(COLUMN_PROVIDER).apply {
-      minWidth = 100
-      cellRenderer = CommitProviderRenderer()
+    background = CCUI.ListBackgroundColor
+    setShowGrid(false)
+    setTableHeader(null)
+    getColumnModel().getColumn(COLUMN_PROVIDER).also {
+      it.minWidth = 100
+      it.cellRenderer = CommitProviderRenderer()
     }
   }
 

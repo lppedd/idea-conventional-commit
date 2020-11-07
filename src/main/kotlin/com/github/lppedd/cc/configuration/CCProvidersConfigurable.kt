@@ -1,17 +1,16 @@
 package com.github.lppedd.cc.configuration
 
-import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.CC
+import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.api.*
 import com.intellij.openapi.components.service
-import com.intellij.openapi.options.Configurable.NoScroll
 import com.intellij.openapi.options.SearchableConfigurable
 import com.intellij.openapi.project.Project
 
 /**
  * @author Edoardo Luppi
  */
-private class CCProvidersConfigurable(project: Project) : SearchableConfigurable, NoScroll {
+private class CCProvidersConfigurable(project: Project) : SearchableConfigurable {
   private val gui = CCProvidersConfigurableGui()
   private val configService = project.service<CCConfigService>()
 
@@ -20,6 +19,9 @@ private class CCProvidersConfigurable(project: Project) : SearchableConfigurable
       TYPE_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
       SCOPE_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
       SUBJECT_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
+      BODY_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
+      FOOTER_TYPE_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
+      FOOTER_VALUE_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
     )
   }
 
@@ -45,10 +47,31 @@ private class CCProvidersConfigurable(project: Project) : SearchableConfigurable
         .toMap()
     )
 
+    configService.setBodyProvidersOrder(
+      gui.bodyProviders
+        .mapIndexed { index, provider -> provider.getId() to index }
+        .toMap()
+    )
+
+    configService.setFooterTypeProvidersOrder(
+      gui.footerTypeProviders
+        .mapIndexed { index, provider -> provider.getId() to index }
+        .toMap()
+    )
+
+    configService.setFooterValueProvidersOrder(
+      gui.footerValueProviders
+        .mapIndexed { index, provider -> provider.getId() to index }
+        .toMap()
+    )
+
     gui.setProviders(
       gui.typeProviders,
       gui.scopeProviders,
       gui.subjectProviders,
+      gui.bodyProviders,
+      gui.footerTypeProviders,
+      gui.footerValueProviders,
     )
   }
 

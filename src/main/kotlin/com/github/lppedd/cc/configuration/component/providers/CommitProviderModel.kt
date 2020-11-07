@@ -6,9 +6,7 @@ import com.github.lppedd.cc.configuration.component.AbstractTableEditableModel
 /**
  * @author Edoardo Luppi
  */
-internal class CommitProviderModel<T : CommitTokenProvider>(
-    private val title: String,
-) : AbstractTableEditableModel() {
+internal class CommitProviderModel<T : CommitTokenProvider> : AbstractTableEditableModel() {
   companion object {
     private const val serialVersionUID = 1L
   }
@@ -22,9 +20,7 @@ internal class CommitProviderModel<T : CommitTokenProvider>(
   }
 
   override fun getColumnCount() = 1
-  override fun getColumnName(column: Int) =
-    if (column == CommitProviderTable.COLUMN_PROVIDER) title
-    else ""
+  override fun getColumnName(column: Int) = ""
 
   override fun getRowCount() = providers.size
   override fun getValueAt(rowIndex: Int, columnIndex: Int): Any? =

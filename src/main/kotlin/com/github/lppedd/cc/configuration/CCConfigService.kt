@@ -100,6 +100,18 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
     this.subjectProvidersMap = ConcurrentHashMap(subjectProvidersMap)
   }
 
+  fun setBodyProvidersOrder(bodyProvidersMap: Map<String, Int>) {
+    this.bodyProvidersMap = ConcurrentHashMap(bodyProvidersMap)
+  }
+
+  fun setFooterTypeProvidersOrder(footerTypeProvidersMap: Map<String, Int>) {
+    this.footerTypeProvidersMap = ConcurrentHashMap(footerTypeProvidersMap)
+  }
+
+  fun setFooterValueProvidersOrder(footerValueProvidersMap: Map<String, Int>) {
+    this.footerValueProvidersMap = ConcurrentHashMap(footerValueProvidersMap)
+  }
+
   override fun getState() =
     this
 
@@ -124,7 +136,10 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
            Objects.equals(customCoAuthorsFilePath, other.customCoAuthorsFilePath) &&
            Objects.equals(typeProvidersMap, other.typeProvidersMap) &&
            Objects.equals(scopeProvidersMap, other.scopeProvidersMap) &&
-           Objects.equals(subjectProvidersMap, other.subjectProvidersMap)
+           Objects.equals(subjectProvidersMap, other.subjectProvidersMap) &&
+           Objects.equals(bodyProvidersMap, other.bodyProvidersMap) &&
+           Objects.equals(footerTypeProvidersMap, other.footerTypeProvidersMap) &&
+           Objects.equals(footerValueProvidersMap, other.footerValueProvidersMap)
   }
 
   override fun hashCode() =
@@ -134,7 +149,10 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
       customCoAuthorsFilePath,
       typeProvidersMap,
       scopeProvidersMap,
-      subjectProvidersMap
+      subjectProvidersMap,
+      bodyProvidersMap,
+      footerTypeProvidersMap,
+      footerValueProvidersMap,
     )
 
   enum class CompletionType {

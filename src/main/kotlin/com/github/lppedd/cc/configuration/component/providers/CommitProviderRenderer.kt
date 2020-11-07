@@ -31,9 +31,8 @@ internal class CommitProviderRenderer : DefaultTableCellRenderer() {
       column: Int,
   ): Component {
     super.getTableCellRendererComponent(table, value, isSelected, false, row, column)
-    val paddingBorder = JBUI.Borders.empty(1, 3, 2, 3)
-    val compoundBorder = border.wrap(paddingBorder)
-    border = compoundBorder
+    val paddingBorder = JBUI.Borders.empty(2, 2, 1, 2)
+    border = border.wrap(paddingBorder)
     return this
   }
 
