@@ -7,13 +7,12 @@ import com.github.lppedd.cc.configuration.CCDefaultTokensService.JsonCommitScope
 import com.github.lppedd.cc.configuration.CommitTypeMap
 import com.github.lppedd.cc.configuration.component.tokens.CommitTokenList
 import com.github.lppedd.cc.ui.JBGridLayout
+import com.github.lppedd.cc.ui.TitledPanel
 import com.github.lppedd.cc.wrap
-import com.intellij.ui.IdeBorderFactory
 import com.intellij.ui.ListSpeedSearch
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.util.ui.JBDimension
 import com.intellij.util.ui.JBUI
-import java.awt.BorderLayout
 import java.awt.Graphics
 import javax.swing.JList
 import javax.swing.JPanel
@@ -60,13 +59,8 @@ internal class DefaultTokensPanel : JPanel(JBGridLayout(1, 1, 24, 1)) {
       it.border = IdeBorderFactory.createBorder(CCUI.BorderColor).wrap(JBUI.Borders.empty(0, 1, 1, 1))
     }
 
-    return JPanel(BorderLayout()).also {
-      val border = IdeBorderFactory.createTitledBorder(title, false, JBUI.insetsTop(7))
-      border.setShowLine(false)
-
-      it.border = border
+    return TitledPanel(title, scrollPane).also {
       it.minimumSize = JBDimension(130, 250)
-      it.add(scrollPane)
     }
   }
 

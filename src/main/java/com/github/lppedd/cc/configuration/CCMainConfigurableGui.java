@@ -186,7 +186,7 @@ public class CCMainConfigurableGui {
 
     gc.setRow(2);
     gc.setVSizePolicy(SIZEPOLICY_CAN_SHRINK | SIZEPOLICY_CAN_GROW | SIZEPOLICY_WANT_GROW);
-    defaultsPanel.add(defaultTokensPanel, gc);
+    defaultsPanel.add(JBUI.Borders.emptyTop(7).wrap(defaultTokensPanel), gc);
   }
 
   @Nullable
