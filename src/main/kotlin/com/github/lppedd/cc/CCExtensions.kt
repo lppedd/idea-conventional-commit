@@ -82,7 +82,6 @@ internal fun Color.brighter(factor: Double): Color {
 // region Border
 
 @InlineOnly
-@Suppress("RedundantNotNullExtensionReceiverOfInline")
 internal inline fun Border.wrap(border: Border): Border =
   BorderFactory.createCompoundBorder(this, border)
 
@@ -158,7 +157,6 @@ internal inline fun Editor.moveCaretRelatively(caretShift: Int): Int {
 }
 
 @InlineOnly
-@Suppress("RedundantNotNullExtensionReceiverOfInline")
 internal inline fun Editor.insertStringAtCaret(string: String) {
   EditorModificationUtil.insertStringAtCaret(this, string)
 }
@@ -202,7 +200,6 @@ internal inline operator fun TextRange.component3(): Boolean = isEmpty
 // region CompletionParameters
 
 @InlineOnly
-@Suppress("RedundantNotNullExtensionReceiverOfInline")
 internal inline fun CompletionParameters.getCompletionPrefix(): String =
   TextFieldWithAutoCompletionListProvider.getCompletionPrefix(this)
 
