@@ -190,7 +190,6 @@ public class CCMainConfigurableGui {
   }
 
   @Nullable
-  @SuppressWarnings("deprecation")
   private HyperlinkLabel buildTranslatorLabel() {
     final String name = CCBundle.getWithDefault("cc.translation.translator.name", "");
 
