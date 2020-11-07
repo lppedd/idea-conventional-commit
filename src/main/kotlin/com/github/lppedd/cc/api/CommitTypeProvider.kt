@@ -1,7 +1,7 @@
 package com.github.lppedd.cc.api
 
 import com.intellij.openapi.extensions.ProjectExtensionPointName
-import org.jetbrains.annotations.ApiStatus
+import org.jetbrains.annotations.ApiStatus.*
 
 internal val TYPE_EP = ProjectExtensionPointName<CommitTypeProvider>(
   "com.github.lppedd.idea-conventional-commit.commitTypeProvider"
@@ -10,7 +10,7 @@ internal val TYPE_EP = ProjectExtensionPointName<CommitTypeProvider>(
 /**
  * @author Edoardo Luppi
  */
-@ApiStatus.Experimental
+@Experimental
 interface CommitTypeProvider : CommitTokenProvider {
   fun getCommitTypes(prefix: String?): Collection<CommitType>
 }

@@ -1,7 +1,7 @@
 package com.github.lppedd.cc.parser
 
 import com.intellij.openapi.util.TextRange
-import org.jetbrains.annotations.ApiStatus
+import org.jetbrains.annotations.ApiStatus.*
 import kotlin.contracts.contract
 import kotlin.internal.InlineOnly
 import kotlin.math.max
@@ -9,7 +9,7 @@ import kotlin.math.max
 /**
  * @author Edoardo Luppi
  */
-@ApiStatus.Experimental
+@Experimental
 object CCParser {
   private const val TYPE = "type"
   private const val SCOPE = "scope"

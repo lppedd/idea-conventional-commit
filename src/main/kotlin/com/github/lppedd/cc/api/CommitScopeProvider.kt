@@ -1,7 +1,7 @@
 package com.github.lppedd.cc.api
 
 import com.intellij.openapi.extensions.ProjectExtensionPointName
-import org.jetbrains.annotations.ApiStatus
+import org.jetbrains.annotations.ApiStatus.*
 
 internal val SCOPE_EP = ProjectExtensionPointName<CommitScopeProvider>(
   "com.github.lppedd.idea-conventional-commit.commitScopeProvider"
@@ -10,7 +10,7 @@ internal val SCOPE_EP = ProjectExtensionPointName<CommitScopeProvider>(
 /**
  * @author Edoardo Luppi
  */
-@ApiStatus.Experimental
+@Experimental
 interface CommitScopeProvider : CommitTokenProvider {
   fun getCommitScopes(commitType: String?): Collection<CommitScope>
 }

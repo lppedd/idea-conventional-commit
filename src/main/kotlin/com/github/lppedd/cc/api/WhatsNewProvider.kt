@@ -3,7 +3,7 @@ package com.github.lppedd.cc.api
 import com.intellij.openapi.extensions.AbstractExtensionPointBean
 import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.util.xmlb.annotations.*
-import org.jetbrains.annotations.ApiStatus
+import org.jetbrains.annotations.ApiStatus.*
 
 internal val WHATS_NEW_EP = ExtensionPointName<WhatsNewProvider>(
   "com.github.lppedd.idea-conventional-commit.whatsNewProvider"
@@ -26,7 +26,8 @@ internal val WHATS_NEW_EP = ExtensionPointName<WhatsNewProvider>(
  * @author Edoardo Luppi
  * @see com.github.lppedd.cc.whatsnew.WhatsNewDialog
  */
-@ApiStatus.Experimental
+@Experimental
+@AvailableSince("0.16.0")
 abstract class WhatsNewProvider : AbstractExtensionPointBean() {
   @Property(surroundWithTag = false)
   var files: WhatsNewFiles = WhatsNewFiles()
