@@ -127,6 +127,7 @@
     <inspection_tool class="LawOfDemeter" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="ignoreLibraryCalls" value="true" />
     </inspection_tool>
+    <inspection_tool class="LeakingThis" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="LiftReturnOrAssignment" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="LiteralAsArgToStringEquals" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="LocalCanBeFinal" enabled="true" level="WARNING" enabled_by_default="true">
@@ -191,7 +192,7 @@
     <inspection_tool class="RedundantInnerClassModifier" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="RedundantLabelMigration" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="RedundantLambdaArrow" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="RedundantNotNullExtensionReceiverOfInline" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="RedundantNotNullExtensionReceiverOfInline" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="RedundantObjectTypeCheck" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="RedundantRequireNotNullCall" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="RedundantReturnLabel" enabled="true" level="WARNING" enabled_by_default="true" />
