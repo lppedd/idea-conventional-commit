@@ -9,6 +9,8 @@ import com.intellij.codeInsight.completion.InsertionContext
 import com.intellij.codeInsight.lookup.LookupElementPresentation
 
 /**
+ * Represents an item in the completion's popup inside the footer type context.
+ *
  * @author Edoardo Luppi
  */
 internal class CommitFooterTypeLookupElement(
@@ -22,12 +24,15 @@ internal class CommitFooterTypeLookupElement(
     psiElement
 
   override fun getLookupString(): String =
+    commitFooterType.value
+
+  override fun getDisplayedText(): String =
     commitFooterType.text
 
-  override fun renderElement(presentation: LookupElementPresentation) =
-    presentation.let {
+  override fun renderElement(presentation: LookupElementPresentation) {
+    presentation.also {
       it.icon = CCIcons.Tokens.Footer
-      it.itemText = lookupString
+      it.itemText = getDisplayedText()
       it.isItemTextBold = true
       it.isTypeIconRightAligned = true
 
@@ -36,40 +41,45 @@ internal class CommitFooterTypeLookupElement(
       it.isStrikeout = rendering.strikeout
       it.setTypeText(rendering.type, rendering.icon)
     }
+  }
 
+  @Suppress("DuplicatedCode")
   override fun handleInsert(context: InsertionContext) {
     val editor = context.editor
-    val document = context.document
-
-    val range = editor.getCurrentLineRange()
-    val lineText = document.getText(range)
+    val (lineStartOffset, lineEndOffset) = editor.getCurrentLineRange()
+    val lineText = editor.document.getSegment(lineStartOffset, lineEndOffset)
     val (footerType, separator, footerValue) = CCParser.parseFooter(lineText)
-    val caretShift: Int
-    val textToAdd: String
 
     if (footerType is ValidToken) {
-      if (separator.isPresent) {
-        if (footerValue !is ValidToken) {
-          caretShift = 2
-          textToAdd = " "
-        } else {
-          caretShift = if (footerValue.value.firstIsWhitespace()) 2 else 1
-          textToAdd = ""
-        }
-      } else {
-        caretShift = 2
-        textToAdd = ": "
-      }
-
-      val elementValue = commitFooterType.getValue(context.toTokenContext())
-      val text = footerType.range.replace(lineText, elementValue)
-      document.replaceString(context.startOffset, range.endOffset, "$text$textToAdd")
+      // Replace the old footer type with new one
+      editor.replaceString(
+        lineStartOffset + footerType.range.startOffset,
+        lineStartOffset + footerType.range.endOffset,
+        commitFooterType.value,
+      )
     } else {
-      document.insertString(context.tailOffset, ": ")
-      caretShift = 2
+      // No footer type had been inserted before, thus we simply insert the value
+      editor.insertStringAtCaret(commitFooterType.value)
     }
 
-    editor.moveCaretRelatively(caretShift)
+    // If a separator isn't already present, add it
+    if (!separator.isPresent) {
+      editor.insertStringAtCaret(":", moveCaret = false)
+    }
+
+    // Move the caret after the separator
+    editor.moveCaretRelatively(1)
+
+    // If the footer value is present and starts with a whitespace,
+    // shift the caret of one position, otherwise insert a whitespace
+    if (footerValue is ValidToken) {
+      if (footerValue.value.firstIsWhitespace()) {
+        editor.moveCaretRelatively(1)
+      }
+    } else {
+      editor.insertStringAtCaret(" ")
+    }
+
     editor.scheduleAutoPopup()
   }
 }

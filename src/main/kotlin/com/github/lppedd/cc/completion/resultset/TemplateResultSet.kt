@@ -1,5 +1,7 @@
 package com.github.lppedd.cc.completion.resultset
 
+import com.github.lppedd.cc.lookupElement.CommitLookupElement
+import com.github.lppedd.cc.lookupElement.TemplateLookupElementDecorator
 import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.codeInsight.completion.PrefixMatcher
 import com.intellij.codeInsight.lookup.LookupElement
@@ -7,9 +9,9 @@ import com.intellij.codeInsight.lookup.LookupElement
 /**
  * @author Edoardo Luppi
  */
-internal open class DelegateResultSet(private var resultSet: CompletionResultSet) : ResultSet {
+internal class TemplateResultSet(private var resultSet: CompletionResultSet) : ResultSet {
   override fun addElement(lookupElement: LookupElement) {
-    resultSet.addElement(lookupElement)
+    resultSet.addElement(decorateIfNeeded(lookupElement))
   }
 
   override fun withPrefixMatcher(prefix: String): ResultSet {
@@ -25,4 +27,11 @@ internal open class DelegateResultSet(private var resultSet: CompletionResultSet
   override fun stopHere() {
     resultSet.stopHere()
   }
+
+  private fun decorateIfNeeded(lookupElement: LookupElement): LookupElement =
+    if (lookupElement is CommitLookupElement) {
+      TemplateLookupElementDecorator(lookupElement)
+    } else {
+      lookupElement
+    }
 }

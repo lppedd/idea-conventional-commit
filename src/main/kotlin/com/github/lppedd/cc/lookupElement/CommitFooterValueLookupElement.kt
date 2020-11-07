@@ -7,7 +7,6 @@ import com.github.lppedd.cc.parser.ValidToken
 import com.github.lppedd.cc.psiElement.CommitFooterValuePsiElement
 import com.intellij.codeInsight.completion.InsertionContext
 import com.intellij.codeInsight.lookup.LookupElementPresentation
-import com.intellij.openapi.util.TextRange
 
 /**
  * @author Edoardo Luppi
@@ -16,7 +15,6 @@ internal class CommitFooterValueLookupElement(
     index: Int,
     provider: FooterValueProviderWrapper,
     private val psiElement: CommitFooterValuePsiElement,
-    private val completionPrefix: String,
 ) : CommitLookupElement(index, CC.Tokens.PriorityFooterValue, provider) {
   private val commitFooterValue = psiElement.commitFooterValue
 
@@ -24,12 +22,15 @@ internal class CommitFooterValueLookupElement(
     psiElement
 
   override fun getLookupString(): String =
+    commitFooterValue.value
+
+  override fun getDisplayedText(): String =
     commitFooterValue.text
 
-  override fun renderElement(presentation: LookupElementPresentation) =
-    presentation.let {
+  override fun renderElement(presentation: LookupElementPresentation) {
+    presentation.also {
       it.icon = CCIcons.Tokens.Footer
-      it.itemText = lookupString.flattenWhitespaces().abbreviate(100)
+      it.itemText = getDisplayedText().flattenWhitespaces().abbreviate(100)
       it.isTypeIconRightAligned = true
 
       val rendering = commitFooterValue.getRendering()
@@ -38,29 +39,26 @@ internal class CommitFooterValueLookupElement(
       it.isStrikeout = rendering.strikeout
       it.setTypeText(rendering.type, rendering.icon)
     }
+  }
 
   override fun handleInsert(context: InsertionContext) {
-    val document = context.document
-    val (lineStart, lineEnd) = document.getLineRangeByOffset(context.startOffset)
-    val elementValue = commitFooterValue.getValue(context.toTokenContext())
-    val tempAdditionalLength = elementValue.length - completionPrefix.length
-    val removeTo = context.tailOffset - lineStart
-    val removeFrom = removeTo - tempAdditionalLength
-    val oldFooterText =
-      document
-        .getSegment(lineStart, document.textLength)
-        .removeRange(removeFrom, removeTo)
+    val editor = context.editor
+    val document = editor.document
+    val (lineStartOffset) = editor.getCurrentLineRange()
+    val lineText = document.getSegment(lineStartOffset, document.textLength)
+    val footer = CCParser.parseFooter(lineText).footer
+    val newFooterValueString = " ${commitFooterValue.value}"
 
-    val footer = CCParser.parseFooter(oldFooterText).footer
-    val footerText = " $elementValue"
-    val (footerStart, footerEnd) = if (footer is ValidToken) {
-      val (start, end) = footer.range
-      TextRange(lineStart + start, lineStart + end + tempAdditionalLength)
+    if (footer is ValidToken) {
+      // Replace an existing footer value
+      editor.replaceString(
+        lineStartOffset + footer.range.startOffset,
+        lineStartOffset + footer.range.endOffset,
+        newFooterValueString,
+      )
     } else {
-      TextRange(lineStart, lineEnd)
+      // No footer value was present, just insert the string
+      editor.insertStringAtCaret(newFooterValueString)
     }
-
-    document.replaceString(footerStart, footerEnd, footerText)
-    context.editor.moveCaretToOffset(footerStart + footerText.length)
   }
 }

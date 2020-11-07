@@ -36,13 +36,6 @@ internal class TemplateCommitTypeLookupElement(
   private val templateSettings = TemplateSettings.getInstance()
 
   /**
-   * In autopopup context (see `CompletionAutoPopupHandler`),
-   * avoid hiding the commit type when it matches entirely what the user typed.
-   */
-  override fun isWorthShowingInAutoPopup() =
-    true
-
-  /**
    * When the user select the commit type a new template has to be initiated.
    * The template should start with the commit type already inserted, and with the
    * caret positioned in the commit scope context, with an active completion popup.
@@ -68,10 +61,8 @@ internal class TemplateCommitTypeLookupElement(
     )
 
     // We populate the macro type context with the chosen commit type
-    val elementValue = psiElement.commitType.getValue(context.toTokenContext())
-
     runWriteAction {
-      editor.insertStringAtCaret(elementValue)
+      editor.insertStringAtCaret(psiElement.commitType.value)
     }
 
     // ...and we confirm it by navigating to the subject context

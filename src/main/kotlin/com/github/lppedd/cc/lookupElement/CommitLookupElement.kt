@@ -26,5 +26,20 @@ internal abstract class CommitLookupElement(
   override fun getAutoCompletionPolicy() =
     AutoCompletionPolicy.NEVER_AUTOCOMPLETE
 
+  override fun getAllLookupStrings(): Set<String> =
+    setOf(lookupString, getDisplayedText())
+
+  /**
+   * In autopopup context (see `CompletionAutoPopupHandler`),
+   * avoid hiding the commit type when it matches entirely what the user typed.
+   */
+  override fun isWorthShowingInAutoPopup() =
+    true
+
   abstract override fun getPsiElement(): CommitFakePsiElement
+
+  /**
+   * The text shown to the user for the completion's item.
+   */
+  abstract fun getDisplayedText(): String
 }

@@ -57,7 +57,6 @@ internal class FooterValueCompletionProvider(
           index,
           provider,
           CommitFooterValuePsiElement(project, commitFooterValue),
-          prefix,
         )
       }
       .distinctBy(CommitFooterValueLookupElement::getLookupString)
@@ -77,6 +76,7 @@ internal class FooterValueCompletionProvider(
     val wrapper = FooterValueProviderWrapper(project, provider)
     val lookupElement = ShowMoreCoAuthorsLookupElement(2000, wrapper, psiElement, prefix)
 
+    @Suppress("UnstableApiUsage")
     if (process is CompletionProgressIndicator) {
       process.lookup.addPrefixChangeListener(lookupElement, process.lookup)
     }

@@ -20,7 +20,7 @@ object CCParser {
   private const val FOOTER = "footer"
 
   private val headerRegExp = """
-    |(?:.*? |)??(?<$TYPE>[a-zA-Z0-9-]+)
+    |(?:[^:]*? |)??(?<$TYPE>[a-zA-Z0-9-]+)
     |(?<$SCOPE>(?:\([^()\r\n]*\)|\(.*(?=!)|\(.*(?=:))|\(.*(?=$))?
     |(?<$BRK_CHANGE>!)?
     |(?<$SEPARATOR>:)?
@@ -31,10 +31,11 @@ object CCParser {
     .trim()
     .toRegex()
 
+  // TODO: should not consider lines below if there is nothing after the separator
   private val footerRegExp = """
     |^(?<$FOOTER_TYPE>[ a-zA-Z0-9-]+)?
     |(?<$SEPARATOR>:)?
-    |(?<$FOOTER>(?<=:)(?:.|[\r\n](?![\r\n]|([a-zA-Z0-9-]+)?(:)?((?<=:))))*)?
+    |(?<$FOOTER>(?<=:)(?:.|[\r\n](?![\r\n]|([a-zA-Z0-9-]+)?(:)?((?<=:))))+)?
   """
     .trimMargin()
     .replace("\n", "")

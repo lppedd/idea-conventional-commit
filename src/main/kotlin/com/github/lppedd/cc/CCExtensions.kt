@@ -1,15 +1,16 @@
 package com.github.lppedd.cc
 
 import com.github.lppedd.cc.annotation.RequireEDT
-import com.github.lppedd.cc.api.CommitTokenElement.TokenContext
 import com.intellij.codeInsight.AutoPopupController
 import com.intellij.codeInsight.completion.CompletionParameters
-import com.intellij.codeInsight.completion.InsertionContext
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl
 import com.intellij.codeInsight.template.impl.TemplateState
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ex.ApplicationUtil
-import com.intellij.openapi.editor.*
+import com.intellij.openapi.editor.Document
+import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.editor.EditorModificationUtil
+import com.intellij.openapi.editor.LogicalPosition
 import com.intellij.openapi.editor.ex.util.EditorUtil
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.ui.DialogWrapper
@@ -89,6 +90,7 @@ internal inline fun Border.wrap(border: Border): Border =
 // region VirtualFile
 
 @InlineOnly
+@Suppress("unused")
 internal inline val VirtualFile.isHidden: Boolean
   get() = `is`(VFileProperty.HIDDEN)
 
@@ -102,13 +104,6 @@ internal inline val VirtualFile.isSymlink: Boolean
 internal inline val PsiFile.document: Document?
   @InlineOnly
   get() = PsiDocumentManager.getInstance(project).getDocument(this)
-
-// endregion
-// region InsertionContext
-
-@InlineOnly
-internal inline fun InsertionContext.toTokenContext(): TokenContext =
-  TokenContext(completionChar, editor)
 
 // endregion
 // region LogicalPosition
@@ -146,6 +141,10 @@ internal inline fun Editor.scheduleAutoPopup() {
 }
 
 @InlineOnly
+internal inline fun Editor.removeSelection(allCarets: Boolean = false) =
+  selectionModel.removeSelection(allCarets)
+
+@InlineOnly
 internal inline fun Editor.moveCaretToOffset(offset: Int, locateBeforeSoftWrap: Boolean = false) {
   caretModel.moveToOffset(offset, locateBeforeSoftWrap)
 }
@@ -157,9 +156,26 @@ internal inline fun Editor.moveCaretRelatively(caretShift: Int): Int {
 }
 
 @InlineOnly
-internal inline fun Editor.insertStringAtCaret(string: String) {
-  EditorModificationUtil.insertStringAtCaret(this, string)
+internal inline fun Editor.insertStringAtCaret(string: String, moveCaret: Boolean = true) {
+  EditorModificationUtil.insertStringAtCaret(this, string, false, moveCaret)
 }
+
+internal fun Editor.replaceString(
+    startOffset: Int,
+    endOffset: Int,
+    newString: CharSequence,
+    moveCaret: Boolean = true,
+) {
+  document.replaceString(startOffset, endOffset, newString)
+
+  if (moveCaret) {
+    caretModel.moveToOffset(startOffset + newString.length)
+  }
+}
+
+@InlineOnly
+internal inline fun Editor.getCharAfterCaret(): Char? =
+  document.immutableCharSequence.getOrNull(caretModel.offset)
 
 @InlineOnly
 internal inline fun Editor.getTemplateState(): TemplateState? =
@@ -207,17 +223,8 @@ internal inline fun CompletionParameters.getCompletionPrefix(): String =
 // region StringBuilder
 
 @InlineOnly
-internal inline operator fun StringBuilder.plus(char: Char): StringBuilder =
-  append(char)
-
-@InlineOnly
-internal inline operator fun StringBuilder.plus(string: String): StringBuilder =
-  append(string)
-
-@InlineOnly
-internal inline operator fun StringBuilder.plusAssign(string: String) {
-  append(string)
-}
+internal inline fun StringBuilder.deleteLast(): StringBuilder =
+  deleteCharAt(length - 1)
 
 // endregion
 // region CharSequence
@@ -227,9 +234,6 @@ internal val WHITESPACE_REGEX: Regex = "\\s+".toRegex()
 @InlineOnly
 internal inline fun CharSequence.flattenWhitespaces(): String =
   replace(WHITESPACE_REGEX, " ")
-
-internal fun CharSequence?.orWhitespace(): String =
-  if (this == null || isEmpty()) " " else this.toString()
 
 internal fun CharSequence.firstIsWhitespace(): Boolean =
   firstOrNull()?.isWhitespace() == true

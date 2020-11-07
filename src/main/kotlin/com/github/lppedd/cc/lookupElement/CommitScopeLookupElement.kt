@@ -9,6 +9,8 @@ import com.intellij.codeInsight.completion.InsertionContext
 import com.intellij.codeInsight.lookup.LookupElementPresentation
 
 /**
+ * Represents an item in the completion's popup inside the scope context.
+ *
  * @author Edoardo Luppi
  */
 internal class CommitScopeLookupElement(
@@ -22,12 +24,15 @@ internal class CommitScopeLookupElement(
     psiElement
 
   override fun getLookupString(): String =
+    commitScope.value
+
+  override fun getDisplayedText(): String =
     commitScope.text
 
-  override fun renderElement(presentation: LookupElementPresentation) =
-    presentation.let {
+  override fun renderElement(presentation: LookupElementPresentation) {
+    presentation.also {
       it.icon = CCIcons.Tokens.Scope
-      it.itemText = lookupString
+      it.itemText = getDisplayedText()
       it.isTypeIconRightAligned = true
 
       val rendering = commitScope.getRendering()
@@ -36,38 +41,53 @@ internal class CommitScopeLookupElement(
       it.isStrikeout = rendering.strikeout
       it.setTypeText(rendering.type, rendering.icon)
     }
+  }
 
+  @Suppress("DuplicatedCode")
   override fun handleInsert(context: InsertionContext) {
     val editor = context.editor
-    val document = context.document
+    val (lineStartOffset, lineEndOffset) = editor.getCurrentLineRange()
+    val lineText = context.document.getSegment(lineStartOffset, lineEndOffset)
+    val (_, scope, breakingChange, separator, subject) = CCParser.parseHeader(lineText)
 
-    val (lineStart, lineEnd) = editor.getCurrentLineRange()
-    val lineText = document.getSegment(lineStart, lineEnd)
-    val (type, _, breakingChange, _, subject) = CCParser.parseHeader(lineText)
-    val text = StringBuilder(150)
-
-    // If a type had been specified, we need to insert it again
-    // starting from the original position
-    val typeStartOffset = if (type is ValidToken) {
-      text += type.value
-      lineStart + type.range.startOffset
-    } else {
-      lineStart
+    if (scope !is ValidToken) {
+      throw InvalidTokenException("The scope token should be valid here. There might be a parser issue")
     }
 
-    // We insert the new scope
-    val elementValue = commitScope.getValue(context.toTokenContext())
-    text += "($elementValue)"
+    // Replace the old scope with the new one
+    editor.replaceString(
+      lineStartOffset + scope.range.startOffset,
+      lineStartOffset + scope.range.endOffset,
+      commitScope.value,
+    )
 
-    // If a breaking change indicator was present, we insert it back
-    text += if (breakingChange.isPresent) "!:" else ":"
+    // If a closing scope's paren isn't already present, add it
+    if (editor.getCharAfterCaret() != ')') {
+      editor.insertStringAtCaret(")", moveCaret = false)
+    }
 
-    // If a subject had been specified, we insert it back
-    val subjectValue = (subject as? ValidToken)?.value.orWhitespace()
-    val textLengthWithoutSubject = text.length + if (subjectValue.firstIsWhitespace()) 1 else 0
+    // Move the caret after the closing paren and breaking change symbol, if present.
+    // The condition is inside the parameter space to save a call to moveCaretRelatively
+    editor.moveCaretRelatively(if (breakingChange.isPresent) 2 else 1)
 
-    document.replaceString(typeStartOffset, lineEnd, text + subjectValue)
-    editor.moveCaretToOffset(typeStartOffset + textLengthWithoutSubject)
+    // If a separator isn't already present, add it
+    if (!separator.isPresent) {
+      editor.insertStringAtCaret(":", moveCaret = false)
+    }
+
+    // Move the caret after the separator
+    editor.moveCaretRelatively(1)
+
+    // If the subject is present and starts with a whitespace,
+    // shift the caret of one position, otherwise insert a whitespace
+    if (subject is ValidToken) {
+      if (subject.value.firstIsWhitespace()) {
+        editor.moveCaretRelatively(1)
+      }
+    } else {
+      editor.insertStringAtCaret(" ")
+    }
+
     editor.scheduleAutoPopup()
   }
 }

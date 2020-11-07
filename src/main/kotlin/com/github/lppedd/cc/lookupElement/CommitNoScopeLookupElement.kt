@@ -16,11 +16,7 @@ internal class CommitNoScopeLookupElement(project: Project) :
     CommitLookupElement(
       -1,
       CC.Tokens.PriorityScope,
-      object : ProviderWrapper {
-        override fun getPriority() = Priority(0)
-        override fun getId() = ""
-        override fun getPresentation() = ProviderPresentation("Default", CCIcons.Logo)
-      },
+      FakeProviderWrapper,
     ) {
   private val psiElement = object : CommitFakePsiElement(project) {}
 
@@ -30,9 +26,19 @@ internal class CommitNoScopeLookupElement(project: Project) :
   override fun getLookupString(): String =
     ""
 
-  override fun renderElement(presentation: LookupElementPresentation) =
-    presentation.let {
-      it.itemText = "No scope"
+  override fun getDisplayedText(): String =
+    "No scope"
+
+  override fun renderElement(presentation: LookupElementPresentation) {
+    presentation.also {
+      it.itemText = getDisplayedText()
       it.isItemTextItalic = true
     }
+  }
+
+  private object FakeProviderWrapper : ProviderWrapper {
+    override fun getPriority() = Priority(0)
+    override fun getId() = ""
+    override fun getPresentation() = ProviderPresentation("Default", CCIcons.Logo)
+  }
 }

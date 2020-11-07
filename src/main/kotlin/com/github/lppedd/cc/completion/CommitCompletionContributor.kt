@@ -1,4 +1,4 @@
-@file:Suppress("DEPRECATION", "UnstableApiUsage", "RedundantNotNullExtensionReceiverOfInline")
+@file:Suppress("UnstableApiUsage", "deprecation")
 
 package com.github.lppedd.cc.completion
 
@@ -7,13 +7,15 @@ import com.github.lppedd.cc.collection.NoopList
 import com.github.lppedd.cc.completion.menu.MenuEnhancerLookupListener
 import com.github.lppedd.cc.completion.providers.*
 import com.github.lppedd.cc.completion.providers.CompletionProvider
-import com.github.lppedd.cc.completion.resultset.DelegateResultSet
-import com.github.lppedd.cc.completion.resultset.TemplateDelegateResultSet
+import com.github.lppedd.cc.completion.resultset.ContextResultSet
+import com.github.lppedd.cc.completion.resultset.TemplateResultSet
 import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.configuration.CCConfigService.CompletionType.TEMPLATE
 import com.github.lppedd.cc.lookupElement.INDEX_TYPE
 import com.github.lppedd.cc.parser.CCParser
-import com.github.lppedd.cc.parser.CommitContext.*
+import com.github.lppedd.cc.parser.CommitContext.ScopeCommitContext
+import com.github.lppedd.cc.parser.CommitContext.SubjectCommitContext
+import com.github.lppedd.cc.parser.CommitContext.TypeCommitContext
 import com.github.lppedd.cc.parser.FooterContext.FooterTypeContext
 import com.github.lppedd.cc.parser.FooterContext.FooterValueContext
 import com.intellij.codeInsight.completion.*
@@ -34,7 +36,6 @@ import com.intellij.openapi.vcs.ui.CommitMessage
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.util.ReflectionUtil.findField
 import com.intellij.util.concurrency.Semaphore
-import org.jetbrains.annotations.ApiStatus
 import java.lang.reflect.Field
 import java.util.*
 import java.util.Collections.synchronizedMap
@@ -50,7 +51,6 @@ private val LOOKUP_DISPOSER_MAP = synchronizedMap(IdentityHashMap<Lookup, Dispos
  *
  * @author Edoardo Luppi
  */
-@ApiStatus.Internal
 private class CommitCompletionContributor : CompletionContributor() {
   private val myArrangerField: Field by lazy(PUBLICATION) {
     findField(CompletionProgressIndicator::class.java, null, "myArranger")
@@ -88,9 +88,9 @@ private class CommitCompletionContributor : CompletionContributor() {
     val isTemplateActive = templateState != null
 
     val myResultSet = if (isTemplateActive) {
-      TemplateDelegateResultSet(resultSet)
+      TemplateResultSet(resultSet)
     } else {
-      DelegateResultSet(resultSet)
+      ContextResultSet(resultSet)
     }
 
     val project = file.project
@@ -226,7 +226,7 @@ private class CommitCompletionContributor : CompletionContributor() {
    */
   private fun safelySetNoopListOnLookupArranger(process: CompletionProgressIndicator) {
     try {
-      @Suppress("UNCHECKED_CAST")
+      @Suppress("unchecked_cast")
       process.getArranger().setFrozenItemsList(NoopList as MutableList<LookupElement?>)
     } catch (ignored: Exception) {
       // Let's just continue.

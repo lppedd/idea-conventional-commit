@@ -22,12 +22,15 @@ internal class CommitSubjectLookupElement(
     psiElement
 
   override fun getLookupString(): String =
+    commitSubject.value
+
+  override fun getDisplayedText(): String =
     commitSubject.text
 
-  override fun renderElement(presentation: LookupElementPresentation) =
-    presentation.let {
+  override fun renderElement(presentation: LookupElementPresentation) {
+    presentation.also {
       it.icon = CCIcons.Tokens.Subject
-      it.itemText = lookupString
+      it.itemText = getDisplayedText()
       it.isTypeIconRightAligned = true
 
       val rendering = commitSubject.getRendering()
@@ -36,19 +39,25 @@ internal class CommitSubjectLookupElement(
       it.isStrikeout = rendering.strikeout
       it.setTypeText(rendering.type, rendering.icon)
     }
+  }
 
   override fun handleInsert(context: InsertionContext) {
     val editor = context.editor
-    val document = context.document
-
-    val (lineStart, lineEnd) = editor.getCurrentLineRange()
-    val line = document.getSegment(lineStart, lineEnd)
+    val (lineStartOffset, lineEndOffset) = editor.getCurrentLineRange()
+    val line = context.document.getSegment(lineStartOffset, lineEndOffset)
     val subject = CCParser.parseHeader(line).subject
-    val subjectStartOffset = lineStart + ((subject as? ValidToken)?.range?.startOffset ?: 0)
-    val elementValue = commitSubject.getValue(context.toTokenContext())
-    val subjectText = " $elementValue"
+    val newSubjectString = " ${commitSubject.value}"
 
-    document.replaceString(subjectStartOffset, lineEnd, subjectText)
-    editor.moveCaretToOffset(subjectStartOffset + subjectText.length)
+    if (subject is ValidToken) {
+      // Replace an existing subject
+      editor.replaceString(
+        lineStartOffset + subject.range.startOffset,
+        lineEndOffset,
+        newSubjectString,
+      )
+    } else {
+      // No subject was present before, just insert the string
+      editor.insertStringAtCaret(newSubjectString)
+    }
   }
 }

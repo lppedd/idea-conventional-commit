@@ -44,7 +44,6 @@ internal class BodyCompletionProvider(
           index,
           provider,
           CommitBodyPsiElement(project, commitBody),
-          context.type,
         )
       }
       .distinctBy(CommitBodyLookupElement::getLookupString)

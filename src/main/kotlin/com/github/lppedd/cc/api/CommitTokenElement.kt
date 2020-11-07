@@ -9,13 +9,10 @@ import javax.swing.Icon
  * @author Edoardo Luppi
  */
 abstract class CommitTokenElement @JvmOverloads constructor(
-    open val text: String,
-    open val description: String,
-    private val value: String = text,
+    val text: String,
+    val description: String,
+    val value: String = text,
 ) {
-  open fun getValue(tokenContext: TokenContext): String =
-    value
-
   open fun getRendering(): CommitTokenRendering =
     CommitTokenRendering()
 
