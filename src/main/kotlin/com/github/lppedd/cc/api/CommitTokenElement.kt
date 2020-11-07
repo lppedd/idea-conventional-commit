@@ -1,6 +1,5 @@
 package com.github.lppedd.cc.api
 
-import com.intellij.openapi.editor.Editor
 import com.intellij.ui.JBColor
 import java.awt.Color
 import javax.swing.Icon
@@ -28,10 +27,5 @@ abstract class CommitTokenElement @JvmOverloads constructor(
       val foreground: Color = FOREGROUND,
       val type: String? = null,
       val icon: Icon? = null,
-  )
-
-  data class TokenContext(
-      val completionChar: Char,
-      val editor: Editor,
   )
 }
