@@ -3,6 +3,7 @@ package com.github.lppedd.cc.api
 import com.intellij.openapi.extensions.ProjectExtensionPointName
 import org.jetbrains.annotations.ApiStatus.*
 
+@JvmSynthetic
 internal val FOOTER_VALUE_EP = ProjectExtensionPointName<CommitFooterValueProvider>(
   "com.github.lppedd.idea-conventional-commit.commitFooterValueProvider"
 )

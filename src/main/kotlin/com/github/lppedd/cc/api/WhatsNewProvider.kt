@@ -5,6 +5,7 @@ import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.util.xmlb.annotations.*
 import org.jetbrains.annotations.ApiStatus.*
 
+@JvmSynthetic
 internal val WHATS_NEW_EP = ExtensionPointName<WhatsNewProvider>(
   "com.github.lppedd.idea-conventional-commit.whatsNewProvider"
 )
