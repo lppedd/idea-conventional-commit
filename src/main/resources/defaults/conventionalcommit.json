@@ -18,7 +18,7 @@
       }
     },
     "chore": {
-      "description": "Changes which aren’t user-facing"
+      "description": "Changes which aren't user-facing"
     },
     "style": {
       "description": "Changes which don't affect code logic.\nWhite-spaces, formatting, missing semi-colons, etc"
