@@ -2,48 +2,46 @@ package com.github.lppedd.cc.configuration.component.providers
 
 import com.github.lppedd.cc.CCIcons
 import com.github.lppedd.cc.api.CommitTokenProvider
-import com.github.lppedd.cc.wrap
 import com.intellij.openapi.application.ApplicationInfo
+import com.intellij.ui.ColoredTableCellRenderer
 import com.intellij.ui.scale.JBUIScale
+import com.intellij.ui.speedSearch.SpeedSearchUtil
 import com.intellij.util.ui.JBUI
-import java.awt.Component
 import javax.swing.Icon
 import javax.swing.JTable
-import javax.swing.table.DefaultTableCellRenderer
 
 /**
  * @author Edoardo Luppi
  */
-internal class CommitProviderRenderer : DefaultTableCellRenderer() {
+internal class CommitProviderRenderer : ColoredTableCellRenderer() {
   companion object {
-    private val APP = ApplicationInfo.getInstance()
-    private val ICON_HW =
-      if ("${APP.majorVersion}.${APP.minorVersion}" == "2019.2") 16f
+    private val ICON_HW = ApplicationInfo.getInstance().let {
+      if ("${it.majorVersion}.${it.minorVersion}" == "2019.2") 16f
       else 32f
+    }
   }
 
-  override fun getTableCellRendererComponent(
+  override fun isTransparentIconBackground(): Boolean =
+    true
+
+  override fun customizeCellRenderer(
       table: JTable,
-      value: Any,
+      value: Any?,
       isSelected: Boolean,
       hasFocus: Boolean,
       row: Int,
       column: Int,
-  ): Component {
-    super.getTableCellRendererComponent(table, value, isSelected, false, row, column)
-    val paddingBorder = JBUI.Borders.empty(2, 2, 1, 2)
-    border = border.wrap(paddingBorder)
-    return this
+  ) {
+    ipad = JBUI.insets(1, 5, 2, 2)
+    setValue(value)
+    SpeedSearchUtil.applySpeedSearchHighlighting(table, this, true, isSelected)
   }
 
-  override fun setValue(value: Any) {
+  private fun setValue(value: Any?) {
     if (value is CommitTokenProvider) {
       val (name, icon) = value.getPresentation()
-      text = name
       setIcon(getIcon(icon))
-    } else {
-      text = null
-      icon = null
+      append(name)
     }
   }
 
