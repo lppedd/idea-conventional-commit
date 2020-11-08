@@ -83,7 +83,7 @@
     <projectService serviceImplementation="com.github.lppedd.cc.configuration.CCDefaultTokensService" />
 
     <postStartupActivity
-        id="PluginChangelogStartupActivity"
+        order="before TipOfTheDayActivity"
         implementation="com.github.lppedd.cc.whatsnew.WhatsNewStartupActivity"
     />
   </extensions>
