@@ -22,7 +22,7 @@ internal class DefaultWhatsNewProvider : WhatsNewProvider() {
   override fun shouldDisplay(): Boolean {
     val properties = PropertiesComponent.getInstance()
     val installedVersion = getPlugin()?.version ?: return false
-    val registeredVersion = properties.getValue(versionPropertyName) ?: return true
+    val registeredVersion = properties.getValue(versionPropertyName, "0.0.0")
 
     // We display the dialog only if the installed version
     // is greater than the last registered version
