@@ -2,6 +2,7 @@ package com.github.lppedd.cc.lookupElement
 
 import com.github.lppedd.cc.*
 import com.github.lppedd.cc.completion.providers.BodyProviderWrapper
+import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.psiElement.CommitBodyPsiElement
 import com.intellij.codeInsight.completion.InsertionContext
 import com.intellij.codeInsight.lookup.LookupElementPresentation
@@ -45,17 +46,52 @@ internal class CommitBodyLookupElement(
     val document = editor.document
     val caretOffset = editor.caretModel.offset
     val lineStartOffset = document.getLineRangeByOffset(caretOffset).startOffset
+    val lineCount = document.lineCount
+    val currentLineNumber = document.getLineNumber(caretOffset)
 
-    for (i in document.getLineNumber(caretOffset) until document.lineCount) {
-      val (_, lineEndOffset, lineIsEmpty) = document.getLineRange(i)
+    var replaceUntilOffset = -1
+    var addNewLine = false
 
-      if (lineIsEmpty) {
-        editor.replaceString(lineStartOffset, max(lineStartOffset, lineEndOffset), commitBody.value)
-        //editor.insertStringAtCaret(commitBody.value)
-        return
-      } else {
+    // TODO: simplify. This is like a drug trip currently
+    // We scan the document line by line until we find a footer (this means there were
+    // no bodies and we are going to overwrite that footer),
+    // or a blank line (that means we simply overwrite everything up to that point)
+    for (i in currentLineNumber until lineCount) {
+      val (currLineStartOffset, currLineEndOffset, currLineIsEmpty) = document.getLineRange(i)
+
+      if (currLineIsEmpty) {
+        // -1 to return to the previous line end
+        replaceUntilOffset = max(currLineStartOffset - 1, lineStartOffset)
+        addNewLine = i == currentLineNumber && i + 1 < lineCount && !document.isLineEmpty(i + 1)
+        break
       }
 
+      // Check if this line represents a footer
+      val (_, separator) = CCParser.parseFooter(document.getSegment(currLineStartOffset, currLineEndOffset))
+
+      if (separator.isPresent) {
+        if (replaceUntilOffset != -1) {
+          replaceUntilOffset = currLineStartOffset - 1
+          break
+        }
+
+        replaceUntilOffset = currLineEndOffset
+        addNewLine = true
+      }
+
+      // If we are at the last line, just overwrite until its end offset
+      if (i == lineCount - 1) {
+        replaceUntilOffset = currLineEndOffset
+        addNewLine = false
+      }
+    }
+
+    if (replaceUntilOffset >= lineStartOffset) {
+      editor.replaceString(lineStartOffset, replaceUntilOffset, commitBody.value)
+
+      if (addNewLine) {
+        editor.insertStringAtCaret("\n", moveCaret = false)
+      }
     }
   }
 }

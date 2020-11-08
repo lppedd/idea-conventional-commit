@@ -121,6 +121,9 @@ internal inline operator fun LogicalPosition.component2() = column
 internal inline fun Document.getSegment(start: Int, end: Int): CharSequence =
   immutableCharSequence.subSequence(start, end)
 
+internal fun Document.isLineEmpty(line: Int): Boolean =
+  getLineStartOffset(line) == getLineEndOffset(line)
+
 internal fun Document.getLineRange(line: Int): TextRange =
   TextRange(getLineStartOffset(line), getLineEndOffset(line))
 
