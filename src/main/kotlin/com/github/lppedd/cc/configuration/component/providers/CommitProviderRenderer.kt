@@ -32,7 +32,8 @@ internal class CommitProviderRenderer : ColoredTableCellRenderer() {
       row: Int,
       column: Int,
   ) {
-    ipad = JBUI.insets(1, 5, 2, 2)
+    border = JBUI.Borders.empty()
+    ipad = JBUI.insets(4, 6)
     setValue(value)
     SpeedSearchUtil.applySpeedSearchHighlighting(table, this, true, isSelected)
   }

@@ -4,6 +4,8 @@ import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.CCUI
 import com.github.lppedd.cc.api.CommitTokenProvider
 import com.intellij.ui.table.JBTable
+import java.awt.event.FocusAdapter
+import java.awt.event.FocusEvent
 
 /**
  * @author Edoardo Luppi
@@ -27,6 +29,12 @@ internal class CommitProviderTable<T : CommitTokenProvider> : JBTable() {
       it.minWidth = 100
       it.cellRenderer = CommitProviderRenderer()
     }
+
+    addFocusListener(object : FocusAdapter() {
+      override fun focusLost(event: FocusEvent?) {
+        clearSelection()
+      }
+    })
   }
 
   var providers: List<T>
