@@ -15,6 +15,10 @@ import com.intellij.util.concurrency.EdtScheduledExecutorService
  */
 private class WhatsNewStartupActivity : StartupActivity, DumbAware {
   override fun runActivity(project: Project) {
+    if (System.getProperty("com.github.lppedd.cc.whatsnew.disable") != null) {
+      return
+    }
+
     val shouldDisplay = WHATS_NEW_EP.extensions
       .asSequence()
       .filter(WhatsNewProvider::shouldDisplay)
