@@ -22,6 +22,7 @@ import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UI
 import org.everit.json.schema.ValidationException
 import java.awt.event.ItemEvent
+import java.nio.file.NoSuchFileException
 import javax.swing.JComponent
 import javax.swing.JPanel
 import javax.swing.event.DocumentEvent
@@ -146,18 +147,20 @@ internal class DefaultTokensFilePickerPanel(
       null
     } catch (e: Exception) {
       isComponentValid = false
+      customFile.requestFocus()
 
-      val error = if (e is ValidationException) {
-        val messages = e.allMessages.joinToString("<br />", ":<br />")
-        CCBundle["cc.config.filePicker.error.schema"] + messages
-      } else {
-        CCBundle["cc.config.filePicker.error.schema"]
+      val errorMessage = when (e) {
+        is ValidationException -> buildReadableValidationMessage(e)
+        is NoSuchFileException -> CCBundle["cc.config.filePicker.error.existence"]
+        else -> CCBundle["cc.config.filePicker.error.schema"]
       }
 
-      customFile.requestFocus()
-      ValidationInfo(error, customFile)
+      ValidationInfo(errorMessage, customFile)
     }
   }
+
+  private fun buildReadableValidationMessage(e: ValidationException) =
+    CCBundle["cc.config.filePicker.error.schema"] + e.allMessages.joinToString("<br />", ":<br />")
 
   private fun setEmptyText(component: JComponent, text: String?) {
     if (component !is ComponentWithEmptyText) {

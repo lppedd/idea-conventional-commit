@@ -22,6 +22,7 @@ import java.io.Reader
 import java.nio.charset.StandardCharsets.UTF_8
 import java.nio.file.FileSystems
 import java.nio.file.Files
+import java.nio.file.NoSuchFileException
 
 internal typealias CommitTypeMap = Map<String, JsonCommitType>
 internal typealias CommitScopeList = Collection<JsonCommitScope>
@@ -62,7 +63,13 @@ internal class CCDefaultTokensService(private val project: Project) {
 
   /** Validates a file via the inputted absolute path. */
   fun validateDefaultsFile(filePath: String) {
-    Files.newBufferedReader(FileSystems.getDefault().getPath(filePath), UTF_8).use {
+    val path = FileSystems.getDefault().getPath(filePath)
+
+    if (Files.notExists(path)) {
+      throw NoSuchFileException(filePath)
+    }
+
+    Files.newBufferedReader(path, UTF_8).use {
       defaultsSchema.validateJson(JSONObject(JSONTokener(it)))
     }
   }
