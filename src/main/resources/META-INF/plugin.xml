@@ -29,6 +29,8 @@
   </actions>
 
   <extensions defaultExtensionNs="com.intellij">
+    <actionPromoter implementation="com.github.lppedd.cc.inspection.ReformatActionPromoter" order="last" />
+
     <projectService
         overrides="true"
         serviceInterface="com.intellij.vcs.commit.message.CommitMessageInspectionProfile"
