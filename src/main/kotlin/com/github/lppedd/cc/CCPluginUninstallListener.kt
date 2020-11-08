@@ -17,13 +17,19 @@ internal class CCPluginUninstallListener : PluginStateListener {
       return
     }
 
-    PropertiesComponent.getInstance().let {
-      it.unsetValue(DefaultWhatsNewProvider.PROPERTY_VERSION)
-      it.unsetValue(WhatsNewPanel.PROPERTY_SHOW)
-    }
+    cleanupOptions()
   }
 
   override fun install(descriptor: IdeaPluginDescriptor) {
     // Can't do anything here
+  }
+
+  private fun cleanupOptions() = try {
+    PropertiesComponent.getInstance().let {
+      it.unsetValue(DefaultWhatsNewProvider.PROPERTY_VERSION)
+      it.unsetValue(WhatsNewPanel.PROPERTY_SHOW)
+    }
+  } catch (ignored: Exception) {
+    //
   }
 }
