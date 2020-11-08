@@ -1,5 +1,6 @@
 package com.github.lppedd.cc.whatsnew
 
+import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.api.WhatsNewProvider
 import com.intellij.ide.plugins.IdeaPluginDescriptor
 import com.intellij.ide.plugins.PluginManager
@@ -14,7 +15,9 @@ import kotlin.math.max
  * @author Edoardo Luppi
  */
 internal class DefaultWhatsNewProvider : WhatsNewProvider() {
-  private val versionPropertyName = "com.github.lppedd.cc.version"
+  companion object {
+    const val PROPERTY_VERSION = "com.github.lppedd.cc.version"
+  }
 
   override fun displayName(): String =
     "Core"
@@ -22,12 +25,12 @@ internal class DefaultWhatsNewProvider : WhatsNewProvider() {
   override fun shouldDisplay(): Boolean {
     val properties = PropertiesComponent.getInstance()
     val installedVersion = getPlugin()?.version ?: return false
-    val registeredVersion = properties.getValue(versionPropertyName, "0.0.0")
+    val registeredVersion = properties.getValue(PROPERTY_VERSION, "0.0.0")
 
     // We display the dialog only if the installed version
     // is greater than the last registered version
     if (PluginVersion(installedVersion) > PluginVersion(registeredVersion)) {
-      properties.setValue(versionPropertyName, installedVersion)
+      properties.setValue(PROPERTY_VERSION, installedVersion)
       return true
     }
 
@@ -35,7 +38,7 @@ internal class DefaultWhatsNewProvider : WhatsNewProvider() {
   }
 
   private fun getPlugin(): IdeaPluginDescriptor? =
-    PluginManager.getPlugin(PluginId.findId("com.github.lppedd.idea-conventional-commit"))
+    PluginManager.getPlugin(PluginId.findId(CC.PluginId))
 
   private class PluginVersion(version: String) : Comparable<PluginVersion> {
     private val parts = version.split(".").map(String::toInt)

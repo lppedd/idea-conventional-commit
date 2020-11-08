@@ -6,6 +6,7 @@ import com.github.lppedd.cc.completion.Priority
  * @author Edoardo Luppi
  */
 object CC {
+  const val PluginId: String = "com.github.lppedd.idea-conventional-commit"
   const val AppName: String = "ConventionalCommit"
 
   object Settings {
