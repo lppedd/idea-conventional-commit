@@ -3,6 +3,7 @@
     <words>
       <w>autopopup</w>
       <w>bytecode</w>
+      <w>ccui</w>
       <w>choosed</w>
       <w>commitlint</w>
       <w>conventionalcommit</w>
@@ -15,6 +16,8 @@
       <w>luppi</w>
       <w>nodep</w>
       <w>revalidate</w>
+      <w>roamable</w>
+      <w>suppressions</w>
       <w>tokener</w>
       <w>typealias</w>
       <w>vgap</w>
