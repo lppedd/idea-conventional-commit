@@ -43,9 +43,7 @@ internal class DefaultCommitTokenProvider(private val project: Project) :
     ProviderPresentation("Default", CCIcons.Logo)
 
   override fun getCommitTypes(prefix: String?): Collection<CommitType> =
-    defaults.types.asSequence()
-      .mapIndexed { i, it -> CommitType(it.key + "$i".repeat(5), it.value.description, it.key) }
-      .toList()
+    defaults.types.map { CommitType(it.key, it.value.description) }
 
   override fun getCommitScopes(commitType: String?): Collection<CommitScope> =
     when (commitType) {
@@ -53,7 +51,7 @@ internal class DefaultCommitTokenProvider(private val project: Project) :
       else ->
         defaults.types[commitType]
           ?.scopes
-          ?.map { CommitScope(it.name, it.description, it.name) }
+          ?.map { CommitScope(it.name, it.description) }
         ?: emptyList()
     }
 
