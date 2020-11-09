@@ -6,7 +6,6 @@ import com.github.lppedd.cc.api.WhatsNewProvider
 import com.github.lppedd.cc.setFocused
 import com.github.lppedd.cc.setName
 import com.github.lppedd.cc.ui.NoContentTabbedPaneWrapper
-import com.intellij.CommonBundle
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper.DialogStyle.COMPACT
 import com.intellij.util.ui.JBUI
@@ -35,7 +34,7 @@ internal class WhatsNewDialog(project: Project) : CCDialogWrapper(project) {
   init {
     isModal = false
     title = CCBundle["cc.whatsnew.title"]
-    setCancelButtonText(CommonBundle.getCloseButtonText())
+    setCancelButtonText(CCBundle["cc.whatsnew.dialog.close"])
     setDoNotAskOption(whatsNewPanel)
     init()
   }
