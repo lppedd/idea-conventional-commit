@@ -175,6 +175,8 @@ internal class MenuEnhancerLookupListener(
 
   @Suppress("unchecked_cast", "SameParameterValue")
   private fun overrideLookupFocusDegree(focusDegree: String) {
+    // Unfortunately this is required to maintain compatibility with versions prior to 193.5096.
+    // setLookupFocusDegree and LookupFocusDegree don't exist in those versions.
     val (className, methodName) = if (ApplicationInfo.getInstance().majorVersion.toInt() < 2020) {
       "com.intellij.codeInsight.lookup.impl.LookupImpl\$FocusDegree" to "setFocusDegree"
     } else {
