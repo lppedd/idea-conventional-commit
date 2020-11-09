@@ -10,7 +10,7 @@
       "description": "Changes which introduce a new feature"
     },
     "build": {
-      "description": "Changes which affect the build system or external dependencies (example scopes: gulp, broccoli, npm)",
+      "description": "Changes which affect the build system or external dependencies.<br/>Example scopes: gulp, broccoli, npm",
       "scopes": {
         "npm": {},
         "gulp": {},
@@ -21,7 +21,7 @@
       "description": "Changes which aren't user-facing"
     },
     "style": {
-      "description": "Changes which don't affect code logic.\nWhite-spaces, formatting, missing semi-colons, etc"
+      "description": "Changes which don't affect code logic, such as white-spaces, formatting, missing semi-colons"
     },
     "test": {
       "description": "Changes which add missing tests or correct existing tests"
@@ -33,7 +33,7 @@
       "description": "Changes which improve performance"
     },
     "ci": {
-      "description": "Changes which affect CI configuration files and scripts (example scopes: travis, circle, browser-stack, sauce-labs)"
+      "description": "Changes which affect CI configuration files and scripts.<br/>Example scopes: travis, circle, browser-stack, sauce-labs"
     },
     "revert": {
       "description": "Changes which revert a previous commit"
@@ -54,7 +54,7 @@
     },
     {
       "name": "Co-authored-by",
-      "description": "The commit is co-authored by another person (for multiple people use one line each)"
+      "description": "The commit is co-authored by another person.<br/>For multiple people use one line each"
     }
   ]
 }
