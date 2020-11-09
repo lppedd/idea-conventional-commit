@@ -107,8 +107,11 @@ internal class WhatsNewDialog(project: Project) : CCDialogWrapper(project) {
   }
 
   companion object {
+    const val PROPERTY_SHOW = "com.github.lppedd.cc.whatsnew.show"
+
     private var sharedDialog: WhatsNewDialog? = null
 
+    @Synchronized
     fun showForProject(project: Project) {
       var dialog = sharedDialog
 

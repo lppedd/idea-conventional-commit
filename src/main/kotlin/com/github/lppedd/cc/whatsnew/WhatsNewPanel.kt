@@ -21,10 +21,6 @@ import javax.swing.JPanel
  * @author Edoardo Luppi
  */
 internal class WhatsNewPanel : JPanel(BorderLayout()), DoNotAskOption {
-  companion object {
-    const val PROPERTY_SHOW = "com.github.lppedd.cc.whatsnew.show"
-  }
-
   private val browser: Browser = TipUIUtil.createBrowser()
   private lateinit var provider: WhatsNewProvider
   private var fileDescriptions: List<FileDescription> = emptyList()
@@ -41,10 +37,10 @@ internal class WhatsNewPanel : JPanel(BorderLayout()), DoNotAskOption {
     JBDimension(550, 270)
 
   override fun isToBeShown(): Boolean =
-    service<PropertiesComponent>().getValue(PROPERTY_SHOW, "true").toBoolean().not()
+    service<PropertiesComponent>().getValue(WhatsNewDialog.PROPERTY_SHOW, "true").toBoolean().not()
 
   override fun setToBeShown(toBeShown: Boolean, exitCode: Int) {
-    service<PropertiesComponent>().setValue(PROPERTY_SHOW, toBeShown.not().toString())
+    service<PropertiesComponent>().setValue(WhatsNewDialog.PROPERTY_SHOW, toBeShown.not().toString())
   }
 
   override fun canBeHidden(): Boolean =

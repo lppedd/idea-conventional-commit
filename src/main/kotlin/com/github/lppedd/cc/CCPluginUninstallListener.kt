@@ -1,7 +1,7 @@
 package com.github.lppedd.cc
 
 import com.github.lppedd.cc.whatsnew.DefaultWhatsNewProvider
-import com.github.lppedd.cc.whatsnew.WhatsNewPanel
+import com.github.lppedd.cc.whatsnew.WhatsNewDialog
 import com.intellij.ide.plugins.IdeaPluginDescriptor
 import com.intellij.ide.plugins.PluginStateListener
 import com.intellij.ide.util.PropertiesComponent
@@ -27,7 +27,7 @@ internal class CCPluginUninstallListener : PluginStateListener {
   private fun cleanupOptions() = try {
     PropertiesComponent.getInstance().let {
       it.unsetValue(DefaultWhatsNewProvider.PROPERTY_VERSION)
-      it.unsetValue(WhatsNewPanel.PROPERTY_SHOW)
+      it.unsetValue(WhatsNewDialog.PROPERTY_SHOW)
     }
   } catch (ignored: Exception) {
     //
