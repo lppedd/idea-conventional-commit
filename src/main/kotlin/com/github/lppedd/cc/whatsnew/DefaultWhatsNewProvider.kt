@@ -27,11 +27,11 @@ internal class DefaultWhatsNewProvider : WhatsNewProvider() {
     val installedVersion = getPlugin()?.version ?: return false
     val registeredVersion = properties.getValue(PROPERTY_VERSION, "0.0.0")
 
-    // We display the dialog only if the installed version
-    // is greater than the last registered version
     if (PluginVersion(installedVersion) > PluginVersion(registeredVersion)) {
       properties.setValue(PROPERTY_VERSION, installedVersion)
-      return true
+      val showOnEveryUpdate = properties.getValue(WhatsNewPanel.PROPERTY_SHOW, "true").toBoolean()
+      val hasAttachedFile = files.fileDescriptions.any { it.version == installedVersion }
+      return showOnEveryUpdate && hasAttachedFile
     }
 
     return false
