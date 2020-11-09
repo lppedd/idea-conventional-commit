@@ -13,10 +13,11 @@
     <option name="FORMATTER_TAGS_ENABLED" value="true" />
     <DB2CodeStyleSettings version="1">
       <option name="myVersion" value="1" />
-      <option name="ALIAS_CASE" value="1" />
       <option name="KEYWORD_CASE" value="1" />
-      <option name="TYPE_CASE" value="1" />
       <option name="IDENTIFIER_CASE" value="1" />
+      <option name="TYPE_CASE" value="1" />
+      <option name="CUSTOM_TYPE_CASE" value="1" />
+      <option name="ALIAS_CASE" value="1" />
       <option name="QUOTED_IDENTIFIER_CASE" value="1" />
       <option name="QUOTE_IDENTIFIER" value="1" />
       <option name="INSERT_INTO_NL" value="2" />
@@ -41,10 +42,11 @@
     </DB2CodeStyleSettings>
     <DerbyCodeStyleSettings version="1">
       <option name="myVersion" value="1" />
-      <option name="ALIAS_CASE" value="1" />
       <option name="KEYWORD_CASE" value="1" />
-      <option name="TYPE_CASE" value="1" />
       <option name="IDENTIFIER_CASE" value="1" />
+      <option name="TYPE_CASE" value="1" />
+      <option name="CUSTOM_TYPE_CASE" value="1" />
+      <option name="ALIAS_CASE" value="1" />
       <option name="QUOTED_IDENTIFIER_CASE" value="1" />
       <option name="QUOTE_IDENTIFIER" value="1" />
       <option name="INSERT_INTO_NL" value="2" />
@@ -69,10 +71,11 @@
     </DerbyCodeStyleSettings>
     <H2CodeStyleSettings version="1">
       <option name="myVersion" value="1" />
-      <option name="ALIAS_CASE" value="1" />
       <option name="KEYWORD_CASE" value="1" />
-      <option name="TYPE_CASE" value="1" />
       <option name="IDENTIFIER_CASE" value="1" />
+      <option name="TYPE_CASE" value="1" />
+      <option name="CUSTOM_TYPE_CASE" value="1" />
+      <option name="ALIAS_CASE" value="1" />
       <option name="QUOTED_IDENTIFIER_CASE" value="1" />
       <option name="QUOTE_IDENTIFIER" value="1" />
       <option name="INSERT_INTO_NL" value="2" />
@@ -97,10 +100,11 @@
     </H2CodeStyleSettings>
     <HSQLCodeStyleSettings version="1">
       <option name="myVersion" value="1" />
-      <option name="ALIAS_CASE" value="1" />
       <option name="KEYWORD_CASE" value="1" />
-      <option name="TYPE_CASE" value="1" />
       <option name="IDENTIFIER_CASE" value="1" />
+      <option name="TYPE_CASE" value="1" />
+      <option name="CUSTOM_TYPE_CASE" value="1" />
+      <option name="ALIAS_CASE" value="1" />
       <option name="QUOTED_IDENTIFIER_CASE" value="1" />
       <option name="QUOTE_IDENTIFIER" value="1" />
       <option name="INSERT_INTO_NL" value="2" />
@@ -176,15 +180,6 @@
           <package name="io.ktor" alias="false" withSubpackages="true" />
         </value>
       </option>
-      <option name="PACKAGES_IMPORT_LAYOUT">
-        <value>
-          <package name="" alias="false" withSubpackages="true" />
-          <package name="java" alias="false" withSubpackages="true" />
-          <package name="javax" alias="false" withSubpackages="true" />
-          <package name="kotlin" alias="false" withSubpackages="true" />
-          <package name="" alias="true" withSubpackages="true" />
-        </value>
-      </option>
       <option name="NAME_COUNT_TO_USE_STAR_IMPORT_FOR_MEMBERS" value="5" />
       <option name="IMPORT_NESTED_CLASSES" value="true" />
       <option name="CONTINUATION_INDENT_IN_PARAMETER_LISTS" value="true" />
@@ -196,10 +191,11 @@
     </JetCodeStyleSettings>
     <MSSQLCodeStyleSettings version="1">
       <option name="myVersion" value="1" />
-      <option name="ALIAS_CASE" value="1" />
       <option name="KEYWORD_CASE" value="1" />
-      <option name="TYPE_CASE" value="1" />
       <option name="IDENTIFIER_CASE" value="1" />
+      <option name="TYPE_CASE" value="1" />
+      <option name="CUSTOM_TYPE_CASE" value="1" />
+      <option name="ALIAS_CASE" value="1" />
       <option name="QUOTED_IDENTIFIER_CASE" value="1" />
       <option name="QUOTE_IDENTIFIER" value="1" />
       <option name="INSERT_INTO_NL" value="2" />
@@ -224,10 +220,11 @@
     </MSSQLCodeStyleSettings>
     <MySQLCodeStyleSettings version="1">
       <option name="myVersion" value="1" />
-      <option name="ALIAS_CASE" value="1" />
       <option name="KEYWORD_CASE" value="1" />
-      <option name="TYPE_CASE" value="1" />
       <option name="IDENTIFIER_CASE" value="1" />
+      <option name="TYPE_CASE" value="1" />
+      <option name="CUSTOM_TYPE_CASE" value="1" />
+      <option name="ALIAS_CASE" value="1" />
       <option name="QUOTED_IDENTIFIER_CASE" value="1" />
       <option name="QUOTE_IDENTIFIER" value="1" />
       <option name="INSERT_INTO_NL" value="2" />
@@ -252,10 +249,11 @@
     </MySQLCodeStyleSettings>
     <OracleCodeStyleSettings version="1">
       <option name="myVersion" value="1" />
-      <option name="ALIAS_CASE" value="1" />
       <option name="KEYWORD_CASE" value="1" />
-      <option name="TYPE_CASE" value="1" />
       <option name="IDENTIFIER_CASE" value="1" />
+      <option name="TYPE_CASE" value="1" />
+      <option name="CUSTOM_TYPE_CASE" value="1" />
+      <option name="ALIAS_CASE" value="1" />
       <option name="QUOTED_IDENTIFIER_CASE" value="1" />
       <option name="QUOTE_IDENTIFIER" value="1" />
       <option name="INSERT_INTO_NL" value="2" />
@@ -280,10 +278,11 @@
     </OracleCodeStyleSettings>
     <PostgresCodeStyleSettings version="1">
       <option name="myVersion" value="1" />
-      <option name="ALIAS_CASE" value="1" />
       <option name="KEYWORD_CASE" value="1" />
-      <option name="TYPE_CASE" value="1" />
       <option name="IDENTIFIER_CASE" value="1" />
+      <option name="TYPE_CASE" value="1" />
+      <option name="CUSTOM_TYPE_CASE" value="1" />
+      <option name="ALIAS_CASE" value="1" />
       <option name="QUOTED_IDENTIFIER_CASE" value="1" />
       <option name="QUOTE_IDENTIFIER" value="1" />
       <option name="INSERT_INTO_NL" value="2" />
@@ -311,10 +310,11 @@
     </Properties>
     <SQLiteCodeStyleSettings version="1">
       <option name="myVersion" value="1" />
-      <option name="ALIAS_CASE" value="1" />
       <option name="KEYWORD_CASE" value="1" />
-      <option name="TYPE_CASE" value="1" />
       <option name="IDENTIFIER_CASE" value="1" />
+      <option name="TYPE_CASE" value="1" />
+      <option name="CUSTOM_TYPE_CASE" value="1" />
+      <option name="ALIAS_CASE" value="1" />
       <option name="QUOTED_IDENTIFIER_CASE" value="1" />
       <option name="QUOTE_IDENTIFIER" value="1" />
       <option name="INSERT_INTO_NL" value="2" />
@@ -339,10 +339,11 @@
     </SQLiteCodeStyleSettings>
     <SqlCodeStyleSettings version="1">
       <option name="myVersion" value="1" />
-      <option name="ALIAS_CASE" value="1" />
       <option name="KEYWORD_CASE" value="1" />
-      <option name="TYPE_CASE" value="1" />
       <option name="IDENTIFIER_CASE" value="1" />
+      <option name="TYPE_CASE" value="1" />
+      <option name="CUSTOM_TYPE_CASE" value="1" />
+      <option name="ALIAS_CASE" value="1" />
       <option name="QUOTED_IDENTIFIER_CASE" value="1" />
       <option name="QUOTE_IDENTIFIER" value="1" />
       <option name="INSERT_INTO_NL" value="2" />
@@ -368,10 +369,11 @@
     </SqlCodeStyleSettings>
     <SybaseCodeStyleSettings version="1">
       <option name="myVersion" value="1" />
-      <option name="ALIAS_CASE" value="1" />
       <option name="KEYWORD_CASE" value="1" />
-      <option name="TYPE_CASE" value="1" />
       <option name="IDENTIFIER_CASE" value="1" />
+      <option name="TYPE_CASE" value="1" />
+      <option name="CUSTOM_TYPE_CASE" value="1" />
+      <option name="ALIAS_CASE" value="1" />
       <option name="QUOTED_IDENTIFIER_CASE" value="1" />
       <option name="QUOTE_IDENTIFIER" value="1" />
       <option name="INSERT_INTO_NL" value="2" />
@@ -427,6 +429,7 @@
       </indentOptions>
     </codeStyleSettings>
     <codeStyleSettings language="HTML">
+      <option name="RIGHT_MARGIN" value="130" />
       <indentOptions>
         <option name="INDENT_SIZE" value="2" />
         <option name="CONTINUATION_INDENT_SIZE" value="4" />
