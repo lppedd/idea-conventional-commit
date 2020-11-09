@@ -96,6 +96,19 @@
     &#8226; cleaned-up whatever the plugin created if it is uninstalled.<br/>
     Currently only some non-roamable properties are removed, but this will be expanded in the future if necessary.
   </p>
+  <!-- FIXES -->
+  <p><strong>Fixes:</strong></p>
+  <p class="indented">
+    &#8226; used the correct project's base path.<br/>
+    Probably from 2020.3, the platform API started returning the <code>.idea</code> folder as the project's base path.
+    This is obviously wrong and hinders the auto-discovery of the default tokens file (<code>conventionalcommit.json</code>)
+    and of the Co-authors file (<code>conventionalcommit.coauthors</code>).
+  </p>
+  <p class="indented">
+    &#8226; allowed commit message reformatting using keys shortcut in 2020.2+<br/>
+    This is a platform problem (<a href="https://youtrack.jetbrains.com/issue/IDEA-254830">IDEA-254830</a>) but I managed
+    to workaround it.
+  </p>
   <!-- REFACTORINGS -->
   <p><strong>Refactorings:</strong></p>
   <p class="indented">
@@ -110,19 +123,6 @@
     Scaling of panels and controls is taken into account everywhere to ease working with big monitors
     and higher resolutions.
   </p>
-  <!-- FIXES -->
-  <p><strong>Fixes:</strong></p>
-  <p class="indented">
-    &#8226; used the correct project's base path.<br/>
-    Probably from 2020.3, the platform API started returning the <code>.idea</code> folder as the project's base path.
-    This is obviously wrong and hinders the auto-discovery of the default tokens file (<code>conventionalcommit.json</code>)
-    and of the Co-authors file (<code>conventionalcommit.coauthors</code>).
-  </p>
-  <p class="indented">
-    &#8226; allowed commit message reformatting using keys shortcut in 2020.2+<br/>
-    This is a platform problem (<a href="https://youtrack.jetbrains.com/issue/IDEA-254830">IDEA-254830</a>) but I managed
-    to workaround it.
-  </p>
   <h1>Future plans</h1>
   <p>
     Until the end of the year I would like to focus on the features we already have, and on bug fixes if required.
@@ -133,6 +133,7 @@
   <p class="indented">
     <strong>&#8226; work on new extensions! I've already written a POC for GitHub issues integration.</strong>
   </p>
+  <p class="indented">&#8226; handle more edge cases in completion.</p>
   <p class="indented">
     &#8226; stabilize and document the exposed API.<br/>
     This will allow more third-party extensions to become available.
