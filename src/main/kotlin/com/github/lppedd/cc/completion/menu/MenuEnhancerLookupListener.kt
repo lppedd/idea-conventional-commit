@@ -19,9 +19,11 @@ import com.intellij.openapi.actionSystem.ex.ActionManagerEx
 import com.intellij.openapi.actionSystem.ex.ActionPopupMenuListener
 import com.intellij.openapi.actionSystem.ex.AnActionListener
 import com.intellij.openapi.actionSystem.impl.ActionButton
+import com.intellij.openapi.application.ApplicationInfo
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.command.CommandProcessor
 import com.intellij.openapi.components.service
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.util.Disposer
 import com.intellij.util.ReflectionUtil.getField
 import java.awt.Robot
@@ -39,6 +41,7 @@ private const val MENU_ACTION_FQN = "com.intellij.codeInsight.lookup.impl.Lookup
 internal class MenuEnhancerLookupListener(
     private val lookup: LookupImpl,
 ) : LookupListener, PrefixChangeListener, AnActionListener {
+  private val logger = logger<MenuEnhancerLookupListener>()
   private val commandProcessor = CommandProcessor.getInstance()
   private val actionManager = ActionManagerEx.getInstanceEx()
   private val config = lookup.project.service<CCConfigService>()
@@ -77,6 +80,16 @@ internal class MenuEnhancerLookupListener(
       reopenMenu = true
       true
     }
+
+  override fun lookupShown(event: LookupEvent) {
+    try {
+      // Setting the lookup focus degree to "focused" means the top lookup item
+      // matching the prefix is preselected and ready to be completed
+      overrideLookupFocusDegree("FOCUSED")
+    } catch (e: Exception) {
+      logger.error("Couldn't override the lookup focus degree", e)
+    }
+  }
 
   override fun uiRefreshed() {
     try {
@@ -158,6 +171,22 @@ internal class MenuEnhancerLookupListener(
     }
 
     commandProcessor.executeCommand(project, command, "Invoke completion", CC.AppName)
+  }
+
+  @Suppress("unchecked_cast", "SameParameterValue")
+  private fun overrideLookupFocusDegree(focusDegree: String) {
+    val (className, methodName) = if (ApplicationInfo.getInstance().majorVersion.toInt() < 2020) {
+      "com.intellij.codeInsight.lookup.impl.LookupImpl\$FocusDegree" to "setFocusDegree"
+    } else {
+      "com.intellij.codeInsight.lookup.LookupFocusDegree" to "setLookupFocusDegree"
+    }
+
+    val `class` = Class.forName(className) as Class<out Enum<*>?>
+    val focused = java.lang.Enum.valueOf(`class`, focusDegree)
+    LookupImpl::class.java.getDeclaredMethod(methodName, `class`).also {
+      it.isAccessible = true
+      it.invoke(lookup, focused)
+    }
   }
 
   private inner class LookupPopupMenuListener(private val disposable: Disposable) : ActionPopupMenuListener {
