@@ -203,6 +203,12 @@ internal fun Editor.getCurrentLineUntilCaret(): CharSequence {
   return document.getSegment(lineStartOffset, lineStartOffset + logicalPosition.column)
 }
 
+internal fun Editor.getCaretOffsetInLine(): Int {
+  val logicalPosition = caretModel.logicalPosition
+  val lineStartOffset = document.getLineStartOffset(logicalPosition.line)
+  return caretModel.offset - lineStartOffset
+}
+
 // endregion
 // region TextRange
 

@@ -62,6 +62,27 @@ object CCParser {
     )
   }
 
+  @JvmSynthetic
+  internal fun fixLine(line: CharSequence, caretOffsetInLine: Int): CharSequence {
+    // TODO: go onward or backward depending on where the caret is and what's before it
+    //   Now:           "refactor b<caret>ui  " -> "refactor bui  "
+    //   Next release:  "refactor b<caret>ui  " -> "bui  "
+    val wsIndex = line.indexOf(' ', caretOffsetInLine)
+
+    if (wsIndex >= 0) {
+      return line.subSequence(0, wsIndex + 1)
+    }
+
+    val splitIndex = line.indexOfAny(charArrayOf('(', ':'))
+
+    if (splitIndex < 0) {
+      return line
+    }
+
+    val newLine = "$line"
+    return newLine.take(splitIndex).replace(' ', '-') + newLine.substring(splitIndex)
+  }
+
   private fun buildCommitScope(matchGroup: MatchGroup?): Scope {
     if (matchGroup == null) {
       return InvalidToken

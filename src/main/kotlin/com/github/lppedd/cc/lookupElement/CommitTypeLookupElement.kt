@@ -47,7 +47,8 @@ internal open class CommitTypeLookupElement(
     val editor = context.editor
     val (lineStartOffset, lineEndOffset) = editor.getCurrentLineRange()
     val lineText = editor.document.getSegment(lineStartOffset, lineEndOffset)
-    val type = CCParser.parseHeader(lineText).type
+    val fixedLineText = CCParser.fixLine(lineText, editor.getCaretOffsetInLine()).trimEnd()
+    val type = CCParser.parseHeader(fixedLineText).type
 
     if (type is ValidToken) {
       // Replace the old type with the new one
