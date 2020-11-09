@@ -82,9 +82,6 @@ internal class WhatsNewDialog(project: Project) : CCDialogWrapper(project) {
   override fun getStyle(): DialogStyle =
     COMPACT
 
-  override fun getDimensionServiceKey(): String =
-    "#com.github.lppedd.cc.WhatsNewDialog"
-
   override fun getPreferredFocusedComponent(): JComponent? =
     myPreferredFocusedComponent
 

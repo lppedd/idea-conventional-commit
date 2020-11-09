@@ -38,7 +38,7 @@ internal class WhatsNewPanel : JPanel(BorderLayout()), DoNotAskOption {
   }
 
   override fun getPreferredSize(): Dimension =
-    JBDimension(400, 200)
+    JBDimension(550, 270)
 
   override fun isToBeShown(): Boolean =
     service<PropertiesComponent>().getValue(PROPERTY_SHOW, "true").toBoolean().not()

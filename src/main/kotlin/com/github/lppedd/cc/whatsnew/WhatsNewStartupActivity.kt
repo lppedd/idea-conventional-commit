@@ -6,6 +6,7 @@ import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.StartupActivity
 import com.intellij.util.concurrency.EdtScheduledExecutorService
+import java.util.concurrent.TimeUnit
 
 /**
  * Verifies the need to display the What's New dialog at startup.
@@ -25,11 +26,11 @@ private class WhatsNewStartupActivity : StartupActivity, DumbAware {
       .any { it.files.fileDescriptions.isNotEmpty() }
 
     if (shouldDisplay) {
-      EdtScheduledExecutorService.getInstance().execute {
+      EdtScheduledExecutorService.getInstance().schedule({
         if (!project.isDisposed) {
           WhatsNewDialog.showForProject(project)
         }
-      }
+      }, 1, TimeUnit.SECONDS)
     }
   }
 }
