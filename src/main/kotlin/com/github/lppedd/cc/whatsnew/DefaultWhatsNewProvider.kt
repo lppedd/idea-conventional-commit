@@ -30,7 +30,7 @@ internal class DefaultWhatsNewProvider : WhatsNewProvider() {
     if (PluginVersion(installedVersion) > PluginVersion(registeredVersion)) {
       properties.setValue(PROPERTY_VERSION, installedVersion)
       val showOnEveryUpdate = properties.getValue(WhatsNewPanel.PROPERTY_SHOW, "true").toBoolean()
-      val hasAttachedFile = files.fileDescriptions.any { it.version == installedVersion }
+      val hasAttachedFile = showOnEveryUpdate && files.fileDescriptions.any { it.version == installedVersion }
       return showOnEveryUpdate && hasAttachedFile
     }
 
