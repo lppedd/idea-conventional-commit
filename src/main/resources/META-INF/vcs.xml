@@ -1,5 +1,9 @@
 <!--suppress PluginXmlValidity -->
 <idea-plugin>
+  <extensions defaultExtensionNs="com.intellij">
+    <actionPromoter implementation="com.github.lppedd.cc.inspection.ReformatActionPromoter" order="last" />
+  </extensions>
+
   <extensions defaultExtensionNs="com.github.lppedd.idea-conventional-commit">
     <commitSubjectProvider order="first" implementation="com.github.lppedd.cc.api.DefaultVcsCommitSubjectProvider" />
   </extensions>

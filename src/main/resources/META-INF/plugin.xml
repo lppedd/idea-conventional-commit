@@ -30,7 +30,6 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <ApplicationLoadListener implementation="com.github.lppedd.cc.CCApplicationLoadListener" />
-    <actionPromoter implementation="com.github.lppedd.cc.inspection.ReformatActionPromoter" order="last" />
 
     <projectService
         overrides="true"
