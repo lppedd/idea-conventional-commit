@@ -7,7 +7,6 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.ComponentValidator
-import com.intellij.openapi.ui.TextBrowseFolderListener
 import com.intellij.openapi.ui.TextFieldWithBrowseButton
 import com.intellij.openapi.ui.ValidationInfo
 import com.intellij.openapi.util.io.FileUtil
@@ -45,7 +44,7 @@ internal class DefaultTokensFilePickerPanel(
 
   private val customFile = TextFieldWithBrowseButton().also {
     it.isEnabled = false
-    it.addBrowseFolderListener(TextBrowseFolderListener(MyFileChooserDescriptor))
+    it.addBrowseFolderListener(CCTextBrowseFolderListener(MyFileChooserDescriptor))
   }
 
   var isComponentValid = true
