@@ -6,7 +6,6 @@ import com.github.lppedd.cc.api.WhatsNewProvider.FileDescription
 import com.intellij.ide.util.PropertiesComponent
 import com.intellij.ide.util.TipUIUtil
 import com.intellij.ide.util.TipUIUtil.Browser
-import com.intellij.openapi.components.service
 import com.intellij.openapi.ui.DialogWrapper.DoNotAskOption
 import com.intellij.ui.JBColor
 import com.intellij.ui.ScrollPaneFactory
@@ -37,10 +36,10 @@ internal class WhatsNewPanel : JPanel(BorderLayout()), DoNotAskOption {
     JBDimension(550, 270)
 
   override fun isToBeShown(): Boolean =
-    service<PropertiesComponent>().getValue(WhatsNewDialog.PROPERTY_SHOW, "true").toBoolean().not()
+    PropertiesComponent.getInstance().getValue(WhatsNewDialog.PROPERTY_SHOW, "true").toBoolean().not()
 
   override fun setToBeShown(toBeShown: Boolean, exitCode: Int) {
-    service<PropertiesComponent>().setValue(WhatsNewDialog.PROPERTY_SHOW, toBeShown.not().toString())
+    PropertiesComponent.getInstance().setValue(WhatsNewDialog.PROPERTY_SHOW, toBeShown.not().toString())
   }
 
   override fun canBeHidden(): Boolean =
