@@ -155,7 +155,7 @@ public class CCMainConfigurableGui {
     coAuthorsPanel.setLayout(new BorderLayout());
     coAuthorsPanel.setBorder(
         IdeBorderFactory.createTitledBorder(
-            "Co-authors",
+            CCBundle.get("cc.config.coAuthors.title"),
             false,
             JBUI.insetsTop(10)
         )
