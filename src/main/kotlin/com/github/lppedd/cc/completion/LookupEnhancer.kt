@@ -1,7 +1,9 @@
-package com.github.lppedd.cc.completion.menu
+package com.github.lppedd.cc.completion
 
 import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.api.CommitTokenProvider
+import com.github.lppedd.cc.completion.menu.FilterAction
+import com.github.lppedd.cc.completion.menu.SettingsActions
 import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.configuration.CCConfigService.ProviderFilterType.KEEP_SELECTED
 import com.github.lppedd.cc.emptyCollection
@@ -36,14 +38,14 @@ import java.awt.event.KeyEvent
  *
  * @author Edoardo Luppi
  */
-internal class LookupEnhancerLookupListener(
+internal class LookupEnhancer(
     private val lookup: LookupImpl,
 ) : LookupListener, PrefixChangeListener, AnActionListener {
   private companion object {
     const val SHOW_GROUP_IN_POPUP = "actionSystem.toolbar.show.group.in.popup"
 
     val menuActionClass: Class<*> = Class.forName("com.intellij.codeInsight.lookup.impl.LookupUi\$MenuAction")
-    val logger = logger<LookupEnhancerLookupListener>()
+    val logger = logger<LookupEnhancer>()
     val robot = Robot()
   }
 

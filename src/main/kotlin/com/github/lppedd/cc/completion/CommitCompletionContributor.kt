@@ -4,7 +4,6 @@ package com.github.lppedd.cc.completion
 
 import com.github.lppedd.cc.*
 import com.github.lppedd.cc.collection.NoopList
-import com.github.lppedd.cc.completion.menu.LookupEnhancerLookupListener
 import com.github.lppedd.cc.completion.providers.*
 import com.github.lppedd.cc.completion.providers.CompletionProvider
 import com.github.lppedd.cc.completion.resultset.ContextResultSet
@@ -43,7 +42,7 @@ import kotlin.LazyThreadSafetyMode.PUBLICATION
 import kotlin.internal.InlineOnly
 
 private val PLAIN_TEXT_PATTERN = PlatformPatterns.psiElement().withLanguage(PlainTextLanguage.INSTANCE)
-private val MENU_ENHANCER_MAP = synchronizedMap(IdentityHashMap<Lookup, LookupEnhancerLookupListener>(16))
+private val MENU_ENHANCER_MAP = synchronizedMap(IdentityHashMap<Lookup, LookupEnhancer>(16))
 private val LOOKUP_DISPOSER_MAP = synchronizedMap(IdentityHashMap<Lookup, Disposable>(16))
 
 /**
@@ -202,7 +201,7 @@ private class CommitCompletionContributor : CompletionContributor() {
     }
   }
 
-  private fun installAndGetMenuEnhancer(lookup: LookupImpl): LookupEnhancerLookupListener? {
+  private fun installAndGetMenuEnhancer(lookup: LookupImpl): LookupEnhancer? {
     val disposable = LOOKUP_DISPOSER_MAP.computeIfAbsent(lookup) {
       Disposable {
         LOOKUP_DISPOSER_MAP.remove(lookup)
@@ -214,7 +213,7 @@ private class CommitCompletionContributor : CompletionContributor() {
       Disposer.register(lookup, disposable)
     }
 
-    return MENU_ENHANCER_MAP.computeIfAbsent(lookup) { LookupEnhancerLookupListener(lookup) }
+    return MENU_ENHANCER_MAP.computeIfAbsent(lookup) { LookupEnhancer(lookup) }
   }
 
   /**

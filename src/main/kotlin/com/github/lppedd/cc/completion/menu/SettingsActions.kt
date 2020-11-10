@@ -1,6 +1,7 @@
 package com.github.lppedd.cc.completion.menu
 
 import com.github.lppedd.cc.CCBundle
+import com.github.lppedd.cc.completion.LookupEnhancer
 import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.configuration.CCConfigService.CompletionType.POPUP
 import com.github.lppedd.cc.configuration.CCConfigService.CompletionType.TEMPLATE
@@ -25,7 +26,7 @@ import java.util.*
  * @author Edoardo Luppi
  */
 internal class SettingsActions(
-    private val enhancer: LookupEnhancerLookupListener,
+    private val enhancer: LookupEnhancer,
     private val lookup: LookupImpl,
 ) : ActionGroup("", false), DumbAware {
   private val config = lookup.project.service<CCConfigService>()

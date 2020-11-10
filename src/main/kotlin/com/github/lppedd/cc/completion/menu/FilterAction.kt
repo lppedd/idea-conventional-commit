@@ -3,6 +3,7 @@ package com.github.lppedd.cc.completion.menu
 import com.github.lppedd.cc.CCIcons
 import com.github.lppedd.cc.api.CommitTokenProvider
 import com.github.lppedd.cc.completion.FilterPrefixMatcher
+import com.github.lppedd.cc.completion.LookupEnhancer
 import com.github.lppedd.cc.lookupElement.CommitLookupElement
 import com.intellij.codeInsight.completion.PlainPrefixMatcher
 import com.intellij.codeInsight.lookup.impl.LookupImpl
@@ -14,7 +15,7 @@ import java.util.*
  * @author Edoardo Luppi
  */
 internal class FilterAction(
-    private val enhancer: LookupEnhancerLookupListener,
+    private val enhancer: LookupEnhancer,
     private val lookup: LookupImpl,
     private val provider: CommitTokenProvider,
 ) : AnAction(provider.getPresentation().name) {
