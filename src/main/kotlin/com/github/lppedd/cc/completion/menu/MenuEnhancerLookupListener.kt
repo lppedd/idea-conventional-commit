@@ -183,11 +183,11 @@ internal class MenuEnhancerLookupListener(
       "com.intellij.codeInsight.lookup.LookupFocusDegree" to "setLookupFocusDegree"
     }
 
-    val `class` = Class.forName(className) as Class<out Enum<*>?>
-    val focused = java.lang.Enum.valueOf(`class`, focusDegree)
-    LookupImpl::class.java.getDeclaredMethod(methodName, `class`).also {
+    val enumClass = Class.forName(className) as Class<out Enum<*>?>
+    val enumValue = java.lang.Enum.valueOf(enumClass, focusDegree)
+    LookupImpl::class.java.getDeclaredMethod(methodName, enumClass).also {
       it.isAccessible = true
-      it.invoke(lookup, focused)
+      it.invoke(lookup, enumValue)
     }
   }
 
