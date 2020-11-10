@@ -88,7 +88,7 @@ internal class LookupEnhancer(
     try {
       // Setting the lookup focus degree to "focused" means the top lookup item
       // matching the prefix is preselected and ready to be completed
-      lookup.setLookupFocusDegree("FOCUSED")
+      lookup.setLookupFocusDegree("SEMI_FOCUSED")
     } catch (e: Exception) {
       logger.error("Couldn't override the lookup focus degree", e)
     }
