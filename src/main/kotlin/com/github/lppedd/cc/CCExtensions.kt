@@ -3,8 +3,10 @@ package com.github.lppedd.cc
 import com.github.lppedd.cc.annotation.RequireEDT
 import com.intellij.codeInsight.AutoPopupController
 import com.intellij.codeInsight.completion.CompletionParameters
+import com.intellij.codeInsight.lookup.impl.LookupImpl
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl
 import com.intellij.codeInsight.template.impl.TemplateState
+import com.intellij.openapi.application.ApplicationInfo
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ex.ApplicationUtil
 import com.intellij.openapi.editor.Document
@@ -31,6 +33,27 @@ import kotlin.internal.InlineOnly
 import kotlin.math.max
 import kotlin.math.min
 
+// region LookupImpl
+
+internal fun LookupImpl.setLookupFocusDegree(focusDegree: String) {
+  // Unfortunately this is required to maintain compatibility with versions prior to 193.5096.
+  // setLookupFocusDegree and LookupFocusDegree don't exist in those versions.
+  val (className, methodName) = if (ApplicationInfo.getInstance().majorVersion.toInt() < 2020) {
+    "com.intellij.codeInsight.lookup.impl.LookupImpl\$FocusDegree" to "setFocusDegree"
+  } else {
+    "com.intellij.codeInsight.lookup.LookupFocusDegree" to "setLookupFocusDegree"
+  }
+
+  @Suppress("unchecked_cast")
+  val enumClass = Class.forName(className) as Class<out Enum<*>?>
+  val enumValue = java.lang.Enum.valueOf(enumClass, focusDegree)
+  LookupImpl::class.java.getDeclaredMethod(methodName, enumClass).also {
+    it.isAccessible = true
+    it.invoke(this, enumValue)
+  }
+}
+
+// endregion
 // region Action
 
 @InlineOnly

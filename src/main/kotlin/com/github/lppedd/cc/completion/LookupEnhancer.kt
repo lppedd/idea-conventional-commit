@@ -1,14 +1,11 @@
 package com.github.lppedd.cc.completion
 
-import com.github.lppedd.cc.CC
+import com.github.lppedd.cc.*
 import com.github.lppedd.cc.api.CommitTokenProvider
 import com.github.lppedd.cc.completion.menu.FilterAction
 import com.github.lppedd.cc.completion.menu.SettingsActions
 import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.configuration.CCConfigService.ProviderFilterType.KEEP_SELECTED
-import com.github.lppedd.cc.emptyCollection
-import com.github.lppedd.cc.keyPressAndRelease
-import com.github.lppedd.cc.plus
 import com.intellij.codeInsight.completion.CodeCompletionHandlerBase
 import com.intellij.codeInsight.completion.CompletionType.BASIC
 import com.intellij.codeInsight.lookup.LookupEvent
@@ -21,7 +18,6 @@ import com.intellij.openapi.actionSystem.ex.ActionManagerEx
 import com.intellij.openapi.actionSystem.ex.ActionPopupMenuListener
 import com.intellij.openapi.actionSystem.ex.AnActionListener
 import com.intellij.openapi.actionSystem.impl.ActionButton
-import com.intellij.openapi.application.ApplicationInfo
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.command.CommandProcessor
 import com.intellij.openapi.components.service
@@ -92,7 +88,7 @@ internal class LookupEnhancer(
     try {
       // Setting the lookup focus degree to "focused" means the top lookup item
       // matching the prefix is preselected and ready to be completed
-      overrideLookupFocusDegree("FOCUSED")
+      lookup.setLookupFocusDegree("FOCUSED")
     } catch (e: Exception) {
       logger.error("Couldn't override the lookup focus degree", e)
     }
@@ -178,24 +174,6 @@ internal class LookupEnhancer(
     }
 
     commandProcessor.executeCommand(project, command, "Invoke completion", CC.AppName)
-  }
-
-  @Suppress("unchecked_cast", "SameParameterValue")
-  private fun overrideLookupFocusDegree(focusDegree: String) {
-    // Unfortunately this is required to maintain compatibility with versions prior to 193.5096.
-    // setLookupFocusDegree and LookupFocusDegree don't exist in those versions.
-    val (className, methodName) = if (ApplicationInfo.getInstance().majorVersion.toInt() < 2020) {
-      "com.intellij.codeInsight.lookup.impl.LookupImpl\$FocusDegree" to "setFocusDegree"
-    } else {
-      "com.intellij.codeInsight.lookup.LookupFocusDegree" to "setLookupFocusDegree"
-    }
-
-    val enumClass = Class.forName(className) as Class<out Enum<*>?>
-    val enumValue = java.lang.Enum.valueOf(enumClass, focusDegree)
-    LookupImpl::class.java.getDeclaredMethod(methodName, enumClass).also {
-      it.isAccessible = true
-      it.invoke(lookup, enumValue)
-    }
   }
 
   private inner class LookupPopupMenuListener(private val disposable: Disposable) : ActionPopupMenuListener {
