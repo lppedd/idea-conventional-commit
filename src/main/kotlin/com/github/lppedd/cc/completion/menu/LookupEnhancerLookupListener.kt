@@ -25,6 +25,7 @@ import com.intellij.openapi.command.CommandProcessor
 import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.util.Disposer
+import com.intellij.openapi.util.registry.Registry
 import com.intellij.util.ReflectionUtil.getField
 import java.awt.Robot
 import java.awt.event.KeyEvent
@@ -39,8 +40,9 @@ internal class LookupEnhancerLookupListener(
     private val lookup: LookupImpl,
 ) : LookupListener, PrefixChangeListener, AnActionListener {
   private companion object {
-    const val MENU_ACTION_FQN = "com.intellij.codeInsight.lookup.impl.LookupUi\$MenuAction"
+    const val SHOW_GROUP_IN_POPUP = "actionSystem.toolbar.show.group.in.popup"
 
+    val menuActionClass: Class<*> = Class.forName("com.intellij.codeInsight.lookup.impl.LookupUi\$MenuAction")
     val logger = logger<LookupEnhancerLookupListener>()
     val robot = Robot()
   }
@@ -144,7 +146,7 @@ internal class LookupEnhancerLookupListener(
   }
 
   override fun beforeActionPerformed(action: AnAction, dataContext: DataContext, event: AnActionEvent) {
-    if (action.javaClass == Class.forName(MENU_ACTION_FQN, false, javaClass.classLoader)) {
+    if (action.javaClass == menuActionClass && !Registry.`is`(SHOW_GROUP_IN_POPUP, false)) {
       val disposable = Disposer.newDisposable()
       actionManager.addActionPopupMenuListener(LookupPopupMenuListener(disposable), disposable)
       closeMenu = true
