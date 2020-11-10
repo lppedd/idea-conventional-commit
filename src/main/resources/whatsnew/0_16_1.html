@@ -35,7 +35,7 @@
   <div id="table-of-contents">
     <h2>Table of contents:</h2>
     <p>&#8226; Towards 1.0 and a plea to users</p>
-    <p>&#8226; Changes in 0.16.0</p>
+    <p>&#8226; Changes in 0.16.1</p>
     <p>&#8226; Future plans</p>
   </div>
   <h1>Towards 1.0 and a plea to users</h1>
@@ -66,13 +66,13 @@
     With this in mind, I hope by the beginning of the new year we'll have the first
     stable version.
   </p>
-  <h1>Changes in 0.16.0</h1>
+  <h1>Changes in 0.16.1</h1>
   <p>
     This release packs more then 100 commits which include new features, extensive refactorings,
     and bug fixes. Following is a short but comprehensive summary.
   </p>
   <!-- FEATURES -->
-  <p><strong>Features:</strong></p>
+  <p><b>Features:</b></p>
   <p class="indented">
     &#8226; differentiated the token's displayed value (in completion popup) from its real value.<br/>
     This enhancement seems like a small detail, but it's huge as it let's us search an item by a comprehensible
@@ -89,21 +89,21 @@
     This is accessible via the <em>Settings > Conventional Commit > Providers</em> tab.
   </p>
   <p class="indented">
-    &#8226; displayed changelogs/news inside a dedicated dialog (this very dialog!) and expose a public API.
+    &#8226; displayed changelogs/news inside a dedicated dialog (this very dialog!) and exposed a public API.
     Even extensions are able to add their own tabs.
   </p>
   <p class="indented">
     &#8226; preselected the top item in completion's popup when using <em>context completion</em>.<br/>
     This change removes the need to use the down-arrow key to begin selecting items,
     so that you can immediately complete.<br/>
-    Should this be optional? Let me know in the <a href="https://github.com/lppedd/idea-conventional-commit/issues/35">feedback issue</a>.
+    <b>Should this be optional?</b> Let me know in the <a href="https://github.com/lppedd/idea-conventional-commit/issues/35">feedback issue</a>.
   </p>
   <p class="indented">
     &#8226; cleaned-up whatever the plugin created if it is uninstalled.<br/>
     Currently only some non-roamable properties are removed, but this will be expanded in the future if necessary.
   </p>
   <!-- FIXES -->
-  <p><strong>Fixes:</strong></p>
+  <p><b>Fixes:</b></p>
   <p class="indented">
     &#8226; used the correct project's base path.<br/>
     Probably from 2020.3, the platform API started returning the <code>.idea</code> folder as the project's base path.
@@ -116,11 +116,11 @@
     to workaround it.
   </p>
   <!-- REFACTORINGS -->
-  <p><strong>Refactorings:</strong></p>
+  <p><b>Refactorings:</b></p>
   <p class="indented">
     &#8226; improved the completion process.<br/>
     In conjunction with the first mentioned feature, I've replaced the underlying code that performs the completion item
-    insertion. That is now smarter and lighter, but <strong>there might be issues, so report them in case</strong>.
+    insertion. That is now smarter and lighter, but <b>there might be issues, so report them in case</b>.
   </p>
   <p class="indented">
     &#8226; improved the UI.<br/>
@@ -137,7 +137,7 @@
     What I already planned:
   </p>
   <p class="indented">
-    <strong>&#8226; work on new extensions! I've already written a POC for GitHub issues integration.</strong>
+    <b>&#8226; work on new extensions! I've already written a POC for GitHub issues integration.</b>
   </p>
   <p class="indented">&#8226; handle more edge cases in completion.</p>
   <p class="indented">
