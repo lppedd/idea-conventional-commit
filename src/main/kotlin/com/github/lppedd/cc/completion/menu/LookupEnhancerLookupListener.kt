@@ -29,9 +29,6 @@ import com.intellij.util.ReflectionUtil.getField
 import java.awt.Robot
 import java.awt.event.KeyEvent
 
-private val ROBOT = Robot()
-private const val MENU_ACTION_FQN = "com.intellij.codeInsight.lookup.impl.LookupUi\$MenuAction"
-
 /**
  * Known issues:
  * - the menu retains focus after opening, see [IDEA-254427](https://youtrack.jetbrains.com/issue/IDEA-254427)
@@ -41,7 +38,13 @@ private const val MENU_ACTION_FQN = "com.intellij.codeInsight.lookup.impl.Lookup
 internal class LookupEnhancerLookupListener(
     private val lookup: LookupImpl,
 ) : LookupListener, PrefixChangeListener, AnActionListener {
-  private val logger = logger<LookupEnhancerLookupListener>()
+  private companion object {
+    const val MENU_ACTION_FQN = "com.intellij.codeInsight.lookup.impl.LookupUi\$MenuAction"
+
+    val logger = logger<LookupEnhancerLookupListener>()
+    val robot = Robot()
+  }
+
   private val commandProcessor = CommandProcessor.getInstance()
   private val actionManager = ActionManagerEx.getInstanceEx()
   private val config = lookup.project.service<CCConfigService>()
@@ -131,7 +134,7 @@ internal class LookupEnhancerLookupListener(
 
     if (closeMenu) {
       closeMenu = false
-      ROBOT.keyPressAndRelease(KeyEvent.VK_ESCAPE)
+      robot.keyPressAndRelease(KeyEvent.VK_ESCAPE)
     }
   }
 
