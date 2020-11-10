@@ -14,7 +14,7 @@ import java.util.*
  * @author Edoardo Luppi
  */
 internal class FilterAction(
-    private val enhancer: MenuEnhancerLookupListener,
+    private val enhancer: LookupEnhancerLookupListener,
     private val lookup: LookupImpl,
     private val provider: CommitTokenProvider,
 ) : AnAction(provider.getPresentation().name) {

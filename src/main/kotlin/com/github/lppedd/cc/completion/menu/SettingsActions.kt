@@ -25,7 +25,7 @@ import java.util.*
  * @author Edoardo Luppi
  */
 internal class SettingsActions(
-    private val enhancer: MenuEnhancerLookupListener,
+    private val enhancer: LookupEnhancerLookupListener,
     private val lookup: LookupImpl,
 ) : ActionGroup("", false), DumbAware {
   private val config = lookup.project.service<CCConfigService>()

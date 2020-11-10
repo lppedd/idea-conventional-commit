@@ -38,10 +38,10 @@ private const val MENU_ACTION_FQN = "com.intellij.codeInsight.lookup.impl.Lookup
  *
  * @author Edoardo Luppi
  */
-internal class MenuEnhancerLookupListener(
+internal class LookupEnhancerLookupListener(
     private val lookup: LookupImpl,
 ) : LookupListener, PrefixChangeListener, AnActionListener {
-  private val logger = logger<MenuEnhancerLookupListener>()
+  private val logger = logger<LookupEnhancerLookupListener>()
   private val commandProcessor = CommandProcessor.getInstance()
   private val actionManager = ActionManagerEx.getInstanceEx()
   private val config = lookup.project.service<CCConfigService>()
