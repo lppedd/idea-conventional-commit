@@ -1,5 +1,6 @@
 package com.github.lppedd.cc.inspection
 
+import com.github.lppedd.cc.annotation.Compatibility
 import com.github.lppedd.cc.api.INSPECTION_EP
 import com.intellij.codeInspection.ex.InspectionProfileImpl
 import com.intellij.codeInspection.ex.InspectionToolWrapper
@@ -45,7 +46,7 @@ private class CommitMessageInspectionProfileEx(project: Project) : CommitMessage
     val proxyToolSupplier: Any
 
     if (ideaToolSupplier is Supplier<*>) {
-      @Suppress("UNCHECKED_CAST")
+      @Suppress("unchecked_cast")
       val delegate = ideaToolSupplier as Supplier<List<InspectionToolWrapper<*, *>>>
       proxyToolSupplier = CommitInspectionToolSupplier(delegate)
       inspectionProfileImpl = inspectionProfileImplClazz
@@ -82,6 +83,7 @@ private class CommitMessageInspectionProfileEx(project: Project) : CommitMessage
 }
 
 /** Provides support for IDEA 2019.2 only. */
+@Compatibility(minVersionForRemoval = "193.3519.25")
 private class CommitInspectionToolSupplier(
     private val delegate: Supplier<List<InspectionToolWrapper<*, *>>>,
 ) : Supplier<List<InspectionToolWrapper<*, *>>> {
@@ -112,7 +114,7 @@ private class InspectionToolSupplierInterceptor(private val delegate: Any) : Met
           .map(::LocalInspectionToolWrapper)
           .toList()
 
-      @Suppress("UNCHECKED_CAST")
+      @Suppress("unchecked_cast")
       val originalInspections = proxy.invoke(delegate, args) as List<InspectionToolWrapper<*, *>>
       originalInspections + additionalInspections
     } else {

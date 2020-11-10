@@ -1,5 +1,6 @@
 package com.github.lppedd.cc
 
+import com.github.lppedd.cc.annotation.Compatibility
 import com.github.lppedd.cc.annotation.RequireEDT
 import com.intellij.codeInsight.AutoPopupController
 import com.intellij.codeInsight.completion.CompletionParameters
@@ -35,6 +36,7 @@ import kotlin.math.min
 
 // region LookupImpl
 
+@Compatibility(minVersionForRemoval = "193.5096.12")
 internal fun LookupImpl.setLookupFocusDegree(focusDegree: String) {
   // Unfortunately this is required to maintain compatibility with versions prior to 193.5096.
   // setLookupFocusDegree and LookupFocusDegree don't exist in those versions.

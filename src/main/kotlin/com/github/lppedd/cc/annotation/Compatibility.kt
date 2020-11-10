@@ -1,0 +1,17 @@
+package com.github.lppedd.cc.annotation
+
+/**
+ * @author Edoardo Luppi
+ */
+@Target(
+  AnnotationTarget.CLASS,
+  AnnotationTarget.FUNCTION,
+)
+@Retention(AnnotationRetention.SOURCE)
+internal annotation class Compatibility(
+    /**
+     * The minimum supported IDE version that is required
+     * for removing the annotated element.
+     */
+    val minVersionForRemoval: String,
+)
