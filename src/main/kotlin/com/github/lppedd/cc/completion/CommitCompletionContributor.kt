@@ -42,7 +42,7 @@ import kotlin.LazyThreadSafetyMode.PUBLICATION
 import kotlin.internal.InlineOnly
 
 private val PLAIN_TEXT_PATTERN = PlatformPatterns.psiElement().withLanguage(PlainTextLanguage.INSTANCE)
-private val MENU_ENHANCER_MAP = synchronizedMap(IdentityHashMap<Lookup, LookupEnhancer>(16))
+private val LOOKUP_ENHANCER_MAP = synchronizedMap(IdentityHashMap<Lookup, LookupEnhancer>(16))
 private val LOOKUP_DISPOSER_MAP = synchronizedMap(IdentityHashMap<Lookup, Disposable>(16))
 
 /**
@@ -196,16 +196,16 @@ private class CommitCompletionContributor : CompletionContributor() {
       safelySetNoopListOnLookupArranger(process)
       safelyReleaseProcessSemaphore(process)
 
-      val menuEnhancer = installAndGetMenuEnhancer(process.lookup)
-      menuEnhancer?.setProviders(providers.flatMap { it.providers.take(3) }.take(6))
+      val lookupEnhancer = installAndGetLookupEnhancer(process.lookup)
+      lookupEnhancer.setProviders(providers.flatMap { it.providers.take(3) }.take(6))
     }
   }
 
-  private fun installAndGetMenuEnhancer(lookup: LookupImpl): LookupEnhancer? {
+  private fun installAndGetLookupEnhancer(lookup: LookupImpl): LookupEnhancer {
     val disposable = LOOKUP_DISPOSER_MAP.computeIfAbsent(lookup) {
       Disposable {
         LOOKUP_DISPOSER_MAP.remove(lookup)
-        MENU_ENHANCER_MAP.remove(lookup)
+        LOOKUP_ENHANCER_MAP.remove(lookup)
       }
     }
 
@@ -213,7 +213,7 @@ private class CommitCompletionContributor : CompletionContributor() {
       Disposer.register(lookup, disposable)
     }
 
-    return MENU_ENHANCER_MAP.computeIfAbsent(lookup) { LookupEnhancer(lookup) }
+    return LOOKUP_ENHANCER_MAP.computeIfAbsent(lookup) { LookupEnhancer(lookup) }
   }
 
   /**
