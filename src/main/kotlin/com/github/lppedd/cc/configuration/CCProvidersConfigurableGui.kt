@@ -10,6 +10,7 @@ import com.intellij.openapi.actionSystem.ActionToolbarPosition.RIGHT
 import com.intellij.ui.TableSpeedSearch
 import com.intellij.ui.ToolbarDecorator
 import com.intellij.ui.components.JBLabel
+import com.intellij.ui.scale.JBUIScale
 import com.intellij.ui.table.JBTable
 import com.intellij.util.containers.Convertor
 import com.intellij.util.ui.JBDimension
@@ -110,7 +111,7 @@ internal class CCProvidersConfigurableGui {
       .setToolbarPosition(RIGHT)
       .setToolbarBorder(toolbarBorder)
       .setPanelBorder(panelBorder)
-      .setPreferredSize(JBDimension(table.preferredSize.width, JBUI.scale(135), true))
+      .setPreferredSize(JBDimension(table.preferredSize.width, JBUIScale.scale(135), true))
       .setRemoveAction(null)
       .setAddAction(null)
       .createPanel()

@@ -13,6 +13,7 @@ import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.DocumentAdapter
 import com.intellij.ui.components.JBCheckBox
+import com.intellij.ui.scale.JBUIScale
 import com.intellij.uiDesigner.core.GridConstraints
 import com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL
 import com.intellij.uiDesigner.core.GridLayoutManager
@@ -32,7 +33,7 @@ import javax.swing.event.DocumentEvent
 internal class DefaultTokensFilePickerPanel(
     private val project: Project,
     private val disposable: Disposable,
-) : JPanel(GridLayoutManager(2, 1, JBUI.emptyInsets(), 0, JBUI.scale(5))) {
+) : JPanel(GridLayoutManager(2, 1, JBUI.emptyInsets(), 0, JBUIScale.scale(5))) {
   private val isCustomFile = JBCheckBox(CCBundle["cc.config.customFile"]).also {
     it.addItemListener { event ->
       when (event.stateChange) {

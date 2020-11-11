@@ -25,10 +25,10 @@ import com.intellij.ui.HyperlinkLabel;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBRadioButton;
+import com.intellij.ui.scale.JBUIScale;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.UIUtil.FontSize;
 
@@ -130,7 +130,7 @@ public class CCMainConfigurableGui {
       @NotNull final Project project,
       @NotNull final Disposable disposable) {
     completionTypePanel.setLayout(
-        new GridLayoutManager(2, 1, JBUI.insetsLeft(INDENT), 0, JBUI.scale(5))
+        new GridLayoutManager(2, 1, JBUI.insetsLeft(INDENT), 0, JBUIScale.scale(5))
     );
 
     final GridConstraints gcCtp = new GridConstraints();
@@ -161,7 +161,7 @@ public class CCMainConfigurableGui {
         )
     );
 
-    coAuthorsPanel.add(Box.createHorizontalStrut(UI.scale(INDENT)), BorderLayout.LINE_START);
+    coAuthorsPanel.add(Box.createHorizontalStrut(JBUIScale.scale(INDENT)), BorderLayout.LINE_START);
     coAuthorsFilePickerPanel = new CoAuthorsFilePickerPanel(project, disposable);
     coAuthorsPanel.add(coAuthorsFilePickerPanel, BorderLayout.CENTER);
 
