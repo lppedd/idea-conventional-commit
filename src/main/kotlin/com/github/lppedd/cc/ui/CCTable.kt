@@ -3,6 +3,7 @@ package com.github.lppedd.cc.ui
 import com.github.lppedd.cc.CCUI
 import com.intellij.ui.table.JBTable
 import com.intellij.util.ui.UIUtil
+import java.awt.Dimension
 import java.awt.event.FocusEvent
 import java.awt.event.FocusListener
 import javax.swing.table.TableModel
@@ -16,6 +17,7 @@ internal open class CCTable : JBTable {
 
   init {
     background = CCUI.ListBackgroundColor
+    intercellSpacing = Dimension(0, 0)
 
     // See https://jetbrains.design/intellij/controls/table/#interaction
     // It seems this behavior isn't implemented at Platform level,

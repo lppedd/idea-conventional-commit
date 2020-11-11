@@ -5,6 +5,7 @@ import com.github.lppedd.cc.selectedIndices
 import com.github.lppedd.cc.ui.CCTable
 import com.intellij.ui.ColoredTableCellRenderer
 import com.intellij.ui.components.JBCheckBox
+import com.intellij.ui.scale.JBUIScale
 import com.intellij.ui.speedSearch.SpeedSearchUtil
 import com.intellij.util.ui.JBUI
 import java.awt.Component
@@ -38,6 +39,7 @@ internal class CoAuthorsTable(tableModel: CoAuthorsTableModel) : CCTable(tableMo
 
     setTableHeader(null)
     setShowGrid(false)
+    setRowHeight(JBUIScale.scale(26))
     setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN)
 
     getColumnModel().getColumn(COLUMN_CHECKBOX).also {
@@ -159,8 +161,8 @@ internal class CoAuthorsTable(tableModel: CoAuthorsTableModel) : CCTable(tableMo
         rowIndex: Int,
         columnIndex: Int,
     ) {
-      ipad = JBUI.insetsLeft(5)
-      border = JBUI.Borders.empty(1, 3, 2, 3)
+      ipad = JBUI.insets(0, 3, 2, 3)
+      border = JBUI.Borders.empty()
 
       append(value as String)
       SpeedSearchUtil.applySpeedSearchHighlighting(table, this, true, isSelected)
