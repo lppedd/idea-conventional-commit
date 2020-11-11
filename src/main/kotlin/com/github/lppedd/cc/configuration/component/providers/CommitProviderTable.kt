@@ -1,16 +1,13 @@
 package com.github.lppedd.cc.configuration.component.providers
 
 import com.github.lppedd.cc.CCBundle
-import com.github.lppedd.cc.CCUI
 import com.github.lppedd.cc.api.CommitTokenProvider
-import com.intellij.ui.table.JBTable
-import java.awt.event.FocusAdapter
-import java.awt.event.FocusEvent
+import com.github.lppedd.cc.ui.CCTable
 
 /**
  * @author Edoardo Luppi
  */
-internal class CommitProviderTable<T : CommitTokenProvider> : JBTable() {
+internal class CommitProviderTable<T : CommitTokenProvider> : CCTable() {
   companion object {
     const val COLUMN_PROVIDER = 0
   }
@@ -22,19 +19,12 @@ internal class CommitProviderTable<T : CommitTokenProvider> : JBTable() {
     setModel(model)
     emptyText.text = CCBundle["cc.config.providers.empty"]
 
-    background = CCUI.ListBackgroundColor
-    setShowGrid(false)
     setTableHeader(null)
+    setShowGrid(false)
     getColumnModel().getColumn(COLUMN_PROVIDER).also {
       it.minWidth = 100
       it.cellRenderer = CommitProviderRenderer()
     }
-
-    addFocusListener(object : FocusAdapter() {
-      override fun focusLost(event: FocusEvent?) {
-        clearSelection()
-      }
-    })
   }
 
   var providers: List<T>

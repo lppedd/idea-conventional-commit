@@ -2,9 +2,9 @@ package com.github.lppedd.cc.configuration.component.providers
 
 import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.selectedIndices
+import com.github.lppedd.cc.ui.CCTable
 import com.intellij.ui.ColoredTableCellRenderer
 import com.intellij.ui.speedSearch.SpeedSearchUtil
-import com.intellij.ui.table.JBTable
 import com.intellij.util.ui.JBUI
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
@@ -22,18 +22,17 @@ private const val COLUMN_TEXT = 1
 /**
  * @author Edoardo Luppi
  */
-internal class CoAuthorsTable(tableModel: CoAuthorsTableModel) : JBTable(tableModel) {
+internal class CoAuthorsTable(tableModel: CoAuthorsTableModel) : CCTable(tableModel) {
   init {
     if (model.rowCount > 0) {
       setRowSelectionInterval(0, 0)
     }
 
-    setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN)
-    setTableHeader(null)
-    setShowGrid(false)
-    isStriped = true
     emptyText.text = CCBundle["cc.config.coAuthorsDialog.empty"]
 
+    setTableHeader(null)
+    setShowGrid(false)
+    setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN)
     getColumnModel().getColumn(COLUMN_TEXT).also {
       it.cellRenderer = CoAuthorCellRenderer()
       it.minWidth = 100
@@ -71,10 +70,10 @@ internal class CoAuthorsTable(tableModel: CoAuthorsTableModel) : JBTable(tableMo
   override fun processKeyBinding(ks: KeyStroke?, e: KeyEvent?, condition: Int, pressed: Boolean): Boolean {
     val result = super.processKeyBinding(ks, e, condition, pressed)
     return if (
-      !isEditing &&
-      ks?.isOnKeyRelease == true &&
-      ks.keyCode == KeyEvent.VK_SPACE &&
-      ks.modifiers == 0
+        !isEditing &&
+        ks?.isOnKeyRelease == true &&
+        ks.keyCode == KeyEvent.VK_SPACE &&
+        ks.modifiers == 0
     ) {
       toggleSelectedRows()
       true
