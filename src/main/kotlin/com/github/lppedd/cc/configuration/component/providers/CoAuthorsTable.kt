@@ -138,21 +138,21 @@ internal class CoAuthorsTable(tableModel: CoAuthorsTableModel) : CCTable(tableMo
     firstColumn.minWidth = width
     firstColumn.width = width
   }
-}
 
-private class CoAuthorCellRenderer : ColoredTableCellRenderer() {
-  override fun customizeCellRenderer(
-      table: JTable,
-      value: Any?,
-      isSelected: Boolean,
-      hasFocus: Boolean,
-      rowIndex: Int,
-      columnIndex: Int,
-  ) {
-    ipad = JBUI.insetsLeft(5)
-    border = JBUI.Borders.empty(1, 3, 2, 3)
+  private class CoAuthorCellRenderer : ColoredTableCellRenderer() {
+    override fun customizeCellRenderer(
+        table: JTable,
+        value: Any?,
+        isSelected: Boolean,
+        hasFocus: Boolean,
+        rowIndex: Int,
+        columnIndex: Int,
+    ) {
+      ipad = JBUI.insetsLeft(5)
+      border = JBUI.Borders.empty(1, 3, 2, 3)
 
-    append(value as String)
-    SpeedSearchUtil.applySpeedSearchHighlighting(table, this, true, isSelected)
+      append(value as String)
+      SpeedSearchUtil.applySpeedSearchHighlighting(table, this, true, isSelected)
+    }
   }
 }
