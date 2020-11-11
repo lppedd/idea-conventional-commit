@@ -60,21 +60,21 @@ internal class CoAuthorsTableModel(coAuthors: Collection<String>) : AbstractTabl
       fireTableRowsUpdated(oldIndex.coerceAtMost(newIndex), oldIndex.coerceAtLeast(newIndex))
     }
   }
-}
 
-private data class CoAuthorRow(var text: String = "", var isSelected: Boolean = false) {
-  operator fun get(columnIndex: Int): Any =
-    when (columnIndex) {
-      0 -> isSelected
-      1 -> text
-      else -> throw IllegalArgumentException("Column index $columnIndex does not exist")
-    }
+  private data class CoAuthorRow(var text: String = "", var isSelected: Boolean = false) {
+    operator fun get(columnIndex: Int): Any =
+      when (columnIndex) {
+        0 -> isSelected
+        1 -> text
+        else -> throw IllegalArgumentException("Column index $columnIndex does not exist")
+      }
 
-  operator fun set(columnIndex: Int, value: Any) {
-    when (columnIndex) {
-      0 -> isSelected = value as Boolean
-      1 -> text = value as String
-      else -> throw IllegalArgumentException("Column index $columnIndex does not exist")
+    operator fun set(columnIndex: Int, value: Any) {
+      when (columnIndex) {
+        0 -> isSelected = value as Boolean
+        1 -> text = value as String
+        else -> throw IllegalArgumentException("Column index $columnIndex does not exist")
+      }
     }
   }
 }
