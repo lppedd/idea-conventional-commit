@@ -322,10 +322,6 @@ internal fun String.abbreviate(max: Int, suffix: CharSequence = "..."): String {
 // region Collections
 
 @InlineOnly
-internal inline fun <T> emptyCollection(): Collection<T> =
-  emptyList()
-
-@InlineOnly
 internal inline operator fun <T, C : MutableList<T>> T.plus(list: C): C {
   list.add(0, this)
   return list

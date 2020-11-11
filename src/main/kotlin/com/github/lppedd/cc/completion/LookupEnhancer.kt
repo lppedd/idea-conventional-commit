@@ -1,11 +1,14 @@
 package com.github.lppedd.cc.completion
 
-import com.github.lppedd.cc.*
+import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.api.CommitTokenProvider
 import com.github.lppedd.cc.completion.menu.FilterAction
 import com.github.lppedd.cc.completion.menu.SettingsActions
 import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.configuration.CCConfigService.ProviderFilterType.KEEP_SELECTED
+import com.github.lppedd.cc.keyPressAndRelease
+import com.github.lppedd.cc.plus
+import com.github.lppedd.cc.setLookupFocusDegree
 import com.intellij.codeInsight.completion.CodeCompletionHandlerBase
 import com.intellij.codeInsight.completion.CompletionType.BASIC
 import com.intellij.codeInsight.lookup.LookupEvent
@@ -49,8 +52,8 @@ internal class LookupEnhancer(
   private val actionManager = ActionManagerEx.getInstanceEx()
   private val config = lookup.project.service<CCConfigService>()
 
-  @Volatile private var allActions = emptyCollection<AnAction>()
-  @Volatile private var filterActions = emptyCollection<FilterAction>()
+  @Volatile private var allActions = emptyList<AnAction>()
+  @Volatile private var filterActions = emptyList<FilterAction>()
   @Volatile private var lastKeptAction: FilterAction? = null
   @Volatile private var menuButton: ActionButton? = null
   @Volatile private var reopenMenu = false
