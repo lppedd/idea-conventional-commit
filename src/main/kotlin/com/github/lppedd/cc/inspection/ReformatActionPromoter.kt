@@ -1,5 +1,6 @@
 package com.github.lppedd.cc.inspection
 
+import com.github.lppedd.cc.annotation.Compatibility
 import com.intellij.codeInsight.actions.ReformatCodeAction
 import com.intellij.openapi.actionSystem.ActionPromoter
 import com.intellij.openapi.actionSystem.AnAction
@@ -14,6 +15,7 @@ import com.intellij.vcs.commit.message.ReformatCommitMessageAction
  *
  * @author Edoardo Luppi
  */
+@Compatibility(minVersionForRemoval = "See IDEA-254830")
 private class ReformatActionPromoter : ActionPromoter {
   override fun promote(actions: List<AnAction>, context: DataContext): List<AnAction> =
     if (isApplicable(context)) {
