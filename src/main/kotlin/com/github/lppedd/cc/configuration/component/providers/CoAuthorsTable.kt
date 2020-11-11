@@ -16,13 +16,15 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 
-private const val COLUMN_CHECKBOX = 0
-private const val COLUMN_TEXT = 1
-
 /**
  * @author Edoardo Luppi
  */
 internal class CoAuthorsTable(tableModel: CoAuthorsTableModel) : CCTable(tableModel) {
+  private companion object {
+    private const val COLUMN_CHECKBOX = 0
+    private const val COLUMN_TEXT = 1
+  }
+
   init {
     if (model.rowCount > 0) {
       setRowSelectionInterval(0, 0)
