@@ -49,6 +49,7 @@
     <typedHandler order="first" implementation="com.github.lppedd.cc.editor.OpenParenHandler" />
     <typedHandler order="first" implementation="com.github.lppedd.cc.editor.CloseParenHandler" />
     <typedHandler order="first" implementation="com.github.lppedd.cc.editor.ColonHandler" />
+    <typedHandler order="first" implementation="com.github.lppedd.cc.editor.SpecialCharTypedHandler" />
 
     <liveTemplateMacro implementation="com.github.lppedd.cc.liveTemplate.CommitTypeMacro" />
     <liveTemplateMacro implementation="com.github.lppedd.cc.liveTemplate.CommitScopeMacro" />
