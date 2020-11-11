@@ -4,14 +4,18 @@ import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.selectedIndices
 import com.github.lppedd.cc.ui.CCTable
 import com.intellij.ui.ColoredTableCellRenderer
+import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.speedSearch.SpeedSearchUtil
 import com.intellij.util.ui.JBUI
+import java.awt.Component
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import java.util.*
 import javax.swing.JTable
 import javax.swing.KeyStroke
+import javax.swing.SwingConstants
 import javax.swing.event.ChangeEvent
+import javax.swing.table.TableCellRenderer
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -35,6 +39,11 @@ internal class CoAuthorsTable(tableModel: CoAuthorsTableModel) : CCTable(tableMo
     setTableHeader(null)
     setShowGrid(false)
     setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN)
+
+    getColumnModel().getColumn(COLUMN_CHECKBOX).also {
+      it.cellRenderer = CheckboxCellRenderer()
+    }
+
     getColumnModel().getColumn(COLUMN_TEXT).also {
       it.cellRenderer = CoAuthorCellRenderer()
       it.minWidth = 100
@@ -155,6 +164,33 @@ internal class CoAuthorsTable(tableModel: CoAuthorsTableModel) : CCTable(tableMo
 
       append(value as String)
       SpeedSearchUtil.applySpeedSearchHighlighting(table, this, true, isSelected)
+    }
+  }
+
+  private class CheckboxCellRenderer : JBCheckBox(), TableCellRenderer {
+    override fun getTableCellRendererComponent(
+        table: JTable?,
+        value: Any?,
+        isRowSelected: Boolean,
+        hasFocus: Boolean,
+        row: Int,
+        column: Int,
+    ): Component {
+      requireNotNull(table) { "The table object should be valid here" }
+
+      isSelected = value as? Boolean == true
+      border = JBUI.Borders.emptyRight(1)
+      horizontalAlignment = SwingConstants.CENTER
+
+      if (isRowSelected) {
+        foreground = table.selectionForeground
+        background = table.selectionBackground
+      } else {
+        foreground = table.foreground
+        background = table.background
+      }
+
+      return this
     }
   }
 }
