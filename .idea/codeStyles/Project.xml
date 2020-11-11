@@ -11,8 +11,8 @@
     <option name="LINE_SEPARATOR" value="&#10;" />
     <option name="RIGHT_MARGIN" value="101" />
     <option name="FORMATTER_TAGS_ENABLED" value="true" />
-    <DB2CodeStyleSettings version="1">
-      <option name="myVersion" value="1" />
+    <DB2CodeStyleSettings version="5">
+      <option name="USE_GENERAL_STYLE" value="false" />
       <option name="KEYWORD_CASE" value="1" />
       <option name="IDENTIFIER_CASE" value="1" />
       <option name="TYPE_CASE" value="1" />
@@ -40,8 +40,8 @@
       <option name="EXPR_CASE_THEN_WRAP" value="true" />
       <option name="PRIMARY_KEY_NAME_TEMPLATE" value="{table}_{columns}_pk" />
     </DB2CodeStyleSettings>
-    <DerbyCodeStyleSettings version="1">
-      <option name="myVersion" value="1" />
+    <DerbyCodeStyleSettings version="5">
+      <option name="USE_GENERAL_STYLE" value="false" />
       <option name="KEYWORD_CASE" value="1" />
       <option name="IDENTIFIER_CASE" value="1" />
       <option name="TYPE_CASE" value="1" />
@@ -69,8 +69,8 @@
       <option name="EXPR_CASE_THEN_WRAP" value="true" />
       <option name="PRIMARY_KEY_NAME_TEMPLATE" value="{table}_{columns}_pk" />
     </DerbyCodeStyleSettings>
-    <H2CodeStyleSettings version="1">
-      <option name="myVersion" value="1" />
+    <H2CodeStyleSettings version="5">
+      <option name="USE_GENERAL_STYLE" value="false" />
       <option name="KEYWORD_CASE" value="1" />
       <option name="IDENTIFIER_CASE" value="1" />
       <option name="TYPE_CASE" value="1" />
@@ -98,8 +98,8 @@
       <option name="EXPR_CASE_THEN_WRAP" value="true" />
       <option name="PRIMARY_KEY_NAME_TEMPLATE" value="{table}_{columns}_pk" />
     </H2CodeStyleSettings>
-    <HSQLCodeStyleSettings version="1">
-      <option name="myVersion" value="1" />
+    <HSQLCodeStyleSettings version="5">
+      <option name="USE_GENERAL_STYLE" value="false" />
       <option name="KEYWORD_CASE" value="1" />
       <option name="IDENTIFIER_CASE" value="1" />
       <option name="TYPE_CASE" value="1" />
@@ -189,8 +189,8 @@
       <option name="ALLOW_TRAILING_COMMA" value="true" />
       <option name="CODE_STYLE_DEFAULTS" value="KOTLIN_OFFICIAL" />
     </JetCodeStyleSettings>
-    <MSSQLCodeStyleSettings version="1">
-      <option name="myVersion" value="1" />
+    <MSSQLCodeStyleSettings version="5">
+      <option name="USE_GENERAL_STYLE" value="false" />
       <option name="KEYWORD_CASE" value="1" />
       <option name="IDENTIFIER_CASE" value="1" />
       <option name="TYPE_CASE" value="1" />
@@ -218,8 +218,8 @@
       <option name="EXPR_CASE_THEN_WRAP" value="true" />
       <option name="PRIMARY_KEY_NAME_TEMPLATE" value="{table}_{columns}_pk" />
     </MSSQLCodeStyleSettings>
-    <MySQLCodeStyleSettings version="1">
-      <option name="myVersion" value="1" />
+    <MySQLCodeStyleSettings version="5">
+      <option name="USE_GENERAL_STYLE" value="false" />
       <option name="KEYWORD_CASE" value="1" />
       <option name="IDENTIFIER_CASE" value="1" />
       <option name="TYPE_CASE" value="1" />
@@ -247,8 +247,8 @@
       <option name="EXPR_CASE_THEN_WRAP" value="true" />
       <option name="PRIMARY_KEY_NAME_TEMPLATE" value="{table}_{columns}_pk" />
     </MySQLCodeStyleSettings>
-    <OracleCodeStyleSettings version="1">
-      <option name="myVersion" value="1" />
+    <OracleCodeStyleSettings version="5">
+      <option name="USE_GENERAL_STYLE" value="false" />
       <option name="KEYWORD_CASE" value="1" />
       <option name="IDENTIFIER_CASE" value="1" />
       <option name="TYPE_CASE" value="1" />
@@ -276,8 +276,8 @@
       <option name="EXPR_CASE_THEN_WRAP" value="true" />
       <option name="PRIMARY_KEY_NAME_TEMPLATE" value="{table}_{columns}_pk" />
     </OracleCodeStyleSettings>
-    <PostgresCodeStyleSettings version="1">
-      <option name="myVersion" value="1" />
+    <PostgresCodeStyleSettings version="5">
+      <option name="USE_GENERAL_STYLE" value="false" />
       <option name="KEYWORD_CASE" value="1" />
       <option name="IDENTIFIER_CASE" value="1" />
       <option name="TYPE_CASE" value="1" />
@@ -308,8 +308,8 @@
     <Properties>
       <option name="KEEP_BLANK_LINES" value="true" />
     </Properties>
-    <SQLiteCodeStyleSettings version="1">
-      <option name="myVersion" value="1" />
+    <SQLiteCodeStyleSettings version="5">
+      <option name="USE_GENERAL_STYLE" value="false" />
       <option name="KEYWORD_CASE" value="1" />
       <option name="IDENTIFIER_CASE" value="1" />
       <option name="TYPE_CASE" value="1" />
@@ -337,8 +337,7 @@
       <option name="EXPR_CASE_THEN_WRAP" value="true" />
       <option name="PRIMARY_KEY_NAME_TEMPLATE" value="{table}_{columns}_pk" />
     </SQLiteCodeStyleSettings>
-    <SqlCodeStyleSettings version="1">
-      <option name="myVersion" value="1" />
+    <SqlCodeStyleSettings version="5">
       <option name="KEYWORD_CASE" value="1" />
       <option name="IDENTIFIER_CASE" value="1" />
       <option name="TYPE_CASE" value="1" />
@@ -367,8 +366,8 @@
       <option name="PRIMARY_KEY_NAME_TEMPLATE" value="{table}_{columns}_pk" />
       <option name="NEW_LINE_BEFORE_JOIN_CONDITION" value="true" />
     </SqlCodeStyleSettings>
-    <SybaseCodeStyleSettings version="1">
-      <option name="myVersion" value="1" />
+    <SybaseCodeStyleSettings version="5">
+      <option name="USE_GENERAL_STYLE" value="false" />
       <option name="KEYWORD_CASE" value="1" />
       <option name="IDENTIFIER_CASE" value="1" />
       <option name="TYPE_CASE" value="1" />
