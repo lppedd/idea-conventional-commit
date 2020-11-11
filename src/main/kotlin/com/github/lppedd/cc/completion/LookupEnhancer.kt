@@ -86,8 +86,13 @@ internal class LookupEnhancer(
 
   override fun lookupShown(event: LookupEvent) {
     try {
-      // Setting the lookup focus degree to "focused" means the top lookup item
-      // matching the prefix is preselected and ready to be completed
+      // Setting the lookup focus degree to "semi-focused" means the top lookup item
+      // matching the prefix is preselected and ready to be completed by non-contextual keys
+      // TODO: maybe consider using a CompletionPreselectionBehaviourProvider.
+      //   However the provider evaluation happens only if "...depends.on.context"
+      //   registry key is set to "true".
+      //   Also if the user checked the "Insert selected suggestion by... context-dependent keys"
+      //   option, the FOCUSED degree is used while we want SEMI_FOCUSED
       lookup.setLookupFocusDegree("SEMI_FOCUSED")
     } catch (e: Exception) {
       logger.error("Couldn't override the lookup focus degree", e)
