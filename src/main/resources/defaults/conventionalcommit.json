@@ -55,6 +55,10 @@
     {
       "name": "Co-authored-by",
       "description": "The commit is co-authored by another person.<br/>For multiple people use one line each"
+    },
+    {
+      "name": "Refs",
+      "description": "The commit references other commits by their hash ID.<br/>For multiple hash IDs use a comma as separator"
     }
   ]
 }
