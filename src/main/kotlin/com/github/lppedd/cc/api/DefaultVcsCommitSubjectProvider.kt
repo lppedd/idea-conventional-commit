@@ -50,8 +50,8 @@ internal class DefaultVcsCommitSubjectProvider(private val project: Project)
       .asSequence()
       .take(if ("co-authored-by".equals(footerType, true)) 5 else 15)
       .flatMap { message -> getFooterValues(footerType, message) }
+      .distinctBy(String::toLowerCase)
       .map(::CommitFooterValue)
-      .distinctBy { it.text.toLowerCase() }
       .toList()
 
   private fun getFooterValues(footerType: String, message: String): Sequence<String> =
