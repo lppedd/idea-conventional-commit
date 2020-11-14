@@ -3,10 +3,7 @@
 package com.github.lppedd.cc.completion.providers
 
 import com.github.lppedd.cc.CC
-import com.github.lppedd.cc.CCBundle
-import com.github.lppedd.cc.api.CommitFooterValue
 import com.github.lppedd.cc.api.CommitFooterValueProvider
-import com.github.lppedd.cc.api.DefaultCommitTokenProvider
 import com.github.lppedd.cc.api.FOOTER_VALUE_EP
 import com.github.lppedd.cc.completion.resultset.ResultSet
 import com.github.lppedd.cc.lookupElement.CommitFooterValueLookupElement
@@ -70,11 +67,7 @@ internal class FooterValueCompletionProvider(
   }
 
   private fun buildShowMoreLookupElement(prefix: String): CommitLookupElement {
-    val commitFooter = CommitFooterValue("", CCBundle["cc.config.coAuthors.description"])
-    val psiElement = CommitFooterValuePsiElement(project, commitFooter)
-    val provider = FOOTER_VALUE_EP.findExtensionOrFail(DefaultCommitTokenProvider::class.java, project)
-    val wrapper = FooterValueProviderWrapper(project, provider)
-    val lookupElement = ShowMoreCoAuthorsLookupElement(2000, wrapper, psiElement, prefix)
+    val lookupElement = ShowMoreCoAuthorsLookupElement(project, prefix)
 
     @Suppress("UnstableApiUsage")
     if (process is CompletionProgressIndicator) {

@@ -1,10 +1,7 @@
 package com.github.lppedd.cc.lookupElement
 
 import com.github.lppedd.cc.CC
-import com.github.lppedd.cc.CCIcons
-import com.github.lppedd.cc.api.ProviderPresentation
-import com.github.lppedd.cc.completion.Priority
-import com.github.lppedd.cc.completion.providers.ProviderWrapper
+import com.github.lppedd.cc.completion.providers.FakeProviderWrapper
 import com.github.lppedd.cc.psiElement.CommitFakePsiElement
 import com.intellij.codeInsight.lookup.LookupElementPresentation
 import com.intellij.openapi.project.Project
@@ -34,11 +31,5 @@ internal class CommitNoScopeLookupElement(project: Project) :
       it.itemText = getDisplayedText()
       it.isItemTextItalic = true
     }
-  }
-
-  private object FakeProviderWrapper : ProviderWrapper {
-    override fun getPriority() = Priority(0)
-    override fun getId() = ""
-    override fun getPresentation() = ProviderPresentation("Default", CCIcons.Logo)
   }
 }

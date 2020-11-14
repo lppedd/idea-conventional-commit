@@ -1,7 +1,8 @@
 package com.github.lppedd.cc.lookupElement
 
 import com.github.lppedd.cc.*
-import com.github.lppedd.cc.completion.providers.FooterValueProviderWrapper
+import com.github.lppedd.cc.api.CommitFooterValue
+import com.github.lppedd.cc.completion.providers.FakeProviderWrapper
 import com.github.lppedd.cc.configuration.component.CoAuthorsDialog
 import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.ValidToken
@@ -12,6 +13,7 @@ import com.intellij.codeInsight.lookup.LookupElementPresentation
 import com.intellij.codeInsight.lookup.impl.PrefixChangeListener
 import com.intellij.openapi.command.CommandProcessor
 import com.intellij.openapi.command.WriteCommandAction
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiDocumentManager
 import kotlin.test.assertNotNull
@@ -19,17 +21,20 @@ import kotlin.test.assertNotNull
 /**
  * @author Edoardo Luppi
  */
-internal class ShowMoreCoAuthorsLookupElement(
-    index: Int,
-    provider: FooterValueProviderWrapper,
-    private val psiElement: CommitFooterValuePsiElement,
-    completionPrefix: String,
-) : CommitLookupElement(index, CC.Tokens.PriorityFooterValue, provider), PrefixChangeListener {
-  init {
-    putUserData(CodeCompletionHandlerBase.DIRECT_INSERTION, true)
-  }
+internal class ShowMoreCoAuthorsLookupElement : CommitLookupElement, PrefixChangeListener {
+  private val psiElement: CommitFooterValuePsiElement
+  private var userInsertedText: StringBuilder
 
-  private var userInsertedText = StringBuilder(50).append(completionPrefix)
+  constructor(project: Project, completionPrefix: String)
+      : super(2000, CC.Tokens.PriorityFooterValue, FakeProviderWrapper) {
+    putUserData(CodeCompletionHandlerBase.DIRECT_INSERTION, true)
+
+    userInsertedText = StringBuilder(50).append(completionPrefix)
+    psiElement = CommitFooterValuePsiElement(
+      project,
+      CommitFooterValue("", CCBundle["cc.config.coAuthors.description"])
+    )
+  }
 
   override fun beforeAppend(char: Char) {
     userInsertedText.append(char)
