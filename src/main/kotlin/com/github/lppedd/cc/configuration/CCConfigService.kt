@@ -123,7 +123,7 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
   override fun noStateLoaded() {
     typeProvidersMap.putIfAbsent(DefaultCommitTokenProvider.ID, 0)
     scopeProvidersMap.putIfAbsent(DefaultCommitTokenProvider.ID, 0)
-    subjectProvidersMap.putIfAbsent(DefaultVcsCommitSubjectProvider.ID, 0)
+    subjectProvidersMap.putIfAbsent(RecentCommitTokenProvider.ID, 0)
     footerTypeProvidersMap.putIfAbsent(DefaultCommitTokenProvider.ID, 0)
     footerValueProvidersMap.putIfAbsent(DefaultCommitTokenProvider.ID, 0)
   }

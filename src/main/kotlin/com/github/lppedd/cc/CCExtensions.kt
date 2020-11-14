@@ -318,6 +318,25 @@ internal inline operator fun <T, C : MutableList<T>> T.plus(list: C): C {
 }
 
 // endregion
+// region Sequence
+
+@InlineOnly
+internal inline fun Sequence<String>.mapToLowerCase(): Sequence<String> =
+  map(String::toLowerCase)
+
+@InlineOnly
+internal inline fun Sequence<String>.filterNotEmpty(): Sequence<String> =
+  filterNot(String::isEmpty)
+
+@InlineOnly
+internal inline fun Sequence<String>.filterNotBlank(): Sequence<String> =
+  filterNot(String::isBlank)
+
+@InlineOnly
+internal inline fun Sequence<String>.trim(): Sequence<String> =
+  map(String::trim)
+
+// endregion
 // region Utilities
 
 @InlineOnly

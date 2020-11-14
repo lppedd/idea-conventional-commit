@@ -16,6 +16,8 @@ object CCIcons {
   object Provider {
     @JvmField val Unknown: Icon = getIcon("provider/unknown.svg")
     @JvmField val Disabled: Icon = getIcon("provider/disabled.svg")
+    @JvmField val Recent: Icon = getIcon("provider/recent.svg")
+    @JvmField val Vcs: Icon = getIcon("provider/vcs.svg")
   }
 
   object Tokens {
