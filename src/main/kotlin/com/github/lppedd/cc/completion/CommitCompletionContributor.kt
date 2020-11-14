@@ -3,6 +3,7 @@
 package com.github.lppedd.cc.completion
 
 import com.github.lppedd.cc.*
+import com.github.lppedd.cc.api.CommitTokenProvider
 import com.github.lppedd.cc.collection.NoopList
 import com.github.lppedd.cc.completion.providers.*
 import com.github.lppedd.cc.completion.providers.CompletionProvider
@@ -188,7 +189,7 @@ private class CommitCompletionContributor : CompletionContributor() {
 
   private fun enhanceCompletionProcessIndicator(
       process: CompletionProcess,
-      providers: Collection<CompletionProvider<*>>,
+      completionProviders: Collection<CompletionProvider<*>>,
   ) {
     if (process is CompletionProgressIndicator) {
       ProgressManager.checkCanceled()
@@ -196,8 +197,27 @@ private class CommitCompletionContributor : CompletionContributor() {
       safelySetNoopListOnLookupArranger(process)
       safelyReleaseProcessSemaphore(process)
 
-      val lookupEnhancer = installAndGetLookupEnhancer(process.lookup)
-      lookupEnhancer.setProviders(providers.flatMap { it.providers.take(3) }.take(6))
+      // Only token providers that will be executed need to be filterable,
+      // so take them until the one that says "stopHere"
+      var n = completionProviders.indexOfFirst(CompletionProvider<*>::stopHere) + 1
+
+      if (n == 0) {
+        // All the token providers will be executed and thus
+        // all need to be filterable
+        n = completionProviders.size
+      }
+
+      val commitTokenProviders =
+        completionProviders
+          .asSequence()
+          .take(n)
+          .flatMap(CompletionProvider<*>::providers)
+          // Removing duplicated token providers avoids having duplicated
+          // filtering actions in the menu
+          .distinctBy(CommitTokenProvider::getId)
+          .toList()
+
+      installAndGetLookupEnhancer(process.lookup).setProviders(commitTokenProviders)
     }
   }
 
