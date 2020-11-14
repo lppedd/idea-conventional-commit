@@ -7,7 +7,6 @@ import com.github.lppedd.cc.configuration.component.CoAuthorsDialog
 import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.ValidToken
 import com.github.lppedd.cc.psiElement.CommitFooterValuePsiElement
-import com.intellij.codeInsight.completion.CodeCompletionHandlerBase
 import com.intellij.codeInsight.completion.InsertionContext
 import com.intellij.codeInsight.lookup.LookupElementPresentation
 import com.intellij.codeInsight.lookup.impl.PrefixChangeListener
@@ -22,13 +21,12 @@ import kotlin.test.assertNotNull
  * @author Edoardo Luppi
  */
 internal class ShowMoreCoAuthorsLookupElement : CommitLookupElement, PrefixChangeListener {
-  private val psiElement: CommitFooterValuePsiElement
+  @Suppress("JoinDeclarationAndAssignment")
   private var userInsertedText: StringBuilder
+  private val psiElement: CommitFooterValuePsiElement
 
   constructor(project: Project, completionPrefix: String)
       : super(2000, CC.Tokens.PriorityFooterValue, FakeProviderWrapper) {
-    putUserData(CodeCompletionHandlerBase.DIRECT_INSERTION, true)
-
     userInsertedText = StringBuilder(50).append(completionPrefix)
     psiElement = CommitFooterValuePsiElement(
       project,
