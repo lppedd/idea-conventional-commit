@@ -4,12 +4,14 @@ import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.api.BODY_EP
 import com.github.lppedd.cc.api.CommitBodyProvider
 import com.github.lppedd.cc.completion.resultset.ResultSet
+import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.lookupElement.CommitBodyLookupElement
 import com.github.lppedd.cc.parser.CommitTokens
 import com.github.lppedd.cc.parser.FooterContext.FooterTypeContext
 import com.github.lppedd.cc.parser.ValidToken
 import com.github.lppedd.cc.psiElement.CommitBodyPsiElement
 import com.github.lppedd.cc.safeRunWithCheckCanceled
+import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 
 /**
@@ -25,7 +27,10 @@ internal class BodyCompletionProvider(
 
   override fun complete(resultSet: ResultSet) {
     val rs = resultSet.withPrefixMatcher(context.type)
+    val config = project.service<CCConfigService>()
+
     providers.asSequence()
+      .sortedBy(config::getProviderOrder)
       .flatMap { provider ->
         safeRunWithCheckCanceled {
           val wrapper = BodyProviderWrapper(project, provider)

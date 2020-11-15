@@ -4,10 +4,12 @@ import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.api.CommitSubjectProvider
 import com.github.lppedd.cc.api.SUBJECT_EP
 import com.github.lppedd.cc.completion.resultset.ResultSet
+import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.lookupElement.CommitSubjectLookupElement
 import com.github.lppedd.cc.parser.CommitContext.SubjectCommitContext
 import com.github.lppedd.cc.psiElement.CommitSubjectPsiElement
 import com.github.lppedd.cc.safeRunWithCheckCanceled
+import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 
 /**
@@ -22,7 +24,10 @@ internal class SubjectCompletionProvider(
 
   override fun complete(resultSet: ResultSet) {
     val rs = resultSet.withPrefixMatcher(context.subject.trimStart())
+    val config = project.service<CCConfigService>()
+
     providers.asSequence()
+      .sortedBy(config::getProviderOrder)
       .flatMap { provider ->
         safeRunWithCheckCanceled {
           val wrapper = SubjectProviderWrapper(project, provider)
