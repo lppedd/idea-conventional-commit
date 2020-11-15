@@ -79,8 +79,8 @@ internal class SettingsActions(
     }
 
     override fun update(event: AnActionEvent) {
-      val hideSelected = CCBundle["cc.config.popup.hideSelected"]
-      val keepSelected = CCBundle["cc.config.popup.keepSelected"]
+      val hideSelected = CCBundle["cc.completion.menu.filter.hideSelected"]
+      val keepSelected = CCBundle["cc.completion.menu.filter.keepSelected"]
 
       event.presentation.also {
         val icon = AllIcons.General.Filter
