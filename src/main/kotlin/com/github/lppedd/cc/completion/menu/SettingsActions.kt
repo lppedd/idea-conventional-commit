@@ -8,14 +8,14 @@ import com.github.lppedd.cc.configuration.CCConfigService.CompletionType.TEMPLAT
 import com.github.lppedd.cc.configuration.CCConfigService.ProviderFilterType.HIDE_SELECTED
 import com.github.lppedd.cc.configuration.CCConfigService.ProviderFilterType.KEEP_SELECTED
 import com.intellij.codeInsight.lookup.impl.LookupImpl
-import com.intellij.icons.AllIcons.General.Filter
-import com.intellij.icons.AllIcons.General.Settings
+import com.intellij.icons.AllIcons
 import com.intellij.openapi.actionSystem.ActionGroup
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.Separator
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.DumbAware
+import com.intellij.openapi.util.IconLoader
 import com.intellij.util.ui.UIUtil
 import java.util.*
 
@@ -46,7 +46,7 @@ internal class SettingsActions(
   override fun hashCode(): Int =
     Objects.hashCode(lookup)
 
-  private inner class CompletionModeChangeAction : AnAction(Settings) {
+  private inner class CompletionModeChangeAction : AnAction() {
     override fun actionPerformed(e: AnActionEvent) {
       config.completionType =
         if (config.completionType == TEMPLATE) POPUP
@@ -54,16 +54,23 @@ internal class SettingsActions(
       enhancer.settingChanged()
     }
 
-    override fun update(e: AnActionEvent) {
-      e.presentation.text = if (config.completionType == TEMPLATE) {
-        "Template ${UIUtil.rightArrow()} Standard"
-      } else {
-        "Standard ${UIUtil.rightArrow()} Template"
+    override fun update(event: AnActionEvent) {
+      event.presentation.also {
+        val icon = AllIcons.General.Settings
+        val darkIcon = IconLoader.getDarkIcon(icon, true)
+        it.selectedIcon = darkIcon
+        it.hoveredIcon = darkIcon
+        it.icon = icon
+        it.text = if (config.completionType == TEMPLATE) {
+          "Template ${UIUtil.rightArrow()} Standard"
+        } else {
+          "Standard ${UIUtil.rightArrow()} Template"
+        }
       }
     }
   }
 
-  private inner class FilterModeChangeAction : AnAction(Filter) {
+  private inner class FilterModeChangeAction : AnAction() {
     override fun actionPerformed(e: AnActionEvent) {
       config.providerFilterType =
         if (config.providerFilterType == HIDE_SELECTED) KEEP_SELECTED
@@ -71,13 +78,21 @@ internal class SettingsActions(
       enhancer.settingChanged()
     }
 
-    override fun update(e: AnActionEvent) {
+    override fun update(event: AnActionEvent) {
       val hideSelected = CCBundle["cc.config.popup.hideSelected"]
       val keepSelected = CCBundle["cc.config.popup.keepSelected"]
-      e.presentation.text = if (config.providerFilterType == HIDE_SELECTED) {
-        "$hideSelected ${UIUtil.rightArrow()} $keepSelected"
-      } else {
-        "$keepSelected ${UIUtil.rightArrow()} $hideSelected"
+
+      event.presentation.also {
+        val icon = AllIcons.General.Filter
+        val darkIcon = IconLoader.getDarkIcon(icon, true)
+        it.selectedIcon = darkIcon
+        it.hoveredIcon = darkIcon
+        it.icon = icon
+        it.text = if (config.providerFilterType == HIDE_SELECTED) {
+          "$hideSelected ${UIUtil.rightArrow()} $keepSelected"
+        } else {
+          "$keepSelected ${UIUtil.rightArrow()} $hideSelected"
+        }
       }
     }
   }

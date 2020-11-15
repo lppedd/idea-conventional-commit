@@ -9,6 +9,7 @@ import com.intellij.codeInsight.completion.PlainPrefixMatcher
 import com.intellij.codeInsight.lookup.impl.LookupImpl
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.util.IconLoader
 import java.util.*
 
 /**
@@ -73,11 +74,18 @@ internal class FilterAction(
     }
   }
 
-  override fun update(e: AnActionEvent) {
-    e.presentation.icon = if (isFiltered) {
+  override fun update(event: AnActionEvent) {
+    val icon = if (isFiltered) {
       CCIcons.Provider.Disabled
     } else {
       provider.getPresentation().icon
+    }
+
+    event.presentation.also {
+      val darkIcon = IconLoader.getDarkIcon(icon, true)
+      it.selectedIcon = darkIcon
+      it.hoveredIcon = darkIcon
+      it.icon = icon
     }
   }
 
