@@ -41,11 +41,11 @@ internal class LookupEnhancer(
     private val lookup: LookupImpl,
 ) : LookupListener, PrefixChangeListener, AnActionListener {
   private companion object {
-    const val SHOW_GROUP_IN_POPUP = "actionSystem.toolbar.show.group.in.popup"
+    private const val SHOW_GROUP_IN_POPUP = "actionSystem.toolbar.show.group.in.popup"
 
-    val menuActionClass: Class<*> = Class.forName("com.intellij.codeInsight.lookup.impl.LookupUi\$MenuAction")
-    val logger = logger<LookupEnhancer>()
-    val robot = Robot()
+    private val menuActionClass = Class.forName("com.intellij.codeInsight.lookup.impl.LookupUi\$MenuAction")
+    private val logger = logger<LookupEnhancer>()
+    private val robot = Robot()
   }
 
   private val commandProcessor = CommandProcessor.getInstance()
