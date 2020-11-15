@@ -5,6 +5,7 @@ import com.github.lppedd.cc.CCIcons
 import com.github.lppedd.cc.api.CommitTokenProvider
 import com.github.lppedd.cc.ui.CCTable
 import com.intellij.openapi.application.ApplicationInfo
+import com.intellij.openapi.util.IconLoader
 import com.intellij.ui.ColoredTableCellRenderer
 import com.intellij.ui.scale.JBUIScale
 import com.intellij.ui.speedSearch.SpeedSearchUtil
@@ -73,19 +74,20 @@ internal class CommitProviderTable<T : CommitTokenProvider> : CCTable() {
     ) {
       border = JBUI.Borders.empty()
       ipad = JBUI.insets(4, 6)
-      setValue(value)
+      setValue(value, isSelected && hasFocus)
       SpeedSearchUtil.applySpeedSearchHighlighting(table, this, true, isSelected)
     }
 
-    private fun setValue(value: Any?) {
+    private fun setValue(value: Any?, useDarkIcon: Boolean) {
       if (value is CommitTokenProvider) {
         val (name, icon) = value.getPresentation()
-        setIcon(getIcon(icon))
+        val fixedIcon = getIconOrUnknown(icon)
+        setIcon(if (useDarkIcon) IconLoader.getDarkIcon(fixedIcon, true) else fixedIcon)
         append(name)
       }
     }
 
-    private fun getIcon(icon: Icon): Icon {
+    private fun getIconOrUnknown(icon: Icon): Icon {
       val scaledHW = JBUIScale.scale(iconSize)
       return if (icon.iconHeight <= scaledHW && icon.iconWidth <= scaledHW) {
         icon
