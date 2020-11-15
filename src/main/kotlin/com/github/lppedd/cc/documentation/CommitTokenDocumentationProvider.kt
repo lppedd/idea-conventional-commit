@@ -9,15 +9,18 @@ import com.intellij.lang.documentation.DocumentationMarkup
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
 
-private val LINE_SEPARATOR_REGEX = Regex("\r\n|\n|\r")
-
 /**
  * @author Edoardo Luppi
  */
 private class CommitTokenDocumentationProvider : AbstractDocumentationProvider() {
+  private val lineSeparatorRegex = Regex("\r\n|\n|\r")
+
   override fun generateDoc(element: PsiElement?, originalElement: PsiElement?): String? {
+    if (element !is CommitFakePsiElement) {
+      return null
+    }
+
     val description = when (element) {
-      !is CommitFakePsiElement -> null
       is CommitTypePsiElement -> element.commitType.description
       is CommitScopePsiElement -> element.commitScope.description
       is CommitBodyPsiElement -> generateDocForBody(element.commitBody)
@@ -26,6 +29,7 @@ private class CommitTokenDocumentationProvider : AbstractDocumentationProvider()
       else -> null
     }
 
+    // TODO: maybe create a CommitTokenDocumentationProvider API
     return description?.ifBlank { null }
   }
 
@@ -61,7 +65,7 @@ private class CommitTokenDocumentationProvider : AbstractDocumentationProvider()
         .append("Value:")
         .append(DocumentationMarkup.SECTION_SEPARATOR)
         .append("<p>")
-        .append(LINE_SEPARATOR_REGEX.replace(value, "<p>"))
+        .append(lineSeparatorRegex.replace(value, "<p>"))
         .append(DocumentationMarkup.SECTION_END)
         .append(DocumentationMarkup.SECTIONS_END)
     }
