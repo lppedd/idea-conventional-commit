@@ -5,11 +5,11 @@ import com.github.lppedd.cc.api.CommitTokenProvider
 import com.github.lppedd.cc.completion.FilterPrefixMatcher
 import com.github.lppedd.cc.completion.LookupEnhancer
 import com.github.lppedd.cc.lookupElement.CommitLookupElement
+import com.github.lppedd.cc.updateIcons
 import com.intellij.codeInsight.completion.PlainPrefixMatcher
 import com.intellij.codeInsight.lookup.impl.LookupImpl
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.util.IconLoader
 import java.util.*
 
 /**
@@ -81,12 +81,7 @@ internal class FilterAction(
       provider.getPresentation().icon
     }
 
-    event.presentation.also {
-      val darkIcon = IconLoader.getDarkIcon(icon, true)
-      it.selectedIcon = darkIcon
-      it.hoveredIcon = darkIcon
-      it.icon = icon
-    }
+    event.presentation.updateIcons(icon)
   }
 
   override fun equals(other: Any?): Boolean =

@@ -7,6 +7,7 @@ import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.codeInsight.lookup.impl.LookupImpl
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl
 import com.intellij.codeInsight.template.impl.TemplateState
+import com.intellij.openapi.actionSystem.Presentation
 import com.intellij.openapi.application.ApplicationInfo
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ex.ApplicationUtil
@@ -16,6 +17,7 @@ import com.intellij.openapi.editor.EditorModificationUtil
 import com.intellij.openapi.editor.ex.util.EditorUtil
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.ui.DialogWrapper
+import com.intellij.openapi.util.IconLoader
 import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.vfs.VFileProperty
 import com.intellij.openapi.vfs.VirtualFile
@@ -27,6 +29,7 @@ import java.awt.Robot
 import java.io.InputStream
 import javax.swing.Action
 import javax.swing.BorderFactory
+import javax.swing.Icon
 import javax.swing.ListSelectionModel
 import javax.swing.border.Border
 import kotlin.internal.InlineOnly
@@ -68,6 +71,16 @@ internal inline fun Action.setName(name: String) {
 @InlineOnly
 internal inline fun Action.setFocused(focused: Boolean = true) {
   putValue(DialogWrapper.FOCUSED_ACTION, focused)
+}
+
+// endregion
+// region Presentation
+
+internal fun Presentation.updateIcons(withIcon: Icon) {
+  val darkIcon = IconLoader.getDarkIcon(withIcon, true)
+  selectedIcon = darkIcon
+  hoveredIcon = darkIcon
+  icon = withIcon
 }
 
 // endregion

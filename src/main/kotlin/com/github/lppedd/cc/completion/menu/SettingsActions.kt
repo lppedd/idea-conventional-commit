@@ -7,6 +7,7 @@ import com.github.lppedd.cc.configuration.CCConfigService.CompletionType.POPUP
 import com.github.lppedd.cc.configuration.CCConfigService.CompletionType.TEMPLATE
 import com.github.lppedd.cc.configuration.CCConfigService.ProviderFilterType.HIDE_SELECTED
 import com.github.lppedd.cc.configuration.CCConfigService.ProviderFilterType.KEEP_SELECTED
+import com.github.lppedd.cc.updateIcons
 import com.intellij.codeInsight.lookup.impl.LookupImpl
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.actionSystem.ActionGroup
@@ -15,7 +16,6 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.Separator
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.DumbAware
-import com.intellij.openapi.util.IconLoader
 import com.intellij.util.ui.UIUtil
 import java.util.*
 
@@ -56,11 +56,7 @@ internal class SettingsActions(
 
     override fun update(event: AnActionEvent) {
       event.presentation.also {
-        val icon = AllIcons.General.Settings
-        val darkIcon = IconLoader.getDarkIcon(icon, true)
-        it.selectedIcon = darkIcon
-        it.hoveredIcon = darkIcon
-        it.icon = icon
+        it.updateIcons(AllIcons.General.Settings)
         it.text = if (config.completionType == TEMPLATE) {
           "Template ${UIUtil.rightArrow()} Standard"
         } else {
@@ -83,11 +79,7 @@ internal class SettingsActions(
       val keepSelected = CCBundle["cc.completion.menu.filter.keepSelected"]
 
       event.presentation.also {
-        val icon = AllIcons.General.Filter
-        val darkIcon = IconLoader.getDarkIcon(icon, true)
-        it.selectedIcon = darkIcon
-        it.hoveredIcon = darkIcon
-        it.icon = icon
+        it.updateIcons(AllIcons.General.Filter)
         it.text = if (config.providerFilterType == HIDE_SELECTED) {
           "$hideSelected ${UIUtil.rightArrow()} $keepSelected"
         } else {
