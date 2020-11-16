@@ -71,7 +71,7 @@ private class CommitCompletionContributor : CompletionContributor() {
 
     val file = parameters.originalFile
 
-    // Items must be provided only inside the VCS commit dialog's document
+    // Only execute when inside the VCS commit dialog
     if (file.document?.getUserData(CommitMessage.DATA_KEY) == null) {
       return
     }
@@ -269,16 +269,13 @@ private class CommitCompletionContributor : CompletionContributor() {
     }
   }
 
-  @InlineOnly
-  private inline fun CompletionProgressIndicator.getArranger(): CompletionLookupArrangerImpl =
+  private fun CompletionProgressIndicator.getArranger(): CompletionLookupArrangerImpl =
     myArrangerField.get(this) as CompletionLookupArrangerImpl
 
-  @InlineOnly
-  private inline fun CompletionLookupArrangerImpl.setFrozenItemsList(list: MutableList<LookupElement?>) {
+  private fun CompletionLookupArrangerImpl.setFrozenItemsList(list: MutableList<LookupElement?>) {
     myFrozenItemsField.set(this, list)
   }
 
-  @InlineOnly
-  private inline fun CompletionProgressIndicator.getFreezeSemaphore(): Semaphore =
+  private fun CompletionProgressIndicator.getFreezeSemaphore(): Semaphore =
     myFreezeSemaphoreField.get(this) as Semaphore
 }
