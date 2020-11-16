@@ -29,7 +29,7 @@ internal class CCVcsHandler(private val project: Project) {
     val activeVcsRoots = projectVcsManager.allVcsRoots.toList()
     return VcsLogManager.findLogProviders(activeVcsRoots, project)
       .asSequence()
-      .map { (root, logProvider) -> logProvider.readFirstBlock(root, limit::toInt) }
+      .map { (root, logProvider) -> logProvider.readFirstBlock(root) { limit } }
       .map { it.commits }
       .toList()
       .let(vcsLogMultiRepoJoiner::join)

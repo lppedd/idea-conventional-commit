@@ -26,6 +26,7 @@ internal class RecentCommitTokenProvider(project: Project)
     CommitFooterValueProvider {
   companion object {
     const val ID: String = "f3be5600-71b8-401c-bf50-e2465d8efca8"
+    const val MAX_ELEMENTS = 3
 
     private val regexBeginEndWs = Regex("""^\s+|\s+$""")
     private val regexBlankLines = Regex("""^\s*$""", MULTILINE)
@@ -41,95 +42,100 @@ internal class RecentCommitTokenProvider(project: Project)
     ProviderPresentation("Recently used", CCIcons.Provider.Recent)
 
   override fun getCommitTypes(prefix: String?): Collection<CommitType> =
-    (getOrderedSavedCommitMessages(10) + getOrderedVcsCommitMessages(20))
-      .map { it.lines().first(String::isNotBlank) }
-      .mapToLowerCase()
-      .distinct()
-      .map(CCParser::parseHeader)
-      .map(CommitTokens::type)
-      .filterIsInstance<ValidToken>()
-      .map(ValidToken::value)
-      .trim()
-      .filterNotEmpty()
-      .distinct()
-      .take(3)
-      .map(::RecentCommitType)
-      .toList()
+    doGet(::RecentCommitType) { messages ->
+      messages.map { it.lines().first(String::isNotBlank) }
+        .mapToLowerCase()
+        .distinct()
+        .map(CCParser::parseHeader)
+        .filter { it.type is ValidToken && it.separator.isPresent }
+        .map { it.type as ValidToken }
+        .map(ValidToken::value)
+        .trim()
+        .filterNotEmpty()
+        .toMutableSet()
+    }
 
   override fun getCommitScopes(commitType: String?): Collection<CommitScope> =
-    (getOrderedSavedCommitMessages(10) + getOrderedVcsCommitMessages(20))
-      .map { it.lines().first(String::isNotBlank) }
-      .mapToLowerCase()
-      .distinct()
-      .map(CCParser::parseHeader)
-      .map(CommitTokens::scope)
-      .filterIsInstance<ValidToken>()
-      .map(ValidToken::value)
-      .trim()
-      .filterNotEmpty()
-      .distinct()
-      .take(3)
-      .map(::RecentCommitScope)
-      .toList()
+    doGet(::RecentCommitScope) { messages ->
+      messages.map { it.lines().first(String::isNotBlank) }
+        .mapToLowerCase()
+        .distinct()
+        .map(CCParser::parseHeader)
+        .map(CommitTokens::scope)
+        .filterIsInstance<ValidToken>()
+        .map(ValidToken::value)
+        .trim()
+        .filterNotEmpty()
+        .toMutableSet()
+    }
 
   override fun getCommitSubjects(commitType: String?, commitScope: String?): Collection<CommitSubject> =
-    (getOrderedSavedCommitMessages(10) + getOrderedVcsCommitMessages(20))
-      .map { it.lines().first(String::isNotBlank) }
-      .distinctBy(String::toLowerCase)
-      .map(CCParser::parseHeader)
-      .map(CommitTokens::subject)
-      .filterIsInstance<ValidToken>()
-      .map(ValidToken::value)
-      .trim()
-      .filterNotEmpty()
-      .distinctBy(String::toLowerCase)
-      .take(3)
-      .map(::RecentCommitSubject)
-      .toList()
+    doGet(::RecentCommitSubject) { messages ->
+      messages.map { it.lines().first(String::isNotBlank) }
+        .distinctBy(String::toLowerCase)
+        .map(CCParser::parseHeader)
+        .map(CommitTokens::subject)
+        .filterIsInstance<ValidToken>()
+        .map(ValidToken::value)
+        .trim()
+        .filterNotEmpty()
+        .distinctBy(String::toLowerCase)
+        .toMutableSet()
+    }
 
   override fun getCommitFooterValues(
       footerType: String,
       commitType: String?,
       commitScope: String?,
       commitSubject: String?,
-  ): Collection<CommitFooterValue> {
-    val n = if ("co-authored-by".equals(footerType, true)) 5 else 15
-    return (getOrderedSavedCommitMessages(10) + getOrderedVcsCommitMessages(20))
-      .flatMap { message -> getFooterValues(footerType, message) }
-      .distinctBy(String::toLowerCase)
-      .take(n)
-      .map(::RecentCommitFooterValue)
-      .toList()
-  }
+  ): Collection<CommitFooterValue> =
+    doGet(::RecentCommitFooterValue) { messages ->
+      messages.flatMap(::getFooterValues)
+        .distinctBy(String::toLowerCase)
+        .toMutableSet()
+    }
 
-  private fun getFooterValues(footerType: String, message: String): Sequence<String> =
+  private fun getFooterValues(message: String): Sequence<String> =
     message.replace(regexBeginEndWs, "")
       .split(regexBlankLines)
       .drop(1)
-      .asReversed()
       .asSequence()
       .map { it.replace(regexBeginEndWs, "") }
       .filterNotBlank()
       .map(CCParser::parseFooter)
-      .filter { footerType == (it.type as? ValidToken)?.value }
+      .filter { it.type is ValidToken }
       .map(FooterTokens::footer)
       .filterIsInstance<ValidToken>()
       .map(ValidToken::value)
       .trim()
       .filterNotEmpty()
 
-  @Suppress("SameParameterValue")
-  private fun getOrderedVcsCommitMessages(limit: Int): Sequence<String> =
-    vcsHandler.getOrderedCommits(limit)
+  private fun <T : CommitTokenElement> doGet(
+      ctor: (String) -> T,
+      transformation: (Sequence<String>) -> MutableSet<String>,
+  ): Collection<T> {
+    val tokens = transformation(getOrderedSavedCommitMessages())
+
+    // If we've already found all the required tokens in the saved messages
+    // we don't need to query the VCS log, it would only slow down completion
+    if (tokens.size < MAX_ELEMENTS) {
+      val remainingElements = MAX_ELEMENTS - tokens.size
+      tokens.addAll(transformation(getOrderedVcsCommitMessages()).take(remainingElements))
+    }
+
+    return tokens.take(MAX_ELEMENTS).map(ctor)
+  }
+
+  private fun getOrderedVcsCommitMessages(): Sequence<String> =
+    vcsHandler.getOrderedCommits(25)
       .asSequence()
       .map { it.fullMessage }
 
-  @Suppress("SameParameterValue")
-  private fun getOrderedSavedCommitMessages(limit: Int): Sequence<String> =
+  private fun getOrderedSavedCommitMessages(): Sequence<String> =
     vcsConfiguration.recentMessages
       .asReversed()
       .asSequence()
-      .take(limit)
+      .take(25)
 
   private class RecentCommitType(text: String) : CommitType(text) {
     override fun getRendering() = recentCommitRendering
