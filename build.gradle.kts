@@ -57,7 +57,7 @@ tasks {
       "-Xno-call-assertions",
       "-Xno-receiver-assertions",
       "-Xno-param-assertions",
-      "-Xjvm-default=enable",
+      "-Xjvm-default=all",
       "-Xallow-kotlin-package",
       "-Xopt-in=kotlin.ExperimentalUnsignedTypes",
       "-Xopt-in=kotlin.contracts.ExperimentalContracts",
