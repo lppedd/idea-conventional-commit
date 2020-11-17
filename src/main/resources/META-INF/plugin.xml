@@ -133,7 +133,10 @@
     <commitScopeProvider order="first" implementation="com.github.lppedd.cc.api.DefaultCommitTokenProvider" />
     <commitFooterTypeProvider order="first" implementation="com.github.lppedd.cc.api.DefaultCommitTokenProvider" />
     <commitFooterValueProvider order="first" implementation="com.github.lppedd.cc.api.DefaultCommitTokenProvider" />
-    <commitInspectionProvider order="first" implementation="com.github.lppedd.cc.api.DefaultCommitInspectionProvider" />
+    <commitInspectionProvider
+        order="first"
+        implementation="com.github.lppedd.cc.inspection.DefaultCommitInspectionProvider"
+    />
     <whatsNewProvider order="first" implementation="com.github.lppedd.cc.whatsnew.DefaultWhatsNewProvider">
       <files>
         <name version="0.16.1">0_16_1.html</name>
