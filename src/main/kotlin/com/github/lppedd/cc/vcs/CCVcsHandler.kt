@@ -89,7 +89,7 @@ internal class CCVcsHandler(private val project: Project) : VcsLogRefresher {
     val branchFilter = VcsLogFilterObject.fromBranch(currentBranch)
     val filters = mutableListOf<VcsLogFilter>(branchFilter)
 
-    logProvider.getCurrentUser(root)?.let {
+    logProvider.getCurrentUser(root)?.also {
       filters.add(VcsLogFilterObject.fromUser(it))
     }
 
