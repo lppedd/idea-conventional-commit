@@ -94,23 +94,22 @@ internal class VcsCommitTokenProvider(project: Project)
   ): Collection<CommitFooterValue> {
     val n = if ("co-authored-by".equals(footerType, true)) 5 else MAX_ELEMENTS
     return getOrderedVcsCommitMessages()
-      .flatMap { message -> getFooterValues(footerType, message) }
+      .flatMap(::getFooterValues)
       .distinctBy(String::toLowerCase)
       .take(n)
       .map(::VcsCommitFooterValue)
       .toList()
   }
 
-  private fun getFooterValues(footerType: String, message: String): Sequence<String> =
+  private fun getFooterValues(message: String): Sequence<String> =
     message.replace(regexBeginEndWs, "")
       .split(regexBlankLines)
       .drop(1)
-      .asReversed()
       .asSequence()
       .map { it.replace(regexBeginEndWs, "") }
       .filterNotBlank()
       .map(CCParser::parseFooter)
-      .filter { footerType == (it.type as? ValidToken)?.value }
+      .filter { it.type is ValidToken }
       .map(FooterTokens::footer)
       .filterIsInstance<ValidToken>()
       .map(ValidToken::value)
