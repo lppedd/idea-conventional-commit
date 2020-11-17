@@ -24,7 +24,8 @@ internal class VcsCommitTokenProvider(project: Project)
     CommitSubjectProvider,
     CommitFooterValueProvider {
   companion object {
-    const val ID: String = "e9ce9acf-f4a6-4b36-b43c-531169556c29"
+    const val ID = "e9ce9acf-f4a6-4b36-b43c-531169556c29"
+    const val MAX_ELEMENTS = 8
 
     private val regexBeginEndWs = Regex("""^\s+|\s+$""")
     private val regexBlankLines = Regex("""^\s*$""", MULTILINE)
@@ -50,7 +51,7 @@ internal class VcsCommitTokenProvider(project: Project)
       .trim()
       .filterNotEmpty()
       .distinct()
-      .take(8)
+      .take(MAX_ELEMENTS)
       .map(::VcsCommitType)
       .toList()
 
@@ -66,7 +67,7 @@ internal class VcsCommitTokenProvider(project: Project)
       .trim()
       .filterNotEmpty()
       .distinct()
-      .take(8)
+      .take(MAX_ELEMENTS)
       .map(::VcsCommitScope)
       .toList()
 
@@ -81,7 +82,7 @@ internal class VcsCommitTokenProvider(project: Project)
       .trim()
       .filterNotEmpty()
       .distinctBy(String::toLowerCase)
-      .take(8)
+      .take(MAX_ELEMENTS)
       .map(::VcsCommitSubject)
       .toList()
 
@@ -91,7 +92,7 @@ internal class VcsCommitTokenProvider(project: Project)
       commitScope: String?,
       commitSubject: String?,
   ): Collection<CommitFooterValue> {
-    val n = if ("co-authored-by".equals(footerType, true)) 5 else 8
+    val n = if ("co-authored-by".equals(footerType, true)) 5 else MAX_ELEMENTS
     return getOrderedVcsCommitMessages()
       .flatMap { message -> getFooterValues(footerType, message) }
       .distinctBy(String::toLowerCase)
