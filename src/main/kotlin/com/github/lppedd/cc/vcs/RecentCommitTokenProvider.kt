@@ -1,12 +1,12 @@
-package com.github.lppedd.cc.api
+package com.github.lppedd.cc.vcs
 
 import com.github.lppedd.cc.*
+import com.github.lppedd.cc.api.*
 import com.github.lppedd.cc.api.CommitTokenElement.CommitTokenRendering
 import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.CommitTokens
 import com.github.lppedd.cc.parser.FooterTokens
 import com.github.lppedd.cc.parser.ValidToken
-import com.github.lppedd.cc.vcs.CCVcsHandler
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vcs.VcsConfiguration

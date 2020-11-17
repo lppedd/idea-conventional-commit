@@ -2,6 +2,7 @@ package com.github.lppedd.cc.configuration
 
 import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.api.*
+import com.github.lppedd.cc.vcs.RecentCommitTokenProvider
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage

@@ -6,14 +6,14 @@
   </extensions>
 
   <extensions defaultExtensionNs="com.github.lppedd.idea-conventional-commit">
-    <commitTypeProvider order="first" implementation="com.github.lppedd.cc.api.RecentCommitTokenProvider" />
-    <commitScopeProvider order="first" implementation="com.github.lppedd.cc.api.RecentCommitTokenProvider" />
-    <commitSubjectProvider order="first" implementation="com.github.lppedd.cc.api.RecentCommitTokenProvider" />
-    <commitFooterValueProvider order="first" implementation="com.github.lppedd.cc.api.RecentCommitTokenProvider" />
+    <commitTypeProvider order="first" implementation="com.github.lppedd.cc.vcs.RecentCommitTokenProvider" />
+    <commitScopeProvider order="first" implementation="com.github.lppedd.cc.vcs.RecentCommitTokenProvider" />
+    <commitSubjectProvider order="first" implementation="com.github.lppedd.cc.vcs.RecentCommitTokenProvider" />
+    <commitFooterValueProvider order="first" implementation="com.github.lppedd.cc.vcs.RecentCommitTokenProvider" />
 
-    <commitTypeProvider order="first" implementation="com.github.lppedd.cc.api.VcsCommitTokenProvider" />
-    <commitScopeProvider order="first" implementation="com.github.lppedd.cc.api.VcsCommitTokenProvider" />
-    <commitSubjectProvider order="first" implementation="com.github.lppedd.cc.api.VcsCommitTokenProvider" />
-    <commitFooterValueProvider order="first" implementation="com.github.lppedd.cc.api.VcsCommitTokenProvider" />
+    <commitTypeProvider order="first" implementation="com.github.lppedd.cc.vcs.VcsCommitTokenProvider" />
+    <commitScopeProvider order="first" implementation="com.github.lppedd.cc.vcs.VcsCommitTokenProvider" />
+    <commitSubjectProvider order="first" implementation="com.github.lppedd.cc.vcs.VcsCommitTokenProvider" />
+    <commitFooterValueProvider order="first" implementation="com.github.lppedd.cc.vcs.VcsCommitTokenProvider" />
   </extensions>
 </idea-plugin>
