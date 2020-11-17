@@ -15,7 +15,7 @@ internal annotation class Compatibility(
      * The minimum supported IDE version that is required
      * for removing the annotated element.
      */
-    val minVersionForRemoval: String = "?",
+    val minVersion: String = "?",
 
     /**
      * A suggestion for replacing the annotated element

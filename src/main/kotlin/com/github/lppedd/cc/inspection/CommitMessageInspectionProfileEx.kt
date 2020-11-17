@@ -83,7 +83,7 @@ private class CommitMessageInspectionProfileEx(project: Project) : CommitMessage
 }
 
 /** Provides support for IDEA 2019.2 only. */
-@Compatibility(minVersionForRemoval = "193.3519.25")
+@Compatibility(minVersion = "193.3519.25")
 private class CommitInspectionToolSupplier(
     private val delegate: Supplier<List<InspectionToolWrapper<*, *>>>,
 ) : Supplier<List<InspectionToolWrapper<*, *>>> {

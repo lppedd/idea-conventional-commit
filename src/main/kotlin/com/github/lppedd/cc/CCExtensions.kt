@@ -39,7 +39,7 @@ import kotlin.math.min
 // region LookupImpl
 
 @Compatibility(
-  minVersionForRemoval = "193.5096.12",
+  minVersion = "193.5096.12",
   replaceWith = "LookupImpl#setLookupFocusDegree(LookupFocusDegree)",
 )
 internal fun LookupImpl.setLookupFocusDegree(focusDegree: String) {

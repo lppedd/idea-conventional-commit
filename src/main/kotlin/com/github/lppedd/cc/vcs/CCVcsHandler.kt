@@ -34,10 +34,7 @@ internal class CCVcsHandler(private val project: Project) : VcsLogRefresher {
    * Called on every [ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED].
    */
   fun reset() {
-    @Compatibility(
-      minVersionForRemoval = "201.3803.32",
-      replaceWith = "VcsProjectLog.getLogProviders(Project)",
-    )
+    @Compatibility(minVersion = "201.3803.32", replaceWith = "VcsProjectLog.getLogProviders(Project)")
     val activeVcsRoots = projectVcsManager.allVcsRoots.toList()
     val vcsLogProviders = VcsLogManager.findLogProviders(activeVcsRoots, project)
 
@@ -76,10 +73,7 @@ internal class CCVcsHandler(private val project: Project) : VcsLogRefresher {
   }
 
   private fun <T : Comparable<T>> getCommits(sortBy: (VcsCommitMetadata) -> T): List<VcsCommitMetadata> {
-    @Compatibility(
-      minVersionForRemoval = "201.3803.32",
-      replaceWith = "VcsProjectLog.getLogProviders(Project)",
-    )
+    @Compatibility(minVersion = "201.3803.32", replaceWith = "VcsProjectLog.getLogProviders(Project)")
     val activeVcsRoots = projectVcsManager.allVcsRoots.toList()
     val vcsLogProviders = VcsLogManager.findLogProviders(activeVcsRoots, project)
     return vcsLogProviders
@@ -113,7 +107,7 @@ internal class CCVcsHandler(private val project: Project) : VcsLogRefresher {
     }
   }
 
-  @Compatibility(minVersionForRemoval = "203.4203.26")
+  @Compatibility(minVersion = "203.4203.26")
   private fun VcsLogProvider.readMetadataComp(
       root: VirtualFile,
       commitsHashes: List<String>,
@@ -169,7 +163,7 @@ internal class CCVcsHandler(private val project: Project) : VcsLogRefresher {
   }
 
   @Suppress("unused")
-  @Compatibility(minVersionForRemoval = "203.3645.34")
+  @Compatibility(minVersion = "203.3645.34")
   private fun ensureLogCreated(): Boolean {
     val method =
       getDeclaredMethod(VcsProjectLog::class.java, "ensureLogCreated", Project::class.java)   // 203.3645.34+
