@@ -89,13 +89,7 @@ internal class CCVcsHandler(private val project: Project) : VcsLogRefresher {
   private fun getCommits(root: VirtualFile, logProvider: VcsLogProvider): List<VcsCommitMetadata> {
     val currentBranch = logProvider.getCurrentBranch(root) ?: return emptyList()
     val branchFilter = VcsLogFilterObject.fromBranch(currentBranch)
-    val filters = mutableListOf<VcsLogFilter>(branchFilter)
-
-    logProvider.getCurrentUser(root)?.also {
-      filters.add(VcsLogFilterObject.fromUser(it))
-    }
-
-    val filterCollection = VcsLogFilterObject.collection(*filters.toTypedArray())
+    val filterCollection = VcsLogFilterObject.collection(branchFilter)
     val matchingCommits = logProvider.getCommitsMatchingFilter(root, filterCollection, 100)
 
     // An explicit check is required to avoid a VcsException
