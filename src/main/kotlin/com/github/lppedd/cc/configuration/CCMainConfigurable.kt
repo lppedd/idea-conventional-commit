@@ -14,11 +14,36 @@ import javax.swing.JComponent
 private class CCMainConfigurable(private val project: Project) : SearchableConfigurable {
   private val defaultsService = project.service<CCDefaultTokensService>()
   private val configService = project.service<CCConfigService>()
-  private val disposable = Disposer.newDisposable()
+  private val disposable = Disposer.newDisposable("CCMainConfigurable")
   private lateinit var gui: CCMainConfigurableGui
 
-  override fun getId() = "preferences.${CC.AppName}"
-  override fun getDisplayName() = CCBundle["cc.plugin.name"]
+  override fun getId(): String =
+    "preferences.${CC.AppName}"
+
+  override fun getDisplayName(): String =
+    CCBundle["cc.plugin.name"]
+
+  override fun createComponent(): JComponent {
+    gui = CCMainConfigurableGui(project, disposable)
+    gui.completionType = configService.completionType
+    gui.customTokensFilePath = configService.customFilePath
+    gui.customCoAuthorsFilePath = configService.customCoAuthorsFilePath
+
+    val tokens = try {
+      defaultsService.getDefaultsFromCustomFile(configService.customFilePath)
+    } catch (e: Exception) {
+      defaultsService.getBuiltInDefaults()
+    }
+
+    gui.setTokens(tokens.types)
+    return gui.rootPanel
+  }
+
+  override fun isModified(): Boolean =
+    gui.isValid && (
+        gui.completionType != configService.completionType ||
+        gui.customCoAuthorsFilePath != configService.customCoAuthorsFilePath ||
+        gui.customTokensFilePath != configService.customFilePath)
 
   override fun apply() {
     configService.completionType = gui.completionType
@@ -39,28 +64,6 @@ private class CCMainConfigurable(private val project: Project) : SearchableConfi
     gui.completionType = configService.completionType
     gui.customCoAuthorsFilePath = configService.customCoAuthorsFilePath
     gui.customTokensFilePath = configService.customFilePath
-  }
-
-  override fun isModified() =
-    gui.isValid
-    && (gui.completionType != configService.completionType ||
-        gui.customCoAuthorsFilePath != configService.customCoAuthorsFilePath ||
-        gui.customTokensFilePath != configService.customFilePath)
-
-  override fun createComponent(): JComponent {
-    gui = CCMainConfigurableGui(project, disposable)
-    gui.completionType = configService.completionType
-    gui.customTokensFilePath = configService.customFilePath
-    gui.customCoAuthorsFilePath = configService.customCoAuthorsFilePath
-
-    val tokens = try {
-      defaultsService.getDefaultsFromCustomFile(configService.customFilePath)
-    } catch (e: Exception) {
-      defaultsService.getBuiltInDefaults()
-    }
-
-    gui.setTokens(tokens.types)
-    return gui.rootPanel
   }
 
   override fun disposeUIResources() {

@@ -15,8 +15,28 @@ private class CCProvidersConfigurable(private val project: Project) : Searchable
   private val configService = project.service<CCConfigService>()
   private lateinit var gui: CCProvidersConfigurableGui
 
-  override fun getId() = "preferences.${CC.AppName}.providers"
-  override fun getDisplayName() = CCBundle["cc.config.providers"]
+  override fun getId(): String =
+    "preferences.${CC.AppName}.providers"
+
+  override fun getDisplayName(): String =
+    CCBundle["cc.config.providers"]
+
+  override fun createComponent(): JPanel {
+    gui = CCProvidersConfigurableGui()
+    gui.setProviders(
+      TYPE_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
+      SCOPE_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
+      SUBJECT_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
+      BODY_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
+      FOOTER_TYPE_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
+      FOOTER_VALUE_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
+    )
+
+    return gui.rootPanel
+  }
+
+  override fun isModified(): Boolean =
+    gui.isModified
 
   override fun apply() {
     configService.setTypeProvidersOrder(
@@ -67,20 +87,5 @@ private class CCProvidersConfigurable(private val project: Project) : Searchable
 
   override fun reset() {
     gui.reset()
-  }
-
-  override fun isModified() = gui.isModified
-  override fun createComponent(): JPanel {
-    gui = CCProvidersConfigurableGui()
-    gui.setProviders(
-      TYPE_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
-      SCOPE_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
-      SUBJECT_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
-      BODY_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
-      FOOTER_TYPE_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
-      FOOTER_VALUE_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
-    )
-
-    return gui.rootPanel
   }
 }
