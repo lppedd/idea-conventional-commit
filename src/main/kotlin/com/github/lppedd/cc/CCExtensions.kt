@@ -368,6 +368,11 @@ internal inline fun invokeLaterOnEdt(noinline block: () -> Unit) {
 }
 
 @InlineOnly
+internal inline fun invokeLaterOnEdtAndWait(noinline block: () -> Unit) {
+  ApplicationManager.getApplication().invokeAndWait(block)
+}
+
+@InlineOnly
 internal inline fun Any.getResourceAsStream(path: String): InputStream =
   javaClass.getResourceAsStream(path)!!
 

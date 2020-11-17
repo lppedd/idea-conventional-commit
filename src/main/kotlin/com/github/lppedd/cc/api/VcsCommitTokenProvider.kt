@@ -117,7 +117,7 @@ internal class VcsCommitTokenProvider(project: Project)
       .filterNotEmpty()
 
   private fun getOrderedVcsCommitMessages(): Sequence<String> =
-    vcsHandler.getOrderedCommits(50)
+    vcsHandler.getOrderedTopCommits()
       .asSequence()
       .map { it.fullMessage }
 

@@ -6,6 +6,8 @@ package com.github.lppedd.cc.annotation
 @Target(
   AnnotationTarget.CLASS,
   AnnotationTarget.FUNCTION,
+  AnnotationTarget.EXPRESSION,
+  AnnotationTarget.LOCAL_VARIABLE,
 )
 @Retention(AnnotationRetention.SOURCE)
 internal annotation class Compatibility(
