@@ -6,24 +6,14 @@ import com.github.lppedd.cc.api.*
 import com.intellij.openapi.components.service
 import com.intellij.openapi.options.SearchableConfigurable
 import com.intellij.openapi.project.Project
+import javax.swing.JPanel
 
 /**
  * @author Edoardo Luppi
  */
-private class CCProvidersConfigurable(project: Project) : SearchableConfigurable {
-  private val gui = CCProvidersConfigurableGui()
+private class CCProvidersConfigurable(private val project: Project) : SearchableConfigurable {
   private val configService = project.service<CCConfigService>()
-
-  init {
-    gui.setProviders(
-      TYPE_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
-      SCOPE_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
-      SUBJECT_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
-      BODY_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
-      FOOTER_TYPE_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
-      FOOTER_VALUE_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
-    )
-  }
+  private lateinit var gui: CCProvidersConfigurableGui
 
   override fun getId() = "preferences.${CC.AppName}.providers"
   override fun getDisplayName() = CCBundle["cc.config.providers"]
@@ -80,5 +70,17 @@ private class CCProvidersConfigurable(project: Project) : SearchableConfigurable
   }
 
   override fun isModified() = gui.isModified
-  override fun createComponent() = gui.rootPanel
+  override fun createComponent(): JPanel {
+    gui = CCProvidersConfigurableGui()
+    gui.setProviders(
+      TYPE_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
+      SCOPE_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
+      SUBJECT_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
+      BODY_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
+      FOOTER_TYPE_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
+      FOOTER_VALUE_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
+    )
+
+    return gui.rootPanel
+  }
 }

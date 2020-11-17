@@ -11,11 +11,11 @@ import javax.swing.JComponent
 /**
  * @author Edoardo Luppi
  */
-private class CCMainConfigurable(project: Project) : SearchableConfigurable {
-  private val disposable = Disposer.newDisposable()
-  private val gui = CCMainConfigurableGui(project, disposable)
+private class CCMainConfigurable(private val project: Project) : SearchableConfigurable {
   private val defaultsService = project.service<CCDefaultTokensService>()
   private val configService = project.service<CCConfigService>()
+  private val disposable = Disposer.newDisposable()
+  private lateinit var gui: CCMainConfigurableGui
 
   override fun getId() = "preferences.${CC.AppName}"
   override fun getDisplayName() = CCBundle["cc.plugin.name"]
@@ -48,6 +48,7 @@ private class CCMainConfigurable(project: Project) : SearchableConfigurable {
         gui.customTokensFilePath != configService.customFilePath)
 
   override fun createComponent(): JComponent {
+    gui = CCMainConfigurableGui(project, disposable)
     gui.completionType = configService.completionType
     gui.customTokensFilePath = configService.customFilePath
     gui.customCoAuthorsFilePath = configService.customCoAuthorsFilePath
