@@ -8,7 +8,6 @@ import com.intellij.openapi.vcs.ProjectLevelVcsManager
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.util.Consumer
 import com.intellij.util.EmptyConsumer
-import com.intellij.util.ReflectionUtil.getDeclaredMethod
 import com.intellij.vcs.log.*
 import com.intellij.vcs.log.data.VcsLogMultiRepoJoiner
 import com.intellij.vcs.log.impl.VcsLogContentUtil
@@ -166,12 +165,13 @@ internal class CCVcsHandler(private val project: Project) : VcsLogRefresher {
   @Compatibility(minVersion = "203.3645.34")
   private fun ensureLogCreated(): Boolean {
     val method =
-      getDeclaredMethod(VcsProjectLog::class.java, "ensureLogCreated", Project::class.java)   // 203.3645.34+
-      ?: getDeclaredMethod(VcsProjectLog::class.java, "getOrCreateLog", Project::class.java)  // 201.3803.32+
-      ?: getDeclaredMethod(VcsLogContentUtil::class.java, "getOrCreateLog", Project::class.java)
+      VcsProjectLog::class.java.getDeclaredMethod("ensureLogCreated", Project::class.java)   // 203.3645.34+
+      ?: VcsProjectLog::class.java.getDeclaredMethod("getOrCreateLog", Project::class.java)  // 201.3803.32+
+      ?: VcsLogContentUtil::class.java.getDeclaredMethod("getOrCreateLog", Project::class.java)
       ?: return false
 
     return try {
+      method.isAccessible = true
       method.invoke(null, project)
       true
     } catch (ignored: Exception) {
