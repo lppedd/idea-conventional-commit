@@ -3,6 +3,7 @@ package com.github.lppedd.cc.configuration
 import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.api.*
 import com.github.lppedd.cc.vcs.RecentCommitTokenProvider
+import com.github.lppedd.cc.vcs.VcsCommitTokenProvider
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
@@ -122,11 +123,23 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
   }
 
   override fun noStateLoaded() {
-    typeProvidersMap.putIfAbsent(DefaultCommitTokenProvider.ID, 0)
-    scopeProvidersMap.putIfAbsent(DefaultCommitTokenProvider.ID, 0)
+    typeProvidersMap.putIfAbsent(RecentCommitTokenProvider.ID, 0)
+    typeProvidersMap.putIfAbsent(DefaultCommitTokenProvider.ID, 1)
+    typeProvidersMap.putIfAbsent(VcsCommitTokenProvider.ID, 2)
+
+    scopeProvidersMap.putIfAbsent(RecentCommitTokenProvider.ID, 0)
+    scopeProvidersMap.putIfAbsent(DefaultCommitTokenProvider.ID, 1)
+    scopeProvidersMap.putIfAbsent(VcsCommitTokenProvider.ID, 2)
+
     subjectProvidersMap.putIfAbsent(RecentCommitTokenProvider.ID, 0)
+    subjectProvidersMap.putIfAbsent(DefaultCommitTokenProvider.ID, 1)
+    subjectProvidersMap.putIfAbsent(VcsCommitTokenProvider.ID, 2)
+
     footerTypeProvidersMap.putIfAbsent(DefaultCommitTokenProvider.ID, 0)
-    footerValueProvidersMap.putIfAbsent(DefaultCommitTokenProvider.ID, 0)
+
+    footerValueProvidersMap.putIfAbsent(RecentCommitTokenProvider.ID, 0)
+    footerValueProvidersMap.putIfAbsent(DefaultCommitTokenProvider.ID, 1)
+    footerValueProvidersMap.putIfAbsent(VcsCommitTokenProvider.ID, 2)
   }
 
   override fun equals(other: Any?): Boolean {
