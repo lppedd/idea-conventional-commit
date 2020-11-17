@@ -41,6 +41,9 @@ internal class CCVcsHandler(private val project: Project) : VcsLogRefresher {
       // Remove unused VcsLogProvider(s)
       subscribedVcsLogProviders.retainAll(vcsLogProviders.values)
 
+      // Unlike what VcsLogManager does, we subscribe only a single root directory
+      // even if more than one is mapped to the same VcsLogProvider.
+      // We do this to avoid multiple refreshes each time the VCS configuration changes
       for ((root, vcsLogProvider) in vcsLogProviders) {
         if (subscribedVcsLogProviders.contains(vcsLogProvider).not()) {
           subscribedVcsLogProviders.add(vcsLogProvider)
