@@ -22,12 +22,9 @@ import com.intellij.codeInsight.completion.*
 import com.intellij.codeInsight.completion.CompletionType.BASIC
 import com.intellij.codeInsight.completion.impl.CompletionSorterImpl
 import com.intellij.codeInsight.completion.impl.PreferStartMatching
-import com.intellij.codeInsight.lookup.Lookup
-import com.intellij.codeInsight.lookup.LookupElement
-import com.intellij.codeInsight.lookup.LookupElementWeigher
+import com.intellij.codeInsight.lookup.*
 import com.intellij.codeInsight.lookup.impl.LookupImpl
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl
-import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.service
 import com.intellij.openapi.fileTypes.PlainTextLanguage
 import com.intellij.openapi.progress.ProgressManager
@@ -36,15 +33,12 @@ import com.intellij.openapi.vcs.ui.CommitMessage
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.util.ReflectionUtil.findField
 import com.intellij.util.concurrency.Semaphore
+import java.beans.PropertyChangeEvent
+import java.beans.PropertyChangeListener
 import java.lang.reflect.Field
 import java.util.*
 import java.util.Collections.synchronizedMap
 import kotlin.LazyThreadSafetyMode.PUBLICATION
-import kotlin.internal.InlineOnly
-
-private val PLAIN_TEXT_PATTERN = PlatformPatterns.psiElement().withLanguage(PlainTextLanguage.INSTANCE)
-private val LOOKUP_ENHANCER_MAP = synchronizedMap(IdentityHashMap<Lookup, LookupEnhancer>(16))
-private val LOOKUP_DISPOSER_MAP = synchronizedMap(IdentityHashMap<Lookup, Disposable>(16))
 
 /**
  * Provides context-based completion items inside the VCS commit dialog.
@@ -52,6 +46,11 @@ private val LOOKUP_DISPOSER_MAP = synchronizedMap(IdentityHashMap<Lookup, Dispos
  * @author Edoardo Luppi
  */
 private class CommitCompletionContributor : CompletionContributor() {
+  private companion object {
+    private val plainTextPattern = PlatformPatterns.psiElement().withLanguage(PlainTextLanguage.INSTANCE)
+    private val lookupEnhancers = synchronizedMap(IdentityHashMap<Lookup, LookupEnhancer>(16))
+  }
+
   private val myArrangerField: Field by lazy(PUBLICATION) {
     findField(CompletionProgressIndicator::class.java, null, "myArranger")
   }
@@ -64,8 +63,25 @@ private class CommitCompletionContributor : CompletionContributor() {
     findField(CompletionProgressIndicator::class.java, null, "myFreezeSemaphore")
   }
 
+  override fun beforeCompletion(context: CompletionInitializationContext) {
+    // Only execute when inside the VCS commit dialog
+    if (context.file.document?.getUserData(CommitMessage.DATA_KEY) == null) {
+      return
+    }
+
+    val lookupManager = LookupManager.getInstance(context.project)
+
+    // isCompletion == true means the Lookup had already been created before
+    // and has now been reused.
+    // For our use case it means we've already added the Lookup creation listener
+    // and installed the Lookup enhancer on that Lookup instance
+    if (lookupManager.activeLookup?.isCompletion != true) {
+      lookupManager.addPropertyChangeListener(LookupCreationListener(lookupManager))
+    }
+  }
+
   override fun fillCompletionVariants(parameters: CompletionParameters, result: CompletionResultSet) {
-    if (parameters.completionType != BASIC || !PLAIN_TEXT_PATTERN.accepts(parameters.position)) {
+    if (parameters.completionType != BASIC || !plainTextPattern.accepts(parameters.position)) {
       return
     }
 
@@ -191,49 +207,35 @@ private class CommitCompletionContributor : CompletionContributor() {
       process: CompletionProcess,
       completionProviders: Collection<CompletionProvider<*>>,
   ) {
-    if (process is CompletionProgressIndicator) {
-      ProgressManager.checkCanceled()
-
-      safelySetNoopListOnLookupArranger(process)
-      safelyReleaseProcessSemaphore(process)
-
-      // Only token providers that will be executed need to be filterable,
-      // so take them until the one that says "stopHere"
-      var n = completionProviders.indexOfFirst(CompletionProvider<*>::stopHere) + 1
-
-      if (n == 0) {
-        // All the token providers will be executed and thus
-        // all need to be filterable
-        n = completionProviders.size
-      }
-
-      val commitTokenProviders =
-        completionProviders
-          .asSequence()
-          .take(n)
-          .flatMap(CompletionProvider<*>::providers)
-          // Removing duplicated token providers avoids having duplicated
-          // filtering actions in the menu
-          .distinctBy(CommitTokenProvider::getId)
-          .toList()
-
-      installAndGetLookupEnhancer(process.lookup).setProviders(commitTokenProviders)
-    }
-  }
-
-  private fun installAndGetLookupEnhancer(lookup: LookupImpl): LookupEnhancer {
-    val disposable = LOOKUP_DISPOSER_MAP.computeIfAbsent(lookup) {
-      Disposable {
-        LOOKUP_DISPOSER_MAP.remove(lookup)
-        LOOKUP_ENHANCER_MAP.remove(lookup)
-      }
+    if (process !is CompletionProgressIndicator) {
+      return
     }
 
-    if (Disposer.findRegisteredObject(lookup, disposable) == null) {
-      Disposer.register(lookup, disposable)
+    ProgressManager.checkCanceled()
+    safelySetNoopListOnLookupArranger(process)
+    safelyReleaseProcessSemaphore(process)
+
+    // Only token providers that will be executed need to be filterable,
+    // so take them until the one that says "stopHere"
+    var n = completionProviders.indexOfFirst(CompletionProvider<*>::stopHere) + 1
+
+    if (n == 0) {
+      // All the token providers will be executed and thus
+      // all need to be filterable
+      n = completionProviders.size
     }
 
-    return LOOKUP_ENHANCER_MAP.computeIfAbsent(lookup) { LookupEnhancer(lookup) }
+    val commitTokenProviders =
+      completionProviders
+        .asSequence()
+        .take(n)
+        .flatMap(CompletionProvider<*>::providers)
+        // Removing duplicated token providers avoids having duplicated
+        // filtering actions in the menu
+        .distinctBy(CommitTokenProvider::getId)
+        .toList()
+
+    checkNotNull(lookupEnhancers[process.lookup]).setProviders(commitTokenProviders)
   }
 
   /**
@@ -278,4 +280,24 @@ private class CommitCompletionContributor : CompletionContributor() {
 
   private fun CompletionProgressIndicator.getFreezeSemaphore(): Semaphore =
     myFreezeSemaphoreField.get(this) as Semaphore
+
+  private class LookupCreationListener(val lookupManager: LookupManager) : PropertyChangeListener {
+    override fun propertyChange(event: PropertyChangeEvent) {
+      if (event.propertyName == LookupManager.PROP_ACTIVE_LOOKUP) {
+        when (val lookup = event.newValue) {
+          is LookupImpl -> installLookupEnhancer(lookup)
+
+          // The Lookup has been disposed, thus we can remove ourselves from the listeners
+          else -> lookupManager.removePropertyChangeListener(this)
+        }
+      }
+    }
+
+    fun installLookupEnhancer(lookup: LookupImpl) {
+      lookupEnhancers.computeIfAbsent(lookup) {
+        Disposer.register(lookup, { lookupEnhancers.remove(lookup) })
+        LookupEnhancer(lookup)
+      }
+    }
+  }
 }
