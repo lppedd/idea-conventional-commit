@@ -23,7 +23,8 @@ import kotlin.collections.ArrayList
  * @author Edoardo Luppi
  */
 @Internal
-internal class CCVcsHandler(private val project: Project) : VcsLogRefresher {
+internal class CCVcsHandler(private val project: Project) {
+  private val vcsLogRefresher = MyVcsLogRefresher()
   private val projectVcsManager = ProjectLevelVcsManager.getInstance(project)
   private val vcsLogMultiRepoJoiner = VcsLogMultiRepoJoiner<Hash, VcsCommitMetadata>()
   private val subscribedVcsLogProviders = newSetFromMap<VcsLogProvider>(IdentityHashMap(16))
@@ -46,7 +47,7 @@ internal class CCVcsHandler(private val project: Project) : VcsLogRefresher {
       for ((root, vcsLogProvider) in vcsLogProviders) {
         if (subscribedVcsLogProviders.contains(vcsLogProvider).not()) {
           subscribedVcsLogProviders.add(vcsLogProvider)
-          vcsLogProvider.subscribeToRootRefreshEvents(listOf(root), this)
+          vcsLogProvider.subscribeToRootRefreshEvents(listOf(root), vcsLogRefresher)
         }
       }
     }
@@ -70,10 +71,6 @@ internal class CCVcsHandler(private val project: Project) : VcsLogRefresher {
   @Synchronized
   fun getOrderedTopCommits(): Collection<VcsCommitMetadata> =
     cachedCommits
-
-  override fun refresh(root: VirtualFile) {
-    refreshCachedValues()
-  }
 
   @Synchronized
   private fun refreshCachedValues() {
@@ -187,6 +184,12 @@ internal class CCVcsHandler(private val project: Project) : VcsLogRefresher {
       true
     } catch (ignored: Exception) {
       false
+    }
+  }
+
+  private inner class MyVcsLogRefresher : VcsLogRefresher {
+    override fun refresh(root: VirtualFile) {
+      refreshCachedValues()
     }
   }
 }
