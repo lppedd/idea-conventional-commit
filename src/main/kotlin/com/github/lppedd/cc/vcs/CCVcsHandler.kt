@@ -28,14 +28,13 @@ internal class CCVcsHandler(private val project: Project) : VcsLogRefresher {
   private val vcsLogMultiRepoJoiner = VcsLogMultiRepoJoiner<Hash, VcsCommitMetadata>()
   private val subscribedVcsLogProviders = newSetFromMap<VcsLogProvider>(IdentityHashMap(16))
   private lateinit var cachedCommits: Collection<VcsCommitMetadata>
+  private lateinit var cachedCurrentUser: Collection<VcsUser>
 
   /**
    * Called on every [ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED].
    */
   fun reset() {
-    @Compatibility(minVersion = "201.3803.32", replaceWith = "VcsProjectLog.getLogProviders(Project)")
-    val activeVcsRoots = projectVcsManager.allVcsRoots.toList()
-    val vcsLogProviders = VcsLogManager.findLogProviders(activeVcsRoots, project)
+    val vcsLogProviders = getVcsLogProviders()
 
     synchronized(subscribedVcsLogProviders) {
       // Remove unused VcsLogProvider(s)
@@ -53,9 +52,16 @@ internal class CCVcsHandler(private val project: Project) : VcsLogRefresher {
     }
 
     if (vcsLogProviders.isNotEmpty()) {
-      refreshCachedCommits()
+      refreshCachedValues()
     }
   }
+
+  /**
+   * Returns the user-configured data associated with the active VCS roots.
+   */
+  @Synchronized
+  fun getCurrentUser(): Collection<VcsUser> =
+    cachedCurrentUser
 
   /**
    * Returns at most the top 100 commits for the currently checked-out branch,
@@ -66,25 +72,27 @@ internal class CCVcsHandler(private val project: Project) : VcsLogRefresher {
     cachedCommits
 
   override fun refresh(root: VirtualFile) {
-    refreshCachedCommits()
+    refreshCachedValues()
   }
 
   @Synchronized
-  private fun refreshCachedCommits() {
-    cachedCommits = getCommits(sortBy = VcsCommitMetadata::getCommitTime)
+  private fun refreshCachedValues() {
+    cachedCurrentUser = fetchCurrentUser()
+    cachedCommits = fetchCommits(sortBy = VcsCommitMetadata::getCommitTime)
   }
 
-  private fun <T : Comparable<T>> getCommits(sortBy: (VcsCommitMetadata) -> T): List<VcsCommitMetadata> {
-    @Compatibility(minVersion = "201.3803.32", replaceWith = "VcsProjectLog.getLogProviders(Project)")
-    val activeVcsRoots = projectVcsManager.allVcsRoots.toList()
-    val vcsLogProviders = VcsLogManager.findLogProviders(activeVcsRoots, project)
-    return vcsLogProviders
-      .asSequence()
+  private fun fetchCurrentUser(): Set<VcsUser> =
+    getVcsLogProviders().asSequence()
+      .map { (root, vcsLogProvider) -> vcsLogProvider.getCurrentUser(root) }
+      .filterNotNull()
+      .toSet()
+
+  private fun <T : Comparable<T>> fetchCommits(sortBy: (VcsCommitMetadata) -> T): List<VcsCommitMetadata> =
+    getVcsLogProviders().asSequence()
       .map { (root, vcsLogProvider) -> getCommits(root, vcsLogProvider) }
       .toList()
       .let(vcsLogMultiRepoJoiner::join)
       .sortedByDescending(sortBy)
-  }
 
   private fun getCommits(root: VirtualFile, logProvider: VcsLogProvider): List<VcsCommitMetadata> {
     val currentBranch = logProvider.getCurrentBranch(root) ?: return emptyList()
@@ -128,6 +136,12 @@ internal class CCVcsHandler(private val project: Project) : VcsLogRefresher {
     }
 
     return emptyList()
+  }
+
+  private fun getVcsLogProviders(): Map<VirtualFile, VcsLogProvider> {
+    @Compatibility(minVersion = "201.3803.32", replaceWith = "VcsProjectLog.getLogProviders(Project)")
+    val activeVcsRoots = projectVcsManager.allVcsRoots.toList()
+    return VcsLogManager.findLogProviders(activeVcsRoots, project)
   }
 
   /*
