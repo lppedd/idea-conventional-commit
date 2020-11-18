@@ -2,6 +2,7 @@ package com.github.lppedd.cc.vcs
 
 import com.github.lppedd.cc.annotation.Compatibility
 import com.github.lppedd.cc.invokeLaterOnEdtAndWait
+import com.intellij.dvcs.repo.VcsRepositoryManager
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vcs.ProjectLevelVcsManager
@@ -26,6 +27,7 @@ import kotlin.collections.ArrayList
 internal class CCVcsHandler(private val project: Project) {
   private val vcsLogRefresher = MyVcsLogRefresher()
   private val projectVcsManager = ProjectLevelVcsManager.getInstance(project)
+  private val vcsRepositoryManager = VcsRepositoryManager.getInstance(project)
   private val vcsLogMultiRepoJoiner = VcsLogMultiRepoJoiner<Hash, VcsCommitMetadata>()
   private val subscribedVcsLogProviders = newSetFromMap<VcsLogProvider>(IdentityHashMap(16))
   private lateinit var cachedCommits: Collection<VcsCommitMetadata>
@@ -86,26 +88,31 @@ internal class CCVcsHandler(private val project: Project) {
 
   private fun <T : Comparable<T>> fetchCommits(sortBy: (VcsCommitMetadata) -> T): List<VcsCommitMetadata> =
     getVcsLogProviders().asSequence()
-      .map { (root, vcsLogProvider) -> getCommits(root, vcsLogProvider) }
+      .map { (root, vcsLogProvider) -> fetchCommitsFromLogProvider(root, vcsLogProvider) }
       .toList()
       .let(vcsLogMultiRepoJoiner::join)
       .sortedByDescending(sortBy)
 
-  private fun getCommits(root: VirtualFile, logProvider: VcsLogProvider): List<VcsCommitMetadata> {
+  private fun fetchCommitsFromLogProvider(
+      root: VirtualFile,
+      logProvider: VcsLogProvider,
+  ): List<VcsCommitMetadata> {
+    // If the repository is fresh it means it doesn't have commit yet, and so no branches.
+    // See https://youtrack.jetbrains.com/issue/IDEA-255522
+    if (vcsRepositoryManager.getRepositoryForRoot(root)?.isFresh != false) {
+      return emptyList()
+    }
+
     val currentBranch = logProvider.getCurrentBranch(root) ?: return emptyList()
     val branchFilter = VcsLogFilterObject.fromBranch(currentBranch)
     val filterCollection = VcsLogFilterObject.collection(branchFilter)
     val matchingCommits = logProvider.getCommitsMatchingFilter(root, filterCollection, 100)
 
-    // An explicit check is required to avoid a VcsException
-    // that gets thrown when the current branch doesn't have any commits.
-    // The root cause is VcsLogProvider#getCurrentBranch returns a branch name
-    // even if the repository hasn't got any
-    return if (matchingCommits.isNotEmpty()) {
-      logProvider.readMetadataComp(root, matchingCommits.map { it.id.asString() })
-    } else {
-      emptyList()
+    if (matchingCommits.isEmpty()) {
+      return emptyList()
     }
+
+    return logProvider.readMetadataComp(root, matchingCommits.map { it.id.asString() })
   }
 
   @Compatibility(minVersion = "203.4203.26")
