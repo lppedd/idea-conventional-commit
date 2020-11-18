@@ -34,4 +34,8 @@ object CC {
     internal val PriorityBody = Priority(1_000_000)
     internal val PriorityType = Priority(100_000_000)
   }
+
+  object Registry {
+    const val VcsEnabled: String = "com.github.lppedd.cc.providers.vcs"
+  }
 }

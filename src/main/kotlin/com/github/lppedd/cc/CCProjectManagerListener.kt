@@ -15,8 +15,7 @@ import com.intellij.openapi.vcs.VcsListener
 internal class CCProjectManagerListener : ProjectManagerListener {
   override fun projectOpened(project: Project) {
     val vcsConfigListener = VcsListener {
-      @Suppress("UnresolvedPluginConfigReference")
-      if (Registry.`is`("com.github.lppedd.cc.providers.vcs", false).not()) {
+      if (Registry.`is`(CC.Registry.VcsEnabled, false).not()) {
         return@VcsListener
       }
 

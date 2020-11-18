@@ -28,7 +28,7 @@ private class CCApplicationLoadListener : ApplicationLoadListener {
   private fun addRegistryKeys() {
     CCRegistry.addKeys(
       RegistryKeyDescriptor(
-        name = "com.github.lppedd.cc.providers.vcs",
+        name = CC.Registry.VcsEnabled,
         description = "Enable/disable the new VCS Provider",
         defaultValue = "true",
         restartRequired = true,

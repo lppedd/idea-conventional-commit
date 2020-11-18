@@ -118,8 +118,7 @@ internal class VcsCommitTokenProvider(project: Project)
       .filterNotEmpty()
 
   private fun getOrderedVcsCommitMessages(): Sequence<String> {
-    @Suppress("UnresolvedPluginConfigReference")
-    if (Registry.`is`("com.github.lppedd.cc.providers.vcs", false).not()) {
+    if (Registry.`is`(CC.Registry.VcsEnabled, false).not()) {
       return emptySequence()
     }
 
