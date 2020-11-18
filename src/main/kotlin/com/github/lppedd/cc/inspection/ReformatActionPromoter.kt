@@ -15,7 +15,7 @@ import com.intellij.vcs.commit.message.ReformatCommitMessageAction
  *
  * @author Edoardo Luppi
  */
-@Compatibility(minVersion = "See IDEA-254830")
+@Compatibility(description = "See IDEA-254830")
 private class ReformatActionPromoter : ActionPromoter {
   override fun promote(actions: List<AnAction>, context: DataContext): List<AnAction> =
     if (isApplicable(context)) {

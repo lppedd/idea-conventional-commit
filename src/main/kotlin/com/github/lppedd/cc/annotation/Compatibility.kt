@@ -18,6 +18,12 @@ internal annotation class Compatibility(
     val minVersion: String = "?",
 
     /**
+     * A brief explanation of why this behavior is needed
+     * to maintain compatibility.
+     */
+    val description: String = "",
+
+    /**
      * A suggestion for replacing the annotated element
      * when it's time to remove it.
      */
