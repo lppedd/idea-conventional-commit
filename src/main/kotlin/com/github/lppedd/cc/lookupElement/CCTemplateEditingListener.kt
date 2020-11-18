@@ -115,7 +115,7 @@ internal class CCTemplateEditingListener : TemplateEditingAdapter() {
       the last currentVariableChanged (with newIndex < 0), so we have the opportunity
       to store a boolean for that.
       On older versions it's the opposite and this is the only possible way.
-    """
+    """,
   )
   private fun TemplateState.documentChangesTerminateTemplate(): Boolean =
     logger.runAndLogError(false) {

@@ -37,7 +37,7 @@ internal class BodyCompletionProvider(
           provider.getCommitBodies(
               (commitTokens.type as? ValidToken)?.value,
               (commitTokens.scope as? ValidToken)?.value,
-              (commitTokens.subject as? ValidToken)?.value
+              (commitTokens.subject as? ValidToken)?.value,
             )
             .asSequence()
             .take(CC.Provider.MaxItems)

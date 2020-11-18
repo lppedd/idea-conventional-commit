@@ -46,7 +46,7 @@ internal class FooterValueCompletionProvider(
               context.type,
               (commitTokens.type as? ValidToken)?.value,
               (commitTokens.scope as? ValidToken)?.value,
-              (commitTokens.subject as? ValidToken)?.value
+              (commitTokens.subject as? ValidToken)?.value,
             )
             .asSequence()
             .take(CC.Provider.MaxItems)

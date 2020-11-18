@@ -29,8 +29,8 @@ private class CCConfigFileIconProvider : IconProvider(), DumbAware {
     val customFilePath = psiElement.project.service<CCConfigService>().customFilePath
 
     return if (
-      isCustomFile(customFilePath, psiElement) ||
-      isDefaultFile(customFilePath, psiElement)
+        isCustomFile(customFilePath, psiElement) ||
+        isDefaultFile(customFilePath, psiElement)
     ) {
       CCIcons.Logo
     } else {

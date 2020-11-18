@@ -51,7 +51,7 @@ internal class TemplateCommitTypeLookupElement(
       template,
       true,
       null,
-      CCTemplateEditingListener()
+      CCTemplateEditingListener(),
     )
 
     // We populate the macro type context with the chosen commit type
