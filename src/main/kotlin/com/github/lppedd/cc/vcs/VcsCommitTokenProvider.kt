@@ -9,6 +9,7 @@ import com.github.lppedd.cc.parser.FooterTokens
 import com.github.lppedd.cc.parser.ValidToken
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.registry.Registry
 import org.jetbrains.annotations.ApiStatus.*
 import kotlin.text.RegexOption.MULTILINE
 
@@ -116,10 +117,16 @@ internal class VcsCommitTokenProvider(project: Project)
       .trim()
       .filterNotEmpty()
 
-  private fun getOrderedVcsCommitMessages(): Sequence<String> =
-    vcsHandler.getOrderedTopCommits()
+  private fun getOrderedVcsCommitMessages(): Sequence<String> {
+    @Suppress("UnresolvedPluginConfigReference")
+    if (Registry.`is`("com.github.lppedd.cc.providers.vcs", false).not()) {
+      return emptySequence()
+    }
+
+    return vcsHandler.getOrderedTopCommits()
       .asSequence()
       .map { it.fullMessage }
+  }
 
   private class VcsCommitType(text: String) : CommitType(text) {
     override fun getRendering() = vscCommitRendering

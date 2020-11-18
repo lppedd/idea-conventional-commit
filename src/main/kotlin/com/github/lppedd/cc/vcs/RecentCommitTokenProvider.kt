@@ -9,6 +9,7 @@ import com.github.lppedd.cc.parser.FooterTokens
 import com.github.lppedd.cc.parser.ValidToken
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.registry.Registry
 import com.intellij.openapi.vcs.VcsConfiguration
 import org.jetbrains.annotations.ApiStatus.*
 import kotlin.text.RegexOption.MULTILINE
@@ -127,6 +128,11 @@ internal class RecentCommitTokenProvider(project: Project)
   }
 
   private fun getOrderedVcsCommitMessages(): Sequence<String> {
+    @Suppress("UnresolvedPluginConfigReference")
+    if (Registry.`is`("com.github.lppedd.cc.providers.vcs", false).not()) {
+      return emptySequence()
+    }
+
     val currentUsers = vcsHandler.getCurrentUser()
     return vcsHandler.getOrderedTopCommits()
       .asSequence()
