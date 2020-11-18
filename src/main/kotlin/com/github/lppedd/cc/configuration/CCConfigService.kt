@@ -2,24 +2,32 @@ package com.github.lppedd.cc.configuration
 
 import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.api.*
+import com.github.lppedd.cc.configuration.CCConfigService.PresentableNameGetter
 import com.github.lppedd.cc.vcs.RecentCommitTokenProvider
 import com.github.lppedd.cc.vcs.VcsCommitTokenProvider
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 import com.intellij.util.xmlb.XmlSerializerUtil
+import com.intellij.util.xmlb.annotations.Attribute
+import com.intellij.util.xmlb.annotations.Transient
 import com.intellij.util.xmlb.annotations.XMap
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.collections.Map.Entry
 
 /**
  * @author Edoardo Luppi
  */
 @State(
   name = "general",
-  storages = [Storage(CC.Settings.File)]
+  storages = [Storage(CC.Settings.File)],
+  presentableName = PresentableNameGetter::class,
 )
 internal class CCConfigService : PersistentStateComponent<CCConfigService> {
+  @Attribute
+  private var version: Int = 0
+
   var completionType: CompletionType = CompletionType.POPUP
   var providerFilterType: ProviderFilterType = ProviderFilterType.HIDE_SELECTED
   var customFilePath: String? = null
@@ -142,10 +150,32 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
     footerValueProvidersMap.putIfAbsent(VcsCommitTokenProvider.ID, 2)
   }
 
+  override fun initializeComponent() {
+    if (version < 1) {
+      // 0.17.0
+      updateProvidersOrdering()
+      version++
+    }
+
+    check(version <= CURRENT_VERSION) {
+      "Configuration version can't be $version. Latest is $CURRENT_VERSION"
+    }
+
+    version = CURRENT_VERSION
+  }
+
+  private fun updateProvidersOrdering() {
+    updateProviderOrder(typeProvidersMap, RecentCommitTokenProvider.ID, 0)
+    updateProviderOrder(scopeProvidersMap, RecentCommitTokenProvider.ID, 0)
+    updateProviderOrder(subjectProvidersMap, RecentCommitTokenProvider.ID, 0)
+    updateProviderOrder(footerValueProvidersMap, RecentCommitTokenProvider.ID, 0)
+  }
+
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
     if (other !is CCConfigService) return false
-    return Objects.equals(completionType, other.completionType) &&
+    return Objects.equals(version, other.version) &&
+           Objects.equals(completionType, other.completionType) &&
            Objects.equals(customFilePath, other.customFilePath) &&
            Objects.equals(customCoAuthorsFilePath, other.customCoAuthorsFilePath) &&
            Objects.equals(typeProvidersMap, other.typeProvidersMap) &&
@@ -158,6 +188,7 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
 
   override fun hashCode() =
     Objects.hash(
+      version,
       completionType,
       customFilePath,
       customCoAuthorsFilePath,
@@ -177,5 +208,38 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
   enum class ProviderFilterType {
     KEEP_SELECTED,
     HIDE_SELECTED
+  }
+
+  class PresentableNameGetter : State.NameGetter() {
+    override fun get() = "Conventional Commit Configuration"
+  }
+
+  @Transient
+  private companion object {
+    private const val CURRENT_VERSION = 1
+
+    @Suppress("SameParameterValue")
+    private fun updateProviderOrder(
+        providers: MutableMap<String, Int>,
+        providerId: String,
+        newPosition: Int,
+    ) {
+      // Set a decent ordering without gaps
+      val map = providers.asSequence()
+        .filterNot { it.key == providerId }
+        .sortedBy(Entry<String, Int>::value)
+        .mapIndexed { position, e -> e.key to position }
+        .associateBy(Pair<String, Int>::first, Pair<String, Int>::second)
+        .toMutableMap()
+
+      // Shift other providers
+      for (entry in map) {
+        entry.setValue(entry.value + 1)
+      }
+
+      // Insert new provider
+      map[providerId] = newPosition
+      providers.putAll(map)
+    }
   }
 }
