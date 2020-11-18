@@ -11,10 +11,12 @@ import com.intellij.openapi.actionSystem.Presentation
 import com.intellij.openapi.application.ApplicationInfo
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ex.ApplicationUtil
+import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.EditorModificationUtil
 import com.intellij.openapi.editor.ex.util.EditorUtil
+import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.util.IconLoader
@@ -27,11 +29,14 @@ import com.intellij.ui.TextFieldWithAutoCompletionListProvider
 import java.awt.Color
 import java.awt.Robot
 import java.io.InputStream
+import java.util.concurrent.CancellationException
 import javax.swing.Action
 import javax.swing.BorderFactory
 import javax.swing.Icon
 import javax.swing.ListSelectionModel
 import javax.swing.border.Border
+import kotlin.contracts.InvocationKind.EXACTLY_ONCE
+import kotlin.contracts.contract
 import kotlin.internal.InlineOnly
 import kotlin.math.max
 import kotlin.math.min
@@ -418,5 +423,23 @@ internal fun Throwable.readableMessage(): String =
   } else {
     this::class.simpleName ?: "Anonymous exception object"
   }
+
+@Suppress("SameParameterValue")
+internal inline fun <T> Logger.runAndLogError(defaultValue: T, block: () -> T): T {
+  contract {
+    callsInPlace(block, EXACTLY_ONCE)
+  }
+
+  return try {
+    block()
+  } catch (e: ProcessCanceledException) {
+    throw e
+  } catch (e: CancellationException) {
+    throw e
+  } catch (e: Throwable) {
+    error(e)
+    defaultValue
+  }
+}
 
 // endregion

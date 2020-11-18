@@ -1,6 +1,7 @@
 package com.github.lppedd.cc.lookupElement
 
 import com.github.lppedd.cc.*
+import com.github.lppedd.cc.annotation.Compatibility
 import com.github.lppedd.cc.completion.providers.TypeProviderWrapper
 import com.github.lppedd.cc.psiElement.CommitTypePsiElement
 import com.intellij.codeInsight.completion.InsertionContext
@@ -12,6 +13,7 @@ import com.intellij.codeInsight.template.impl.TemplateSettings
 import com.intellij.codeInsight.template.impl.TemplateState
 import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.command.WriteCommandAction.runWriteCommandAction
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.util.TextRange
 import kotlin.math.max
 import kotlin.math.min
@@ -57,7 +59,7 @@ internal class TemplateCommitTypeLookupElement(
       template,
       true,
       null,
-      CCTemplateEditingListener
+      CCTemplateEditingListener()
     )
 
     // We populate the macro type context with the chosen commit type
@@ -70,14 +72,28 @@ internal class TemplateCommitTypeLookupElement(
   }
 }
 
-private object CCTemplateEditingListener : TemplateEditingAdapter() {
+private class CCTemplateEditingListener : TemplateEditingAdapter() {
+  private companion object {
+    private val logger = logger<CCTemplateEditingListener>()
+  }
+
+  private var isCancelled = false
+
+  override fun templateCancelled(template: Template) {
+    isCancelled = true
+  }
+
   override fun currentVariableChanged(
       templateState: TemplateState,
-      template: Template?,
+      template: Template,
       oldIndex: Int,
       newIndex: Int,
   ) {
     if (newIndex < 0) {
+      if (isCancelled || templateState.documentChangesTerminateTemplate()) {
+        beforeTemplateFinished(templateState, template)
+      }
+
       return
     }
 
@@ -102,9 +118,7 @@ private object CCTemplateEditingListener : TemplateEditingAdapter() {
       repositionCursorAfterSubjectAndCleanUp(templateState, bodyOrFooterTypeRange)
     }
 
-    if (templateState.currentVariableNumber > 0) {
-      deleteScopeParenthesesIfEmpty(templateState)
-    }
+    deleteScopeParenthesesIfEmpty(templateState)
   }
 
   private fun repositionCursorAfterSubjectAndCleanUp(
@@ -150,4 +164,21 @@ private object CCTemplateEditingListener : TemplateEditingAdapter() {
       }
     }
   }
+
+  @Compatibility(
+    minVersion = "202.4357.23",
+    replaceWith = """
+      On newer IDEA versions the templateCancelled method is called before
+      the last currentVariableChanged (with newIndex < 0), so we have the opportunity
+      to store a boolean for that.
+      On older versions it's the opposite and this is the only possible way.
+    """
+  )
+  private fun TemplateState.documentChangesTerminateTemplate(): Boolean =
+    logger.runAndLogError(false) {
+      TemplateState::class.java.getDeclaredField("myDocumentChangesTerminateTemplate").let {
+        it.isAccessible = true
+        it.get(this) as Boolean
+      }
+    }
 }
