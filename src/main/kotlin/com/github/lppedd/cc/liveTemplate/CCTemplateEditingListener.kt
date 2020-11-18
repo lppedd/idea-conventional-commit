@@ -1,7 +1,11 @@
-package com.github.lppedd.cc.lookupElement
+package com.github.lppedd.cc.liveTemplate
 
 import com.github.lppedd.cc.*
 import com.github.lppedd.cc.annotation.Compatibility
+import com.github.lppedd.cc.lookupElement.INDEX_BODY_OR_FOOTER_TYPE
+import com.github.lppedd.cc.lookupElement.INDEX_FOOTER_VALUE
+import com.github.lppedd.cc.lookupElement.INDEX_SCOPE
+import com.github.lppedd.cc.lookupElement.INDEX_SUBJECT
 import com.intellij.codeInsight.template.Template
 import com.intellij.codeInsight.template.TemplateEditingAdapter
 import com.intellij.codeInsight.template.impl.TemplateState

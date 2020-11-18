@@ -3,6 +3,7 @@ package com.github.lppedd.cc.lookupElement
 import com.github.lppedd.cc.completion.providers.TypeProviderWrapper
 import com.github.lppedd.cc.getTemplateState
 import com.github.lppedd.cc.insertStringAtCaret
+import com.github.lppedd.cc.liveTemplate.CCTemplateEditingListener
 import com.github.lppedd.cc.psiElement.CommitTypePsiElement
 import com.intellij.codeInsight.completion.InsertionContext
 import com.intellij.codeInsight.template.TemplateManager
