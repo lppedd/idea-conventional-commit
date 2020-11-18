@@ -126,10 +126,13 @@ internal class RecentCommitTokenProvider(project: Project)
     return tokens.take(MAX_ELEMENTS).map(ctor)
   }
 
-  private fun getOrderedVcsCommitMessages(): Sequence<String> =
-    vcsHandler.getOrderedTopCommits()
+  private fun getOrderedVcsCommitMessages(): Sequence<String> {
+    val currentUsers = vcsHandler.getCurrentUser()
+    return vcsHandler.getOrderedTopCommits()
       .asSequence()
+      .filter { currentUsers.contains(it.author) }
       .map { it.fullMessage }
+  }
 
   private fun getOrderedSavedCommitMessages(): Sequence<String> =
     vcsConfiguration.recentMessages
