@@ -8,6 +8,7 @@ import com.intellij.openapi.ui.DialogWrapper.IdeModalityType
 import com.intellij.openapi.ui.impl.DialogWrapperPeerImpl
 import com.intellij.ui.scale.ScaleContext
 import com.intellij.util.IconUtil
+import com.intellij.util.ui.JBImageIcon
 import java.awt.Component
 import java.awt.Container
 import javax.swing.Icon
@@ -70,12 +71,13 @@ internal class CCDialogWrapperPeer(
   private fun setIcon(customHeader: Any) {
     customHeaderClass.getDeclaredField("myIconProvider").let {
       it.isAccessible = true
-      it.set(customHeader, ScaleContext.Cache { scaleAndGetIcon() })
+      it.set(customHeader, ScaleContext.Cache(::scaleAndGetIcon))
     }
   }
 
-  private fun scaleAndGetIcon(): Icon {
+  private fun scaleAndGetIcon(ctx: ScaleContext): Icon {
     val scale = 16 * UISettings.defFontScale / CCIcons.Logo.iconWidth
-    return IconUtil.scale(CCIcons.Logo, null, scale)
+    val scaledIcon = IconUtil.scale(CCIcons.Logo, null, scale)
+    return JBImageIcon(IconUtil.toImage(scaledIcon, ctx))
   }
 }
