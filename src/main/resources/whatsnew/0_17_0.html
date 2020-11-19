@@ -1,0 +1,122 @@
+<!--suppress HtmlRequiredTitleElement -->
+<html lang="en">
+  <head>
+    <style>
+        code, pre {
+            font-family: monospace;
+        }
+
+        h1 {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+
+        #table-of-contents h2 {
+            font-size: 1em;
+            font-weight: normal;
+            margin: 0 0 5px 0;
+        }
+
+        #table-of-contents p {
+            font-size: 0.96em;
+            margin: 0 0 0 9px;
+        }
+
+        #contributors h2 {
+            margin-top: 20px;
+            margin-bottom: 0;
+        }
+
+        .indented {
+            margin-left: 9px;
+        }
+    </style>
+  </head>
+  <div id="table-of-contents">
+    <h2>Table of contents:</h2>
+    <p>&#8226; New tokens Providers</p>
+    <p>&#8226; Changes in 0.17.0</p>
+    <p>&#8226; What's next?</p>
+  </div>
+  <h1>New tokens Providers</h1>
+  <p>Here we are with another feature-packed update!</p>
+  <p>
+    The <a href="https://github.com/lppedd/idea-conventional-commit/issues/35">feedback issue</a> had some success.
+    Thanks to <a href="https://github.com/Gerrit-K">Gerrit-K</a> suggestion we have now replaced the old
+    <i>Default - VCS</i> Provider with a <i>Recently used</i> one and a <i>VCS</i> one.
+  </p>
+  <p>
+    The <i>Recently used</i> Provider reads tokens from the recent commit messages cache, and if it
+    doesn't find enough tokens it falls back to the active VCS repositories filtering the commits made by yourself.<br/>
+    The <i>VCS</i> Provider reads tokens strictly from VCS repositories, without any filter so that you can
+    pick whatever a friend or colleague wrote down.
+  </p>
+  <p>
+    Don't worry about performance as what's needed is cached at the appropriate time to offer a snappy
+    completion experience. Beware reading from VCS repositories is <b>still experimental</b>,
+    so if you encounter issues you're able to disable it by unchecking the
+  </p>
+  <pre>com.github.lppedd.cc.providers.vcs</pre>
+  <p>
+    Registry key.
+  </p>
+  <br/>
+  <p>
+    Be sure to keep the feedbacks coming by commenting
+    <a href="https://github.com/lppedd/idea-conventional-commit/issues/35">on the GitHub issue</a>,
+    or by contacting me at <code>lp.edoardo(at)gmail.com</code>
+  </p>
+  <h1>Changes in 0.17.0</h1>
+  <p>
+    Other than the new Providers, this release brings small features, a couple of fixes,
+    and as always an extensive refactoring of the codebase.<br/>
+    Following is a short summary, but you can look at all the commits
+    <a href="https://github.com/lppedd/idea-conventional-commit/compare/0.16.1...0.17.0">here</a>.
+  </p>
+  <!-- FEATURES -->
+  <p><b>Features:</b></p>
+  <p class="indented">
+    &#8226; implemented two new tokens Providers that are able to offer <i>Recently used</i> tokens
+    and <i>VCS</i>-extracted tokens.
+  </p>
+  <p class="indented">
+    &#8226; cleaned-up the commit message even when template completion is canceled (deliberately or by accident).
+  </p>
+  <p class="indented">
+    &#8226; included by default the <code>Refs</code> footer type.
+  </p>
+  <!-- FIXES -->
+  <p><b>Fixes:</b></p>
+  <p class="indented">
+    &#8226; deduplicated completion popup's items based on Providers ordering.
+  </p>
+  <p class="indented">
+    &#8226; removed a memory leak when the Providers settings panel was opened without first
+    going through the main panel.
+  </p>
+  <!-- REFACTORINGS -->
+  <p><b>Refactorings:</b></p>
+  <p class="indented">
+    &#8226; updated the UI style of the Co-authors table to reflect the changes made in 0.16.0.
+  </p>
+  <p class="indented">
+    &#8226; correctly calculated the checkbox column width on row insertion when the Co-authors table is empty.
+  </p>
+  <p class="indented">
+    &#8226; improved the SVG icons.
+  </p>
+  <h1>What's next?</h1>
+  <p>
+    As stated in the previous release changelog, I'm focusing mainly on the features we already have.
+    However I'd like to provide a way to disable a Provider as currently this is impossible, if not
+    by disabling plugins in case of third-party ones.
+    And obviously I'll continue cleaning-up the code and fixing issues if required!
+  </p>
+  <div id="contributors">
+    <h2>Contributors</h2>
+    <p>
+      Thanks to <a href="https://github.com/ymind">ymind</a> for keeping the Chinese translation updated
+      and for answering my questions. And thanks to every user.
+    </p>
+  </div>
+</html>
