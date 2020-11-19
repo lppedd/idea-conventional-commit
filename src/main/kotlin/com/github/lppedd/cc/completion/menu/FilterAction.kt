@@ -67,7 +67,7 @@ internal class FilterAction(
     backupItems = emptyList()
   }
 
-  override fun actionPerformed(ignored: AnActionEvent) {
+  override fun actionPerformed(event: AnActionEvent) {
     if (enhancer.filterSelected(this)) {
       filterItems(!isFiltered)
       lookup.resort(false)

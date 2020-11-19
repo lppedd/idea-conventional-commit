@@ -249,7 +249,7 @@ private class CommitCompletionContributor : CompletionContributor() {
     try {
       @Suppress("unchecked_cast")
       process.getArranger().setFrozenItemsList(NoopList as MutableList<LookupElement?>)
-    } catch (ignored: Exception) {
+    } catch (_: Exception) {
       // Let's just continue.
       // Though elements won't be ordered as we'd like
     }
@@ -266,7 +266,7 @@ private class CommitCompletionContributor : CompletionContributor() {
   private fun safelyReleaseProcessSemaphore(process: CompletionProgressIndicator) {
     try {
       process.getFreezeSemaphore().up()
-    } catch (ignored: Exception) {
+    } catch (_: Exception) {
       // Let's just continue
     }
   }

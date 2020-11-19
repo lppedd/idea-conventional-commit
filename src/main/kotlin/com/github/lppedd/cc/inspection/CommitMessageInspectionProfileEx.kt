@@ -23,7 +23,7 @@ private class CommitMessageInspectionProfileEx(project: Project) : CommitMessage
   init {
     try {
       hackInspectionProfile()
-    } catch (ignored: Exception) {
+    } catch (_: Exception) {
       // Ouch, agent Smith caught me and I can't do anything about it :(
     }
   }

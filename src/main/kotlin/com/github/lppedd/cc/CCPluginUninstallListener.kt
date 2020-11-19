@@ -29,7 +29,7 @@ internal class CCPluginUninstallListener : PluginStateListener {
       it.unsetValue(DefaultWhatsNewProvider.PROPERTY_VERSION)
       it.unsetValue(WhatsNewDialog.PROPERTY_SHOW)
     }
-  } catch (ignored: Exception) {
+  } catch (_: Exception) {
     //
   }
 }

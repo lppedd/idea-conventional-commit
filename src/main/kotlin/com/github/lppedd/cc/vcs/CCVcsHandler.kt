@@ -189,7 +189,7 @@ internal class CCVcsHandler(private val project: Project) {
       method.isAccessible = true
       method.invoke(null, project)
       true
-    } catch (ignored: Exception) {
+    } catch (_: Exception) {
       false
     }
   }

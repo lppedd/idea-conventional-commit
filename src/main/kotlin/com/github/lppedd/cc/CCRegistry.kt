@@ -30,7 +30,7 @@ internal object CCRegistry {
 
       ctor.isAccessible = true
       RegistryKeyCreatorNew(ctor)
-    } catch (ignored: Exception) {
+    } catch (_: Exception) {
       val ctor = clazz.getDeclaredConstructor(
         String::class.java,
         String::class.java,

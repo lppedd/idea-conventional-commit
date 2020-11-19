@@ -124,7 +124,7 @@ internal class LookupEnhancer(
       }
 
       this.menuButton = menuButton
-    } catch (ignored: ReflectiveOperationException) {
+    } catch (_: ReflectiveOperationException) {
       // This should never happen, but in case I can't do anything about it,
       // so I'll just clean-up and let the user continue without applying any change
       lookup.removeLookupListener(this)

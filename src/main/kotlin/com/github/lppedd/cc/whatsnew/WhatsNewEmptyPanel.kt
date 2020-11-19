@@ -39,7 +39,7 @@ internal class WhatsNewEmptyPanel : JPanel() {
     override fun actionPerformed(event: AnActionEvent) {
       try {
         Desktop.getDesktop().browse(URI(CCBundle["cc.plugin.repository"]))
-      } catch (ignored: Exception) {
+      } catch (_: Exception) {
         //
       }
     }
