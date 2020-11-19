@@ -111,7 +111,7 @@ internal class CCProvidersConfigurableGui {
       .setToolbarPosition(RIGHT)
       .setToolbarBorder(toolbarBorder)
       .setPanelBorder(panelBorder)
-      .setPreferredSize(JBDimension(table.preferredSize.width, JBUIScale.scale(135), true))
+      .setPreferredSize(JBDimension(table.preferredSize.width, JBUIScale.scale(138), true))
       .setRemoveAction(null)
       .setAddAction(null)
       .createPanel()
