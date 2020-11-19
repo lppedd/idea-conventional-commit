@@ -15,6 +15,7 @@ import com.intellij.util.xmlb.annotations.XMap
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.Map.Entry
+import kotlin.math.min
 
 /**
  * @author Edoardo Luppi
@@ -242,7 +243,7 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
         .toMutableMap()
 
       // Insert new provider
-      map[providerId] = newPosition
+      map[providerId] = min(newPosition, map.size)
       providers.putAll(map)
     }
   }
