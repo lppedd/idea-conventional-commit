@@ -40,7 +40,7 @@ internal class RecentCommitTokenProvider(project: Project)
   override fun getId(): String = ID
 
   override fun getPresentation(): ProviderPresentation =
-    ProviderPresentation("Recently used", CCIcons.Provider.Recent)
+    ProviderPresentation(CCBundle["cc.config.providers.recentlyUsed"], CCIcons.Provider.Recent)
 
   override fun getCommitTypes(prefix: String?): Collection<CommitType> =
     doGet(::RecentCommitType) { messages ->
