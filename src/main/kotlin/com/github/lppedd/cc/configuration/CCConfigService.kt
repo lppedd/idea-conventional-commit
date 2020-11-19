@@ -236,14 +236,10 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
       val map = providers.asSequence()
         .filterNot { it.key == providerId }
         .sortedBy(Entry<String, Int>::value)
-        .mapIndexed { position, e -> e.key to position }
+        // i + 1 to leave the position to the updating Provider
+        .mapIndexed { i, e -> e.key to if (i < newPosition) i else i + 1 }
         .associateBy(Pair<String, Int>::first, Pair<String, Int>::second)
         .toMutableMap()
-
-      // Shift other providers
-      for (entry in map) {
-        entry.setValue(entry.value + 1)
-      }
 
       // Insert new provider
       map[providerId] = newPosition
