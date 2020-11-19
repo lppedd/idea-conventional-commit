@@ -140,8 +140,7 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
     scopeProvidersMap.putIfAbsent(VcsCommitTokenProvider.ID, 2)
 
     subjectProvidersMap.putIfAbsent(RecentCommitTokenProvider.ID, 0)
-    subjectProvidersMap.putIfAbsent(DefaultCommitTokenProvider.ID, 1)
-    subjectProvidersMap.putIfAbsent(VcsCommitTokenProvider.ID, 2)
+    subjectProvidersMap.putIfAbsent(VcsCommitTokenProvider.ID, 1)
 
     footerTypeProvidersMap.putIfAbsent(DefaultCommitTokenProvider.ID, 0)
 
