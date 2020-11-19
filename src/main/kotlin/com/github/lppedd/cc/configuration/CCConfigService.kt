@@ -150,6 +150,15 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
   }
 
   override fun initializeComponent() {
+    // For reference this method is called only when the service
+    // is requested the first time. There is no eager loading (well,
+    // in newer IDEA versions "preload" exists but it's better to
+    // not rely on it) so the updates below are applied only if a user
+    // actually uses completion or opens the settings panel.
+    // TODO: think about a better strategy to update settings as soon
+    //  as the IDE starts but without nagging/scaring the user with
+    //  the ConverterProvider's popup. And maybe without having to deal
+    //  with XML itself
     if (version < 1) {
       // 0.17.0
       updateProvidersOrdering()
