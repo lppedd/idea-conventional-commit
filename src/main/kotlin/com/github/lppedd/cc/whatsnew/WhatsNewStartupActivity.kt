@@ -30,7 +30,7 @@ private class WhatsNewStartupActivity : StartupActivity, DumbAware {
         if (!project.isDisposed) {
           WhatsNewDialog.showForProject(project)
         }
-      }, 1, TimeUnit.SECONDS)
+      }, 1100L, TimeUnit.MILLISECONDS)
     }
   }
 }
