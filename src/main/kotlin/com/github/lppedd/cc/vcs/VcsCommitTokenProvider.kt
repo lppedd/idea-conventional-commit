@@ -26,7 +26,7 @@ internal class VcsCommitTokenProvider(project: Project)
     CommitFooterValueProvider {
   companion object {
     const val ID = "e9ce9acf-f4a6-4b36-b43c-531169556c29"
-    const val MAX_ELEMENTS = 8
+    const val MAX_ELEMENTS = 15
 
     private val regexBeginEndWs = Regex("""^\s+|\s+$""")
     private val regexBlankLines = Regex("""^\s*$""", MULTILINE)
