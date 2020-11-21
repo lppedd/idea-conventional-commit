@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
   java
   id("org.jetbrains.intellij") version "0.6.3"
-  kotlin("jvm") version "1.4.20-RC"
+  kotlin("jvm") version "1.4.20"
 }
 
 group = "com.github.lppedd"
@@ -16,7 +16,7 @@ repositories {
 }
 
 dependencies {
-  implementation(kotlin("stdlib-jdk8", "1.4.20-RC"))
+  implementation(kotlin("stdlib-jdk8", "1.4.20"))
 
   implementation("commons-validator", "commons-validator", "1.7") {
     exclude("commons-beanutils", "commons-beanutils")
