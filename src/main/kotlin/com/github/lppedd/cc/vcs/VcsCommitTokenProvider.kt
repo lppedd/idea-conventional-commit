@@ -46,8 +46,8 @@ internal class VcsCommitTokenProvider(project: Project)
       .mapToLowerCase()
       .distinct()
       .map(CCParser::parseHeader)
-      .map(CommitTokens::type)
-      .filterIsInstance<ValidToken>()
+      .filter { it.type is ValidToken && it.separator.isPresent }
+      .map { it.type as ValidToken }
       .map(ValidToken::value)
       .trim()
       .filterNotEmpty()
