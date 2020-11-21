@@ -18,7 +18,10 @@ import com.intellij.vcs.log.visible.filters.VcsLogFilterObject
 import org.jetbrains.annotations.ApiStatus.*
 import java.util.*
 import java.util.Collections.newSetFromMap
+import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.collections.ArrayList
+import kotlin.concurrent.read
+import kotlin.concurrent.write
 
 /**
  * @author Edoardo Luppi
@@ -30,8 +33,12 @@ internal class CCVcsHandler(private val project: Project) {
   private val vcsRepositoryManager = VcsRepositoryManager.getInstance(project)
   private val vcsLogMultiRepoJoiner = VcsLogMultiRepoJoiner<Hash, VcsCommitMetadata>()
   private val subscribedVcsLogProviders = newSetFromMap<VcsLogProvider>(IdentityHashMap(16))
-  private lateinit var cachedCommits: Collection<VcsCommitMetadata>
-  private lateinit var cachedCurrentUser: Collection<VcsUser>
+
+  private var cachedCurrentUser: Collection<VcsUser> = emptyList()
+  private val cachedCurrentUserLock = ReentrantReadWriteLock()
+
+  private var cachedCommits: Collection<VcsCommitMetadata> = emptyList()
+  private val cachedCommitsLock = ReentrantReadWriteLock()
 
   /**
    * Called on every [ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED].
@@ -62,22 +69,28 @@ internal class CCVcsHandler(private val project: Project) {
   /**
    * Returns the user-configured data associated with the active VCS roots.
    */
-  @Synchronized
   fun getCurrentUser(): Collection<VcsUser> =
-    cachedCurrentUser
+    cachedCurrentUserLock.read {
+      cachedCurrentUser
+    }
 
   /**
    * Returns at most the top 100 commits for the currently checked-out branch,
    * ordered by commit timestamp (latest first).
    */
-  @Synchronized
   fun getOrderedTopCommits(): Collection<VcsCommitMetadata> =
-    cachedCommits
+    cachedCommitsLock.read {
+      cachedCommits
+    }
 
-  @Synchronized
   private fun refreshCachedValues() {
-    cachedCurrentUser = fetchCurrentUser()
-    cachedCommits = fetchCommits(sortBy = VcsCommitMetadata::getCommitTime)
+    cachedCurrentUserLock.write {
+      cachedCurrentUser = fetchCurrentUser()
+    }
+
+    cachedCommitsLock.write {
+      cachedCommits = fetchCommits(sortBy = VcsCommitMetadata::getCommitTime)
+    }
   }
 
   private fun fetchCurrentUser(): Set<VcsUser> =
