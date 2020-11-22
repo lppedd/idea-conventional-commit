@@ -31,7 +31,9 @@ internal class RecentCommitTokenProvider(project: Project)
 
     private val regexBeginEndWs = Regex("""^\s+|\s+$""")
     private val regexBlankLines = Regex("""^\s*$""", MULTILINE)
-    private val recentCommitRendering = CommitTokenRendering(type = "Recently used")
+    private val recentCommitRendering = CommitTokenRendering(
+        type = CCBundle["cc.config.providers.recentlyUsed"]
+    )
   }
 
   private val vcsHandler = project.service<CCVcsHandler>()
