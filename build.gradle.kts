@@ -2,8 +2,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
   java
-  id("org.jetbrains.intellij") version "0.6.3"
-  kotlin("jvm") version "1.4.20"
+  id("org.jetbrains.intellij") version "0.6.5"
+  kotlin("jvm") version "1.4.30-RC"
 }
 
 group = "com.github.lppedd"
@@ -16,15 +16,15 @@ repositories {
 }
 
 dependencies {
-  implementation(kotlin("stdlib-jdk8", "1.4.20"))
+  implementation(kotlin("stdlib-jdk8", "1.4.30-RC"))
 
   implementation("commons-validator", "commons-validator", "1.7") {
     exclude("commons-beanutils", "commons-beanutils")
   }
 
   implementation("cglib:cglib-nodep:3.3.0")
-  implementation("org.json", "json", "20200518")
-  implementation("com.github.everit-org.json-schema", "org.everit.json.schema", "1.12.1")
+  implementation("org.json", "json", "20201115")
+  implementation("com.github.everit-org.json-schema", "org.everit.json.schema", "1.12.2")
 
   testImplementation("junit:junit:4.12")
 }
