@@ -9,7 +9,7 @@ import com.intellij.openapi.project.Project
 /**
  * @author Edoardo Luppi
  */
-internal class AddWsQuickFix(
+internal class AddWhitespaceQuickFix(
     private val toAdd: Int,
     override val canReformat: Boolean = true,
 ) : CommitBaseQuickFix(CCBundle["cc.inspection.nonStdMessage.addWs"]) {

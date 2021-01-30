@@ -2,7 +2,7 @@ package com.github.lppedd.cc.inspection
 
 import com.github.lppedd.cc.*
 import com.github.lppedd.cc.configuration.CCConfigService
-import com.github.lppedd.cc.inspection.quickfix.AddWsQuickFix
+import com.github.lppedd.cc.inspection.quickfix.AddWhitespaceQuickFix
 import com.github.lppedd.cc.inspection.quickfix.RemoveRangeQuickFix
 import com.github.lppedd.cc.inspection.quickfix.ReplaceRangeQuickFix
 import com.github.lppedd.cc.parser.CCParser
@@ -180,7 +180,7 @@ internal class CommitFormatInspection : CommitBaseInspection() {
           CCBundle["cc.inspection.nonStdMessage.text"],
           GENERIC_ERROR_OR_WARNING,
           true,
-          AddWsQuickFix(1),
+          AddWhitespaceQuickFix(1),
           ConventionalCommitReformatQuickFix
         )
       }
