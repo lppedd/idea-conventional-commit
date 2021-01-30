@@ -15,7 +15,7 @@ abstract class CommitBaseQuickFix : LocalQuickFix {
     applyFix(project, getDocument(descriptor.psiElement) ?: return, descriptor)
   }
 
-  @Suppress("INAPPLICABLE_JVM_NAME")
+  @Suppress("inapplicable_jvm_name")
   @get:JvmName("canReformat")
   abstract val canReformat: Boolean
   abstract fun applyFix(project: Project, document: Document, descriptor: ProblemDescriptor)

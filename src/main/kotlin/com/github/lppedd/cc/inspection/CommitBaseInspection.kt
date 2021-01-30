@@ -95,6 +95,6 @@ abstract class CommitBaseInspection : BaseCommitMessageInspection(), TemplateMan
     myMessageBus = null
   }
 
-  @Suppress("EXPOSED_SUPER_CLASS")
+  @Suppress("exposed_super_class")
   object ConventionalCommitReformatQuickFix : ReformatCommitMessageQuickFix()
 }

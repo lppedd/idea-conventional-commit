@@ -50,7 +50,7 @@ private class CommitTabAction : TabAction() {
         }
       }
 
-      @Suppress("DEPRECATION")
+      @Suppress("deprecation")
       return super.isEnabled(editor, dataContext)
     }
 
