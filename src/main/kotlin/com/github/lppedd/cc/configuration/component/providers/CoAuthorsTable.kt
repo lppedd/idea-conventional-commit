@@ -1,11 +1,11 @@
 package com.github.lppedd.cc.configuration.component.providers
 
 import com.github.lppedd.cc.CCBundle
+import com.github.lppedd.cc.scaled
 import com.github.lppedd.cc.selectedIndices
 import com.github.lppedd.cc.ui.CCTable
 import com.intellij.ui.ColoredTableCellRenderer
 import com.intellij.ui.components.JBCheckBox
-import com.intellij.ui.scale.JBUIScale
 import com.intellij.ui.speedSearch.SpeedSearchUtil
 import com.intellij.util.ui.JBUI
 import java.awt.Component
@@ -39,7 +39,7 @@ internal class CoAuthorsTable(tableModel: CoAuthorsTableModel) : CCTable(tableMo
 
     setTableHeader(null)
     setShowGrid(false)
-    setRowHeight(JBUIScale.scale(26))
+    setRowHeight(26.scaled)
     setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN)
 
     getColumnModel().getColumn(COLUMN_CHECKBOX).also {
@@ -131,7 +131,7 @@ internal class CoAuthorsTable(tableModel: CoAuthorsTableModel) : CCTable(tableMo
     // Earlier it was set to 15px, which became a mess with scaling,
     // while now we try to calculate the minimum width using a JCheckBox instance,
     // or we fallback to a scaled value
-    val minimumWidth = max(JBUIScale.scale(19), JBCheckBox().minimumSize.width + 1)
+    val minimumWidth = max(19.scaled, JBCheckBox().minimumSize.width + 1)
     val maxWidth = 300
     val columnModel = columnModel
 

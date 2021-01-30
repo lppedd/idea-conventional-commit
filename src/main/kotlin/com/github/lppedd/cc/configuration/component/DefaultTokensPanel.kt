@@ -1,17 +1,13 @@
 package com.github.lppedd.cc.configuration.component
 
-import com.github.lppedd.cc.CCBundle
-import com.github.lppedd.cc.CCIcons
-import com.github.lppedd.cc.CCUI
+import com.github.lppedd.cc.*
 import com.github.lppedd.cc.configuration.CCDefaultTokensService.JsonCommitScope
 import com.github.lppedd.cc.configuration.CommitTypeMap
 import com.github.lppedd.cc.configuration.component.tokens.CommitTokenList
 import com.github.lppedd.cc.ui.JBGridLayout
 import com.github.lppedd.cc.ui.TitledPanel
-import com.github.lppedd.cc.wrap
 import com.intellij.ui.ListSpeedSearch
 import com.intellij.ui.components.JBScrollPane
-import com.intellij.ui.scale.JBUIScale
 import com.intellij.util.ui.JBDimension
 import com.intellij.util.ui.JBUI
 import java.awt.Graphics
@@ -70,7 +66,7 @@ internal class DefaultTokensPanel : JPanel(JBGridLayout(1, 1, 24, 1)) {
     val icon = CCIcons.General.ArrowRight
     val x = (width - icon.iconWidth) / 2
     // 32 is a magic constant found by trial and error
-    val y = (height - icon.iconHeight + JBUIScale.scale(32)) / 2
+    val y = (height - icon.iconHeight + 32.scaled) / 2
     icon.paintIcon(this, g, x, y)
   }
 }

@@ -1,6 +1,6 @@
 package com.github.lppedd.cc.ui
 
-import com.intellij.ui.scale.JBUIScale
+import com.github.lppedd.cc.scaled
 import java.awt.GridLayout
 
 /**
@@ -10,6 +10,6 @@ class JBGridLayout(rows: Int, cols: Int, hgap: Int, vgap: Int) :
     GridLayout(
       rows,
       cols,
-      JBUIScale.scale(hgap),
-      JBUIScale.scale(vgap)
+      hgap.scaled,
+      vgap.scaled
     )

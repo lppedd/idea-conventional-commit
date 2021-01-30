@@ -4,13 +4,13 @@ import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.CCUI
 import com.github.lppedd.cc.api.*
 import com.github.lppedd.cc.configuration.component.providers.CommitProviderTable
+import com.github.lppedd.cc.scaled
 import com.github.lppedd.cc.ui.JBGridLayout
 import com.github.lppedd.cc.ui.TitledPanel
 import com.intellij.openapi.actionSystem.ActionToolbarPosition.RIGHT
 import com.intellij.ui.TableSpeedSearch
 import com.intellij.ui.ToolbarDecorator
 import com.intellij.ui.components.JBLabel
-import com.intellij.ui.scale.JBUIScale
 import com.intellij.ui.table.JBTable
 import com.intellij.util.containers.Convertor
 import com.intellij.util.ui.JBDimension
@@ -111,7 +111,7 @@ internal class CCProvidersConfigurableGui {
       .setToolbarPosition(RIGHT)
       .setToolbarBorder(toolbarBorder)
       .setPanelBorder(panelBorder)
-      .setPreferredSize(JBDimension(table.preferredSize.width, JBUIScale.scale(138), true))
+      .setPreferredSize(JBDimension(table.preferredSize.width, 138.scaled, true))
       .setRemoveAction(null)
       .setAddAction(null)
       .createPanel()

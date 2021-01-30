@@ -26,6 +26,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiFile
 import com.intellij.ui.TextFieldWithAutoCompletionListProvider
+import com.intellij.ui.scale.JBUIScale
 import java.awt.Color
 import java.awt.Robot
 import java.io.InputStream
@@ -441,5 +442,11 @@ internal inline fun <T> Logger.runAndLogError(defaultValue: T, block: () -> T): 
     defaultValue
   }
 }
+
+internal val Int.scaled
+  get() = JBUIScale.scale(this)
+
+internal val Float.scaled
+  get() = JBUIScale.scale(this)
 
 // endregion

@@ -3,6 +3,7 @@ package com.github.lppedd.cc.configuration.component
 import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.CCIcons
 import com.github.lppedd.cc.configuration.CCDefaultTokensService
+import com.github.lppedd.cc.scaled
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
@@ -13,7 +14,6 @@ import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.DocumentAdapter
 import com.intellij.ui.components.JBCheckBox
-import com.intellij.ui.scale.JBUIScale
 import com.intellij.uiDesigner.core.GridConstraints
 import com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL
 import com.intellij.uiDesigner.core.GridLayoutManager
@@ -33,7 +33,7 @@ import javax.swing.event.DocumentEvent
 internal class DefaultTokensFilePickerPanel(
     private val project: Project,
     private val disposable: Disposable,
-) : JPanel(GridLayoutManager(2, 1, JBUI.emptyInsets(), 0, JBUIScale.scale(5))) {
+) : JPanel(GridLayoutManager(2, 1, JBUI.emptyInsets(), 0, 5.scaled)) {
   private val isCustomFile = JBCheckBox(CCBundle["cc.config.customFile"]).also {
     it.addItemListener { event ->
       when (event.stateChange) {

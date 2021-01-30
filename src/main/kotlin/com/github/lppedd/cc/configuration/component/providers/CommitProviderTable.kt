@@ -3,11 +3,11 @@ package com.github.lppedd.cc.configuration.component.providers
 import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.CCIcons
 import com.github.lppedd.cc.api.CommitTokenProvider
+import com.github.lppedd.cc.scaled
 import com.github.lppedd.cc.ui.CCTable
 import com.intellij.openapi.application.ApplicationInfo
 import com.intellij.openapi.util.IconLoader
 import com.intellij.ui.ColoredTableCellRenderer
-import com.intellij.ui.scale.JBUIScale
 import com.intellij.ui.speedSearch.SpeedSearchUtil
 import com.intellij.util.ui.JBUI
 import javax.swing.Icon
@@ -88,7 +88,7 @@ internal class CommitProviderTable<T : CommitTokenProvider> : CCTable() {
     }
 
     private fun getIconOrUnknown(icon: Icon): Icon {
-      val scaledHW = JBUIScale.scale(iconSize)
+      val scaledHW = iconSize.scaled
       return if (icon.iconHeight <= scaledHW && icon.iconWidth <= scaledHW) {
         icon
       } else {
