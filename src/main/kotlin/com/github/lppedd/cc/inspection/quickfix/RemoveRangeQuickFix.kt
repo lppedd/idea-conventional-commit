@@ -13,8 +13,11 @@ import com.intellij.openapi.project.Project
  */
 internal class RemoveRangeQuickFix(
     override val canReformat: Boolean = true,
-    message: String = CCBundle["cc.inspection.nonStdMessage.removeWs"],
-) : CommitBaseQuickFix(message) {
+    private val message: String = CCBundle["cc.inspection.nonStdMessage.removeWs"],
+) : CommitBaseQuickFix() {
+  override fun getFamilyName(): String =
+    message
+
   override fun applyFix(project: Project, document: Document, descriptor: ProblemDescriptor) {
     val (start, end) = descriptor.textRangeInElement
     document.deleteString(start, end)

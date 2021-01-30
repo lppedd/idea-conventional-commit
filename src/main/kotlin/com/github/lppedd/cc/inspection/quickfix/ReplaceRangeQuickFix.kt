@@ -14,7 +14,10 @@ import com.intellij.openapi.project.Project
 internal class ReplaceRangeQuickFix(
     private val replaceChar: String,
     override val canReformat: Boolean = true,
-) : CommitBaseQuickFix(CCBundle["cc.inspection.nonStdMessage.replaceWs", replaceChar]) {
+) : CommitBaseQuickFix() {
+  override fun getFamilyName(): String =
+    CCBundle["cc.inspection.nonStdMessage.replaceWs", replaceChar]
+
   override fun applyFix(project: Project, document: Document, descriptor: ProblemDescriptor) {
     val (start, end) = descriptor.textRangeInElement
     document.replaceString(start, end, replaceChar)
