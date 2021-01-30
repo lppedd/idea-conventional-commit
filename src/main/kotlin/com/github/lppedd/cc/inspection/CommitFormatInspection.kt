@@ -132,12 +132,12 @@ internal class CommitFormatInspection : CommitBaseInspection() {
       .map(MatchResult::range)
       .map { TextRange(start + it.first, start + it.last + 1) }
       .map {
+        val scopeReplaceChar = manager.project.service<CCConfigService>().scopeReplaceChar
         val quickFix =
-          if (it.startOffset == start || it.endOffset == end) {
+          if (it.startOffset == start || it.endOffset == end || scopeReplaceChar.isEmpty()) {
             RemoveRangeQuickFix()
           } else {
-            val config = manager.project.service<CCConfigService>()
-            ReplaceRangeQuickFix(config.scopeReplaceChar)
+            ReplaceRangeQuickFix(scopeReplaceChar)
           }
 
         manager.createProblemDescriptor(
