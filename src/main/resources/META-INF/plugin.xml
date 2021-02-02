@@ -73,17 +73,16 @@
       />
     </projectConfigurable>
 
-    <projectService
-        overrides="true"
-        serviceInterface="com.intellij.vcs.commit.message.CommitMessageInspectionProfile"
-        serviceImplementation="com.github.lppedd.cc.inspection.CommitMessageInspectionProfileEx"
-    />
     <projectService serviceImplementation="com.github.lppedd.cc.configuration.CCConfigService" />
     <projectService serviceImplementation="com.github.lppedd.cc.configuration.CCDefaultTokensService" />
 
     <postStartupActivity
         order="before TipOfTheDayActivity"
         implementation="com.github.lppedd.cc.whatsnew.WhatsNewStartupActivity"
+    />
+    <postStartupActivity
+        order="first"
+        implementation="com.github.lppedd.cc.inspection.CommitInspectionsRegistrarStartupActivity"
     />
   </extensions>
 
