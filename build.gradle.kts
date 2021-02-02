@@ -24,7 +24,6 @@ dependencies {
     exclude("commons-beanutils", "commons-beanutils")
   }
 
-  implementation("cglib:cglib-nodep:3.3.0")
   implementation("org.json", "json", "20201115")
   implementation("com.github.everit-org.json-schema", "org.everit.json.schema", "1.12.2")
 
