@@ -59,7 +59,7 @@ internal class TemplateLookupElementDecorator : CommitLookupElement {
     delegate.isValid
 
   override fun isCaseSensitive(): Boolean =
-    delegate.isCaseSensitive
+    true
 
   override fun getAutoCompletionPolicy(): AutoCompletionPolicy =
     delegate.autoCompletionPolicy
