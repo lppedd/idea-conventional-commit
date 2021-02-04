@@ -1,0 +1,20 @@
+<h3>0.18.0 (05/02/2021)</h3>
+<p>
+  Thirtieth alpha release.<br/>
+  Features and refactorings
+</p>
+<ul>
+  <li>
+    Implemented a new "naming convention" inspection that highlights illegal symbols in commit's type and scope,
+    based on RegExp patterns defined under <b>Version Control > Commit > Commit message inspections</b>.
+  </li>
+  <li>
+    Relaxed commit's tokens pattern rules in JSON Schema and associated parser
+    to allow a wide range of UTF-8 symbols.
+  </li>
+  <li>
+    Reworked commit's inspections registration to avoid Reflection and bytecode manipulation,
+    thus removing the need for CGLIB.
+  </li>
+  <li>Cleaned-up the source code.</li>
+</ul>

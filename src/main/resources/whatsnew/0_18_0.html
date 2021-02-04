@@ -1,0 +1,97 @@
+<!--suppress HtmlRequiredTitleElement -->
+<html lang="en">
+  <head>
+    <style>
+        code, pre {
+            font-family: monospace;
+        }
+
+        h1 {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+
+        #table-of-contents h2 {
+            font-size: 1em;
+            font-weight: normal;
+            margin: 0 0 5px 0;
+        }
+
+        #table-of-contents p {
+            font-size: 0.96em;
+            margin: 0 0 0 9px;
+        }
+
+        #contributors h2 {
+            margin-top: 20px;
+            margin-bottom: 0;
+        }
+
+        .indented {
+            margin-left: 9px;
+        }
+    </style>
+  </head>
+  <div id="table-of-contents">
+    <h2>Table of contents:</h2>
+    <p>&#8226; Internationalization improvements</p>
+    <p>&#8226; Naming convention inspection</p>
+    <p>&#8226; Support for 2019.2</p>
+    <p>&#8226; Changes in 0.18.0</p>
+  </div>
+  <h1>Internationalization improvements</h1>
+  <p>
+    In the spirit of trying to appeal to a wider international audience, and thanks to the suggestion
+    made by <a href="https://github.com/cn-src">cn-src</a> and <a href="https://github.com/agileago">agileago</a>,
+    the JSON Schema rules and the associated parser - which control the allowed symbols in each commit token -
+    have been relaxed.<br/>
+    Now a wide range of UTF-8 symbols is usable.
+  </p>
+  <p>
+    Keep in mind this is still somewhat experimental, so if you encounter issues you're welcome
+    to <a href="https://github.com/lppedd/idea-conventional-commit/issues/new">open an issue</a> on GitHub,
+    or to contact me via email at <code>lp.edoardo(at)gmail.com</code>
+  </p>
+  <h1>Naming convention inspection</h1>
+  <p>
+    Given the internationalization improvements, one also has to remember the Conventional Commits standard
+    aims for <b>simplicity</b>, and simplicity means trying to use character sets and languages understood worldwide.
+  </p>
+  <p>
+    To let you know when you're using an illegal symbol in commit's type and scope (as of now) a new inspection
+    - enabled by default - is available under <b>Version Control > Commit > Commit message inspections</b>.<br/>
+    There, if necessary, you're free to edit the proposed RegExp patterns to match your needs.
+  </p>
+  <h1>Support for 2019.2</h1>
+  <p>
+    This plugin was first published in late 2019, targeting 2019.2 and 2019.3.
+    The latest IDEA release is now 2021.1, and supporting all of them means having to deal with
+    cumbersome compatibility issues and strange workarounds.<br/>
+    Thus, I'm thinking about <b>dropping support for 2019.2 in 0.19.0</b>, but if you're a user
+    which still codes with it, please let me know and I'll postpone!
+  </p>
+  <h1>Changes in 0.18.0</h1>
+  <p>
+    Following is a short summary, but you can look at all the commits
+    <a href="https://github.com/lppedd/idea-conventional-commit/compare/0.17.1...0.18.0">here</a>.
+  </p>
+  <!-- FEATURES -->
+  <p><b>Features:</b></p>
+  <p class="indented">
+    &#8226; implemented a new "naming convention" inspection that highlights illegal symbols in
+    commit's type and scope, based on RegExp patterns defined under <em>Version Control > Commit > Commit message inspections</em>.
+  </p>
+  <!-- REFACTORINGS -->
+  <p><b>Refactorings:</b></p>
+  <p class="indented">
+    &#8226; relaxed commit's tokens pattern rules in JSON Schema and associated parser
+    to allow a wide range of UTF-8 symbols.
+  </p>
+  <p class="indented">
+    &#8226; reworked commit's inspections registration to avoid Reflection and bytecode manipulation,
+    thus removing the need for CGLIB.
+  </p>
+  <p class="indented">
+    &#8226; cleaned-up the source code.
+  </p>
+</html>
