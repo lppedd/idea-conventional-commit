@@ -225,6 +225,10 @@ internal inline fun Editor.getCharAfterCaret(): Char? =
 internal inline fun Editor.getTemplateState(): TemplateState? =
   TemplateManagerImpl.getTemplateState(this)
 
+@InlineOnly
+internal inline fun Editor.isTemplateActive(): Boolean =
+  getTemplateState()?.isFinished == false
+
 @RequireEDT
 internal fun Editor.getCurrentLineRange(): TextRange {
   val mainCaretLine = EditorUtil.calcCaretLineRange(this).first.line

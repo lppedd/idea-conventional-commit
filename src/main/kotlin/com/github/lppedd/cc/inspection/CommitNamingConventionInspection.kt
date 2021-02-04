@@ -4,6 +4,7 @@ import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.document
 import com.github.lppedd.cc.getLine
+import com.github.lppedd.cc.isTemplateActive
 import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.ValidToken
 import com.github.lppedd.cc.util.RangeValidator
@@ -14,6 +15,7 @@ import com.intellij.openapi.editor.Document
 import com.intellij.openapi.options.ConfigurableUi
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
+import com.intellij.openapi.vcs.ui.CommitMessage
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiPlainText
 
@@ -36,12 +38,15 @@ internal class CommitNamingConventionInspection : CommitBaseInspection() {
 
   override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor =
     object : PsiElementVisitor() {
-      val templateService = holder.project.service<TemplateCommitEditorService>()
-
       override fun visitPlainText(psiPlainText: PsiPlainText) {
         val document = psiPlainText.containingFile.document ?: return
+        val isTemplateActive =
+          document.getUserData(CommitMessage.DATA_KEY)
+            ?.editorField
+            ?.editor
+            ?.isTemplateActive() == true
 
-        if (templateService.isTemplateActive() || document.lineCount == 0) {
+        if (isTemplateActive || document.lineCount == 0) {
           return
         }
 

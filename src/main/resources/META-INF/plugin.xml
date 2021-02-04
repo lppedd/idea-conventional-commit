@@ -75,7 +75,6 @@
 
     <projectService serviceImplementation="com.github.lppedd.cc.configuration.CCConfigService" />
     <projectService serviceImplementation="com.github.lppedd.cc.configuration.CCDefaultTokensService" />
-    <projectService serviceImplementation="com.github.lppedd.cc.inspection.TemplateCommitEditorService" />
 
     <postStartupActivity
         order="before TipOfTheDayActivity"
