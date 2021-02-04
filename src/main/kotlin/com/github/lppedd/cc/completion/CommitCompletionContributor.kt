@@ -22,7 +22,6 @@ import com.intellij.codeInsight.completion.impl.CompletionSorterImpl
 import com.intellij.codeInsight.completion.impl.PreferStartMatching
 import com.intellij.codeInsight.lookup.*
 import com.intellij.codeInsight.lookup.impl.LookupImpl
-import com.intellij.codeInsight.template.impl.TemplateManagerImpl
 import com.intellij.openapi.components.service
 import com.intellij.openapi.fileTypes.PlainTextLanguage
 import com.intellij.openapi.progress.ProgressManager
@@ -97,8 +96,7 @@ private class CommitCompletionContributor : CompletionContributor() {
       .withRelevanceSorter(sorter(CommitLookupElementWeigher))
 
     val editor = parameters.editor
-    val templateState = TemplateManagerImpl.getTemplateState(editor)
-    val isTemplateActive = templateState != null
+    val isTemplateActive = editor.isTemplateActive()
 
     val myResultSet = if (isTemplateActive) {
       TemplateResultSet(resultSet)
@@ -127,7 +125,7 @@ private class CommitCompletionContributor : CompletionContributor() {
     val caretLogicalPosition = editor.caretModel.logicalPosition
     val caretLineNumber = caretLogicalPosition.line
     var caretOffsetInLine = caretLogicalPosition.column
-    val lineStartOffset = document.getLineStartOffset(caretLineNumber)
+    val templateState = editor.getTemplateState()
     val lineUntilCaret = if (templateState?.currentVariableNumber == INDEX_TYPE) {
       // If we are completing a type with template, we need to consider only
       // the part of the line after the range marker's start
@@ -137,6 +135,7 @@ private class CommitCompletionContributor : CompletionContributor() {
       caretOffsetInLine -= typeStartOffset
       document.getSegment(start, start + caretOffsetInLine)
     } else {
+      val lineStartOffset = document.getLineStartOffset(caretLineNumber)
       document.getSegment(lineStartOffset, lineStartOffset + caretOffsetInLine)
     }
 
