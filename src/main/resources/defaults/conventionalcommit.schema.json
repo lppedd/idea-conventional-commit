@@ -23,7 +23,7 @@
       "type": "object",
       "additionalProperties": false,
       "patternProperties": {
-        "^([a-zA-Z0-9-]+)$": {
+        "^[^\\p{Sc}\\p{Sk}\\p{Sm}\\p{Po}\\p{Ps}\\p{Pe}\\p{Pi}\\p{Pf}\\p{Cc}\\p{Co}\\p{Cn}\\p{Z}]+$": {
           "$ref": "#/definitions/commitType"
         }
       }
@@ -33,7 +33,7 @@
       "type": "object",
       "additionalProperties": false,
       "patternProperties": {
-        "^([a-zA-Z0-9-:]+)$": {
+        "^[^\\p{Ps}\\p{Pe}\\p{Pi}\\p{Pf}\\p{Cc}\\p{Co}\\p{Cn}\\p{Z}]+$": {
           "$ref": "#/definitions/commitScope"
         }
       }
@@ -47,7 +47,7 @@
         "properties": {
           "name": {
             "description": "The commit footer type's name (it should possibly be unique)",
-            "pattern": "^(BREAKING[- ]CHANGE|[a-zA-Z0-9-]+)$",
+            "pattern": "^(BREAKING[- ]CHANGE|[^\\p{Sc}\\p{Sk}\\p{Sm}\\p{Po}\\p{Ps}\\p{Pe}\\p{Pi}\\p{Pf}\\p{Cc}\\p{Co}\\p{Cn}\\p{Z}]+)$",
             "type": "string"
           },
           "description": {
@@ -71,7 +71,7 @@
           "type": "object",
           "additionalProperties": false,
           "patternProperties": {
-            "^([a-zA-Z0-9-:]+)$": {
+            "^[^\\p{Ps}\\p{Pe}\\p{Pi}\\p{Pf}\\p{Cc}\\p{Co}\\p{Cn}\\p{Z}]+$": {
               "$ref": "#/definitions/commitScope"
             }
           }

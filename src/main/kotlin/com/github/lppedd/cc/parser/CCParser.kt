@@ -20,7 +20,7 @@ object CCParser {
   private const val FOOTER = "footer"
 
   private val headerRegExp = """
-    |(?:[^:]*? |)??(?<$TYPE>[a-zA-Z0-9-]+)
+    |(?:[^:]*? |)??(?<$TYPE>[^\p{Ps}\p{Pe}\p{Pi}\p{Pf}\p{Po}\p{Cc}\p{Co}\p{Cn}\p{Z}]+)
     |(?<$SCOPE>(?:\([^()\r\n]*\)|\(.*(?=!)|\(.*(?=:))|\(.*(?=$))?
     |(?<$BRK_CHANGE>!)?
     |(?<$SEPARATOR>:)?
@@ -33,9 +33,9 @@ object CCParser {
 
   // TODO: should not consider lines below if there is nothing after the separator
   private val footerRegExp = """
-    |^(?<$FOOTER_TYPE>[ a-zA-Z0-9-]+)?
+    |^(?<$FOOTER_TYPE>[^\p{Ps}\p{Pe}\p{Pi}\p{Pf}\p{Po}\p{Cc}\p{Co}\p{Cn}]+)?
     |(?<$SEPARATOR>:)?
-    |(?<$FOOTER>(?<=:)(?:.|[\r\n](?![\r\n]|([a-zA-Z0-9-]+)?(:)?((?<=:))))+)?
+    |(?<$FOOTER>(?<=:)(?:.|[\r\n](?![\r\n]|([^\p{Ps}\p{Pe}\p{Pi}\p{Pf}\p{Po}\p{Cc}\p{Co}\p{Cn}\p{Z}]+)?(:)?((?<=:))))+)?
   """
     .trimMargin()
     .replace("\n", "")
