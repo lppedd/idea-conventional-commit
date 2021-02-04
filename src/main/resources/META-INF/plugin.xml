@@ -75,6 +75,7 @@
 
     <projectService serviceImplementation="com.github.lppedd.cc.configuration.CCConfigService" />
     <projectService serviceImplementation="com.github.lppedd.cc.configuration.CCDefaultTokensService" />
+    <projectService serviceImplementation="com.github.lppedd.cc.inspection.TemplateCommitEditorService" />
 
     <postStartupActivity
         order="before TipOfTheDayActivity"
@@ -118,6 +119,7 @@
         interface="com.github.lppedd.cc.api.CommitFooterValueProvider"
     />
     <extensionPoint
+        area="IDEA_PROJECT"
         name="commitInspectionProvider"
         interface="com.github.lppedd.cc.api.CommitInspectionProvider"
     />

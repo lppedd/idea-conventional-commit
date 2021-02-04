@@ -21,6 +21,7 @@ import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.util.IconLoader
 import com.intellij.openapi.util.TextRange
+import com.intellij.openapi.vcs.ui.CommitMessage
 import com.intellij.openapi.vfs.VFileProperty
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDocumentManager
@@ -171,6 +172,9 @@ internal fun Document.getLine(line: Int): CharSequence {
   val (start, end) = getLineRange(line)
   return immutableCharSequence.subSequence(start, end)
 }
+
+internal fun Document.isCommitMessage(): Boolean =
+  getUserData(CommitMessage.DATA_KEY) != null
 
 // endregion
 // region Editor

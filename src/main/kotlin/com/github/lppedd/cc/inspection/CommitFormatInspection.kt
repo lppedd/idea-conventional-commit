@@ -22,7 +22,9 @@ import com.intellij.psi.PsiFile
 /**
  * @author Edoardo Luppi
  */
-internal class CommitFormatInspection : CommitBaseInspection() {
+internal class CommitFormatInspection(project: Project) : CommitBaseInspection() {
+  private val templateService = project.service<TemplateCommitEditorService>()
+
   override fun getDisplayName(): String =
     CCBundle["cc.inspection.nonStdMessage.description"]
 
@@ -38,7 +40,7 @@ internal class CommitFormatInspection : CommitBaseInspection() {
       manager: InspectionManager,
       isOnTheFly: Boolean,
   ): Array<ProblemDescriptor> {
-    if (!isTemplateActive() && document.lineCount > 0) {
+    if (!templateService.isTemplateActive() && document.lineCount > 0) {
       return checkHeader(file, document, manager).toTypedArray()
     }
 
