@@ -27,13 +27,15 @@ import kotlin.math.min
 )
 internal class CCConfigService : PersistentStateComponent<CCConfigService> {
   @Attribute
-  private var version: Int = 0
+  private var version: Int = 1
 
   var completionType: CompletionType = CompletionType.POPUP
   var providerFilterType: ProviderFilterType = ProviderFilterType.HIDE_SELECTED
   var customFilePath: String? = null
   var customCoAuthorsFilePath: String? = null
   var scopeReplaceChar: String = "-"
+  var typeNamingPattern: String = "[a-zA-Z]+"
+  var scopeNamingPattern: String = "[a-zA-Z0-9-:]+"
 
   @XMap(
     propertyElementName = "commitTypes",

@@ -60,6 +60,7 @@ tasks {
       "-Xno-param-assertions",
       "-Xjvm-default=all",
       "-Xallow-kotlin-package",
+      "-Xopt-in=kotlin.ExperimentalStdlibApi",
       "-Xopt-in=kotlin.ExperimentalUnsignedTypes",
       "-Xopt-in=kotlin.contracts.ExperimentalContracts",
       "-XXLanguage:+InlineClasses"

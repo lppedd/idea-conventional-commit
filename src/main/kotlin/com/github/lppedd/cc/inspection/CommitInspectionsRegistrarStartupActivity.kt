@@ -13,7 +13,7 @@ import com.intellij.vcs.commit.message.CommitMessageInspectionProfile
  */
 private class CommitInspectionsRegistrarStartupActivity : StartupActivity, DumbAware {
   override fun runActivity(project: Project) {
-    val inspections = INSPECTION_EP.getExtensions(project)
+    val inspections = INSPECTION_EP.extensions
       .asSequence()
       .flatMap(CommitInspectionProvider::getInspections)
       .map(::LocalInspectionToolWrapper)

@@ -119,7 +119,6 @@
         interface="com.github.lppedd.cc.api.CommitFooterValueProvider"
     />
     <extensionPoint
-        area="IDEA_PROJECT"
         name="commitInspectionProvider"
         interface="com.github.lppedd.cc.api.CommitInspectionProvider"
     />
