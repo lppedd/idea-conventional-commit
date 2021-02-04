@@ -13,9 +13,7 @@ import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.configuration.CCConfigService.CompletionType.TEMPLATE
 import com.github.lppedd.cc.lookupElement.INDEX_TYPE
 import com.github.lppedd.cc.parser.CCParser
-import com.github.lppedd.cc.parser.CommitContext.ScopeCommitContext
-import com.github.lppedd.cc.parser.CommitContext.SubjectCommitContext
-import com.github.lppedd.cc.parser.CommitContext.TypeCommitContext
+import com.github.lppedd.cc.parser.CommitContext.*
 import com.github.lppedd.cc.parser.FooterContext.FooterTypeContext
 import com.github.lppedd.cc.parser.FooterContext.FooterValueContext
 import com.intellij.codeInsight.completion.*
@@ -29,7 +27,6 @@ import com.intellij.openapi.components.service
 import com.intellij.openapi.fileTypes.PlainTextLanguage
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.util.Disposer
-import com.intellij.openapi.vcs.ui.CommitMessage
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.util.ReflectionUtil.findField
 import com.intellij.util.concurrency.Semaphore
@@ -65,7 +62,7 @@ private class CommitCompletionContributor : CompletionContributor() {
 
   override fun beforeCompletion(context: CompletionInitializationContext) {
     // Only execute when inside the VCS commit dialog
-    if (context.file.document?.getUserData(CommitMessage.DATA_KEY) == null) {
+    if (context.file.document?.isCommitMessage() == false) {
       return
     }
 
@@ -88,7 +85,7 @@ private class CommitCompletionContributor : CompletionContributor() {
     val file = parameters.originalFile
 
     // Only execute when inside the VCS commit dialog
-    if (file.document?.getUserData(CommitMessage.DATA_KEY) == null) {
+    if (file.document?.isCommitMessage() == false) {
       return
     }
 

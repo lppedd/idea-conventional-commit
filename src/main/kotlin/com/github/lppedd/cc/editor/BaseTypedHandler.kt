@@ -1,6 +1,7 @@
 package com.github.lppedd.cc.editor
 
 import com.github.lppedd.cc.getCurrentLine
+import com.github.lppedd.cc.isCommitMessage
 import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.CommitTokens
 import com.github.lppedd.cc.parser.ValidToken
@@ -9,7 +10,6 @@ import com.intellij.codeInsight.editorActions.TypedHandlerDelegate.Result.CONTIN
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.fileTypes.FileType
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.vcs.ui.CommitMessage
 import com.intellij.psi.PsiFile
 
 /**
@@ -47,7 +47,7 @@ internal abstract class BaseTypedHandler(protected val myChar: Char) : TypedHand
   abstract fun checkAutoPopup(commitTokens: CommitTokens, editor: Editor): Result
 
   private fun getCommitTokensOrNull(editor: Editor): CommitTokens? {
-    if (editor.document.getUserData(CommitMessage.DATA_KEY) == null) {
+    if (!editor.document.isCommitMessage()) {
       return null
     }
 

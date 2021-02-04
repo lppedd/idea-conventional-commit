@@ -8,7 +8,6 @@ import com.intellij.openapi.editor.Caret
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.actions.TabAction
 import com.intellij.openapi.util.Key
-import com.intellij.openapi.vcs.ui.CommitMessage
 
 private val MOVE_CARET_KEY = Key.create<Unit>("Vcs.CommitMessage.moveCaret")
 
@@ -36,7 +35,7 @@ private class CommitTabAction : TabAction() {
     override fun isEnabled(editor: Editor, dataContext: DataContext): Boolean {
       val document = editor.document
 
-      if (document.getUserData(CommitMessage.DATA_KEY) != null) {
+      if (document.isCommitMessage()) {
         val (lineStart, lineEnd) = editor.getCurrentLineRange()
         val lineText = document.getSegment(lineStart, lineEnd)
         val lineCaretOffset = editor.caretModel.offset - lineStart
@@ -55,7 +54,7 @@ private class CommitTabAction : TabAction() {
     }
 
     override fun isEnabledForCaret(editor: Editor, caret: Caret, dataContext: DataContext?): Boolean =
-      if (editor.document.getUserData(CommitMessage.DATA_KEY) != null) {
+      if (editor.document.isCommitMessage()) {
         true
       } else {
         super.isEnabledForCaret(editor, caret, dataContext)
