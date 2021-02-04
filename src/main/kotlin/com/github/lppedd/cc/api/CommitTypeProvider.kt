@@ -5,7 +5,7 @@ import org.jetbrains.annotations.ApiStatus.*
 
 @JvmSynthetic
 internal val TYPE_EP = ProjectExtensionPointName<CommitTypeProvider>(
-  "com.github.lppedd.idea-conventional-commit.commitTypeProvider"
+    "com.github.lppedd.idea-conventional-commit.commitTypeProvider"
 )
 
 /**

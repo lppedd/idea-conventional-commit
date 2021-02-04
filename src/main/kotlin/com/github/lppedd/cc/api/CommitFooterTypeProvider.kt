@@ -5,7 +5,7 @@ import org.jetbrains.annotations.ApiStatus.*
 
 @JvmSynthetic
 internal val FOOTER_TYPE_EP = ProjectExtensionPointName<CommitFooterTypeProvider>(
-  "com.github.lppedd.idea-conventional-commit.commitFooterTypeProvider"
+    "com.github.lppedd.idea-conventional-commit.commitFooterTypeProvider"
 )
 
 /**

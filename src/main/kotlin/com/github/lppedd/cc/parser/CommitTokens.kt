@@ -16,9 +16,9 @@ data class CommitTokens(
     return when {
       offset == 0 -> TypeCommitContext("")
       separator.isPresent -> SubjectCommitContext(
-        (type as ValidToken).value,
-        (scope as? ValidToken)?.value ?: "",
-        (subject as? ValidToken)?.value ?: "",
+          (type as ValidToken).value,
+          (scope as? ValidToken)?.value ?: "",
+          (subject as? ValidToken)?.value ?: "",
       )
       scope.isInContext(offset) -> ScopeCommitContext((type as ValidToken).value, scope.value)
       type.isInContext(offset) -> TypeCommitContext(type.value)

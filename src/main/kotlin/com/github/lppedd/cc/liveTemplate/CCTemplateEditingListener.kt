@@ -113,13 +113,13 @@ internal class CCTemplateEditingListener : TemplateEditingAdapter() {
   }
 
   @Compatibility(
-    minVersion = "202.4357.23",
-    description = """
-      On newer IDEA versions the templateCancelled method is called before
-      the last currentVariableChanged (with newIndex < 0), so we have the opportunity
-      to store a boolean for that.
-      On older versions it's the opposite and this is the only possible way.
-    """,
+      minVersion = "202.4357.23",
+      description = """
+        On newer IDEA versions the templateCancelled method is called before
+        the last currentVariableChanged (with newIndex < 0), so we have the opportunity
+        to store a boolean for that.
+        On older versions it's the opposite and this is the only possible way.
+      """,
   )
   private fun TemplateState.documentChangesTerminateTemplate(): Boolean =
     logger.runAndLogError(false) {

@@ -39,9 +39,9 @@ internal class SubjectCompletionProvider(
       }
       .mapIndexed { index, (provider, commitSubject) ->
         CommitSubjectLookupElement(
-          index,
-          provider,
-          CommitSubjectPsiElement(project, commitSubject),
+            index,
+            provider,
+            CommitSubjectPsiElement(project, commitSubject),
         )
       }
       .distinctBy(CommitSubjectLookupElement::getLookupString)

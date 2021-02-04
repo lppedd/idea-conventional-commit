@@ -8,8 +8,8 @@ import java.awt.GridLayout
  */
 class JBGridLayout(rows: Int, cols: Int, hgap: Int, vgap: Int) :
     GridLayout(
-      rows,
-      cols,
-      hgap.scaled,
-      vgap.scaled
+        rows,
+        cols,
+        hgap.scaled,
+        vgap.scaled
     )

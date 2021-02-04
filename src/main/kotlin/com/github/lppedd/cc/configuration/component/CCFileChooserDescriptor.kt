@@ -20,12 +20,12 @@ internal open class CCFileChooserDescriptor(
     chooseJarContents: Boolean = false,
     chooseMultiple: Boolean = false,
 ) : FileChooserDescriptor(
-  chooseFiles,
-  chooseFolders,
-  chooseJars,
-  chooseJarsAsFiles,
-  chooseJarContents,
-  chooseMultiple,
+    chooseFiles,
+    chooseFolders,
+    chooseJars,
+    chooseJarsAsFiles,
+    chooseJarContents,
+    chooseMultiple,
 ) {
   open val okActionName: String? = null
   open val cancelActionName: String? = null

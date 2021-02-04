@@ -7,7 +7,7 @@ import org.jetbrains.annotations.ApiStatus.*
 
 @JvmSynthetic
 internal val WHATS_NEW_EP = ExtensionPointName<WhatsNewProvider>(
-  "com.github.lppedd.idea-conventional-commit.whatsNewProvider"
+    "com.github.lppedd.idea-conventional-commit.whatsNewProvider"
 )
 
 /**

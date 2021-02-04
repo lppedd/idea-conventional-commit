@@ -29,12 +29,11 @@ internal class CoAuthorsDialog(project: Project) : DialogWrapper(project) {
 
     // It's good the dialog dimensions get saved, but it's better
     // to always display it in the center of the commit dialog
-    window.addWindowListener(
-      object : WindowAdapter() {
-        override fun windowOpened(e: WindowEvent?) {
-          centerRelativeToParent()
-        }
-      })
+    window.addWindowListener(object : WindowAdapter() {
+      override fun windowOpened(e: WindowEvent?) {
+        centerRelativeToParent()
+      }
+    })
   }
 
   fun getSelectedAuthors(): Collection<String> =

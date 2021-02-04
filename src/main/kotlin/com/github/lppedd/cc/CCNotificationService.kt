@@ -11,9 +11,9 @@ import com.intellij.notification.NotificationType
 internal object CCNotificationService {
   @Suppress("unused")
   private val notificationGroup = NotificationGroup(
-    "com.github.lppedd.cc.notifications.schema",
-    NotificationDisplayType.TOOL_WINDOW,
-    true
+      "com.github.lppedd.cc.notifications.schema",
+      NotificationDisplayType.TOOL_WINDOW,
+      true
   )
 
   fun createErrorNotification(message: String): Notification =
@@ -21,12 +21,12 @@ internal object CCNotificationService {
 
   private class CCNotification(message: String, type: NotificationType) :
       Notification(
-        "com.github.lppedd.cc.notifications.schema",
-        null,
-        "Conventional Commit",
-        "",
-        message,
-        type,
-        null
+          "com.github.lppedd.cc.notifications.schema",
+          null,
+          "Conventional Commit",
+          "",
+          message,
+          type,
+          null
       )
 }

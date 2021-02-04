@@ -161,8 +161,8 @@ internal class CCDefaultTokensService(private val project: Project) {
     jsonObject.keySet().associateWith {
       val descriptor = jsonObject.getJSONObject(it)
       JsonCommitType(
-        descriptor.optString("description", ""),
-        commonScopes + buildScopes(descriptor.optJSONObject("scopes")),
+          descriptor.optString("description", ""),
+          commonScopes + buildScopes(descriptor.optJSONObject("scopes")),
       )
     }
 

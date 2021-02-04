@@ -48,11 +48,11 @@ internal class TemplateCommitTypeLookupElement(
     // Now that we have a clean document state, we can initiate the template
     // at the original (pre-commit type insertion) caret position
     TemplateManager.getInstance(project).startTemplate(
-      editor,
-      template,
-      true,
-      null,
-      CCTemplateEditingListener(),
+        editor,
+        template,
+        true,
+        null,
+        CCTemplateEditingListener(),
     )
 
     // We populate the macro type context with the chosen commit type

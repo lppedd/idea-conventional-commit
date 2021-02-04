@@ -39,9 +39,9 @@ internal class ScopeCompletionProvider(
       }
       .mapIndexed { index, (provider, commitScope) ->
         CommitScopeLookupElement(
-          index,
-          provider,
-          CommitScopePsiElement(project, commitScope),
+            index,
+            provider,
+            CommitScopePsiElement(project, commitScope),
         )
       }
       .distinctBy(CommitScopeLookupElement::getLookupString)

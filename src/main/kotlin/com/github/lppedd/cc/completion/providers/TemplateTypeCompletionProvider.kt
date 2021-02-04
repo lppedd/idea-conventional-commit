@@ -39,9 +39,9 @@ internal class TemplateTypeCompletionProvider(
       }
       .mapIndexed { index, (provider, commitType) ->
         TemplateCommitTypeLookupElement(
-          index,
-          provider,
-          CommitTypePsiElement(project, commitType),
+            index,
+            provider,
+            CommitTypePsiElement(project, commitType),
         )
       }
       .distinctBy(TemplateCommitTypeLookupElement::getLookupString)

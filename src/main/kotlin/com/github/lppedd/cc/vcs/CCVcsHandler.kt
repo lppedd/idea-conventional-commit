@@ -19,7 +19,6 @@ import org.jetbrains.annotations.ApiStatus.*
 import java.util.*
 import java.util.Collections.newSetFromMap
 import java.util.concurrent.locks.ReentrantReadWriteLock
-import kotlin.collections.ArrayList
 import kotlin.concurrent.read
 import kotlin.concurrent.write
 
@@ -179,10 +178,10 @@ internal class CCVcsHandler(private val project: Project) {
 
     invokeLaterOnEdtAndWait {
       vcsLogData.miniDetailsGetter.loadCommitsData(
-        matchingCommitsIndexes,
-        { commitsMetadata = it },
-        EmptyConsumer.getInstance(),
-        progressIndicator,
+          matchingCommitsIndexes,
+          { commitsMetadata = it },
+          EmptyConsumer.getInstance(),
+          progressIndicator,
       )
     }
 

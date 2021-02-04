@@ -6,7 +6,7 @@ import com.github.lppedd.cc.completion.Priority
 import com.github.lppedd.cc.configuration.CCConfigService
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
-import org.jetbrains.annotations.ApiStatus.Internal
+import org.jetbrains.annotations.ApiStatus.*
 
 /**
  * @author Edoardo Luppi

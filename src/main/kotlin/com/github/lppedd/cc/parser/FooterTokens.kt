@@ -15,8 +15,8 @@ data class FooterTokens(
     return when {
       offset == 0 -> FooterTypeContext("")
       separator.isPresent -> FooterValueContext(
-        (type as ValidToken).value,
-        (footer as? ValidToken)?.value ?: "",
+          (type as ValidToken).value,
+          (footer as? ValidToken)?.value ?: "",
       )
       type.isInContext(offset) -> FooterTypeContext(type.value)
       else -> null

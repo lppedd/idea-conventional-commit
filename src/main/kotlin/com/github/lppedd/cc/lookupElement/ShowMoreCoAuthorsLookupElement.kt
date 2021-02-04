@@ -29,8 +29,8 @@ internal class ShowMoreCoAuthorsLookupElement : CommitLookupElement, PrefixChang
       : super(2000, CC.Tokens.PriorityFooterValue, FakeProviderWrapper) {
     userInsertedText = StringBuilder(50).append(completionPrefix)
     psiElement = CommitFooterValuePsiElement(
-      project,
-      CommitFooterValue("", CCBundle["cc.config.coAuthors.description"])
+        project,
+        CommitFooterValue("", CCBundle["cc.config.coAuthors.description"])
     )
   }
 
@@ -104,11 +104,11 @@ internal class ShowMoreCoAuthorsLookupElement : CommitLookupElement, PrefixChang
     }
 
     WriteCommandAction.runWriteCommandAction(
-      context.project,
-      commandName,
-      commandGroupId,
-      runnable,
-      assertNotNull(PsiDocumentManager.getInstance(context.project).getPsiFile(document)),
+        context.project,
+        commandName,
+        commandGroupId,
+        runnable,
+        assertNotNull(PsiDocumentManager.getInstance(context.project).getPsiFile(document)),
     )
   }
 }

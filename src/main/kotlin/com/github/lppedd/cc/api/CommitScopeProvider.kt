@@ -5,7 +5,7 @@ import org.jetbrains.annotations.ApiStatus.*
 
 @JvmSynthetic
 internal val SCOPE_EP = ProjectExtensionPointName<CommitScopeProvider>(
-  "com.github.lppedd.idea-conventional-commit.commitScopeProvider"
+    "com.github.lppedd.idea-conventional-commit.commitScopeProvider"
 )
 
 /**

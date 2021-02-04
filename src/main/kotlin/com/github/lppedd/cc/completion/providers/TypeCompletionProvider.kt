@@ -39,9 +39,9 @@ internal class TypeCompletionProvider(
       }
       .mapIndexed { index, (provider, commitType) ->
         CommitTypeLookupElement(
-          index,
-          provider,
-          CommitTypePsiElement(project, commitType),
+            index,
+            provider,
+            CommitTypePsiElement(project, commitType),
         )
       }
       .distinctBy(CommitTypeLookupElement::getLookupString)

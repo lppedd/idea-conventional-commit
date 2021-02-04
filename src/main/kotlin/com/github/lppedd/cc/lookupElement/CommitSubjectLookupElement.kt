@@ -51,9 +51,9 @@ internal class CommitSubjectLookupElement(
     if (subject is ValidToken) {
       // Replace an existing subject
       editor.replaceString(
-        lineStartOffset + subject.range.startOffset,
-        lineEndOffset,
-        newSubjectString,
+          lineStartOffset + subject.range.startOffset,
+          lineEndOffset,
+          newSubjectString,
       )
     } else {
       // No subject was present before, just insert the string

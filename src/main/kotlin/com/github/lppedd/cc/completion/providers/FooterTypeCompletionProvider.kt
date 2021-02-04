@@ -39,9 +39,9 @@ internal class FooterTypeCompletionProvider(
       }
       .mapIndexed { index, (provider, commitFooterType) ->
         CommitFooterTypeLookupElement(
-          index,
-          provider,
-          CommitFooterTypePsiElement(project, commitFooterType),
+            index,
+            provider,
+            CommitFooterTypePsiElement(project, commitFooterType),
         )
       }
       .distinctBy(CommitFooterTypeLookupElement::getLookupString)

@@ -5,7 +5,7 @@ import org.jetbrains.annotations.ApiStatus.*
 
 @JvmSynthetic
 internal val BODY_EP = ProjectExtensionPointName<CommitBodyProvider>(
-  "com.github.lppedd.idea-conventional-commit.commitBodyProvider"
+    "com.github.lppedd.idea-conventional-commit.commitBodyProvider"
 )
 
 /**

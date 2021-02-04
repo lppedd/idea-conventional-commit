@@ -4,10 +4,10 @@ package com.github.lppedd.cc.annotation
  * @author Edoardo Luppi
  */
 @Target(
-  AnnotationTarget.CLASS,
-  AnnotationTarget.FUNCTION,
-  AnnotationTarget.EXPRESSION,
-  AnnotationTarget.LOCAL_VARIABLE,
+    AnnotationTarget.CLASS,
+    AnnotationTarget.FUNCTION,
+    AnnotationTarget.EXPRESSION,
+    AnnotationTarget.LOCAL_VARIABLE,
 )
 @Retention(AnnotationRetention.SOURCE)
 internal annotation class Compatibility(

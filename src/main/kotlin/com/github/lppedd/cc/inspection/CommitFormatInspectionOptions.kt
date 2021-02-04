@@ -27,11 +27,11 @@ import kotlin.internal.InlineOnly
 internal class CommitFormatInspectionOptions : ConfigurableUi<Project> {
   private val charLabel = JBLabel(CCBundle["cc.inspection.nonStdMessage.replaceWs.label"])
   private val charComboModel = CharEntryModel(
-    listOf(
-      CharEntry("-", "Dash"),
-      CharEntry(":", "Colon"),
-      CharEntry("", "Remove"),
-    )
+      listOf(
+          CharEntry("-", "Dash"),
+          CharEntry(":", "Colon"),
+          CharEntry("", "Remove"),
+      )
   )
 
   private val charComboBox = ComboBox(charComboModel)

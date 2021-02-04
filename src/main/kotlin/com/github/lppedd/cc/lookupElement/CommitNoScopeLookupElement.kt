@@ -11,9 +11,9 @@ import com.intellij.openapi.project.Project
  */
 internal class CommitNoScopeLookupElement(project: Project) :
     CommitLookupElement(
-      -1,
-      CC.Tokens.PriorityScope,
-      FakeProviderWrapper,
+        -1,
+        CC.Tokens.PriorityScope,
+        FakeProviderWrapper,
     ) {
   private val psiElement = object : CommitFakePsiElement(project) {}
 

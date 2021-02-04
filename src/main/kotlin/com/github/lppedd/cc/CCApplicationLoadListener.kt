@@ -20,20 +20,20 @@ private class CCApplicationLoadListener : ApplicationLoadListener {
   private fun subscribeToProjectOpened(application: Application) {
     @Suppress("IncorrectParentDisposable")
     application.messageBus.connect(application).subscribe(
-      ProjectManager.TOPIC,
-      CCProjectManagerListener(),
+        ProjectManager.TOPIC,
+        CCProjectManagerListener(),
     )
   }
 
   private fun addRegistryKeys() {
     CCRegistry.addKeys(
-      RegistryKeyDescriptor(
-        name = CC.Registry.VcsEnabled,
-        description = "Enable/disable the new VCS Provider",
-        defaultValue = "true",
-        restartRequired = true,
-        pluginId = CC.PluginId,
-      ),
+        RegistryKeyDescriptor(
+            name = CC.Registry.VcsEnabled,
+            description = "Enable/disable the new VCS Provider",
+            defaultValue = "true",
+            restartRequired = true,
+            pluginId = CC.PluginId,
+        ),
     )
   }
 }

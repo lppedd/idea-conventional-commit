@@ -53,9 +53,9 @@ internal class CommitFooterTypeLookupElement(
     if (footerType is ValidToken) {
       // Replace the old footer type with new one
       editor.replaceString(
-        lineStartOffset + footerType.range.startOffset,
-        lineStartOffset + footerType.range.endOffset,
-        commitFooterType.value,
+          lineStartOffset + footerType.range.startOffset,
+          lineStartOffset + footerType.range.endOffset,
+          commitFooterType.value,
       )
     } else {
       // No footer type had been inserted before, thus we simply insert the value

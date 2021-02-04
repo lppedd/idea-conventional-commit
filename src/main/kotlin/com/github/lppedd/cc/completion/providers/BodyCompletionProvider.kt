@@ -38,7 +38,7 @@ internal class BodyCompletionProvider(
               (commitTokens.type as? ValidToken)?.value,
               (commitTokens.scope as? ValidToken)?.value,
               (commitTokens.subject as? ValidToken)?.value,
-            )
+          )
             .asSequence()
             .take(CC.Provider.MaxItems)
             .map { wrapper to it }
@@ -46,9 +46,9 @@ internal class BodyCompletionProvider(
       }
       .mapIndexed { index, (provider, commitBody) ->
         CommitBodyLookupElement(
-          index,
-          provider,
-          CommitBodyPsiElement(project, commitBody),
+            index,
+            provider,
+            CommitBodyPsiElement(project, commitBody),
         )
       }
       .distinctBy(CommitBodyLookupElement::getLookupString)

@@ -47,7 +47,7 @@ internal class FooterValueCompletionProvider(
               (commitTokens.type as? ValidToken)?.value,
               (commitTokens.scope as? ValidToken)?.value,
               (commitTokens.subject as? ValidToken)?.value,
-            )
+          )
             .asSequence()
             .take(CC.Provider.MaxItems)
             .map { wrapper to it }
@@ -55,9 +55,9 @@ internal class FooterValueCompletionProvider(
       }
       .mapIndexed { index, (provider, commitFooterValue) ->
         CommitFooterValueLookupElement(
-          index,
-          provider,
-          CommitFooterValuePsiElement(project, commitFooterValue),
+            index,
+            provider,
+            CommitFooterValuePsiElement(project, commitFooterValue),
         )
       }
       .distinctBy(CommitFooterValueLookupElement::getLookupString)

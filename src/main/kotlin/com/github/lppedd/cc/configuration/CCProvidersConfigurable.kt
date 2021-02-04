@@ -24,12 +24,12 @@ private class CCProvidersConfigurable(private val project: Project) : Searchable
   override fun createComponent(): JPanel {
     gui = CCProvidersConfigurableGui()
     gui.setProviders(
-      TYPE_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
-      SCOPE_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
-      SUBJECT_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
-      BODY_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
-      FOOTER_TYPE_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
-      FOOTER_VALUE_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
+        TYPE_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
+        SCOPE_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
+        SUBJECT_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
+        BODY_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
+        FOOTER_TYPE_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
+        FOOTER_VALUE_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
     )
 
     return gui.rootPanel
@@ -40,48 +40,48 @@ private class CCProvidersConfigurable(private val project: Project) : Searchable
 
   override fun apply() {
     configService.setTypeProvidersOrder(
-      gui.typeProviders
-        .mapIndexed { index, provider -> provider.getId() to index }
-        .toMap()
+        gui.typeProviders
+          .mapIndexed { index, provider -> provider.getId() to index }
+          .toMap()
     )
 
     configService.setScopeProvidersOrder(
-      gui.scopeProviders
-        .mapIndexed { index, provider -> provider.getId() to index }
-        .toMap()
+        gui.scopeProviders
+          .mapIndexed { index, provider -> provider.getId() to index }
+          .toMap()
     )
 
     configService.setSubjectProvidersOrder(
-      gui.subjectProviders
-        .mapIndexed { index, provider -> provider.getId() to index }
-        .toMap()
+        gui.subjectProviders
+          .mapIndexed { index, provider -> provider.getId() to index }
+          .toMap()
     )
 
     configService.setBodyProvidersOrder(
-      gui.bodyProviders
-        .mapIndexed { index, provider -> provider.getId() to index }
-        .toMap()
+        gui.bodyProviders
+          .mapIndexed { index, provider -> provider.getId() to index }
+          .toMap()
     )
 
     configService.setFooterTypeProvidersOrder(
-      gui.footerTypeProviders
-        .mapIndexed { index, provider -> provider.getId() to index }
-        .toMap()
+        gui.footerTypeProviders
+          .mapIndexed { index, provider -> provider.getId() to index }
+          .toMap()
     )
 
     configService.setFooterValueProvidersOrder(
-      gui.footerValueProviders
-        .mapIndexed { index, provider -> provider.getId() to index }
-        .toMap()
+        gui.footerValueProviders
+          .mapIndexed { index, provider -> provider.getId() to index }
+          .toMap()
     )
 
     gui.setProviders(
-      gui.typeProviders,
-      gui.scopeProviders,
-      gui.subjectProviders,
-      gui.bodyProviders,
-      gui.footerTypeProviders,
-      gui.footerValueProviders,
+        gui.typeProviders,
+        gui.scopeProviders,
+        gui.subjectProviders,
+        gui.bodyProviders,
+        gui.footerTypeProviders,
+        gui.footerValueProviders,
     )
   }
 

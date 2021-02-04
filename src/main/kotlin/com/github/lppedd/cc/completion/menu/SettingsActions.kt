@@ -31,10 +31,10 @@ internal class SettingsActions(
 ) : ActionGroup("", false), DumbAware {
   private val config = lookup.project.service<CCConfigService>()
   private val actions = arrayOf(
-    Separator.create(),
-    CompletionModeChangeAction(),
-    FilterModeChangeAction(),
-    Separator.create(),
+      Separator.create(),
+      CompletionModeChangeAction(),
+      FilterModeChangeAction(),
+      Separator.create(),
   )
 
   override fun getChildren(e: AnActionEvent?): Array<AnAction> =

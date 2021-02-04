@@ -5,7 +5,7 @@ import org.jetbrains.annotations.ApiStatus.*
 
 @JvmSynthetic
 internal val SUBJECT_EP = ProjectExtensionPointName<CommitSubjectProvider>(
-  "com.github.lppedd.idea-conventional-commit.commitSubjectProvider"
+    "com.github.lppedd.idea-conventional-commit.commitSubjectProvider"
 )
 
 /**

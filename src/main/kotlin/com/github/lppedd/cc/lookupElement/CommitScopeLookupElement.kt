@@ -56,9 +56,9 @@ internal class CommitScopeLookupElement(
 
     // Replace the old scope with the new one
     editor.replaceString(
-      lineStartOffset + scope.range.startOffset,
-      lineStartOffset + scope.range.endOffset,
-      commitScope.value,
+        lineStartOffset + scope.range.startOffset,
+        lineStartOffset + scope.range.endOffset,
+        commitScope.value,
     )
 
     // If a closing scope's paren isn't already present, add it

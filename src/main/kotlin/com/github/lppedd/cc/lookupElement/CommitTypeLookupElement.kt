@@ -53,9 +53,9 @@ internal open class CommitTypeLookupElement(
     if (type is ValidToken) {
       // Replace the old type with the new one
       editor.replaceString(
-        lineStartOffset + type.range.startOffset,
-        lineStartOffset + type.range.endOffset,
-        commitType.value,
+          lineStartOffset + type.range.startOffset,
+          lineStartOffset + type.range.endOffset,
+          commitType.value,
       )
     } else {
       editor.insertStringAtCaret(commitType.value)

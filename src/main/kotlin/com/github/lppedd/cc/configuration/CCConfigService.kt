@@ -21,9 +21,9 @@ import kotlin.math.min
  * @author Edoardo Luppi
  */
 @State(
-  name = "general",
-  storages = [Storage(CC.Settings.File)],
-  presentableName = PresentableNameGetter::class,
+    name = "general",
+    storages = [Storage(CC.Settings.File)],
+    presentableName = PresentableNameGetter::class,
 )
 internal class CCConfigService : PersistentStateComponent<CCConfigService> {
   @Attribute
@@ -38,44 +38,44 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
   var scopeNamingPattern: String = "[a-zA-Z0-9-:]+"
 
   @XMap(
-    propertyElementName = "commitTypes",
-    keyAttributeName = "providerId",
-    valueAttributeName = "order"
+      propertyElementName = "commitTypes",
+      keyAttributeName = "providerId",
+      valueAttributeName = "order"
   )
   private var typeProvidersMap: MutableMap<String, Int> = ConcurrentHashMap<String, Int>()
 
   @XMap(
-    propertyElementName = "commitScopes",
-    keyAttributeName = "providerId",
-    valueAttributeName = "order"
+      propertyElementName = "commitScopes",
+      keyAttributeName = "providerId",
+      valueAttributeName = "order"
   )
   private var scopeProvidersMap: MutableMap<String, Int> = ConcurrentHashMap<String, Int>()
 
   @XMap(
-    propertyElementName = "commitSubjects",
-    keyAttributeName = "providerId",
-    valueAttributeName = "order"
+      propertyElementName = "commitSubjects",
+      keyAttributeName = "providerId",
+      valueAttributeName = "order"
   )
   private var subjectProvidersMap: MutableMap<String, Int> = ConcurrentHashMap<String, Int>()
 
   @XMap(
-    propertyElementName = "commitBodies",
-    keyAttributeName = "providerId",
-    valueAttributeName = "order"
+      propertyElementName = "commitBodies",
+      keyAttributeName = "providerId",
+      valueAttributeName = "order"
   )
   private var bodyProvidersMap: MutableMap<String, Int> = ConcurrentHashMap<String, Int>()
 
   @XMap(
-    propertyElementName = "commitFooterTypes",
-    keyAttributeName = "providerId",
-    valueAttributeName = "order"
+      propertyElementName = "commitFooterTypes",
+      keyAttributeName = "providerId",
+      valueAttributeName = "order"
   )
   private var footerTypeProvidersMap: MutableMap<String, Int> = ConcurrentHashMap<String, Int>()
 
   @XMap(
-    propertyElementName = "commitFooterValues",
-    keyAttributeName = "providerId",
-    valueAttributeName = "order"
+      propertyElementName = "commitFooterValues",
+      keyAttributeName = "providerId",
+      valueAttributeName = "order"
   )
   private var footerValueProvidersMap: MutableMap<String, Int> = ConcurrentHashMap<String, Int>()
 
@@ -199,16 +199,16 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
 
   override fun hashCode() =
     Objects.hash(
-      version,
-      completionType,
-      customFilePath,
-      customCoAuthorsFilePath,
-      typeProvidersMap,
-      scopeProvidersMap,
-      subjectProvidersMap,
-      bodyProvidersMap,
-      footerTypeProvidersMap,
-      footerValueProvidersMap,
+        version,
+        completionType,
+        customFilePath,
+        customCoAuthorsFilePath,
+        typeProvidersMap,
+        scopeProvidersMap,
+        subjectProvidersMap,
+        bodyProvidersMap,
+        footerTypeProvidersMap,
+        footerValueProvidersMap,
     )
 
   enum class CompletionType {

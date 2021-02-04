@@ -46,8 +46,8 @@ import kotlin.math.min
 // region LookupImpl
 
 @Compatibility(
-  minVersion = "193.5096.12",
-  replaceWith = "LookupImpl#setLookupFocusDegree(LookupFocusDegree)",
+    minVersion = "193.5096.12",
+    replaceWith = "LookupImpl#setLookupFocusDegree(LookupFocusDegree)",
 )
 internal fun LookupImpl.setLookupFocusDegree(focusDegree: String) {
   // Unfortunately this is required to maintain compatibility with versions prior to 193.5096.
@@ -96,10 +96,10 @@ internal fun Presentation.updateIcons(withIcon: Icon) {
 @Suppress("unused")
 internal fun Color.darker(factor: Double): Color =
   Color(
-    max((red * factor).toInt(), 0),
-    max((green * factor).toInt(), 0),
-    max((blue * factor).toInt(), 0),
-    alpha
+      max((red * factor).toInt(), 0),
+      max((green * factor).toInt(), 0),
+      max((blue * factor).toInt(), 0),
+      alpha
   )
 
 @Suppress("ConvertTwoComparisonsToRangeCheck")
@@ -119,10 +119,10 @@ internal fun Color.brighter(factor: Double): Color {
   if (b > 0 && b < i) b = i
 
   return Color(
-    min((r / factor).toInt(), 255),
-    min((g / factor).toInt(), 255),
-    min((b / factor).toInt(), 255),
-    alpha
+      min((r / factor).toInt(), 255),
+      min((g / factor).toInt(), 255),
+      min((b / factor).toInt(), 255),
+      alpha
   )
 }
 
@@ -304,9 +304,9 @@ internal fun String.abbreviate(max: Int, suffix: CharSequence = "..."): String {
   }
 
   var end = minOf(
-    lastIndexOf(' ', max - 3),
-    lastIndexOf('\n', max - 3),
-    lastIndexOf('\r', max - 3),
+      lastIndexOf(' ', max - 3),
+      lastIndexOf('\n', max - 3),
+      lastIndexOf('\r', max - 3),
   )
 
   if (end == -1) {
@@ -318,9 +318,9 @@ internal fun String.abbreviate(max: Int, suffix: CharSequence = "..."): String {
   do {
     end = newEnd
     newEnd = minOf(
-      indexOf(' ', end + 1),
-      indexOf('\n', end + 1),
-      indexOf('\r', end + 1),
+        indexOf(' ', end + 1),
+        indexOf('\n', end + 1),
+        indexOf('\r', end + 1),
     )
 
     if (newEnd == -1) {

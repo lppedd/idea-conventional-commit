@@ -99,12 +99,12 @@ internal class CommitFormatInspection : CommitBaseInspection() {
         }
 
         manager.createProblemDescriptor(
-          psiFile,
-          it,
-          CCBundle["cc.inspection.nonStdMessage.text"],
-          GENERIC_ERROR_OR_WARNING,
-          true,
-          *quickFixes
+            psiFile,
+            it,
+            CCBundle["cc.inspection.nonStdMessage.text"],
+            GENERIC_ERROR_OR_WARNING,
+            true,
+            *quickFixes
         )
       }.toList()
   }
@@ -120,13 +120,13 @@ internal class CommitFormatInspection : CommitBaseInspection() {
 
     if (value.isBlank() && ')' == firstLine.getOrNull(end)) {
       return listOf(manager.createProblemDescriptor(
-        psiFile,
-        TextRange(start - 1, end + 1),
-        CCBundle["cc.inspection.nonStdMessage.emptyScope"],
-        GENERIC_ERROR_OR_WARNING,
-        true,
-        RemoveRangeQuickFix(message = CCBundle["cc.inspection.nonStdMessage.removeScope"]),
-        ConventionalCommitReformatQuickFix
+          psiFile,
+          TextRange(start - 1, end + 1),
+          CCBundle["cc.inspection.nonStdMessage.emptyScope"],
+          GENERIC_ERROR_OR_WARNING,
+          true,
+          RemoveRangeQuickFix(message = CCBundle["cc.inspection.nonStdMessage.removeScope"]),
+          ConventionalCommitReformatQuickFix
       ))
     }
 
@@ -143,13 +143,13 @@ internal class CommitFormatInspection : CommitBaseInspection() {
           }
 
         manager.createProblemDescriptor(
-          psiFile,
-          it,
-          CCBundle["cc.inspection.nonStdMessage.text"],
-          GENERIC_ERROR_OR_WARNING,
-          true,
-          quickFix,
-          ConventionalCommitReformatQuickFix
+            psiFile,
+            it,
+            CCBundle["cc.inspection.nonStdMessage.text"],
+            GENERIC_ERROR_OR_WARNING,
+            true,
+            quickFix,
+            ConventionalCommitReformatQuickFix
         )
       }.toList()
   }
@@ -166,24 +166,24 @@ internal class CommitFormatInspection : CommitBaseInspection() {
         val nonWsIndex = value.indexOfFirst { !it.isWhitespace() }
         val newEnd = if (nonWsIndex < 0) end else start + nonWsIndex
         manager.createProblemDescriptor(
-          psiFile,
-          TextRange(start + 1, newEnd),
-          CCBundle["cc.inspection.nonStdMessage.text"],
-          GENERIC_ERROR_OR_WARNING,
-          true,
-          RemoveRangeQuickFix(),
-          ConventionalCommitReformatQuickFix
+            psiFile,
+            TextRange(start + 1, newEnd),
+            CCBundle["cc.inspection.nonStdMessage.text"],
+            GENERIC_ERROR_OR_WARNING,
+            true,
+            RemoveRangeQuickFix(),
+            ConventionalCommitReformatQuickFix
         )
       }
       value.isNotEmpty() && !value.firstIsWhitespace() -> {
         manager.createProblemDescriptor(
-          psiFile,
-          TextRange(start, start + 1),
-          CCBundle["cc.inspection.nonStdMessage.text"],
-          GENERIC_ERROR_OR_WARNING,
-          true,
-          AddWhitespaceQuickFix(1),
-          ConventionalCommitReformatQuickFix
+            psiFile,
+            TextRange(start, start + 1),
+            CCBundle["cc.inspection.nonStdMessage.text"],
+            GENERIC_ERROR_OR_WARNING,
+            true,
+            AddWhitespaceQuickFix(1),
+            ConventionalCommitReformatQuickFix
         )
       }
       else -> null
