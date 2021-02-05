@@ -17,6 +17,10 @@ import javax.swing.JPanel
  * @author Edoardo Luppi
  */
 class NoContentTabbedPaneWrapper(disposable: Disposable) : TabbedPaneWrapper(disposable), Disposable {
+  init {
+    Disposer.register(disposable, this)
+  }
+
   @Synchronized
   fun addTab(title: String) {
     addTab(title, JPanel())

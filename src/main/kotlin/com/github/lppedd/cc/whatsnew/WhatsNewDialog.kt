@@ -9,7 +9,6 @@ import com.github.lppedd.cc.setName
 import com.github.lppedd.cc.ui.NoContentTabbedPaneWrapper
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper.DialogStyle.COMPACT
-import com.intellij.openapi.util.Disposer
 import com.intellij.ui.SimpleColoredText
 import com.intellij.ui.SimpleTextAttributes
 import com.intellij.util.ui.JBUI
@@ -57,9 +56,6 @@ internal class WhatsNewDialog(project: Project) : CCDialogWrapper(project) {
     tabbedPane.addChangeListener {
       tabSelectedHandlers[tabbedPane.selectedIndex]?.invoke()
     }
-
-    // Our custom TabbedPaneWrapper needs this to clean-up the scaling listener
-    Disposer.register(disposable, tabbedPane)
 
     providers.forEach { provider ->
       tabSelectedHandlers[tabbedPane.tabCount] = {
