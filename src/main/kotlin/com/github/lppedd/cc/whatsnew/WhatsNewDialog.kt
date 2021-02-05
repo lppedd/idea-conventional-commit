@@ -1,6 +1,7 @@
 package com.github.lppedd.cc.whatsnew
 
 import com.github.lppedd.cc.CCBundle
+import com.github.lppedd.cc.annotation.Compatibility
 import com.github.lppedd.cc.api.WHATS_NEW_EP
 import com.github.lppedd.cc.api.WhatsNewProvider
 import com.github.lppedd.cc.setFocused
@@ -9,6 +10,8 @@ import com.github.lppedd.cc.ui.NoContentTabbedPaneWrapper
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper.DialogStyle.COMPACT
 import com.intellij.openapi.util.Disposer
+import com.intellij.ui.SimpleColoredText
+import com.intellij.ui.SimpleTextAttributes
 import com.intellij.util.ui.JBUI
 import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
@@ -32,6 +35,8 @@ internal class WhatsNewDialog(project: Project) : CCDialogWrapper(project) {
     .filter { it.files.fileDescriptions.isNotEmpty() }
     .toList()
 
+  private lateinit var tabbedPane: NoContentTabbedPaneWrapper
+
   init {
     isModal = false
     title = CCBundle["cc.whatsnew.title"]
@@ -48,8 +53,9 @@ internal class WhatsNewDialog(project: Project) : CCDialogWrapper(project) {
 
     olderAction.setFocused()
 
-    val tabbedPane = NoContentTabbedPaneWrapper(myDisposable).also {
-      it.addChangeListener { _ -> tabSelectedHandlers[it.selectedIndex]?.invoke() }
+    tabbedPane = NoContentTabbedPaneWrapper(myDisposable)
+    tabbedPane.addChangeListener {
+      tabSelectedHandlers[tabbedPane.selectedIndex]?.invoke()
     }
 
     // Our custom TabbedPaneWrapper needs this to clean-up the scaling listener
@@ -58,7 +64,7 @@ internal class WhatsNewDialog(project: Project) : CCDialogWrapper(project) {
     providers.forEach { provider ->
       tabSelectedHandlers[tabbedPane.tabCount] = {
         whatsNewPanel.setProvider(provider)
-        updateActions()
+        updateComponents()
       }
 
       tabbedPane.addTab(provider.displayName())
@@ -88,7 +94,9 @@ internal class WhatsNewDialog(project: Project) : CCDialogWrapper(project) {
   override fun getPreferredFocusedComponent(): JComponent? =
     myPreferredFocusedComponent
 
-  private fun updateActions() {
+  private fun updateComponents() {
+    updateTabTitle()
+
     val currentVersion = whatsNewPanel.currentVersion()
     val hasNewer = whatsNewPanel.hasNewer()
     val hasOlder = whatsNewPanel.hasOlder()
@@ -102,11 +110,40 @@ internal class WhatsNewDialog(project: Project) : CCDialogWrapper(project) {
     updateActionName(olderAction, CCBundle["cc.whatsnew.dialog.older"], olderVersion)
   }
 
+  private fun updateTabTitle() {
+    val currentVersion = whatsNewPanel.currentVersion()
+    val selectedTabIndex = tabbedPane.selectedIndex
+
+    if (currentVersion == null || selectedTabIndex < 0) {
+      return
+    }
+
+    val text = SimpleColoredText().also {
+      it.append(tabbedPane.getTitleAt(selectedTabIndex), SimpleTextAttributes.REGULAR_ATTRIBUTES)
+      it.append(" (", SimpleTextAttributes.REGULAR_ATTRIBUTES)
+      it.append(currentVersion, SimpleTextAttributes.REGULAR_ATTRIBUTES)
+      it.append(")", SimpleTextAttributes.REGULAR_ATTRIBUTES)
+    }
+
+    setTabLabelText(tabbedPane.getTabComponentAt(selectedTabIndex), text)
+  }
+
   private fun updateActionName(action: AbstractAction, baseName: String, version: String?) {
     if (version == null) {
       action.setName(baseName)
     } else {
-      action.setName("$baseName - $version")
+      action.setName("$baseName ($version)")
+    }
+  }
+
+  @Compatibility(
+      minVersion = "193.3793.14",
+      replaceWith = "com.intellij.ui.tabs.impl.TabLabel#setText"
+  )
+  private fun setTabLabelText(tabLabel: Any, text: SimpleColoredText) {
+    tabLabel.javaClass.getDeclaredMethod("setText", SimpleColoredText::class.java).also {
+      it.isAccessible = true
+      it.invoke(tabLabel, text)
     }
   }
 
@@ -136,7 +173,7 @@ internal class WhatsNewDialog(project: Project) : CCDialogWrapper(project) {
 
     override fun actionPerformed(actionEvent: ActionEvent) {
       whatsNewPanel.olderChangelog()
-      updateActions()
+      updateComponents()
     }
   }
 
@@ -147,7 +184,7 @@ internal class WhatsNewDialog(project: Project) : CCDialogWrapper(project) {
 
     override fun actionPerformed(actionEvent: ActionEvent) {
       whatsNewPanel.newerChangelog()
-      updateActions()
+      updateComponents()
     }
   }
 
