@@ -75,8 +75,8 @@ internal inline fun Action.setName(name: String) {
 }
 
 @InlineOnly
-internal inline fun Action.setFocused(focused: Boolean = true) {
-  putValue(DialogWrapper.FOCUSED_ACTION, focused)
+internal inline fun Action.setFocused(isFocused: Boolean = true) {
+  putValue(DialogWrapper.FOCUSED_ACTION, if (isFocused) true else null)
 }
 
 // endregion
