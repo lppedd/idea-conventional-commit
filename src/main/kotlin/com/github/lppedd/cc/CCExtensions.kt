@@ -71,7 +71,7 @@ internal fun LookupImpl.setLookupFocusDegree(focusDegree: String) {
 
 @InlineOnly
 internal inline fun Action.setName(name: String) {
-  putValue("Name", name)
+  putValue(Action.NAME, name)
 }
 
 @InlineOnly
