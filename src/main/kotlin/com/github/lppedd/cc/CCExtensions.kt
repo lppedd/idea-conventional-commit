@@ -79,6 +79,11 @@ internal inline fun Action.setFocused(isFocused: Boolean = true) {
   putValue(DialogWrapper.FOCUSED_ACTION, if (isFocused) true else null)
 }
 
+@InlineOnly
+internal inline fun Action.setDefault(isDefault: Boolean = true) {
+  putValue(DialogWrapper.DEFAULT_ACTION, if (isDefault) true else null)
+}
+
 // endregion
 // region Presentation
 
