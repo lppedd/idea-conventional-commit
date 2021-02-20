@@ -1,12 +1,12 @@
 package com.github.lppedd.cc.inspection
 
 import com.github.lppedd.cc.annotation.Compatibility
+import com.github.lppedd.cc.isCommitMessage
 import com.intellij.codeInsight.actions.ReformatCodeAction
 import com.intellij.openapi.actionSystem.ActionPromoter
 import com.intellij.openapi.actionSystem.AnAction
+import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.actionSystem.DataContext
-import com.intellij.openapi.editor.Editor
-import com.intellij.openapi.vcs.ui.CommitMessage
 import com.intellij.vcs.commit.message.ReformatCommitMessageAction
 
 /**
@@ -24,10 +24,10 @@ private class ReformatActionPromoter : ActionPromoter {
       actions.toMutableList()
     }
 
-  private fun isApplicable(context: DataContext): Boolean =
-    (context.getData("editor") as? Editor)
-      ?.document
-      ?.getUserData(CommitMessage.DATA_KEY) != null
+  private fun isApplicable(context: DataContext): Boolean {
+    val editor = context.getData(CommonDataKeys.EDITOR) ?: return false
+    return editor.document.isCommitMessage()
+  }
 
   private object AnActionComparator : Comparator<AnAction> {
     override fun compare(a1: AnAction, a2: AnAction): Int =
