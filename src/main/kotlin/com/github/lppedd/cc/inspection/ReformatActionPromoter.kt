@@ -19,7 +19,7 @@ import com.intellij.vcs.commit.message.ReformatCommitMessageAction
 private class ReformatActionPromoter : ActionPromoter {
   override fun promote(actions: List<AnAction>, context: DataContext): List<AnAction> =
     if (isApplicable(context)) {
-      actions.sortedWith(AnActionComparator)
+      actions.sortedWith(MyComparator)
     } else {
       actions.toMutableList()
     }
@@ -29,7 +29,7 @@ private class ReformatActionPromoter : ActionPromoter {
     return editor.document.isCommitMessage()
   }
 
-  private object AnActionComparator : Comparator<AnAction> {
+  private object MyComparator : Comparator<AnAction> {
     override fun compare(a1: AnAction, a2: AnAction): Int =
       when {
         a1 is ReformatCommitMessageAction -> -1
