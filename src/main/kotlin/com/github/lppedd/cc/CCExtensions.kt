@@ -189,6 +189,11 @@ internal inline fun Editor.scheduleAutoPopup() {
 }
 
 @InlineOnly
+internal inline fun Editor.selectAll() {
+  selectionModel.setSelection(0, document.textLength)
+}
+
+@InlineOnly
 internal inline fun Editor.removeSelection(allCarets: Boolean = false) =
   selectionModel.removeSelection(allCarets)
 
