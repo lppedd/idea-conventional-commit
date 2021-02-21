@@ -9,8 +9,6 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.actions.TabAction
 import com.intellij.openapi.util.Key
 
-private val MOVE_CARET_KEY = Key.create<Unit>("Vcs.CommitMessage.moveCaret")
-
 /**
  * @author Edoardo Luppi
  */
@@ -19,12 +17,14 @@ private class CommitTabAction : TabAction() {
     setupHandler(CommitTabHandler)
   }
 
-  object CommitTabHandler : Handler() {
+  private object CommitTabHandler : Handler() {
+    private val moveCaretKey = Key.create<Unit>("Vcs.CommitMessage.moveCaret")
+
     override fun executeWriteAction(editor: Editor, caret: Caret?, dataContext: DataContext) {
       val document = editor.document
 
-      if (document.getUserData(MOVE_CARET_KEY) != null) {
-        document.putUserData(MOVE_CARET_KEY, null)
+      if (document.getUserData(moveCaretKey) != null) {
+        document.putUserData(moveCaretKey, null)
         editor.moveCaretRelatively(1)
         editor.scheduleAutoPopup()
       } else {
@@ -44,7 +44,7 @@ private class CommitTabAction : TabAction() {
         if (scope is ValidToken && (
                 lineCaretOffset == scope.range.startOffset - 1 ||
                 lineCaretOffset == scope.range.endOffset)) {
-          document.putUserData(MOVE_CARET_KEY, Unit)
+          document.putUserData(moveCaretKey, Unit)
           return true
         }
       }
