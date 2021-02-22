@@ -24,6 +24,7 @@
     <action
         id="EditorTab"
         overrides="true"
+        use-shortcut-of="EditorTab"
         class="com.github.lppedd.cc.editor.CommitTabAction"
     />
   </actions>
