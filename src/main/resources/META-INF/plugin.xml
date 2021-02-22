@@ -27,6 +27,18 @@
         use-shortcut-of="EditorTab"
         class="com.github.lppedd.cc.editor.CommitTabAction"
     />
+    <action
+        id="GotoNextError"
+        overrides="true"
+        use-shortcut-of="GotoNextError"
+        class="com.github.lppedd.cc.editor.CommitGotoNextErrorAction"
+    />
+    <action
+        id="GotoPreviousError"
+        overrides="true"
+        use-shortcut-of="GotoPreviousError"
+        class="com.github.lppedd.cc.editor.CommitGotoPreviousErrorAction"
+    />
   </actions>
 
   <extensions defaultExtensionNs="com.intellij">
