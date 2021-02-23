@@ -166,7 +166,7 @@ internal class CommitBuilderDialog(private val project: Project)
       breakingChange != null ->
         sb.append("\n\n")
           .append("${breakingChange.type}: ")
-          .append(breakingChange.value)
+          .append(formatFooterValue(breakingChange.value))
       processedFooters.isNotEmpty() ->
         sb.append("\n")
     }
@@ -175,7 +175,7 @@ internal class CommitBuilderDialog(private val project: Project)
     processedFooters.forEach {
       sb.append("\n")
         .append("${it.type}: ")
-        .append(it.value)
+        .append(formatFooterValue(it.value))
     }
 
     return "$sb"
@@ -207,6 +207,17 @@ internal class CommitBuilderDialog(private val project: Project)
         isBreakingChange = breakingChangeCheckBox.isSelected,
         footers = buildFooters(),
     )
+  }
+
+  private fun formatFooterValue(value: String): String {
+    val lines = value.lineSequence()
+    return if (lines.count() < 2) {
+      value
+    } else {
+      val firstLine = lines.first()
+      val indentedLines = lines.drop(1).joinToString(separator = "\n", prefix = "\n") { "  $it" }
+      firstLine + indentedLines
+    }
   }
 
   override fun getDimensionServiceKey(): String =
