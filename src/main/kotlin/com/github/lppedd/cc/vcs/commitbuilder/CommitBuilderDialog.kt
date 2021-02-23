@@ -211,6 +211,9 @@ internal class CommitBuilderDialog(private val project: Project)
     )
   }
 
+  override fun getDimensionServiceKey(): String =
+    "#com.github.lppedd.cc.commitbuilder.CommitBuilderDialog"
+
   override fun doOKAction() {
     saveFieldsValues()
     super.doOKAction()
