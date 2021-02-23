@@ -1,4 +1,4 @@
-package com.github.lppedd.cc.whatsnew
+package com.github.lppedd.cc.ui
 
 import com.github.lppedd.cc.CCIcons
 import com.intellij.ide.ui.UISettings

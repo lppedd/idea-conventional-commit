@@ -17,10 +17,10 @@ import com.github.lppedd.cc.psiElement.CommitFooterTypePsiElement
 import com.github.lppedd.cc.psiElement.CommitFooterValuePsiElement
 import com.github.lppedd.cc.scaled
 import com.github.lppedd.cc.setName
+import com.github.lppedd.cc.ui.CCDialogWrapper
+import com.github.lppedd.cc.ui.CCDialogWrapper.ValidationNavigable
 import com.github.lppedd.cc.ui.MnemonicAwareCheckBox
 import com.github.lppedd.cc.vcs.commitbuilder.CommitBuilderService.CommitFooter
-import com.github.lppedd.cc.whatsnew.CCDialogWrapper
-import com.github.lppedd.cc.whatsnew.CCDialogWrapper.ValidationNavigable
 import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.ide.util.PropertiesComponent
 import com.intellij.openapi.actionSystem.IdeActions

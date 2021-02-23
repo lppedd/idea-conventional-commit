@@ -1,6 +1,6 @@
 package com.github.lppedd.cc.ui
 
-import com.github.lppedd.cc.whatsnew.CCDialogWrapper.ValidationNavigable
+import com.github.lppedd.cc.ui.CCDialogWrapper.ValidationNavigable
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.ui.EditorTextField

@@ -6,6 +6,7 @@ import com.github.lppedd.cc.api.WHATS_NEW_EP
 import com.github.lppedd.cc.api.WhatsNewProvider
 import com.github.lppedd.cc.setFocused
 import com.github.lppedd.cc.setName
+import com.github.lppedd.cc.ui.CCDialogWrapper
 import com.github.lppedd.cc.ui.NoContentTabbedPaneWrapper
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper.DialogStyle.COMPACT

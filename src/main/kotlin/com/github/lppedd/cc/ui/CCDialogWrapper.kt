@@ -1,4 +1,4 @@
-package com.github.lppedd.cc.whatsnew
+package com.github.lppedd.cc.ui
 
 import com.intellij.openapi.actionSystem.DataKey
 import com.intellij.openapi.actionSystem.DataProvider
