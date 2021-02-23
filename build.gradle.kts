@@ -63,7 +63,8 @@ tasks {
       "-Xopt-in=kotlin.ExperimentalStdlibApi",
       "-Xopt-in=kotlin.ExperimentalUnsignedTypes",
       "-Xopt-in=kotlin.contracts.ExperimentalContracts",
-      "-XXLanguage:+InlineClasses"
+      "-XXLanguage:+InlineClasses",
+      "-XXLanguage:+UnitConversion"
     )
   }
 
