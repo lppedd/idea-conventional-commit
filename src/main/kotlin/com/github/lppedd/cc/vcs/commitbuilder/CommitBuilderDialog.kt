@@ -34,18 +34,18 @@ import com.intellij.openapi.ui.ComponentValidator
 import com.intellij.openapi.ui.DialogWrapper.DoNotAskOption
 import com.intellij.openapi.ui.ValidationInfo
 import com.intellij.openapi.util.TextRange
+import com.intellij.ui.AncestorListenerAdapter
 import com.intellij.ui.JBColor
 import com.intellij.ui.SeparatorFactory
 import com.intellij.ui.border.CustomLineBorder
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBScrollPane
-import com.intellij.util.ui.GridBag
-import com.intellij.util.ui.JBEmptyBorder
-import com.intellij.util.ui.JBUI
-import com.intellij.util.ui.UI.PanelFactory
-import com.intellij.util.ui.UIUtil
+import com.intellij.util.ui.*
 import com.intellij.util.ui.accessibility.ScreenReader
-import java.awt.*
+import java.awt.BorderLayout
+import java.awt.GridBagConstraints
+import java.awt.GridBagLayout
+import java.awt.GridLayout
 import javax.accessibility.AccessibleRelation
 import javax.swing.Action
 import javax.swing.Box
@@ -53,6 +53,7 @@ import javax.swing.JComponent
 import javax.swing.JPanel
 import javax.swing.border.Border
 import javax.swing.border.CompoundBorder
+import javax.swing.event.AncestorEvent
 import kotlin.text.RegexOption.IGNORE_CASE
 
 /**
@@ -300,7 +301,7 @@ internal class CommitBuilderDialog(private val project: Project)
 
     // Body
     val bodyTextFieldWithComment =
-      PanelFactory.panel(bodyTextField)
+      UI.PanelFactory.panel(bodyTextField)
         .withComment(softWrapsComment)
         .resizeY(true)
         .createPanel()
@@ -327,7 +328,7 @@ internal class CommitBuilderDialog(private val project: Project)
 
     // Breaking change text area
     val breakingChangeTextFieldWithComment =
-      PanelFactory.panel(breakingChangeTextField)
+      UI.PanelFactory.panel(breakingChangeTextField)
         .withComment(softWrapsComment)
         .resizeY(true)
         .createPanel()
@@ -414,7 +415,7 @@ internal class CommitBuilderDialog(private val project: Project)
     super.createDoNotAskCheckbox()?.let {
       val description = CCBundle["cc.commitbuilder.dialog.a11y.rememberValues"]
       it.accessibleContext.accessibleDescription = description
-      PanelFactory.panel(it)
+      UI.PanelFactory.panel(it)
         .withTooltip(description)
         .createPanel()
     }

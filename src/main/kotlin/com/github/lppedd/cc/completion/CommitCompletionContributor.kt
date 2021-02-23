@@ -193,11 +193,10 @@ private class CommitCompletionContributor : CompletionContributor() {
     }
   }
 
-  private fun sorter(weigher: LookupElementWeigher): CompletionSorter {
-    return (CompletionSorter.emptySorter() as CompletionSorterImpl)
+  private fun sorter(weigher: LookupElementWeigher): CompletionSorter =
+    (CompletionSorter.emptySorter() as CompletionSorterImpl)
       .withClassifier(CompletionSorterImpl.weighingFactory(PreferStartMatching()))
       .withClassifier(CompletionSorterImpl.weighingFactory(weigher))
-  }
 
   private fun enhanceCompletionProcessIndicator(
       process: CompletionProcess,
@@ -291,7 +290,7 @@ private class CommitCompletionContributor : CompletionContributor() {
 
     fun installLookupEnhancer(lookup: LookupImpl) {
       lookupEnhancers.computeIfAbsent(lookup) {
-        Disposer.register(lookup, { lookupEnhancers.remove(lookup) })
+        Disposer.register(lookup) { lookupEnhancers.remove(lookup) }
         LookupEnhancer(lookup)
       }
     }
