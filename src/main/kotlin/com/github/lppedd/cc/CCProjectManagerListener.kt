@@ -1,6 +1,7 @@
 package com.github.lppedd.cc
 
 import com.github.lppedd.cc.vcs.CCVcsHandler
+import com.github.lppedd.cc.vcs.commitbuilder.CommitBuilderService
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
@@ -30,5 +31,9 @@ internal class CCProjectManagerListener : ProjectManagerListener {
       it.subscribe(ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED, vcsConfigListener)
       it.subscribe(ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED_IN_PLUGIN, vcsConfigListener)
     }
+  }
+
+  override fun projectClosingBeforeSave(project: Project) {
+    project.service<CommitBuilderService>().clear()
   }
 }

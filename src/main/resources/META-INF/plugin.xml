@@ -21,6 +21,10 @@
     >
       <add-to-group group-id="HelpMenu" anchor="after" relative-to-action="WhatsNewAction" />
     </action>
+    <action class="com.github.lppedd.cc.vcs.commitbuilder.CommitBuilderAction">
+      <add-to-group group-id="Vcs.MessageActionGroup" anchor="first" />
+      <keyboard-shortcut first-keystroke="control B" keymap="$default" />
+    </action>
     <action
         id="EditorTab"
         overrides="true"
@@ -39,6 +43,8 @@
         use-shortcut-of="GotoPreviousError"
         class="com.github.lppedd.cc.editor.CommitGotoPreviousErrorAction"
     />
+    <action use-shortcut-of="GotoNextError" class="com.github.lppedd.cc.ui.DialogGotoNextErrorAction" />
+    <action use-shortcut-of="GotoPreviousError" class="com.github.lppedd.cc.ui.DialogGotoPreviousErrorAction" />
   </actions>
 
   <extensions defaultExtensionNs="com.intellij">
@@ -88,6 +94,7 @@
 
     <projectService serviceImplementation="com.github.lppedd.cc.configuration.CCConfigService" />
     <projectService serviceImplementation="com.github.lppedd.cc.configuration.CCDefaultTokensService" />
+    <projectService serviceImplementation="com.github.lppedd.cc.vcs.commitbuilder.CommitBuilderService" />
 
     <postStartupActivity
         order="before TipOfTheDayActivity"
@@ -97,6 +104,8 @@
         order="first"
         implementation="com.github.lppedd.cc.inspection.CommitInspectionsRegistrarStartupActivity"
     />
+
+    <checkinHandlerFactory implementation="com.github.lppedd.cc.vcs.commitbuilder.CommitBuilderCheckinHandlerFactory" />
   </extensions>
 
   <extensionPoints>

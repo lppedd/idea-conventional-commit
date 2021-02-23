@@ -3,6 +3,7 @@
   <extensions defaultExtensionNs="com.intellij">
     <projectService serviceImplementation="com.github.lppedd.cc.vcs.CCVcsHandler" />
     <actionPromoter implementation="com.github.lppedd.cc.inspection.ReformatActionPromoter" order="last" />
+    <actionPromoter implementation="com.github.lppedd.cc.vcs.commitbuilder.CommitBuilderActionPromoter" order="last" />
   </extensions>
 
   <extensions defaultExtensionNs="com.github.lppedd.idea-conventional-commit">
