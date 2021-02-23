@@ -47,10 +47,7 @@ import java.awt.GridBagConstraints
 import java.awt.GridBagLayout
 import java.awt.GridLayout
 import javax.accessibility.AccessibleRelation
-import javax.swing.Action
-import javax.swing.Box
-import javax.swing.JComponent
-import javax.swing.JPanel
+import javax.swing.*
 import javax.swing.border.Border
 import javax.swing.border.CompoundBorder
 import javax.swing.event.AncestorEvent
@@ -409,6 +406,19 @@ internal class CommitBuilderDialog(private val project: Project)
           CustomLineBorder(JBColor.border(), 1, 0, 0, 0),
           JBEmptyBorder(UIUtil.PANEL_REGULAR_INSETS),
       )
+    }
+
+  override fun createButtonsPanel(buttons: List<JButton>): JPanel =
+    super.createButtonsPanel(buttons).also {
+      // Since it seems the left actions panel border is overridden by platform code,
+      // we need to set it on the right actions panel.
+      // However here we have no way to know to which panel we're setting the border,
+      // thus we have to check if a button represents the 'OK' action, which is
+      // on the right actions panel
+      if (buttons.any { b -> b.action === myOKAction }) {
+        val ltr = it.componentOrientation.isLeftToRight
+        it.border = if (ltr) JBUI.Borders.emptyLeft(20) else JBUI.Borders.emptyRight(20)
+      }
     }
 
   override fun createDoNotAskCheckbox(): JComponent? =
