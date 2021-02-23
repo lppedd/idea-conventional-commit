@@ -114,10 +114,14 @@ internal class CommitBuilderDialog(private val project: Project)
     installValidators()
 
     // Trick to avoid spawning with a scrollbar.
-    // TODO: find a cleaner way
     pack()
-    contentPane.preferredSize = Dimension(preferredSize.width + 25.scaled, preferredSize.height)
-    repaint()
+
+    // Needed for 192, as the default button is set to null somehow, probably on pack
+    rootPane.addAncestorListener(object : AncestorListenerAdapter() {
+      override fun ancestorAdded(event: AncestorEvent) {
+        rootPane.defaultButton = getButton(okAction)
+      }
+    })
   }
 
   /**
