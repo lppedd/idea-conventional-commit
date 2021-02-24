@@ -27,5 +27,6 @@ abstract class CommitTokenElement @JvmOverloads constructor(
       val foreground: Color = FOREGROUND,
       val type: String? = null,
       val icon: Icon? = null,
+      val hasCustomDocumentation: Boolean = false,
   )
 }
