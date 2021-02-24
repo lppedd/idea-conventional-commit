@@ -103,7 +103,6 @@ private class CommitTokenDocumentationProvider : AbstractDocumentationProvider()
     if (value.isNotEmpty()) {
       if (hasCustomDocumentation) {
         // Emulate a styled <hr>, which is still unsupported in JEditorPane
-        // See https://stackoverflow.com/questions/12787121/jtextpane-and-horizontal-lines
         val colorHex = ColorUtil.toHex(getSeparatorColor())
         sb.append("<div style='margin: 4px 0 2px; font-size: 0; border-top: thin solid #$colorHex'></div>")
       }
