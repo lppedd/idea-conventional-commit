@@ -1,4 +1,6 @@
-### Join the [Slack workspace][10] to discuss features and issues!
+### Notice
+**Currently I'm busy developing other software, that's why no updates are being published.  
+I prefer publishing only when I'm sure the quality is top notch.**
 
 <img align="left" width="85" height="85" src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_logo.png" alt="Plugin logo">
 
