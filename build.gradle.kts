@@ -4,8 +4,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
   java
-  id("org.jetbrains.intellij") version "0.6.5"
-  kotlin("jvm") version "1.4.30"
+  id("org.jetbrains.intellij") version "1.0"
+  kotlin("jvm") version "1.5.10"
 }
 
 group = "com.github.lppedd"
@@ -18,23 +18,23 @@ repositories {
 }
 
 dependencies {
-  implementation(kotlin("stdlib-jdk8", "1.4.30"))
+  implementation(kotlin("stdlib-jdk8", "1.5.10"))
 
   implementation("commons-validator", "commons-validator", "1.7") {
     exclude("commons-beanutils", "commons-beanutils")
   }
 
-  implementation("org.json", "json", "20201115")
+  implementation("org.json", "json", "20210307")
   implementation("com.github.everit-org.json-schema", "org.everit.json.schema", "1.12.2")
 
   testImplementation("junit:junit:4.12")
 }
 
 intellij {
-  version = "IU-192.5728.98"
-  downloadSources = true
-  pluginName = "idea-conventional-commit"
-  setPlugins("java")
+  version.set("IU-192.5728.98")
+  downloadSources.set(true)
+  pluginName.set("idea-conventional-commit")
+  plugins.set(listOf("java"))
 }
 
 configure<JavaPluginConvention> {
@@ -72,10 +72,12 @@ tasks {
   compileTestKotlin(kotlinSettings)
 
   patchPluginXml {
-    version(project.version)
-    sinceBuild("192.5728")
-    untilBuild("211.*")
-    pluginDescription(File("plugin-description.html").readText(Charsets.UTF_8))
-    changeNotes(File("change-notes/${version.replace('.', '_')}.html").readText(Charsets.UTF_8))
+    version.set(project.version.toString())
+    sinceBuild.set("192.5728")
+    untilBuild.set("212.*")
+
+    val projectPath = projectDir.path
+    pluginDescription.set((File("$projectPath/plugin-description.html").readText(Charsets.UTF_8)))
+    changeNotes.set((File("$projectPath/change-notes/${version.get().replace('.', '_')}.html").readText(Charsets.UTF_8)))
   }
 }
