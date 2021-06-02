@@ -15,7 +15,6 @@ import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiDocumentManager
-import kotlin.test.assertNotNull
 
 /**
  * @author Edoardo Luppi
@@ -108,7 +107,7 @@ internal class ShowMoreCoAuthorsLookupElement : CommitLookupElement, PrefixChang
         commandName,
         commandGroupId,
         runnable,
-        assertNotNull(PsiDocumentManager.getInstance(context.project).getPsiFile(document)),
+        PsiDocumentManager.getInstance(context.project).getPsiFile(document),
     )
   }
 }
