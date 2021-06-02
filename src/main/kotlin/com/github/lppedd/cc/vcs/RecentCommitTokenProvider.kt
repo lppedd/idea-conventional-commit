@@ -46,7 +46,8 @@ internal class RecentCommitTokenProvider(project: Project)
 
   override fun getCommitTypes(prefix: String?): Collection<CommitType> =
     doGet(::RecentCommitType) { messages ->
-      messages.map { it.lines().first(String::isNotBlank) }
+      messages.map { it.lines().firstOrNull(String::isNotBlank) }
+        .filterNotNull()
         .mapToLowerCase()
         .distinct()
         .map(CCParser::parseHeader)
@@ -60,7 +61,8 @@ internal class RecentCommitTokenProvider(project: Project)
 
   override fun getCommitScopes(commitType: String?): Collection<CommitScope> =
     doGet(::RecentCommitScope) { messages ->
-      messages.map { it.lines().first(String::isNotBlank) }
+      messages.map { it.lines().firstOrNull(String::isNotBlank) }
+        .filterNotNull()
         .mapToLowerCase()
         .distinct()
         .map(CCParser::parseHeader)
@@ -74,7 +76,8 @@ internal class RecentCommitTokenProvider(project: Project)
 
   override fun getCommitSubjects(commitType: String?, commitScope: String?): Collection<CommitSubject> =
     doGet(::RecentCommitSubject) { messages ->
-      messages.map { it.lines().first(String::isNotBlank) }
+      messages.map { it.lines().firstOrNull(String::isNotBlank) }
+        .filterNotNull()
         .distinctBy(String::toLowerCase)
         .map(CCParser::parseHeader)
         .map(CommitTokens::subject)
@@ -92,8 +95,8 @@ internal class RecentCommitTokenProvider(project: Project)
       commitScope: String?,
       commitSubject: String?,
   ): Collection<CommitFooterValue> =
-    doGet(::RecentCommitFooterValue) { messages ->
-      messages.flatMap(::getFooterValues)
+    doGet(::RecentCommitFooterValue) {
+      it.flatMap(::getFooterValues)
         .distinctBy(String::toLowerCase)
         .toMutableSet()
     }

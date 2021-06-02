@@ -42,7 +42,8 @@ internal class VcsCommitTokenProvider(project: Project)
 
   override fun getCommitTypes(prefix: String?): Collection<CommitType> =
     getOrderedVcsCommitMessages()
-      .map { it.lines().first(String::isNotBlank) }
+      .map { it.lines().firstOrNull(String::isNotBlank) }
+      .filterNotNull()
       .mapToLowerCase()
       .distinct()
       .map(CCParser::parseHeader)
@@ -58,7 +59,8 @@ internal class VcsCommitTokenProvider(project: Project)
 
   override fun getCommitScopes(commitType: String?): Collection<CommitScope> =
     getOrderedVcsCommitMessages()
-      .map { it.lines().first(String::isNotBlank) }
+      .map { it.lines().firstOrNull(String::isNotBlank) }
+      .filterNotNull()
       .mapToLowerCase()
       .distinct()
       .map(CCParser::parseHeader)
@@ -74,7 +76,8 @@ internal class VcsCommitTokenProvider(project: Project)
 
   override fun getCommitSubjects(commitType: String?, commitScope: String?): Collection<CommitSubject> =
     getOrderedVcsCommitMessages()
-      .map { it.lines().first(String::isNotBlank) }
+      .map { it.lines().firstOrNull(String::isNotBlank) }
+      .filterNotNull()
       .distinctBy(String::toLowerCase)
       .map(CCParser::parseHeader)
       .map(CommitTokens::subject)
