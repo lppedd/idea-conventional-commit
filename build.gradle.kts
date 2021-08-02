@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "com.github.lppedd"
-version = "0.18.0"
+version = "0.19.0"
 
 repositories {
   maven("https://dl.bintray.com/kotlin/kotlin-eap")
@@ -31,7 +31,7 @@ dependencies {
 }
 
 intellij {
-  version.set("IU-192.5728.98")
+  version.set("IU-202.6397.94")
   downloadSources.set(true)
   pluginName.set("idea-conventional-commit")
   plugins.set(listOf("java"))
@@ -73,8 +73,8 @@ tasks {
 
   patchPluginXml {
     version.set(project.version.toString())
-    sinceBuild.set("192.5728")
-    untilBuild.set("212.*")
+    sinceBuild.set("202.6397")
+    untilBuild.set("213.*")
 
     val projectPath = projectDir.path
     pluginDescription.set((File("$projectPath/plugin-description.html").readText(Charsets.UTF_8)))
