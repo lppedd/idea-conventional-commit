@@ -1,0 +1,91 @@
+<!--suppress HtmlRequiredTitleElement -->
+<html lang="en">
+  <head>
+    <style>
+        code, pre {
+            font-family: monospace;
+        }
+
+        h1 {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+
+        #table-of-contents h2 {
+            font-size: 1em;
+            font-weight: normal;
+            margin: 0 0 5px 0;
+        }
+
+        #table-of-contents p {
+            font-size: 0.96em;
+            margin: 0 0 0 9px;
+        }
+
+        #contributors h2 {
+            margin-top: 20px;
+            margin-bottom: 0;
+        }
+
+        .indented {
+            margin-left: 9px;
+        }
+    </style>
+  </head>
+  <div id="table-of-contents">
+    <h2>Table of contents:</h2>
+    <p>&#8226; Commit creation dialog</p>
+    <p>&#8226; Documentation presentation</p>
+    <p>&#8226; Supported IDEA releases</p>
+    <p>&#8226; Changes in 0.19.0</p>
+  </div>
+  <h1>Commit creation dialog</h1>
+  <p>
+    Thanks to <a href="https://github.com/patrek">patrek</a>'s suggestion, we now have a dialog to create commit messages.<br/>
+    The dialog can be opened via the Conventional Commit icon near the commit message area (the default shortcut is <b>CTRL+B</b>)
+    and it is pretty straightforward to use. It can also be navigated with assistive technologies.
+  </p>
+  <p>
+    Regarding accessibility, I've tried using the IDE with <a href="https://www.nvaccess.org/">NVDA</a>
+    through keyboard only, and I've noticed we are still lacking a bit both on the Platform itself and on my side.<br/>
+    During development I've spent a lot of time trying to understand how Swing works with a11y
+    and the knowledge I've absorbed for the dialog itself will be applied to the other areas of the plugin.
+  </p>
+  <h1>Documentation presentation</h1>
+  <p>
+    The commit token's documentation presentation has changed a bit.
+    I wanted to display more, and more accurate, information for the proposed token.<br/>
+    I don't know if you'll find it better or worse, so please let me know in the
+    <a href="https://github.com/lppedd/idea-conventional-commit/issues/35">feedback issue</a> on GitHub.
+  </p>
+  <h1>Supported IDE releases</h1>
+  <p>
+    As announced in 0.18.0, I've moved up the minimum supported IDEA release to <b>202.6397</b>.<br/>
+    This allowed the removal of some workarounds in place for compatibility reasons, and will make
+    future development easier.
+  </p>
+  <h1>Changes in 0.19.0</h1>
+  <p>
+    Following is a short summary, but you can look at all the commits
+    <a href="https://github.com/lppedd/idea-conventional-commit/compare/0.18.0...0.19.0">here</a>.
+  </p>
+  <!-- FEATURES -->
+  <p><b>Features:</b></p>
+  <p class="indented">
+    &#8226; allowed creation of commit messages through a specialized dialog (as described above).
+  </p>
+  <p class="indented">
+    &#8226; allowed navigation of inspections results with keyboard shortcuts inside the commit message editor.
+  </p>
+  <!-- REFACTORINGS -->
+  <p><b>Refactorings:</b></p>
+  <p class="indented">
+    &#8226; improved presentation of commit tokens' documentation.
+  </p>
+  <p class="indented">
+    &#8226; shown the release changelog version in the tab title inside the What's New dialog.
+  </p>
+  <p class="indented">
+    &#8226; cleaned-up the source code.
+  </p>
+</html>
