@@ -1,7 +1,9 @@
 package com.github.lppedd.cc.api
 
-import com.intellij.openapi.extensions.AbstractExtensionPointBean
 import com.intellij.openapi.extensions.ExtensionPointName
+import com.intellij.openapi.extensions.PluginAware
+import com.intellij.openapi.extensions.PluginDescriptor
+import com.intellij.serviceContainer.LazyExtensionInstance
 import com.intellij.util.xmlb.annotations.*
 import org.jetbrains.annotations.ApiStatus.*
 
@@ -29,9 +31,22 @@ internal val WHATS_NEW_EP = ExtensionPointName<WhatsNewProvider>(
  */
 @Experimental
 @AvailableSince("0.16.0")
-abstract class WhatsNewProvider : AbstractExtensionPointBean() {
+abstract class WhatsNewProvider : LazyExtensionInstance<WhatsNewProvider>(), PluginAware {
+  lateinit var pluginDescriptor: PluginDescriptor
+    private set
+
+  @Attribute("implementation")
+  var implementation: String = ""
+
   @Property(surroundWithTag = false)
   var files: WhatsNewFiles = WhatsNewFiles()
+
+  override fun getImplementationClassName(): String =
+    implementation
+
+  override fun setPluginDescriptor(pluginDescriptor: PluginDescriptor) {
+    this.pluginDescriptor = pluginDescriptor
+  }
 
   /**
    * The name for the dialog's tab.
@@ -41,7 +56,7 @@ abstract class WhatsNewProvider : AbstractExtensionPointBean() {
   /**
    * States if the "what's new" pages should be displayed at IDE startup,
    * and thus states if the What's New dialog should be shown.
-   * Typically the dialog should be shown every plugin update.
+   * Typically, the dialog should be shown every plugin update.
    */
   abstract fun shouldDisplay(): Boolean
 
