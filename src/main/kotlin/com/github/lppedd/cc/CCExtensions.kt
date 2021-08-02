@@ -329,7 +329,7 @@ internal inline operator fun <T, C : MutableList<T>> T.plus(list: C): C {
 
 @InlineOnly
 internal inline fun Sequence<String>.mapToLowerCase(): Sequence<String> =
-  map(String::toLowerCase)
+  map { it.lowercase(Locale.getDefault()) }
 
 @InlineOnly
 internal inline fun Sequence<String>.filterNotEmpty(): Sequence<String> =

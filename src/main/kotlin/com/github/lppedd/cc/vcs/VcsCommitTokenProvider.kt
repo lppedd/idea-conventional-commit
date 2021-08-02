@@ -11,6 +11,7 @@ import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.registry.Registry
 import org.jetbrains.annotations.ApiStatus.*
+import java.util.*
 import kotlin.text.RegexOption.MULTILINE
 
 /**
@@ -78,14 +79,14 @@ internal class VcsCommitTokenProvider(project: Project)
     getOrderedVcsCommitMessages()
       .map { it.lines().firstOrNull(String::isNotBlank) }
       .filterNotNull()
-      .distinctBy(String::toLowerCase)
+      .distinctBy { it.lowercase(Locale.getDefault()) }
       .map(CCParser::parseHeader)
       .map(CommitTokens::subject)
       .filterIsInstance<ValidToken>()
       .map(ValidToken::value)
       .trim()
       .filterNotEmpty()
-      .distinctBy(String::toLowerCase)
+      .distinctBy { it.lowercase(Locale.getDefault()) }
       .take(MAX_ELEMENTS)
       .map(::VcsCommitSubject)
       .toList()
@@ -99,7 +100,7 @@ internal class VcsCommitTokenProvider(project: Project)
     val n = if ("co-authored-by".equals(footerType, true)) 5 else MAX_ELEMENTS
     return getOrderedVcsCommitMessages()
       .flatMap(::getFooterValues)
-      .distinctBy(String::toLowerCase)
+      .distinctBy { it.lowercase(Locale.getDefault()) }
       .take(n)
       .map(::VcsCommitFooterValue)
       .toList()

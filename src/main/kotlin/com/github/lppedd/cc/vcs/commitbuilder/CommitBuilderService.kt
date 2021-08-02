@@ -94,6 +94,6 @@ internal class CommitBuilderService : PersistentStateComponent<CommitBuilderServ
       }
 
     override fun hashCode(): Int =
-      type.toLowerCase().hashCode()
+      type.lowercase(Locale.getDefault()).hashCode()
   }
 }

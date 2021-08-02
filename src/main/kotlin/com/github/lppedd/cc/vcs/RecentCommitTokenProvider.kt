@@ -12,6 +12,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.registry.Registry
 import com.intellij.openapi.vcs.VcsConfiguration
 import org.jetbrains.annotations.ApiStatus.*
+import java.util.*
 import kotlin.text.RegexOption.MULTILINE
 
 /**
@@ -78,14 +79,14 @@ internal class RecentCommitTokenProvider(project: Project)
     doGet(::RecentCommitSubject) { messages ->
       messages.map { it.lines().firstOrNull(String::isNotBlank) }
         .filterNotNull()
-        .distinctBy(String::toLowerCase)
+        .distinctBy { it.lowercase(Locale.getDefault()) }
         .map(CCParser::parseHeader)
         .map(CommitTokens::subject)
         .filterIsInstance<ValidToken>()
         .map(ValidToken::value)
         .trim()
         .filterNotEmpty()
-        .distinctBy(String::toLowerCase)
+        .distinctBy { it.lowercase(Locale.getDefault()) }
         .toMutableSet()
     }
 
@@ -95,9 +96,9 @@ internal class RecentCommitTokenProvider(project: Project)
       commitScope: String?,
       commitSubject: String?,
   ): Collection<CommitFooterValue> =
-    doGet(::RecentCommitFooterValue) {
-      it.flatMap(::getFooterValues)
-        .distinctBy(String::toLowerCase)
+    doGet(::RecentCommitFooterValue) { messages ->
+      messages.flatMap(::getFooterValues)
+        .distinctBy { it.lowercase(Locale.getDefault()) }
         .toMutableSet()
     }
 
