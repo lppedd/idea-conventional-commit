@@ -106,6 +106,13 @@
     />
 
     <checkinHandlerFactory implementation="com.github.lppedd.cc.vcs.commitbuilder.CommitBuilderCheckinHandlerFactory" />
+
+    <registryKey
+        key="com.github.lppedd.cc.providers.vcs"
+        description="Enable/disable the new VCS Provider"
+        defaultValue="true"
+        restartRequired="true"
+    />
   </extensions>
 
   <extensionPoints>
