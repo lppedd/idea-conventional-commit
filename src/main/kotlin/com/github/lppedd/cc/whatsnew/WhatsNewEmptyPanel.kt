@@ -5,6 +5,7 @@ import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.labels.ActionLink
+import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
 import java.awt.Component
 import java.awt.Desktop
@@ -33,6 +34,7 @@ internal class WhatsNewEmptyPanel : JPanel() {
     add(label)
     add(link)
     add(Box.createVerticalGlue())
+    border = JBUI.Borders.empty(40, 30)
   }
 
   private class VisitPageAction : AnAction() {
