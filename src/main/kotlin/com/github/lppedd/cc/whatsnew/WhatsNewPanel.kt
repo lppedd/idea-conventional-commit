@@ -2,7 +2,7 @@ package com.github.lppedd.cc.whatsnew
 
 import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.api.WhatsNewProvider
-import com.github.lppedd.cc.api.WhatsNewProvider.FileDescription
+import com.github.lppedd.cc.api.WhatsNewProvider.WhatsNewPage
 import com.intellij.ide.util.PropertiesComponent
 import com.intellij.ide.util.TipUIUtil
 import com.intellij.ide.util.TipUIUtil.Browser
@@ -22,7 +22,7 @@ import javax.swing.JPanel
 internal class WhatsNewPanel : JPanel(BorderLayout()), DoNotAskOption {
   private val browser: Browser = TipUIUtil.createBrowser()
   private lateinit var provider: WhatsNewProvider
-  private var fileDescriptions: List<FileDescription> = emptyList()
+  private var whatsNewPages: List<WhatsNewPage> = emptyList()
   private var nameIndex = 0
 
   init {
@@ -53,7 +53,7 @@ internal class WhatsNewPanel : JPanel(BorderLayout()), DoNotAskOption {
 
   fun setProvider(provider: WhatsNewProvider) {
     this.provider = provider
-    fileDescriptions = provider.files.fileDescriptions.toList()
+    whatsNewPages = provider.getWhatsNewPages().toList()
     setInitialChangelog()
   }
 
@@ -62,28 +62,28 @@ internal class WhatsNewPanel : JPanel(BorderLayout()), DoNotAskOption {
     nameIndex > 0
 
   fun hasOlder(): Boolean =
-    nameIndex < fileDescriptions.size - 1
+    nameIndex < whatsNewPages.size - 1
 
   fun newerChangelog() {
-    setChangelog(fileDescriptions[--nameIndex].name)
+    setChangelog(whatsNewPages[--nameIndex].fileName)
   }
 
   fun olderChangelog() {
-    setChangelog(fileDescriptions[++nameIndex].name)
+    setChangelog(whatsNewPages[++nameIndex].fileName)
   }
 
   fun currentVersion(): String? =
-    fileDescriptions[nameIndex].version
+    whatsNewPages[nameIndex].version
 
   fun newerVersion(): String? =
-    fileDescriptions[nameIndex - 1].version
+    whatsNewPages[nameIndex - 1].version
 
   fun olderVersion(): String? =
-    fileDescriptions[nameIndex + 1].version
+    whatsNewPages[nameIndex + 1].version
 
   private fun setInitialChangelog() {
     nameIndex = 0
-    setChangelog(fileDescriptions[nameIndex].name)
+    setChangelog(whatsNewPages[nameIndex].fileName)
   }
 
   private fun setChangelog(fileName: String) {
@@ -92,7 +92,7 @@ internal class WhatsNewPanel : JPanel(BorderLayout()), DoNotAskOption {
     }
 
     val classLoader = provider.pluginDescriptor.pluginClassLoader ?: this::class.java.classLoader
-    val changelogStream = ResourceUtil.getResourceAsStream(classLoader, provider.files.basePath, fileName)
+    val changelogStream = ResourceUtil.getResourceAsStream(classLoader, provider.basePath(), fileName)
 
     requireNotNull(changelogStream) {
       "The changelog file '$fileName' doesn't exist. Provider: ${provider::class.java.name}"

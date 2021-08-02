@@ -19,7 +19,14 @@ internal class DefaultWhatsNewProvider : WhatsNewProvider() {
     const val PROPERTY_VERSION = "com.github.lppedd.cc.version"
   }
 
-  override fun displayName(): String =
+  private val whatsNewPages = listOf(
+      WhatsNewPage("0.19.0", "0_19_0.html"),
+      WhatsNewPage("0.18.0", "0_18_0.html"),
+      WhatsNewPage("0.17.0", "0_17_0.html"),
+      WhatsNewPage("0.16.1", "0_16_1.html"),
+  )
+
+  override fun getDisplayName(): String =
     "Core"
 
   override fun shouldDisplay(): Boolean {
@@ -30,11 +37,17 @@ internal class DefaultWhatsNewProvider : WhatsNewProvider() {
     if (PluginVersion(installedVersion) > PluginVersion(registeredVersion)) {
       properties.setValue(PROPERTY_VERSION, installedVersion)
       val showOnEveryUpdate = properties.getValue(WhatsNewDialog.PROPERTY_SHOW, "true").toBoolean()
-      return showOnEveryUpdate && files.fileDescriptions.any { it.version == installedVersion }
+      return showOnEveryUpdate && getWhatsNewPages().any { it.version == installedVersion }
     }
 
     return false
   }
+
+  override fun basePath(): String =
+    "/whatsnew/"
+
+  override fun getWhatsNewPages(): List<WhatsNewPage> =
+    whatsNewPages
 
   private fun getPlugin(): IdeaPluginDescriptor? =
     PluginManagerCore.getPlugin(PluginId.findId(CC.PluginId))

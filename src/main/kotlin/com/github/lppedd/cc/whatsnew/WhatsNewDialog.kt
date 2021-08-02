@@ -32,7 +32,7 @@ internal class WhatsNewDialog(project: Project) : CCDialogWrapper(project) {
   private val providers = WHATS_NEW_EP.extensions
     .asSequence()
     .sortedWith(WhatsNewProviderComparator)
-    .filter { it.files.fileDescriptions.isNotEmpty() }
+    .filter { it.getWhatsNewPages().isNotEmpty() }
     .toList()
 
   private lateinit var tabbedPane: NoContentTabbedPaneWrapper
@@ -64,7 +64,7 @@ internal class WhatsNewDialog(project: Project) : CCDialogWrapper(project) {
         updateComponents()
       }
 
-      tabbedPane.addTab(provider.displayName())
+      tabbedPane.addTab(provider.getDisplayName())
     }
 
     return tabbedPane.component

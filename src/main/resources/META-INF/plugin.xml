@@ -165,13 +165,6 @@
         order="first"
         implementation="com.github.lppedd.cc.inspection.DefaultCommitInspectionProvider"
     />
-    <whatsNewProvider order="first" implementation="com.github.lppedd.cc.whatsnew.DefaultWhatsNewProvider">
-      <files>
-        <name version="0.19.0">0_19_0.html</name>
-        <name version="0.18.0">0_18_0.html</name>
-        <name version="0.17.0">0_17_0.html</name>
-        <name version="0.16.1">0_16_1.html</name>
-      </files>
-    </whatsNewProvider>
+    <whatsNewProvider order="first" implementation="com.github.lppedd.cc.whatsnew.DefaultWhatsNewProvider" />
   </extensions>
 </idea-plugin>

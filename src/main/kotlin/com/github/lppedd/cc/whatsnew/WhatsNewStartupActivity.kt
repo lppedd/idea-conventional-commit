@@ -23,7 +23,7 @@ private class WhatsNewStartupActivity : StartupActivity, DumbAware {
     val shouldDisplay = WHATS_NEW_EP.extensions
       .asSequence()
       .filter(WhatsNewProvider::shouldDisplay)
-      .any { it.files.fileDescriptions.isNotEmpty() }
+      .any { it.getWhatsNewPages().isNotEmpty() }
 
     if (shouldDisplay) {
       EdtScheduledExecutorService.getInstance().schedule({
