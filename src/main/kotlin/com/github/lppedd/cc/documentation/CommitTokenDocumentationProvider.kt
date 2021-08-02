@@ -1,7 +1,6 @@
 package com.github.lppedd.cc.documentation
 
 import com.github.lppedd.cc.CCBundle
-import com.github.lppedd.cc.annotation.Compatibility
 import com.github.lppedd.cc.api.*
 import com.github.lppedd.cc.brighter
 import com.github.lppedd.cc.darker
@@ -122,8 +121,7 @@ private class CommitTokenDocumentationProvider : AbstractDocumentationProvider()
   }
 
   private fun getSeparatorColor(): Color {
-    @Compatibility(minVersion = "193.4778", replaceWith = "UIUtil.getTooltipSeparatorColor()")
-    val color = JBColor.namedColor("Tooltip.separatorColor", JBColor(0xd1d1d1, 0x545658))
+    val color = UIUtil.getTooltipSeparatorColor()
     return if (JBColor.isBright()) {
       color.brighter(0.97)
     } else {

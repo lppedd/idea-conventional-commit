@@ -155,7 +155,6 @@ internal class CCVcsHandler(private val project: Project) {
   }
 
   private fun getVcsLogProviders(): Map<VirtualFile, VcsLogProvider> {
-    @Compatibility(minVersion = "201.3803.32", replaceWith = "VcsProjectLog.getLogProviders(Project)")
     val activeVcsRoots = projectVcsManager.allVcsRoots.toList()
     return VcsLogManager.findLogProviders(activeVcsRoots, project)
   }

@@ -1,7 +1,6 @@
 package com.github.lppedd.cc.whatsnew
 
 import com.github.lppedd.cc.CCBundle
-import com.github.lppedd.cc.annotation.Compatibility
 import com.github.lppedd.cc.api.WHATS_NEW_EP
 import com.github.lppedd.cc.api.WhatsNewProvider
 import com.github.lppedd.cc.setFocused
@@ -12,6 +11,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper.DialogStyle.COMPACT
 import com.intellij.ui.SimpleColoredText
 import com.intellij.ui.SimpleTextAttributes
+import com.intellij.ui.tabs.impl.TabLabel
 import com.intellij.util.ui.JBUI
 import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
@@ -122,7 +122,11 @@ internal class WhatsNewDialog(project: Project) : CCDialogWrapper(project) {
       it.append(")", SimpleTextAttributes.REGULAR_ATTRIBUTES)
     }
 
-    setTabLabelText(tabbedPane.getTabComponentAt(selectedTabIndex), text)
+    val tabLabel = tabbedPane.getTabComponentAt(selectedTabIndex)
+
+    if (tabLabel is TabLabel) {
+      tabLabel.setText(text)
+    }
   }
 
   private fun updateActionName(action: AbstractAction, baseName: String, version: String?) {
@@ -130,17 +134,6 @@ internal class WhatsNewDialog(project: Project) : CCDialogWrapper(project) {
       action.setName(baseName)
     } else {
       action.setName("$baseName ($version)")
-    }
-  }
-
-  @Compatibility(
-      minVersion = "193.3793.14",
-      replaceWith = "com.intellij.ui.tabs.impl.TabLabel#setText"
-  )
-  private fun setTabLabelText(tabLabel: Any, text: SimpleColoredText) {
-    tabLabel.javaClass.getDeclaredMethod("setText", SimpleColoredText::class.java).also {
-      it.isAccessible = true
-      it.invoke(tabLabel, text)
     }
   }
 

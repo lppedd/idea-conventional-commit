@@ -115,6 +115,8 @@ internal class CCTemplateEditingListener : TemplateEditingAdapter() {
   @Compatibility(
       minVersion = "202.4357.23",
       description = """
+        NOTE: we keep this just to be safe!
+        
         On newer IDEA versions the templateCancelled method is called before
         the last currentVariableChanged (with newIndex < 0), so we have the opportunity
         to store a boolean for that.

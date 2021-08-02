@@ -8,10 +8,10 @@ import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.configuration.CCConfigService.ProviderFilterType.KEEP_SELECTED
 import com.github.lppedd.cc.keyPressAndRelease
 import com.github.lppedd.cc.plus
-import com.github.lppedd.cc.setLookupFocusDegree
 import com.intellij.codeInsight.completion.CodeCompletionHandlerBase
 import com.intellij.codeInsight.completion.CompletionType.BASIC
 import com.intellij.codeInsight.lookup.LookupEvent
+import com.intellij.codeInsight.lookup.LookupFocusDegree
 import com.intellij.codeInsight.lookup.LookupListener
 import com.intellij.codeInsight.lookup.impl.LookupImpl
 import com.intellij.codeInsight.lookup.impl.PrefixChangeListener
@@ -96,7 +96,7 @@ internal class LookupEnhancer(
       //   registry key is set to "true".
       //   Also if the user checked the "Insert selected suggestion by... context-dependent keys"
       //   option, the FOCUSED degree is used while we want SEMI_FOCUSED
-      lookup.setLookupFocusDegree("SEMI_FOCUSED")
+      lookup.lookupFocusDegree = LookupFocusDegree.SEMI_FOCUSED
     } catch (e: Exception) {
       logger.error("Couldn't override the lookup focus degree", e)
     }

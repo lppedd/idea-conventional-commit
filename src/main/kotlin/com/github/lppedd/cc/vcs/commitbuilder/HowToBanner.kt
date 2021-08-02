@@ -1,12 +1,11 @@
 package com.github.lppedd.cc.vcs.commitbuilder
 
 import com.github.lppedd.cc.CCBundle
-import com.github.lppedd.cc.annotation.Compatibility
 import com.github.lppedd.cc.scaled
+import com.intellij.codeInsight.hint.HintUtil
 import com.intellij.icons.AllIcons.Actions
 import com.intellij.icons.AllIcons.General
 import com.intellij.ide.util.PropertiesComponent
-import com.intellij.openapi.editor.colors.ColorKey
 import com.intellij.openapi.editor.colors.EditorColorsManager
 import com.intellij.openapi.ui.popup.IconButton
 import com.intellij.ui.InplaceButton
@@ -47,13 +46,7 @@ internal class HowToBanner(completionShortcutText: String) : JPanel(BorderLayout
       infoIcon = General.Information
       infoText = CCBundle["cc.commitbuilder.dialog.howTo.info", completionShortcutText]
       closeText = CCBundle["cc.commitbuilder.dialog.howTo.info.close"]
-
-      @Compatibility(
-          minVersion = "202.4357.23",
-          replaceWith = "...globalScheme.getColor(HintUtil#PROMOTION_PANE_KEY)"
-      )
-      val color = EditorColorsManager.getInstance().globalScheme.getColor(ColorKey.find("PROMOTION_PANE"))
-      background = color ?: JBColor(0xE0EAF8, 0x3B4C57)
+      background = EditorColorsManager.getInstance().globalScheme.getColor(HintUtil.PROMOTION_PANE_KEY)
     } else {
       infoIcon = General.Error
       infoText = CCBundle["cc.commitbuilder.dialog.howTo.error"]
