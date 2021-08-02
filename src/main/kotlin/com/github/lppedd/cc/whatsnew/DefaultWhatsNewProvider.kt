@@ -3,7 +3,7 @@ package com.github.lppedd.cc.whatsnew
 import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.api.WhatsNewProvider
 import com.intellij.ide.plugins.IdeaPluginDescriptor
-import com.intellij.ide.plugins.PluginManager
+import com.intellij.ide.plugins.PluginManagerCore
 import com.intellij.ide.util.PropertiesComponent
 import com.intellij.openapi.extensions.PluginId
 import java.util.*
@@ -37,7 +37,7 @@ internal class DefaultWhatsNewProvider : WhatsNewProvider() {
   }
 
   private fun getPlugin(): IdeaPluginDescriptor? =
-    PluginManager.getPlugin(PluginId.findId(CC.PluginId))
+    PluginManagerCore.getPlugin(PluginId.findId(CC.PluginId))
 
   private class PluginVersion(version: String) : Comparable<PluginVersion> {
     private val parts = version.split(".").map(String::toInt)
