@@ -74,7 +74,7 @@
     <liveTemplateMacro implementation="com.github.lppedd.cc.liveTemplate.CommitSubjectMacro" />
     <liveTemplateMacro implementation="com.github.lppedd.cc.liveTemplate.CommitBodyOrFooterTypeMacro" />
     <liveTemplateMacro implementation="com.github.lppedd.cc.liveTemplate.CommitFooterValueMacro" />
-    <defaultLiveTemplatesProvider implementation="com.github.lppedd.cc.liveTemplate.CCLiveTemplatesProvider" />
+    <defaultLiveTemplates file="liveTemplates/ConventionalCommit.xml" hidden="true" />
 
     <documentationProvider implementation="com.github.lppedd.cc.documentation.CommitTokenDocumentationProvider" />
 
