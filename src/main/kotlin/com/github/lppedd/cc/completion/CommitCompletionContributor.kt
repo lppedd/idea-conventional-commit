@@ -1,4 +1,4 @@
-@file:Suppress("UnstableApiUsage", "deprecation")
+@file:Suppress("UnstableApiUsage")
 
 package com.github.lppedd.cc.completion
 
@@ -25,15 +25,16 @@ import com.intellij.codeInsight.lookup.impl.LookupImpl
 import com.intellij.openapi.components.service
 import com.intellij.openapi.fileTypes.PlainTextLanguage
 import com.intellij.openapi.progress.ProgressManager
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.util.ReflectionUtil.findField
 import com.intellij.util.concurrency.Semaphore
-import java.beans.PropertyChangeEvent
-import java.beans.PropertyChangeListener
 import java.lang.reflect.Field
 import java.util.*
+import java.util.Collections.newSetFromMap
 import java.util.Collections.synchronizedMap
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.LazyThreadSafetyMode.PUBLICATION
 
 /**
@@ -44,6 +45,7 @@ import kotlin.LazyThreadSafetyMode.PUBLICATION
 private class CommitCompletionContributor : CompletionContributor() {
   private companion object {
     private val plainTextPattern = PlatformPatterns.psiElement().withLanguage(PlainTextLanguage.INSTANCE)
+    private val registeredProjects = newSetFromMap(ConcurrentHashMap<Project, Boolean>(16))
     private val lookupEnhancers = synchronizedMap(IdentityHashMap<Lookup, LookupEnhancer>(16))
   }
 
@@ -65,14 +67,16 @@ private class CommitCompletionContributor : CompletionContributor() {
       return
     }
 
-    val lookupManager = LookupManager.getInstance(context.project)
+    val project = context.project
 
-    // isCompletion == true means the Lookup had already been created before
-    // and has now been reused.
-    // For our use case it means we've already added the Lookup creation listener
-    // and installed the Lookup enhancer on that Lookup instance
-    if (lookupManager.activeLookup?.isCompletion != true) {
-      lookupManager.addPropertyChangeListener(LookupCreationListener(lookupManager))
+    if (registeredProjects.add(project)) {
+      Disposer.register(project) {
+        registeredProjects.remove(project)
+      }
+
+      project.messageBus
+        .connect()
+        .subscribe(LookupManagerListener.TOPIC, LookupCreationListener())
     }
   }
 
@@ -276,21 +280,22 @@ private class CommitCompletionContributor : CompletionContributor() {
   private fun CompletionProgressIndicator.getFreezeSemaphore(): Semaphore =
     myFreezeSemaphoreField.get(this) as Semaphore
 
-  private class LookupCreationListener(val lookupManager: LookupManager) : PropertyChangeListener {
-    override fun propertyChange(event: PropertyChangeEvent) {
-      if (event.propertyName == LookupManager.PROP_ACTIVE_LOOKUP) {
-        when (val lookup = event.newValue) {
-          is LookupImpl -> installLookupEnhancer(lookup)
-
-          // The Lookup has been disposed, thus we can remove ourselves from the listeners
-          else -> lookupManager.removePropertyChangeListener(this)
-        }
+  private class LookupCreationListener : LookupManagerListener {
+    override fun activeLookupChanged(oldLookup: Lookup?, newLookup: Lookup?) {
+      // isCompletion == true means the Lookup had already been created before and has been reused.
+      // For our use case it means we've already installed the Lookup enhancer on that instance
+      if (newLookup is LookupImpl && !newLookup.isCompletion) {
+        installLookupEnhancer(newLookup)
       }
     }
 
     fun installLookupEnhancer(lookup: LookupImpl) {
+      check(lookupEnhancers.isEmpty()) { "Lookup enhancers map should be empty" }
       lookupEnhancers.computeIfAbsent(lookup) {
-        Disposer.register(lookup) { lookupEnhancers.remove(lookup) }
+        Disposer.register(lookup) {
+          lookupEnhancers.remove(lookup)
+        }
+
         LookupEnhancer(lookup)
       }
     }
