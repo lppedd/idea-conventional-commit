@@ -26,8 +26,7 @@ internal class CCProjectManagerListener : ProjectManagerListener {
       }
     }
 
-    @Suppress("IncorrectParentDisposable")
-    project.messageBus.connect(project).also {
+    project.messageBus.connect().also {
       it.subscribe(ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED, vcsConfigListener)
       it.subscribe(ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED_IN_PLUGIN, vcsConfigListener)
     }

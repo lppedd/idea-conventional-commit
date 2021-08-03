@@ -16,8 +16,7 @@ private class CCApplicationLoadListener : ApplicationLoadListener {
   }
 
   private fun subscribeToProjectOpened(application: Application) {
-    @Suppress("IncorrectParentDisposable")
-    application.messageBus.connect(application).subscribe(
+    application.messageBus.connect().subscribe(
         ProjectManager.TOPIC,
         CCProjectManagerListener(),
     )
