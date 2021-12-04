@@ -112,7 +112,7 @@ private class CommitTokenDocumentationProvider : AbstractDocumentationProvider()
         .append(CCBundle["cc.completion.documentation.section.value"])
         .append("</span>")
         .append(DocumentationMarkup.SECTION_SEPARATOR)
-        .append(value.replace(lineSeparatorRegex, "<br>"))
+        .append(value.replace(lineSeparatorRegex, "<br/>"))
         .append(DocumentationMarkup.SECTION_END)
         .append(DocumentationMarkup.SECTIONS_END)
     }

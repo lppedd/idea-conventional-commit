@@ -67,7 +67,7 @@ internal class DefaultCommitTokenProvider(private val project: Project) :
       CCBundle["cc.notifications.schema"] +
       ((e as? ValidationException)
          ?.allMessages
-         ?.joinToString("<br />", " <br />") ?: "")
+         ?.joinToString("<br/>", "<br/>") ?: "")
 
     CCNotificationService.createErrorNotification(message).notify(project)
   }

@@ -160,7 +160,7 @@ internal class DefaultTokensFilePickerPanel(
   }
 
   private fun buildReadableValidationMessage(e: ValidationException) =
-    CCBundle["cc.config.filePicker.error.schema"] + e.allMessages.joinToString("<br />", ":<br />")
+    CCBundle["cc.config.filePicker.error.schema"] + e.allMessages.joinToString("<br/>", ":<br/>")
 
   private fun setEmptyText(component: JComponent, text: String?) {
     if (component !is ComponentWithEmptyText) {
