@@ -3,7 +3,8 @@ package com.github.lppedd.cc.completion
 /**
  * @author Edoardo Luppi
  */
-internal inline class Priority(val value: Int) : Comparable<Priority> {
+@JvmInline
+internal value class Priority(val value: Int) : Comparable<Priority> {
   override fun compareTo(other: Priority): Int =
     value.compareTo(other.value)
 

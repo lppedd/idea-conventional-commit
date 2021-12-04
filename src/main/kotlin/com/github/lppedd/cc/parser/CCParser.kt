@@ -122,8 +122,12 @@ interface Scope : Token
 interface Subject : Token
 interface FooterType : Token
 interface Footer : Token
-inline class BreakingChange(val isPresent: Boolean)
-inline class Separator(val isPresent: Boolean)
+
+@JvmInline
+value class BreakingChange(val isPresent: Boolean)
+
+@JvmInline
+value class Separator(val isPresent: Boolean)
 
 object InvalidToken :
     Type,
