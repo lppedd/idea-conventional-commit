@@ -5,6 +5,7 @@ package com.github.lppedd.cc.annotation
  */
 @Target(
     AnnotationTarget.CLASS,
+    AnnotationTarget.FIELD,
     AnnotationTarget.FUNCTION,
     AnnotationTarget.EXPRESSION,
     AnnotationTarget.LOCAL_VARIABLE,

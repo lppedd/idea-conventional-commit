@@ -1,5 +1,6 @@
 package com.github.lppedd.cc
 
+import com.github.lppedd.cc.annotation.Compatibility
 import com.intellij.notification.Notification
 import com.intellij.notification.NotificationDisplayType
 import com.intellij.notification.NotificationGroup
@@ -9,24 +10,16 @@ import com.intellij.notification.NotificationType
  * @author Edoardo Luppi
  */
 internal object CCNotificationService {
-  @Suppress("unused")
+  @Compatibility(
+      minVersion = "203.3645.34",
+      replaceWith = "NotificationGroupEP/NotificationGroupManager"
+  )
   private val notificationGroup = NotificationGroup(
-      "com.github.lppedd.cc.notifications.schema",
-      NotificationDisplayType.TOOL_WINDOW,
+      "com.github.lppedd.cc.notifications",
+      NotificationDisplayType.STICKY_BALLOON,
       true
   )
 
   fun createErrorNotification(message: String): Notification =
-    CCNotification(message, NotificationType.ERROR)
-
-  private class CCNotification(message: String, type: NotificationType) :
-      Notification(
-          "com.github.lppedd.cc.notifications.schema",
-          null,
-          "Conventional Commit",
-          "",
-          message,
-          type,
-          null
-      )
+    notificationGroup.createNotification("Conventional Commit", message, NotificationType.ERROR)
 }
