@@ -12,7 +12,7 @@ group = "com.github.lppedd"
 version = "0.19.0"
 
 repositories {
-  maven("https://dl.bintray.com/kotlin/kotlin-eap")
+  //maven("https://dl.bintray.com/kotlin/kotlin-eap")
   maven("https://jitpack.io")
   mavenCentral()
 }
@@ -74,7 +74,7 @@ tasks {
   patchPluginXml {
     version.set(project.version.toString())
     sinceBuild.set("202.6397")
-    untilBuild.set("213.*")
+    untilBuild.set("221.*")
 
     val projectPath = projectDir.path
     pluginDescription.set((File("$projectPath/plugin-description.html").readText(Charsets.UTF_8)))
