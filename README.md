@@ -9,6 +9,7 @@ I prefer publishing only when I'm sure the quality is top notch.**
 ### Available @ [JetBrains Plugins Repository][1]
 
 Looking for the latest **plugin binaries**? Get them [here][2] as `.zip`  
+<small>Supported IDE versions **from 0.20.0**: `221` to `221.*` (both inclusive)</small>  
 <small>Supported IDE versions **from 0.19.0**: `202.6397` to `213.*` (both inclusive)</small>  
 <small>Supported IDE versions **upto 0.18.0**: `193.****` to `212.*` (both inclusive)</small> 
 

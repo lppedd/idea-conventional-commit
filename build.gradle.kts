@@ -6,8 +6,8 @@ fun properties(key: String) = project.findProperty(key).toString()
 
 plugins {
   java
-  id("org.jetbrains.intellij") version "1.1.4"
-  kotlin("jvm") version "1.5.21"
+  id("org.jetbrains.intellij") version "1.5.2"
+  kotlin("jvm") version "1.6.10"
 }
 
 group = "com.github.lppedd"
@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-  implementation(kotlin("stdlib-jdk8", "1.5.21"))
+  implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.10")
 
   implementation("commons-validator", "commons-validator", "1.7") {
     exclude("commons-beanutils", "commons-beanutils")
@@ -29,7 +29,7 @@ dependencies {
   implementation("org.json", "json", "20210307")
   implementation("com.github.everit-org.json-schema", "org.everit.json.schema", "1.13.0")
 
-  testImplementation("junit:junit:4.12")
+  testImplementation("junit:junit:4.13.2")
 }
 
 intellij {
@@ -40,8 +40,8 @@ intellij {
 }
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_1_8
-  targetCompatibility = JavaVersion.VERSION_1_8
+  sourceCompatibility = JavaVersion.VERSION_11
+  targetCompatibility = JavaVersion.VERSION_11
 }
 
 /** Points to the Java executable (usually `java.exe`) of a DCEVM-enabled JVM. */
@@ -55,7 +55,7 @@ tasks {
   }
 
   val kotlinSettings: KotlinCompile.() -> Unit = {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = "11"
     kotlinOptions.freeCompilerArgs += listOf(
       "-Xno-call-assertions",
       "-Xno-receiver-assertions",
