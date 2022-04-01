@@ -2,6 +2,8 @@
 
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+fun properties(key: String) = project.findProperty(key).toString()
+
 plugins {
   java
   id("org.jetbrains.intellij") version "1.1.4"
@@ -12,7 +14,8 @@ group = "com.github.lppedd"
 version = "0.19.0"
 
 repositories {
-  maven("https://dl.bintray.com/kotlin/kotlin-eap")
+  //maven("https://dl.bintray.com/kotlin/kotlin-eap")
+  maven("https://packages.jetbrains.team/maven/p/ij/intellij-dependencies")
   maven("https://jitpack.io")
   mavenCentral()
 }
@@ -31,7 +34,7 @@ dependencies {
 }
 
 intellij {
-  version.set("IU-202.6397.94")
+  version.set(properties("platformVersion"))
   downloadSources.set(true)
   pluginName.set("idea-conventional-commit")
   plugins.set(listOf("java"))
@@ -73,8 +76,8 @@ tasks {
 
   patchPluginXml {
     version.set(project.version.toString())
-    sinceBuild.set("202.6397")
-    untilBuild.set("213.*")
+    sinceBuild.set(properties("pluginSinceBuild"))
+    untilBuild.set(properties("pluginUntilBuild"))
 
     val projectPath = projectDir.path
     pluginDescription.set((File("$projectPath/plugin-description.html").readText(Charsets.UTF_8)))
