@@ -50,13 +50,6 @@
   <extensions defaultExtensionNs="com.intellij">
     <ApplicationLoadListener implementation="com.github.lppedd.cc.CCApplicationLoadListener" />
 
-    <notification.parentGroup id="com.github.lppedd.cc.notifications" title="Conventional Commit" />
-    <notification.group
-        parentId="com.github.lppedd.cc.notifications"
-        groupId="com.github.lppedd.cc.notifications.schema"
-        replaceTitle="Schema error"
-    />
-
     <iconProvider implementation="com.github.lppedd.cc.icon.CCConfigFileIconProvider" />
 
     <completion.contributor
