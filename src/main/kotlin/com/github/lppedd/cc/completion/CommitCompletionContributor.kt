@@ -160,6 +160,9 @@ private class CommitCompletionContributor : CompletionContributor() {
         is FooterValueContext -> {
           providers.add(FooterValueCompletionProvider(project, context, firstLineTokens, process))
         }
+        null -> {
+          // Not in a valid footer context
+        }
       }
     }
 
@@ -167,7 +170,9 @@ private class CommitCompletionContributor : CompletionContributor() {
       val commitTokens = CCParser.parseHeader(lineUntilCaret)
 
       when (val context = commitTokens.getContext(caretOffsetInLine)) {
-        is TypeCommitContext -> providers.add(TypeCompletionProvider(project, context))
+        is TypeCommitContext -> {
+          providers.add(TypeCompletionProvider(project, context))
+        }
         is ScopeCommitContext -> {
           if (isTemplateActive) {
             providers.add(NoScopeCompletionProvider(project))
@@ -175,7 +180,12 @@ private class CommitCompletionContributor : CompletionContributor() {
 
           providers.add(ScopeCompletionProvider(project, context))
         }
-        is SubjectCommitContext -> providers.add(SubjectCompletionProvider(project, context))
+        is SubjectCommitContext -> {
+          providers.add(SubjectCompletionProvider(project, context))
+        }
+        null -> {
+          // Not in a valid header context
+        }
       }
     }
 
