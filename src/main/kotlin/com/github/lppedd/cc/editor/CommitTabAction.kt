@@ -20,7 +20,7 @@ private class CommitTabAction : TabAction() {
   private object CommitTabHandler : Handler() {
     private val moveCaretKey = Key.create<Unit>("Vcs.CommitMessage.moveCaret")
 
-    override fun executeWriteAction(editor: Editor, caret: Caret, dataContext: DataContext) {
+    override fun executeWriteAction(editor: Editor, caret: Caret?, dataContext: DataContext) {
       val document = editor.document
 
       if (document.getUserData(moveCaretKey) != null) {
@@ -32,6 +32,7 @@ private class CommitTabAction : TabAction() {
       }
     }
 
+    @Suppress("override_deprecation")
     override fun isEnabled(editor: Editor, dataContext: DataContext): Boolean {
       val document = editor.document
 
