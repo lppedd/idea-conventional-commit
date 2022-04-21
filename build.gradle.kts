@@ -19,14 +19,14 @@ repositories {
 }
 
 dependencies {
-  implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.10")
+  implementation(kotlin("stdlib-jdk8", "1.6.20"))
 
   implementation("commons-validator", "commons-validator", "1.7") {
     exclude("commons-beanutils", "commons-beanutils")
   }
 
-  implementation("org.json", "json", "20210307")
-  implementation("com.github.everit-org.json-schema", "org.everit.json.schema", "1.13.0")
+  implementation("org.json", "json", "20220320")
+  implementation("com.github.everit-org.json-schema", "org.everit.json.schema", "1.14.1")
 
   testImplementation("junit:junit:4.13.2")
 }
