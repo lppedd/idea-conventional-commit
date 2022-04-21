@@ -7,7 +7,7 @@ fun properties(key: String) = project.findProperty(key).toString()
 plugins {
   java
   id("org.jetbrains.intellij") version "1.5.2"
-  kotlin("jvm") version "1.6.10"
+  kotlin("jvm") version "1.6.20"
 }
 
 group = "com.github.lppedd"
