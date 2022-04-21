@@ -15,7 +15,7 @@ internal class CommitNoScopeLookupElement(project: Project) :
         CC.Tokens.PriorityScope,
         FakeProviderWrapper,
     ) {
-  private val psiElement = object : CommitFakePsiElement(project) {}
+  private val psiElement = object : CommitFakePsiElement(project, "No scope") {}
 
   override fun getPsiElement(): CommitFakePsiElement =
     psiElement

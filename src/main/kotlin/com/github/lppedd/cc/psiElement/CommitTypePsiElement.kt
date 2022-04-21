@@ -7,4 +7,4 @@ import com.intellij.openapi.project.Project
  * @author Edoardo Luppi
  */
 internal class CommitTypePsiElement(project: Project, val commitType: CommitType) :
-    CommitFakePsiElement(project)
+    CommitFakePsiElement(project, commitType.text)

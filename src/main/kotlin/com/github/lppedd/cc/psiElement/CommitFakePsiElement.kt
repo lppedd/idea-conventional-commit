@@ -7,13 +7,17 @@ import com.intellij.psi.impl.FakePsiElement
 /**
  * @author Edoardo Luppi
  */
-internal abstract class CommitFakePsiElement(private val project: Project) : FakePsiElement() {
+internal abstract class CommitFakePsiElement(
+    private val project: Project,
+    private val name: String,
+) : FakePsiElement() {
   private val psiManager by lazy { PsiManager.getInstance(project) }
 
   override fun getContainingFile() = null
   override fun getParent() = null
   override fun getProject() = project
   override fun getManager() = psiManager
+  override fun getName() = name
   override fun isValid() = true
   override fun isPhysical() = false
   override fun isWritable() = false
