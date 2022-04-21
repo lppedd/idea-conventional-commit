@@ -13,7 +13,6 @@ plugins {
 group = "com.github.lppedd"
 
 repositories {
-  //maven("https://dl.bintray.com/kotlin/kotlin-eap")
   maven("https://packages.jetbrains.team/maven/p/ij/intellij-dependencies")
   maven("https://jitpack.io")
   mavenCentral()
