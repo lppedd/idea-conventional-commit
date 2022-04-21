@@ -20,11 +20,11 @@ internal class DefaultWhatsNewProvider : WhatsNewProvider() {
   }
 
   private val whatsNewPages = listOf(
+      WhatsNewPage("0.20.1", "0_20_1.html"),
       WhatsNewPage("0.20.0", "0_20_0.html"),
       WhatsNewPage("0.19.0", "0_19_0.html"),
       WhatsNewPage("0.18.0", "0_18_0.html"),
       WhatsNewPage("0.17.0", "0_17_0.html"),
-      WhatsNewPage("0.16.1", "0_16_1.html"),
   )
 
   override fun getDisplayName(): String =

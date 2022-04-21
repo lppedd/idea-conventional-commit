@@ -1,0 +1,106 @@
+<!--suppress HtmlRequiredTitleElement -->
+<html lang="en">
+  <head>
+    <style>
+        code, pre {
+            font-family: monospace;
+        }
+
+        h1 {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+
+        #table-of-contents h2 {
+            font-size: 1em;
+            font-weight: normal;
+            margin: 0 0 5px 0;
+        }
+
+        #table-of-contents p {
+            font-size: 0.96em;
+            margin: 0 0 0 9px;
+        }
+
+        #contributors h2 {
+            margin-top: 20px;
+            margin-bottom: 0;
+        }
+    </style>
+  </head>
+  <div id="table-of-contents">
+    <h2>Table of contents:</h2>
+    <p>&#8226; Apologies</p>
+    <p>&#8226; Compatibility with IDEA 2022.*</p>
+    <p>&#8226; Fixes in 0.20.1</p>
+    <p>&#8226; Quick Documentation issues (Platform)</p>
+  </div>
+  <h1>Apologies</h1>
+  <p>
+    Many of you probably asked themselves why I haven't been updating this plugin as frequently as I did in the past.
+  </p>
+  <p>
+    Well, long story short, I haven't been working on IDEA - at least not constantly -
+    as I've been developing Eclipse RCP products and plugins starting from April 2021, with a development stack
+    that isn't what you'd look for nowadays. The products' VCS, Rational Team Concert, isn't supported
+    at all in IDEA (I did open a ticket for IBM in 2018), so that ruled out completely the possibility of using it.
+  </p>
+  <p>
+    Other than that, I was burned-out and just thinking about committing to GitHub made me really uncomfortable.
+    I kept postponing forever in favor of playing Call of Duty (gotta admit that). Maybe I was feeling a bit down,
+    or maybe I was stressed out too much.
+    <br/>
+    I hope this shed some light on what was going on during these last months, and it's indeed my fault
+    if I haven't answered issues or pull requests.
+  </p>
+  <p>
+    Some of you emailed me directly, and I really appreciated it. My email (<code>lp.edoardo@gmail.com</code>) is always open,
+    so if you notice I'm not answering on GitHub, you're welcome to forward your issues there too!
+    <br/>
+    I'd like to thank everyone who still visited the repository to report issues or to try to fix what I wasn't able to fix
+    myself.
+  </p>
+  <h1>Compatibility with IDEA 2022.*</h1>
+  <p>
+    The biggest change that comes with this release is compatibility with IDEA 2022.*. As I was mentioning in
+    previous <i>What's new</i> pages, my goal is to keep supporting as many Platform's versions as possible,
+    so that people with older IDEs are still able to enjoy using Conventional Commits.
+  </p>
+  <p>
+    Unfortunately, each new version increases the odds of unexpected behaviors, which can obviously
+    only be observed at runtime. For your interest, I'm using a special annotation,
+    <a href="https://github.com/lppedd/idea-conventional-commit/blob/master/src/main/kotlin/com/github/lppedd/cc/annotation/Compatibility.kt">@Compatibility</a>,
+    to document code that is written for the specific purpose of supporting every possible version.
+    <br/>
+    Have a look at its usages if you want.
+  </p>
+  <h1>Fixes in 0.20.1</h1>
+  <p>This minor release fixes a couple of issues, specifically:</p>
+  <ul>
+    <li>
+      <a href="https://github.com/lppedd/idea-conventional-commit/issues/70">Issue #70</a><br/>
+      Using the tab key inside the commit panel was producing an exception since, probably, the latest 2021.3 versions.
+      Why? Well, the commit's text editor needs to handle the tab key differently from all the other text editors
+      (e.g. to easily navigate the <i>scope</i> token), so a custom handler is injected. That handler was in fact trying
+      to do something which would result in a deadlock, and the Platform was stopping it before it would happen.
+    </li>
+    <li>
+      <a href="https://github.com/lppedd/idea-conventional-commit/issues/64">Issue #64</a><br/>
+      Sometimes the VCS token provider would try to access a deleted repository root.
+      Why? As you may know, direct modifications to the file system are not immediately reflected inside IDEA,
+      and that means a non-existent repository root might be still valid for the IDE.
+    </li>
+  </ul>
+  <h1>Quick Documentation issues (Platform)</h1>
+  <p>
+    The Quick Documentation component seems to not be stable anymore since the beginning of 2021.
+    We currently have an <a href="https://github.com/lppedd/idea-conventional-commit/issues/57">issue</a> opened for this,
+    but beware this is in fact a Platform problem.
+  </p>
+  <p>
+    Here are the relevant issues on IDEA's YouTrack:<br/>
+    <a href="https://youtrack.jetbrains.com/issue/IDEA-261691">IDEA-261691</a><br/>
+    <a href="https://youtrack.jetbrains.com/issue/IDEA-262653">IDEA-262653</a><br/>
+    <a href="https://youtrack.jetbrains.com/issue/IDEA-292730">IDEA-292730</a>
+  </p>
+</html>
