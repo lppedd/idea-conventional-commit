@@ -104,7 +104,7 @@ internal class LookupEnhancer(
 
   override fun uiRefreshed() {
     try {
-      // After much thoughts and trial-and-errors, keeping the Action list
+      // After many thoughts and trial-and-errors, keeping the Action list
       // in memory and replacing each Action in the ActionGroup (the popup's menu)
       // each time the UI is refreshed, is the only way to have a decent and consistent behavior.
       // A positive side of this logic is that code is much simpler, and filters' state
