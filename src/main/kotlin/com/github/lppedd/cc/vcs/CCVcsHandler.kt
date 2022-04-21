@@ -21,6 +21,7 @@ import java.util.Collections.newSetFromMap
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.concurrent.read
 import kotlin.concurrent.write
+import kotlin.io.path.notExists
 
 /**
  * @author Edoardo Luppi
@@ -47,6 +48,7 @@ internal class CCVcsHandler(private val project: Project) {
 
     synchronized(subscribedVcsLogProviders) {
       // Remove unused VcsLogProvider(s)
+      @Suppress("ConvertArgumentToSet")
       subscribedVcsLogProviders.retainAll(vcsLogProviders.values)
 
       // Unlike what VcsLogManager does, we subscribe only a single root directory
@@ -109,9 +111,19 @@ internal class CCVcsHandler(private val project: Project) {
       root: VirtualFile,
       logProvider: VcsLogProvider,
   ): List<VcsCommitMetadata> {
-    // If the repository is fresh it means it doesn't have commit yet, and so no branches.
+    val localPath = root.fileSystem.getNioPath(root)
+
+    // If the repository root is represented by a locally stored file,
+    // we check if that file still exist
+    if (localPath != null && localPath.notExists()) {
+      return emptyList()
+    }
+
+    val repository = vcsRepositoryManager.getRepositoryForRoot(root)
+
+    // If the repository is fresh it means it doesn't have commits yet, and so no branches.
     // See https://youtrack.jetbrains.com/issue/IDEA-255522
-    if (vcsRepositoryManager.getRepositoryForRoot(root)?.isFresh != false) {
+    if (repository == null || repository.isFresh) {
       return emptyList()
     }
 
