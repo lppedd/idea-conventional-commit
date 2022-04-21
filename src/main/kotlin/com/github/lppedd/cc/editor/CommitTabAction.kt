@@ -1,8 +1,11 @@
 package com.github.lppedd.cc.editor
 
-import com.github.lppedd.cc.*
+import com.github.lppedd.cc.getLine
+import com.github.lppedd.cc.isCommitMessage
+import com.github.lppedd.cc.moveCaretRelatively
 import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.ValidToken
+import com.github.lppedd.cc.scheduleAutoPopup
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.editor.Caret
 import com.intellij.openapi.editor.Editor
@@ -37,14 +40,13 @@ private class CommitTabAction : TabAction() {
       val document = editor.document
 
       if (document.isCommitMessage()) {
-        val (lineStart, lineEnd) = editor.getCurrentLineRange()
-        val lineText = document.getSegment(lineStart, lineEnd)
-        val lineCaretOffset = editor.caretModel.offset - lineStart
+        val logicalPosition = editor.caretModel.logicalPosition
+        val lineText = document.getLine(logicalPosition.line)
         val scope = CCParser.parseHeader(lineText).scope
 
         if (scope is ValidToken && (
-                lineCaretOffset == scope.range.startOffset - 1 ||
-                lineCaretOffset == scope.range.endOffset)) {
+                logicalPosition.column == scope.range.startOffset - 1 ||
+                logicalPosition.column == scope.range.endOffset)) {
           document.putUserData(moveCaretKey, Unit)
           return true
         }
