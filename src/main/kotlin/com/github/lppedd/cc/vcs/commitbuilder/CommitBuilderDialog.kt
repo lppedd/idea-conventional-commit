@@ -171,7 +171,7 @@ internal class CommitBuilderDialog(private val project: Project)
         sb.append("\n")
     }
 
-    // All other footers
+    // All others footers
     processedFooters.forEach {
       sb.append("\n")
         .append("${it.type}: ")
@@ -185,7 +185,7 @@ internal class CommitBuilderDialog(private val project: Project)
     fun buildFooters() = buildList {
       val breakingChange = breakingChangeTextField.text.trim()
 
-      // If screen reader support is on, the text field is always enabled
+      // If screen reader support is on, the text field is always enabled,
       // and thus we need to use its value regardless of the checkbox
       if ((breakingChangeCheckBox.isSelected || ScreenReader.isActive()) && breakingChange.isNotEmpty()) {
         add(CommitFooter("BREAKING CHANGE", breakingChange))
@@ -421,7 +421,7 @@ internal class CommitBuilderDialog(private val project: Project)
 
   override fun createButtonsPanel(buttons: List<JButton>): JPanel =
     super.createButtonsPanel(buttons).also {
-      // Since it seems the left actions panel border is overridden by platform code,
+      // Since it seems the left actions' panel border is overridden by platform code,
       // we need to set it on the right actions panel.
       // However here we have no way to know to which panel we're setting the border,
       // thus we have to check if a button represents the 'OK' action, which is
@@ -504,6 +504,7 @@ internal class CommitBuilderDialog(private val project: Project)
     // Footer type
     ComponentValidator(disposable)
       .withValidator(::footerTypeValidator)
+      .withFocusValidator(::footerTypeValidator)
       .withOutlineProvider { footerTypeTextField }
       .installOn(footerTypeTextField)
       .let {
@@ -517,6 +518,7 @@ internal class CommitBuilderDialog(private val project: Project)
     // Footer value
     ComponentValidator(disposable)
       .withValidator(::footerValueValidator)
+      .withFocusValidator(::footerValueValidator)
       .withOutlineProvider { footerValueTextField }
       .installOn(footerValueTextField)
       .let {
