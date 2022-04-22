@@ -15,7 +15,7 @@
   <resource-bundle>messages.ConventionalCommitBundle</resource-bundle>
 
   <actions>
-    <action id="WhatsNewInConventionalCommitAction" class="com.github.lppedd.cc.whatsnew.WhatsNewAction">
+    <action id="cc.whatsnew.dialog.open" class="com.github.lppedd.cc.whatsnew.WhatsNewAction">
       <add-to-group group-id="HelpMenu" anchor="after" relative-to-action="WhatsNewAction" />
     </action>
   </actions>

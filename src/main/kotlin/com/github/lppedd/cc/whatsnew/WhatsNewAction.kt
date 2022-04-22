@@ -1,6 +1,5 @@
 package com.github.lppedd.cc.whatsnew
 
-import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.CCIcons
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.DumbAwareAction
@@ -13,10 +12,7 @@ import com.intellij.openapi.project.DumbAwareAction
  */
 private class WhatsNewAction : DumbAwareAction() {
   init {
-    templatePresentation.apply {
-      text = CCBundle["cc.whatsnew.title"]
-      icon = CCIcons.Logo
-    }
+    templatePresentation.icon = CCIcons.Logo
   }
 
   override fun actionPerformed(event: AnActionEvent) {

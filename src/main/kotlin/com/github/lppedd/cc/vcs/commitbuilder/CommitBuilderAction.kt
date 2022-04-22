@@ -21,9 +21,6 @@ import com.intellij.util.ObjectUtils
 internal class CommitBuilderAction : DumbAwareAction() {
   init {
     isEnabledInModalContext = true
-
-    val templatePresentation = templatePresentation
-    templatePresentation.text = CCBundle["cc.commitbuilder.title"]
     templatePresentation.icon = CCIcons.Logo
   }
 

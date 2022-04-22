@@ -1,30 +1,43 @@
 <!--suppress PluginXmlValidity -->
 <idea-plugin>
-  <actions>
-    <action class="com.github.lppedd.cc.vcs.commitbuilder.CommitBuilderAction">
-      <add-to-group group-id="Vcs.MessageActionGroup" anchor="first" />
-      <keyboard-shortcut first-keystroke="control B" keymap="$default" />
-    </action>
+  <actions resource-bundle="messages.ActionsBundle">
+    <!-- Overridden standard actions -->
     <action
         id="EditorTab"
         overrides="true"
-        use-shortcut-of="EditorTab"
         class="com.github.lppedd.cc.editor.CommitTabAction"
     />
     <action
         id="GotoNextError"
         overrides="true"
-        use-shortcut-of="GotoNextError"
         class="com.github.lppedd.cc.editor.CommitGotoNextErrorAction"
     />
     <action
         id="GotoPreviousError"
         overrides="true"
-        use-shortcut-of="GotoPreviousError"
         class="com.github.lppedd.cc.editor.CommitGotoPreviousErrorAction"
     />
-    <action use-shortcut-of="GotoNextError" class="com.github.lppedd.cc.ui.DialogGotoNextErrorAction" />
-    <action use-shortcut-of="GotoPreviousError" class="com.github.lppedd.cc.ui.DialogGotoPreviousErrorAction" />
+  </actions>
+  <actions>
+    <!-- Commit builder dialog -->
+    <action
+        id="cc.commitbuilder.dialog.open"
+        class="com.github.lppedd.cc.vcs.commitbuilder.CommitBuilderAction">
+      <add-to-group group-id="Vcs.MessageActionGroup" anchor="first" />
+      <keyboard-shortcut first-keystroke="control B" keymap="$default" />
+    </action>
+
+    <!-- Commit builder dialog error navigation -->
+    <action
+        id="cc.commitbuilder.dialog.nextError"
+        use-shortcut-of="GotoNextError"
+        class="com.github.lppedd.cc.ui.DialogGotoNextErrorAction"
+    />
+    <action
+        id="cc.commitbuilder.dialog.previousError"
+        use-shortcut-of="GotoPreviousError"
+        class="com.github.lppedd.cc.ui.DialogGotoPreviousErrorAction"
+    />
   </actions>
 
   <extensions defaultExtensionNs="com.intellij">
