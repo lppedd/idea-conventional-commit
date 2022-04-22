@@ -154,6 +154,7 @@ are going to be automatically filtered by the core engine.
 
  - Edoardo Luppi (<lp.edoardo@gmail.com>)
  - [ymind][4]
+ - [bric3][11]
 
 [1]: https://plugins.jetbrains.com/plugin/13389-conventional-commit
 [2]: https://github.com/lppedd/idea-conventional-commit/releases
@@ -165,3 +166,4 @@ are going to be automatically filtered by the core engine.
 [8]: https://github.com/lppedd/idea-conventional-commit-commitlint
 [9]: https://plugins.jetbrains.com/plugin/14046-commitlint-conventional-commit
 [10]: https://join.slack.com/t/ideaconventio-1ts8697/shared_invite/zt-iuztsuth-pr_5wjvZGqITHCz3OOUxgQ
+[11]: https://github.com/bric3
