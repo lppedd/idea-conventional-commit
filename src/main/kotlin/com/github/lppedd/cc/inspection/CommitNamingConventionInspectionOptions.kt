@@ -13,6 +13,7 @@ import com.intellij.ui.Gray
 import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBBox
 import com.intellij.ui.components.JBLabel
+import com.intellij.ui.components.JBScrollPane
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
 import java.awt.BorderLayout
@@ -22,6 +23,7 @@ import java.util.regex.Pattern
 import java.util.regex.PatternSyntaxException
 import javax.swing.JComponent
 import javax.swing.JPanel
+import javax.swing.ScrollPaneConstants
 
 /**
  * @author Edoardo Luppi
@@ -72,10 +74,10 @@ internal class CommitNamingConventionInspectionOptions : ConfigurableUi<Project>
   override fun getComponent(): JComponent =
     JPanel(BorderLayout()).also {
       val borderColor = JBColor.namedColor("Group.separatorColor", JBColor(Gray.xCD, Gray.x51))
-      it.border =
-        JBUI.Borders.emptyTop(5)
-          .wrap(JBUI.Borders.customLine(borderColor, 1, 0, 0, 0))
-          .wrap(JBUI.Borders.emptyTop(5))
+      it.border = JBUI.Borders.emptyTop(5).wrap(JBUI.Borders.customLine(borderColor, 1, 0, 0, 0))
+
+      val panel = JPanel(BorderLayout())
+      panel.border = JBUI.Borders.empty(4, 0)
 
       val infoBox = JBBox.createHorizontalBox()
       infoBox.add(JBLabel("<html>" + CCBundle["cc.inspection.namingConvention.comment"] + "</html>"))
@@ -86,7 +88,13 @@ internal class CommitNamingConventionInspectionOptions : ConfigurableUi<Project>
       mainBox.add(JBBox.createVerticalStrut(UIUtil.LARGE_VGAP.scaled))
       mainBox.add(buildPatternsPanel())
 
-      it.add(mainBox, BorderLayout.CENTER)
+      panel.add(mainBox, BorderLayout.CENTER)
+
+      val scrollPane = JBScrollPane(panel)
+      scrollPane.border = JBUI.Borders.empty()
+      scrollPane.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+
+      it.add(scrollPane, BorderLayout.CENTER)
     }
 
   private fun buildPatternsPanel(): JPanel =
