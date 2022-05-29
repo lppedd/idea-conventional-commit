@@ -36,6 +36,7 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
 
   var completionType: CompletionType = CompletionType.POPUP
   var isPrioritizeRecentlyUsed: Boolean = true
+  var isAutoInsertSpaceAfterColon: Boolean = true
   var providerFilterType: ProviderFilterType = ProviderFilterType.HIDE_SELECTED
   var customFilePath: String? = null
   var customCoAuthorsFilePath: String? = null

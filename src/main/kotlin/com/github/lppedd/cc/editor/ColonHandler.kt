@@ -1,5 +1,6 @@
 package com.github.lppedd.cc.editor
 
+import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.insertStringAtCaret
 import com.github.lppedd.cc.moveCaretRelatively
 import com.github.lppedd.cc.parser.CommitTokens
@@ -9,27 +10,29 @@ import com.github.lppedd.cc.parser.ValidToken
 import com.github.lppedd.cc.scheduleAutoPopup
 import com.intellij.codeInsight.editorActions.TypedHandlerDelegate.Result.CONTINUE
 import com.intellij.codeInsight.editorActions.TypedHandlerDelegate.Result.STOP
+import com.intellij.openapi.components.service
 import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.project.Project
 
 /**
  * @author Edoardo Luppi
  */
 private class ColonHandler : BaseTypedHandler(':') {
-  override fun beforeCharTyped(commitTokens: CommitTokens, editor: Editor): Result {
+  override fun beforeCharTyped(commitTokens: CommitTokens, project: Project, editor: Editor): Result {
     val type = commitTokens.type as ValidToken
     val scope = commitTokens.scope
     val lineOffset = editor.caretModel.logicalPosition.column
 
     if (scope !is ValidToken && type.range.endOffset == lineOffset ||
         scope is ValidToken && scope.range.endOffset == lineOffset - 1) {
-      doInsertColon(commitTokens.separator, commitTokens.subject, editor)
+      doInsertColon(commitTokens.separator, commitTokens.subject, project, editor)
       return STOP
     }
 
     return CONTINUE
   }
 
-  override fun checkAutoPopup(commitTokens: CommitTokens, editor: Editor): Result {
+  override fun checkAutoPopup(commitTokens: CommitTokens, project: Project, editor: Editor): Result {
     val lineOffset = editor.caretModel.logicalPosition.column
     return if (
         (commitTokens.type as ValidToken).range.endOffset == lineOffset ||
@@ -48,7 +51,12 @@ private class ColonHandler : BaseTypedHandler(':') {
   // type(scope)|
   // type(scope)|:
   // type(scope)|: my desc
-  private fun doInsertColon(separator: Separator, subject: Subject, editor: Editor) {
+  private fun doInsertColon(
+      separator: Separator,
+      subject: Subject,
+      project: Project,
+      editor: Editor,
+  ) {
     if (separator.isPresent) {
       editor.moveCaretRelatively(1)
     } else {
@@ -59,7 +67,7 @@ private class ColonHandler : BaseTypedHandler(':') {
       // type:| my desc
       val caretShift = if (subject.value.startsWith(' ')) 1 else 0
       editor.moveCaretRelatively(caretShift)
-    } else {
+    } else if (project.service<CCConfigService>().isAutoInsertSpaceAfterColon) {
       // type:|
       editor.insertStringAtCaret(" ")
     }

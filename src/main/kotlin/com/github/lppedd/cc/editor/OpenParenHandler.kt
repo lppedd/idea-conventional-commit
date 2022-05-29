@@ -8,12 +8,13 @@ import com.github.lppedd.cc.scheduleAutoPopup
 import com.intellij.codeInsight.editorActions.TypedHandlerDelegate.Result.CONTINUE
 import com.intellij.codeInsight.editorActions.TypedHandlerDelegate.Result.STOP
 import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.project.Project
 
 /**
  * @author Edoardo Luppi
  */
 private class OpenParenHandler : BaseTypedHandler('(') {
-  override fun beforeCharTyped(commitTokens: CommitTokens, editor: Editor): Result {
+  override fun beforeCharTyped(commitTokens: CommitTokens, project: Project, editor: Editor): Result {
     val type = commitTokens.type as ValidToken
     val lineOffset = editor.caretModel.logicalPosition.column
 
@@ -32,7 +33,7 @@ private class OpenParenHandler : BaseTypedHandler('(') {
     return STOP
   }
 
-  override fun checkAutoPopup(commitTokens: CommitTokens, editor: Editor): Result {
+  override fun checkAutoPopup(commitTokens: CommitTokens, project: Project, editor: Editor): Result {
     val lineOffset = editor.caretModel.logicalPosition.column
     return if ((commitTokens.type as ValidToken).range.endOffset == lineOffset) {
       editor.scheduleAutoPopup()

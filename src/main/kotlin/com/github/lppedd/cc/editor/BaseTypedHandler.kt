@@ -24,7 +24,7 @@ internal abstract class BaseTypedHandler(protected val myChar: Char) : TypedHand
       fileType: FileType,
   ): Result {
     return if (myChar == ch) {
-      beforeCharTyped(getCommitTokensOrNull(editor) ?: return CONTINUE, editor)
+      beforeCharTyped(getCommitTokensOrNull(editor) ?: return CONTINUE, project, editor)
     } else {
       CONTINUE
     }
@@ -37,14 +37,14 @@ internal abstract class BaseTypedHandler(protected val myChar: Char) : TypedHand
       file: PsiFile,
   ): Result {
     return if (myChar == ch) {
-      checkAutoPopup(getCommitTokensOrNull(editor) ?: return CONTINUE, editor)
+      checkAutoPopup(getCommitTokensOrNull(editor) ?: return CONTINUE, project, editor)
     } else {
       CONTINUE
     }
   }
 
-  abstract fun beforeCharTyped(commitTokens: CommitTokens, editor: Editor): Result
-  abstract fun checkAutoPopup(commitTokens: CommitTokens, editor: Editor): Result
+  abstract fun beforeCharTyped(commitTokens: CommitTokens, project: Project, editor: Editor): Result
+  abstract fun checkAutoPopup(commitTokens: CommitTokens, project: Project, editor: Editor): Result
 
   private fun getCommitTokensOrNull(editor: Editor): CommitTokens? {
     if (!editor.document.isCommitMessage()) {

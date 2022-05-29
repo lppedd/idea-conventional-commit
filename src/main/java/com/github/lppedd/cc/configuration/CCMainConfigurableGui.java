@@ -49,8 +49,10 @@ public class CCMainConfigurableGui {
   private final JBRadioButton isTemplate = new JBRadioButton(CCBundle.get("cc.config.template"));
 
   private JPanel completionOptionsPanel;
-  private final JBCheckBox prioritizeRecentlyUsed =
+  private final JBCheckBox isPrioritizeRecentlyUsed =
       new JBCheckBox(CCBundle.get("cc.config.prioritizeRecentlyUsed"));
+  private final JBCheckBox isAutoInsertSpaceAfterColon =
+      new JBCheckBox(CCBundle.get("cc.config.autoInsertSpaceAfterColon"));
 
   private JPanel coAuthorsPanel;
   private JPanel defaultsPanel;
@@ -86,7 +88,11 @@ public class CCMainConfigurableGui {
   }
 
   public boolean isPrioritizeRecentlyUsed() {
-    return prioritizeRecentlyUsed.isSelected();
+    return isPrioritizeRecentlyUsed.isSelected();
+  }
+
+  public boolean isAutoInsertSpaceAfterColon() {
+    return isAutoInsertSpaceAfterColon.isSelected();
   }
 
   @Nullable
@@ -113,7 +119,11 @@ public class CCMainConfigurableGui {
   }
 
   public void setPrioritizeRecentlyUsed(final boolean isPrioritizeRecentlyUsed) {
-    prioritizeRecentlyUsed.setSelected(isPrioritizeRecentlyUsed);
+    this.isPrioritizeRecentlyUsed.setSelected(isPrioritizeRecentlyUsed);
+  }
+
+  public void setAutoInsertSpaceAfterColon(final boolean isAutoInsertSpaceAfterColon) {
+    this.isAutoInsertSpaceAfterColon.setSelected(isAutoInsertSpaceAfterColon);
   }
 
   public void setCustomCoAuthorsFilePath(@Nullable final String path) {
@@ -167,7 +177,9 @@ public class CCMainConfigurableGui {
 
     completionOptionsPanel.setLayout(new BoxLayout(completionOptionsPanel, BoxLayout.Y_AXIS));
     completionOptionsPanel.setBorder(JBUI.Borders.emptyTop(10));
-    completionOptionsPanel.add(prioritizeRecentlyUsed);
+    completionOptionsPanel.add(isPrioritizeRecentlyUsed);
+    completionOptionsPanel.add(Box.createVerticalStrut(5));
+    completionOptionsPanel.add(isAutoInsertSpaceAfterColon);
 
     coAuthorsPanel.setLayout(new BorderLayout());
     coAuthorsPanel.setBorder(

@@ -27,6 +27,7 @@ private class CCMainConfigurable(private val project: Project) : SearchableConfi
     gui = CCMainConfigurableGui(project, disposable)
     gui.completionType = configService.completionType
     gui.isPrioritizeRecentlyUsed = configService.isPrioritizeRecentlyUsed
+    gui.isAutoInsertSpaceAfterColon = configService.isAutoInsertSpaceAfterColon
     gui.customTokensFilePath = configService.customFilePath
     gui.customCoAuthorsFilePath = configService.customCoAuthorsFilePath
 
@@ -44,12 +45,14 @@ private class CCMainConfigurable(private val project: Project) : SearchableConfi
     gui.isValid && (
         gui.completionType != configService.completionType ||
         gui.isPrioritizeRecentlyUsed != configService.isPrioritizeRecentlyUsed ||
+        gui.isAutoInsertSpaceAfterColon != configService.isAutoInsertSpaceAfterColon ||
         gui.customCoAuthorsFilePath != configService.customCoAuthorsFilePath ||
         gui.customTokensFilePath != configService.customFilePath)
 
   override fun apply() {
     configService.completionType = gui.completionType
     configService.isPrioritizeRecentlyUsed = gui.isPrioritizeRecentlyUsed
+    configService.isAutoInsertSpaceAfterColon = gui.isAutoInsertSpaceAfterColon
     configService.customCoAuthorsFilePath = gui.customCoAuthorsFilePath
     configService.customFilePath = gui.customTokensFilePath
 

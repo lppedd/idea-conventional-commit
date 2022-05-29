@@ -6,12 +6,13 @@ import com.github.lppedd.cc.parser.ValidToken
 import com.intellij.codeInsight.editorActions.TypedHandlerDelegate.Result.CONTINUE
 import com.intellij.codeInsight.editorActions.TypedHandlerDelegate.Result.STOP
 import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.project.Project
 
 /**
  * @author Edoardo Luppi
  */
 private class CloseParenHandler : BaseTypedHandler(')') {
-  override fun beforeCharTyped(commitTokens: CommitTokens, editor: Editor): Result {
+  override fun beforeCharTyped(commitTokens: CommitTokens, project: Project, editor: Editor): Result {
     if (commitTokens.scope !is ValidToken) {
       return CONTINUE
     }
@@ -32,5 +33,6 @@ private class CloseParenHandler : BaseTypedHandler(')') {
     }
   }
 
-  override fun checkAutoPopup(commitTokens: CommitTokens, editor: Editor): Result = CONTINUE
+  override fun checkAutoPopup(commitTokens: CommitTokens, project: Project, editor: Editor): Result =
+    CONTINUE
 }
