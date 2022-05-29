@@ -32,6 +32,7 @@ dependencies {
 }
 
 intellij {
+  type.set(properties("platformType"))
   version.set(properties("platformVersion"))
   downloadSources.set(true)
   pluginName.set("idea-conventional-commit")
