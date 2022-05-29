@@ -6,8 +6,8 @@ fun properties(key: String) = project.findProperty(key).toString()
 
 plugins {
   java
-  id("org.jetbrains.intellij") version "1.5.2"
-  kotlin("jvm") version "1.6.20"
+  id("org.jetbrains.intellij") version "1.6.0"
+  kotlin("jvm") version "1.7.0-RC"
 }
 
 group = "com.github.lppedd"
@@ -19,7 +19,7 @@ repositories {
 }
 
 dependencies {
-  implementation(kotlin("stdlib-jdk8", "1.6.20"))
+  implementation(kotlin("stdlib-jdk8", "1.7.0-RC"))
 
   implementation("commons-validator", "commons-validator", "1.7") {
     exclude("commons-beanutils", "commons-beanutils")
