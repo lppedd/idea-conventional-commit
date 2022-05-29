@@ -26,6 +26,7 @@ private class CCMainConfigurable(private val project: Project) : SearchableConfi
   override fun createComponent(): JComponent {
     gui = CCMainConfigurableGui(project, disposable)
     gui.completionType = configService.completionType
+    gui.isPrioritizeRecentlyUsed = configService.isPrioritizeRecentlyUsed
     gui.customTokensFilePath = configService.customFilePath
     gui.customCoAuthorsFilePath = configService.customCoAuthorsFilePath
 
@@ -42,11 +43,13 @@ private class CCMainConfigurable(private val project: Project) : SearchableConfi
   override fun isModified(): Boolean =
     gui.isValid && (
         gui.completionType != configService.completionType ||
+        gui.isPrioritizeRecentlyUsed != configService.isPrioritizeRecentlyUsed ||
         gui.customCoAuthorsFilePath != configService.customCoAuthorsFilePath ||
         gui.customTokensFilePath != configService.customFilePath)
 
   override fun apply() {
     configService.completionType = gui.completionType
+    configService.isPrioritizeRecentlyUsed = gui.isPrioritizeRecentlyUsed
     configService.customCoAuthorsFilePath = gui.customCoAuthorsFilePath
     configService.customFilePath = gui.customTokensFilePath
 

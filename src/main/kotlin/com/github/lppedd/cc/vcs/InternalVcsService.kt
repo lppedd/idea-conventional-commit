@@ -27,7 +27,8 @@ import kotlin.io.path.notExists
  * @author Edoardo Luppi
  */
 @Internal
-internal class CCVcsHandler(private val project: Project) {
+internal class InternalVcsService(private val project: Project) : VcsService {
+  private val refreshListeners = mutableSetOf<VcsListener>()
   private val vcsLogRefresher = MyVcsLogRefresher()
   private val projectVcsManager = ProjectLevelVcsManager.getInstance(project)
   private val vcsRepositoryManager = VcsRepositoryManager.getInstance(project)
@@ -40,10 +41,7 @@ internal class CCVcsHandler(private val project: Project) {
   private var cachedCommits: Collection<VcsCommitMetadata> = emptyList()
   private val cachedCommitsLock = ReentrantReadWriteLock()
 
-  /**
-   * Called on every [ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED].
-   */
-  fun reset() {
+  override fun refresh() {
     val vcsLogProviders = getVcsLogProviders()
 
     synchronized(subscribedVcsLogProviders) {
@@ -64,29 +62,27 @@ internal class CCVcsHandler(private val project: Project) {
 
     if (vcsLogProviders.isNotEmpty()) {
       refreshCachedValues()
+      refreshListeners.forEach(VcsListener::refreshed)
     }
   }
 
-  /**
-   * Returns the user-configured data associated with the active VCS roots.
-   */
-  fun getCurrentUser(): Collection<VcsUser> =
+  override fun getCurrentUsers(): Collection<VcsUser> =
     cachedCurrentUserLock.read {
       cachedCurrentUser
     }
 
-  /**
-   * Returns at most the top 100 commits for the currently checked-out branch,
-   * ordered by commit timestamp (latest first).
-   */
-  fun getOrderedTopCommits(): Collection<VcsCommitMetadata> =
+  override fun getOrderedTopCommits(): Collection<VcsCommitMetadata> =
     cachedCommitsLock.read {
       cachedCommits
     }
 
+  override fun addListener(listener: VcsListener) {
+    refreshListeners.add(listener)
+  }
+
   private fun refreshCachedValues() {
     cachedCurrentUserLock.write {
-      cachedCurrentUser = fetchCurrentUser()
+      cachedCurrentUser = fetchCurrentUsers()
     }
 
     cachedCommitsLock.write {
@@ -94,7 +90,7 @@ internal class CCVcsHandler(private val project: Project) {
     }
   }
 
-  private fun fetchCurrentUser(): Set<VcsUser> =
+  private fun fetchCurrentUsers(): Set<VcsUser> =
     getVcsLogProviders().asSequence()
       .map { (root, vcsLogProvider) -> vcsLogProvider.getCurrentUser(root) }
       .filterNotNull()
@@ -220,6 +216,7 @@ internal class CCVcsHandler(private val project: Project) {
   private inner class MyVcsLogRefresher : VcsLogRefresher {
     override fun refresh(root: VirtualFile) {
       refreshCachedValues()
+      refreshListeners.forEach(VcsListener::refreshed)
     }
   }
 }

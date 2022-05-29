@@ -1,6 +1,6 @@
 package com.github.lppedd.cc.completion.resultset
 
-import com.github.lppedd.cc.lookupElement.CommitLookupElement
+import com.github.lppedd.cc.lookupElement.CommitTokenLookupElement
 import com.github.lppedd.cc.lookupElement.ContextLookupElementDecorator
 import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.codeInsight.completion.PrefixMatcher
@@ -29,7 +29,7 @@ internal class ContextResultSet(private var resultSet: CompletionResultSet) : Re
   }
 
   private fun decorateIfNeeded(lookupElement: LookupElement): LookupElement =
-    if (lookupElement is CommitLookupElement) {
+    if (lookupElement is CommitTokenLookupElement) {
       ContextLookupElementDecorator(lookupElement)
     } else {
       lookupElement

@@ -1,8 +1,8 @@
 package com.github.lppedd.cc.whatsnew
 
 import com.github.lppedd.cc.CCBundle
+import com.github.lppedd.cc.api.WhatsNewPage
 import com.github.lppedd.cc.api.WhatsNewProvider
-import com.github.lppedd.cc.api.WhatsNewProvider.WhatsNewPage
 import com.intellij.ide.util.PropertiesComponent
 import com.intellij.ide.util.TipUIUtil
 import com.intellij.ide.util.TipUIUtil.Browser
@@ -53,7 +53,7 @@ internal class WhatsNewPanel : JPanel(BorderLayout()), DoNotAskOption {
 
   fun setProvider(provider: WhatsNewProvider) {
     this.provider = provider
-    whatsNewPages = provider.getWhatsNewPages().toList()
+    whatsNewPages = provider.getPages().toList()
     setInitialChangelog()
   }
 
@@ -65,25 +65,25 @@ internal class WhatsNewPanel : JPanel(BorderLayout()), DoNotAskOption {
     nameIndex < whatsNewPages.size - 1
 
   fun newerChangelog() {
-    setChangelog(whatsNewPages[--nameIndex].fileName)
+    setChangelog(whatsNewPages[--nameIndex].getFileName())
   }
 
   fun olderChangelog() {
-    setChangelog(whatsNewPages[++nameIndex].fileName)
+    setChangelog(whatsNewPages[++nameIndex].getFileName())
   }
 
   fun currentVersion(): String? =
-    whatsNewPages[nameIndex].version
+    whatsNewPages[nameIndex].getVersion()
 
   fun newerVersion(): String? =
-    whatsNewPages[nameIndex - 1].version
+    whatsNewPages[nameIndex - 1].getVersion()
 
   fun olderVersion(): String? =
-    whatsNewPages[nameIndex + 1].version
+    whatsNewPages[nameIndex + 1].getVersion()
 
   private fun setInitialChangelog() {
     nameIndex = 0
-    setChangelog(whatsNewPages[nameIndex].fileName)
+    setChangelog(whatsNewPages[nameIndex].getFileName())
   }
 
   private fun setChangelog(fileName: String) {
@@ -91,8 +91,8 @@ internal class WhatsNewPanel : JPanel(BorderLayout()), DoNotAskOption {
       "The changelog file's name cannot be blank. Provider: ${provider::class.java.name}"
     }
 
-    val classLoader = provider.pluginDescriptor.pluginClassLoader ?: this::class.java.classLoader
-    val changelogStream = ResourceUtil.getResourceAsStream(classLoader, provider.basePath(), fileName)
+    val classLoader = provider.getPluginDescriptor().pluginClassLoader ?: this::class.java.classLoader
+    val changelogStream = ResourceUtil.getResourceAsStream(classLoader, provider.getBasePath(), fileName)
 
     requireNotNull(changelogStream) {
       "The changelog file '$fileName' doesn't exist. Provider: ${provider::class.java.name}"

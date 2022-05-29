@@ -23,6 +23,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.HyperlinkLabel;
 import com.intellij.ui.IdeBorderFactory;
+import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBRadioButton;
 import com.intellij.ui.scale.JBUIScale;
@@ -46,6 +47,10 @@ public class CCMainConfigurableGui {
   private final ButtonGroup group = new ButtonGroup();
   private final JBRadioButton isPopup = new JBRadioButton(CCBundle.get("cc.config.popup"));
   private final JBRadioButton isTemplate = new JBRadioButton(CCBundle.get("cc.config.template"));
+
+  private JPanel completionOptionsPanel;
+  private final JBCheckBox prioritizeRecentlyUsed =
+      new JBCheckBox(CCBundle.get("cc.config.prioritizeRecentlyUsed"));
 
   private JPanel coAuthorsPanel;
   private JPanel defaultsPanel;
@@ -80,6 +85,10 @@ public class CCMainConfigurableGui {
     throw new IllegalStateException("A radio button should be selected");
   }
 
+  public boolean isPrioritizeRecentlyUsed() {
+    return prioritizeRecentlyUsed.isSelected();
+  }
+
   @Nullable
   public String getCustomCoAuthorsFilePath() {
     return coAuthorsFilePickerPanel.getCustomFilePath();
@@ -101,6 +110,10 @@ public class CCMainConfigurableGui {
       default:
         break;
     }
+  }
+
+  public void setPrioritizeRecentlyUsed(final boolean isPrioritizeRecentlyUsed) {
+    prioritizeRecentlyUsed.setSelected(isPrioritizeRecentlyUsed);
   }
 
   public void setCustomCoAuthorsFilePath(@Nullable final String path) {
@@ -133,7 +146,7 @@ public class CCMainConfigurableGui {
         new GridLayoutManager(2, 1, JBUI.insetsLeft(INDENT), 0, JBUIScale.scale(5))
     );
 
-    final GridConstraints gcCtp = new GridConstraints();
+    final var gcCtp = new GridConstraints();
     gcCtp.setFill(FILL_HORIZONTAL);
     completionTypePanel.add(isPopup, gcCtp);
 
@@ -143,7 +156,7 @@ public class CCMainConfigurableGui {
     group.add(isPopup);
     group.add(isTemplate);
 
-    final HyperlinkLabel translatorLabel = buildTranslatorLabel();
+    final var translatorLabel = buildTranslatorLabel();
 
     if (translatorLabel != null) {
       infoPanel.add(translatorLabel, BorderLayout.LINE_END);
@@ -151,6 +164,10 @@ public class CCMainConfigurableGui {
 
     JBUI.Borders.emptyBottom(5).wrap(infoPanel);
     info.setText(CCBundle.get("cc.config.info"));
+
+    completionOptionsPanel.setLayout(new BoxLayout(completionOptionsPanel, BoxLayout.Y_AXIS));
+    completionOptionsPanel.setBorder(JBUI.Borders.emptyTop(10));
+    completionOptionsPanel.add(prioritizeRecentlyUsed);
 
     coAuthorsPanel.setLayout(new BorderLayout());
     coAuthorsPanel.setBorder(
@@ -174,7 +191,7 @@ public class CCMainConfigurableGui {
         )
     );
 
-    final GridConstraints gc = new GridConstraints();
+    final var gc = new GridConstraints();
     gc.setFill(FILL_BOTH);
     gc.setHSizePolicy(SIZEPOLICY_CAN_SHRINK | SIZEPOLICY_CAN_GROW | SIZEPOLICY_WANT_GROW);
     defaultsPanel.add(JBUI.Borders.empty(0, 1, 16, 0).wrap(new DefaultTokensFileExportPanel()), gc);
@@ -191,17 +208,17 @@ public class CCMainConfigurableGui {
 
   @Nullable
   private HyperlinkLabel buildTranslatorLabel() {
-    final String name = CCBundle.getWithDefault("cc.translation.translator.name", "");
+    final var name = CCBundle.getWithDefault("cc.translation.translator.name", "");
 
     if (name.isEmpty()) {
       return null;
     }
 
-    final HyperlinkLabel label = new HyperlinkLabel();
+    final var label = new HyperlinkLabel();
     label.setForeground(UIUtil.getContextHelpForeground());
     label.setFontSize(FontSize.SMALL);
 
-    final String url = CCBundle.getWithDefault("cc.translation.translator.url", "");
+    final var url = CCBundle.getWithDefault("cc.translation.translator.url", "");
 
     if (url.isEmpty()) {
       label.setHyperlinkText(CCBundle.get("cc.translation.text") + " " + name, "", "");

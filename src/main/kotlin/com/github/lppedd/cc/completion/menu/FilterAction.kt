@@ -1,10 +1,10 @@
 package com.github.lppedd.cc.completion.menu
 
-import com.github.lppedd.cc.CCIcons
 import com.github.lppedd.cc.api.CommitTokenProvider
 import com.github.lppedd.cc.completion.FilterPrefixMatcher
 import com.github.lppedd.cc.completion.LookupEnhancer
-import com.github.lppedd.cc.lookupElement.CommitLookupElement
+import com.github.lppedd.cc.completion.providers.ELEMENT_PROVIDER
+import com.github.lppedd.cc.lookupElement.CommitTokenLookupElement
 import com.github.lppedd.cc.updateIcons
 import com.intellij.codeInsight.completion.PlainPrefixMatcher
 import com.intellij.codeInsight.lookup.impl.LookupImpl
@@ -19,9 +19,9 @@ internal class FilterAction(
     private val enhancer: LookupEnhancer,
     private val lookup: LookupImpl,
     private val provider: CommitTokenProvider,
-) : AnAction(provider.getPresentation().name) {
+) : AnAction(provider.getPresentation().getName()) {
   private var isFiltered = false
-  private var backupItems = emptyList<CommitLookupElement>()
+  private var backupItems = emptyList<CommitTokenLookupElement>()
 
   fun filterItems(doFilter: Boolean) {
     if (isFiltered != doFilter) {
@@ -40,13 +40,15 @@ internal class FilterAction(
 
     backupItems = lookup.items
       .asSequence()
-      .filterIsInstance<CommitLookupElement>()
-      .filter { provider.getId() == it.provider.getId() }
-      .onEach {
+      .filterIsInstance<CommitTokenLookupElement>()
+      .filter {
+        val provider = it.getUserData(ELEMENT_PROVIDER)!!
+        provider.getId() == provider.getId()
+      }.onEach {
         val delegatePrefixMatcher = arranger.itemMatcher(it)
         val newPrefixMatcher = FilterPrefixMatcher(delegatePrefixMatcher)
         arranger.registerMatcher(it, newPrefixMatcher)
-        it.valid = false
+        it.setVisible(false)
       }.toList()
   }
 
@@ -58,7 +60,7 @@ internal class FilterAction(
     }
 
     backupItems.forEach {
-      it.valid = true
+      it.setVisible(true)
       val prefix = arranger.itemMatcher(it).prefix
       val newPrefixMatcher = PlainPrefixMatcher(prefix)
       lookup.addItem(it, newPrefixMatcher)
@@ -75,10 +77,11 @@ internal class FilterAction(
   }
 
   override fun update(event: AnActionEvent) {
+    val presentation = provider.getPresentation()
     val icon = if (isFiltered) {
-      CCIcons.Provider.Disabled
+      presentation.getDisabledIcon()
     } else {
-      provider.getPresentation().icon
+      presentation.getIcon()
     }
 
     event.presentation.updateIcons(icon)

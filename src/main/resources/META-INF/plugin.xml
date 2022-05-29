@@ -26,7 +26,7 @@
     <iconProvider implementation="com.github.lppedd.cc.icon.CCConfigFileIconProvider" />
 
     <completion.contributor
-        order="first, before commitCompletion"
+        order="first, before commitCompletion, before coAuthoredCompletion"
         language="TEXT"
         implementationClass="com.github.lppedd.cc.completion.CommitCompletionContributor"
     />
@@ -48,8 +48,7 @@
         id="preferences.ConventionalCommit"
         key="cc.plugin.name"
         bundle="messages.ConventionalCommitBundle"
-        instance="com.github.lppedd.cc.configuration.CCMainConfigurable"
-    >
+        instance="com.github.lppedd.cc.configuration.CCMainConfigurable">
       <configurable
           id="preferences.ConventionalCommit.providers"
           key="cc.config.providers"
@@ -58,18 +57,25 @@
       />
     </projectConfigurable>
 
+    <applicationService
+        serviceInterface="com.github.lppedd.cc.api.WhatsNewProviderService"
+        serviceImplementation="com.github.lppedd.cc.api.impl.InternalWhatsNewProviderService"
+    />
+    <applicationService
+        serviceInterface="com.github.lppedd.cc.api.CommitInspectionProviderService"
+        serviceImplementation="com.github.lppedd.cc.api.impl.InternalCommitInspectionProviderService"
+    />
+
     <projectService serviceImplementation="com.github.lppedd.cc.configuration.CCConfigService" />
     <projectService serviceImplementation="com.github.lppedd.cc.configuration.CCDefaultTokensService" />
     <projectService serviceImplementation="com.github.lppedd.cc.vcs.commitbuilder.CommitBuilderService" />
+    <projectService
+        serviceInterface="com.github.lppedd.cc.api.CommitTokenProviderService"
+        serviceImplementation="com.github.lppedd.cc.api.impl.InternalCommitTokenProviderService"
+    />
 
-    <postStartupActivity
-        order="before TipOfTheDayActivity"
-        implementation="com.github.lppedd.cc.whatsnew.WhatsNewStartupActivity"
-    />
-    <postStartupActivity
-        order="first"
-        implementation="com.github.lppedd.cc.inspection.CommitInspectionsRegistrarStartupActivity"
-    />
+    <postStartupActivity order="before TipOfTheDayActivity" implementation="com.github.lppedd.cc.whatsnew.WhatsNewStartupActivity" />
+    <postStartupActivity order="first" implementation="com.github.lppedd.cc.inspection.CommitInspectionsRegistrarStartupActivity" />
 
     <checkinHandlerFactory implementation="com.github.lppedd.cc.vcs.commitbuilder.CommitBuilderCheckinHandlerFactory" />
 
@@ -82,55 +88,22 @@
   </extensions>
 
   <extensionPoints>
-    <extensionPoint
-        area="IDEA_PROJECT"
-        name="commitTypeProvider"
-        interface="com.github.lppedd.cc.api.CommitTypeProvider"
-    />
-    <extensionPoint
-        area="IDEA_PROJECT"
-        name="commitScopeProvider"
-        interface="com.github.lppedd.cc.api.CommitScopeProvider"
-    />
-    <extensionPoint
-        area="IDEA_PROJECT"
-        name="commitSubjectProvider"
-        interface="com.github.lppedd.cc.api.CommitSubjectProvider"
-    />
-    <extensionPoint
-        area="IDEA_PROJECT"
-        name="commitBodyProvider"
-        interface="com.github.lppedd.cc.api.CommitBodyProvider"
-    />
-    <extensionPoint
-        area="IDEA_PROJECT"
-        name="commitFooterTypeProvider"
-        interface="com.github.lppedd.cc.api.CommitFooterTypeProvider"
-    />
-    <extensionPoint
-        area="IDEA_PROJECT"
-        name="commitFooterValueProvider"
-        interface="com.github.lppedd.cc.api.CommitFooterValueProvider"
-    />
-    <extensionPoint
-        name="commitInspectionProvider"
-        interface="com.github.lppedd.cc.api.CommitInspectionProvider"
-    />
-    <extensionPoint
-        name="whatsNewProvider"
-        interface="com.github.lppedd.cc.api.WhatsNewProvider"
-    />
+    <extensionPoint name="commitTypeProvider" interface="com.github.lppedd.cc.api.CommitTypeProvider" area="IDEA_PROJECT" />
+    <extensionPoint name="commitScopeProvider" interface="com.github.lppedd.cc.api.CommitScopeProvider" area="IDEA_PROJECT" />
+    <extensionPoint name="commitSubjectProvider" interface="com.github.lppedd.cc.api.CommitSubjectProvider" area="IDEA_PROJECT" />
+    <extensionPoint name="commitBodyProvider" interface="com.github.lppedd.cc.api.CommitBodyProvider" area="IDEA_PROJECT" />
+    <extensionPoint name="commitFooterTypeProvider" interface="com.github.lppedd.cc.api.CommitFooterTypeProvider" area="IDEA_PROJECT" />
+    <extensionPoint name="commitFooterValueProvider" interface="com.github.lppedd.cc.api.CommitFooterValueProvider" area="IDEA_PROJECT" />
+    <extensionPoint name="commitInspectionProvider" interface="com.github.lppedd.cc.api.CommitInspectionProvider" />
+    <extensionPoint name="whatsNewProvider" interface="com.github.lppedd.cc.api.WhatsNewProvider" />
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.github.lppedd.idea-conventional-commit">
-    <commitTypeProvider order="first" implementation="com.github.lppedd.cc.api.DefaultCommitTokenProvider" />
-    <commitScopeProvider order="first" implementation="com.github.lppedd.cc.api.DefaultCommitTokenProvider" />
-    <commitFooterTypeProvider order="first" implementation="com.github.lppedd.cc.api.DefaultCommitTokenProvider" />
-    <commitFooterValueProvider order="first" implementation="com.github.lppedd.cc.api.DefaultCommitTokenProvider" />
-    <commitInspectionProvider
-        order="first"
-        implementation="com.github.lppedd.cc.inspection.DefaultCommitInspectionProvider"
-    />
-    <whatsNewProvider order="first" implementation="com.github.lppedd.cc.whatsnew.DefaultWhatsNewProvider" />
+    <commitTypeProvider order="first" implementation="com.github.lppedd.cc.api.impl.InternalCommitTokenProvider" />
+    <commitScopeProvider order="first" implementation="com.github.lppedd.cc.api.impl.InternalCommitTokenProvider" />
+    <commitFooterTypeProvider order="first" implementation="com.github.lppedd.cc.api.impl.InternalCommitTokenProvider" />
+    <commitFooterValueProvider order="first" implementation="com.github.lppedd.cc.api.impl.InternalCommitTokenProvider" />
+    <commitInspectionProvider order="first" implementation="com.github.lppedd.cc.inspection.InternalCommitInspectionProvider" />
+    <whatsNewProvider order="first" implementation="com.github.lppedd.cc.whatsnew.InternalWhatsNewProvider" />
   </extensions>
 </idea-plugin>

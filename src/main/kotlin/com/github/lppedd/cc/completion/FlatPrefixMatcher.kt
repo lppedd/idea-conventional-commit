@@ -1,7 +1,7 @@
 package com.github.lppedd.cc.completion
 
 import com.github.lppedd.cc.flattenWhitespaces
-import com.github.lppedd.cc.lookupElement.CommitLookupElement
+import com.github.lppedd.cc.lookupElement.CommitTokenLookupElement
 import com.intellij.codeInsight.completion.PlainPrefixMatcher
 import com.intellij.codeInsight.completion.PrefixMatcher
 import com.intellij.codeInsight.lookup.LookupElement
@@ -18,8 +18,8 @@ internal class FlatPrefixMatcher(prefix: String) : PlainPrefixMatcher(prefix) {
     name.flattenWhitespaces().startsWith(prefix, true)
 
   override fun prefixMatches(element: LookupElement): Boolean =
-    if (element is CommitLookupElement) {
-      prefixMatches(element.getDisplayedText())
+    if (element is CommitTokenLookupElement) {
+      prefixMatches(element.getItemText())
     } else {
       super.prefixMatches(element)
     }

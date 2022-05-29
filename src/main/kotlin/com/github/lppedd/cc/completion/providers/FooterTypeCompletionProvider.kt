@@ -1,10 +1,10 @@
 package com.github.lppedd.cc.completion.providers
 
 import com.github.lppedd.cc.CC
+import com.github.lppedd.cc.api.CommitFooterType
 import com.github.lppedd.cc.api.CommitFooterTypeProvider
-import com.github.lppedd.cc.api.FOOTER_TYPE_EP
+import com.github.lppedd.cc.api.CommitTokenProviderService
 import com.github.lppedd.cc.completion.resultset.ResultSet
-import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.lookupElement.CommitFooterTypeLookupElement
 import com.github.lppedd.cc.parser.FooterContext.FooterTypeContext
 import com.github.lppedd.cc.psiElement.CommitFooterTypePsiElement
@@ -19,32 +19,32 @@ internal class FooterTypeCompletionProvider(
     private val project: Project,
     private val context: FooterTypeContext,
 ) : CompletionProvider<CommitFooterTypeProvider> {
-  override val providers: List<CommitFooterTypeProvider> = FOOTER_TYPE_EP.getExtensions(project)
-  override val stopHere = false
+  override fun getProviders(): Collection<CommitFooterTypeProvider> =
+    project.service<CommitTokenProviderService>().getFooterTypeProviders()
+
+  override fun stopHere(): Boolean =
+    false
 
   override fun complete(resultSet: ResultSet) {
-    val rs = resultSet.withPrefixMatcher(context.type)
-    val config = project.service<CCConfigService>()
+    val prefixedResultSet = resultSet.withPrefixMatcher(context.type)
+    val footerTypes = LinkedHashSet<ProviderCommitToken<CommitFooterType>>(64)
 
-    providers.asSequence()
-      .sortedBy(config::getProviderOrder)
-      .flatMap { provider ->
-        safeRunWithCheckCanceled {
-          val wrapper = FooterTypeProviderWrapper(project, provider)
-          provider.getCommitFooterTypes()
-            .asSequence()
-            .take(CC.Provider.MaxItems)
-            .map { wrapper to it }
-        }
+    // See comment in TypeCompletionProvider
+    getProviders().forEach { provider ->
+      safeRunWithCheckCanceled {
+        provider.getCommitFooterTypes()
+          .asSequence()
+          .take(CC.Provider.MaxItems)
+          .forEach { footerTypes.add(ProviderCommitToken(provider, it)) }
       }
-      .mapIndexed { index, (provider, commitFooterType) ->
-        CommitFooterTypeLookupElement(
-            index,
-            provider,
-            CommitFooterTypePsiElement(project, commitFooterType),
-        )
-      }
-      .distinctBy(CommitFooterTypeLookupElement::getLookupString)
-      .forEach(rs::addElement)
+    }
+
+    footerTypes.forEachIndexed { index, (provider, commitFooterType) ->
+      val psiElement = CommitFooterTypePsiElement(project, commitFooterType.getText())
+      val element = CommitFooterTypeLookupElement(psiElement, commitFooterType)
+      element.putUserData(ELEMENT_INDEX, index)
+      element.putUserData(ELEMENT_PROVIDER, provider)
+      prefixedResultSet.addElement(element)
+    }
   }
 }

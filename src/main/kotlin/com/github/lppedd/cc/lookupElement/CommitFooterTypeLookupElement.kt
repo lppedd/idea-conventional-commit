@@ -1,7 +1,8 @@
 package com.github.lppedd.cc.lookupElement
 
 import com.github.lppedd.cc.*
-import com.github.lppedd.cc.completion.providers.FooterTypeProviderWrapper
+import com.github.lppedd.cc.api.CommitFooterType
+import com.github.lppedd.cc.api.CommitToken
 import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.ValidToken
 import com.github.lppedd.cc.psiElement.CommitFooterTypePsiElement
@@ -14,33 +15,24 @@ import com.intellij.codeInsight.lookup.LookupElementPresentation
  * @author Edoardo Luppi
  */
 internal class CommitFooterTypeLookupElement(
-    index: Int,
-    provider: FooterTypeProviderWrapper,
     private val psiElement: CommitFooterTypePsiElement,
-) : CommitLookupElement(index, CC.Tokens.PriorityFooterType, provider) {
-  private val commitFooterType = psiElement.commitFooterType
+    private val commitFooterType: CommitFooterType,
+) : CommitTokenLookupElement() {
+  override fun getToken(): CommitToken =
+    commitFooterType
 
   override fun getPsiElement(): CommitFooterTypePsiElement =
     psiElement
 
   override fun getLookupString(): String =
-    commitFooterType.value
+    commitFooterType.getValue()
 
-  override fun getDisplayedText(): String =
-    commitFooterType.text
+  override fun getItemText(): String =
+    commitFooterType.getText()
 
   override fun renderElement(presentation: LookupElementPresentation) {
-    presentation.also {
-      it.icon = CCIcons.Tokens.Footer
-      it.itemText = getDisplayedText()
-      it.isItemTextBold = true
-      it.isTypeIconRightAligned = true
-
-      val rendering = commitFooterType.getRendering()
-      it.isItemTextItalic = rendering.italic
-      it.isStrikeout = rendering.strikeout
-      it.setTypeText(rendering.type, rendering.icon)
-    }
+    presentation.icon = CCIcons.Tokens.Footer
+    super.renderElement(presentation)
   }
 
   @Suppress("DuplicatedCode")
@@ -55,11 +47,11 @@ internal class CommitFooterTypeLookupElement(
       editor.replaceString(
           lineStartOffset + footerType.range.startOffset,
           lineStartOffset + footerType.range.endOffset,
-          commitFooterType.value,
+          commitFooterType.getValue(),
       )
     } else {
       // No footer type had been inserted before, thus we simply insert the value
-      editor.insertStringAtCaret(commitFooterType.value)
+      editor.insertStringAtCaret(commitFooterType.getValue())
     }
 
     // If a separator isn't already present, add it

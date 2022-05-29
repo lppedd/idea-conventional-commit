@@ -20,7 +20,7 @@ import javax.swing.JComponent
  */
 internal class CommitTokenTextField(
     project: Project,
-    provider: CommitTokenCompletionProvider,
+    provider: CommitTokenTextCompletionProvider,
     private val lines: Int = 1,
 ) : TextFieldWithCompletion(project, provider, "", lines == 1, true, false) {
   private var doSelectAll = true

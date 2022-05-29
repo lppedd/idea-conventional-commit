@@ -1,7 +1,8 @@
 package com.github.lppedd.cc.lookupElement
 
 import com.github.lppedd.cc.*
-import com.github.lppedd.cc.completion.providers.SubjectProviderWrapper
+import com.github.lppedd.cc.api.CommitSubject
+import com.github.lppedd.cc.api.CommitToken
 import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.ValidToken
 import com.github.lppedd.cc.psiElement.CommitSubjectPsiElement
@@ -12,33 +13,24 @@ import com.intellij.codeInsight.lookup.LookupElementPresentation
  * @author Edoardo Luppi
  */
 internal class CommitSubjectLookupElement(
-    index: Int,
-    provider: SubjectProviderWrapper,
     private val psiElement: CommitSubjectPsiElement,
-) : CommitLookupElement(index, CC.Tokens.PrioritySubject, provider) {
-  private val commitSubject = psiElement.commitSubject
+    private val commitSubject: CommitSubject,
+) : CommitTokenLookupElement() {
+  override fun getToken(): CommitToken =
+    commitSubject
 
   override fun getPsiElement(): CommitSubjectPsiElement =
     psiElement
 
   override fun getLookupString(): String =
-    commitSubject.value
+    commitSubject.getValue()
 
-  override fun getDisplayedText(): String =
-    commitSubject.text
+  override fun getItemText(): String =
+    commitSubject.getText()
 
   override fun renderElement(presentation: LookupElementPresentation) {
-    presentation.also {
-      it.icon = CCIcons.Tokens.Subject
-      it.itemText = getDisplayedText()
-      it.isTypeIconRightAligned = true
-
-      val rendering = commitSubject.getRendering()
-      it.isItemTextBold = rendering.bold
-      it.isItemTextItalic = rendering.italic
-      it.isStrikeout = rendering.strikeout
-      it.setTypeText(rendering.type, rendering.icon)
-    }
+    presentation.icon = CCIcons.Tokens.Subject
+    super.renderElement(presentation)
   }
 
   override fun handleInsert(context: InsertionContext) {
@@ -46,7 +38,7 @@ internal class CommitSubjectLookupElement(
     val (lineStartOffset, lineEndOffset) = editor.getCurrentLineRange()
     val line = context.document.getSegment(lineStartOffset, lineEndOffset)
     val subject = CCParser.parseHeader(line).subject
-    val newSubjectString = " ${commitSubject.value}"
+    val newSubjectString = " ${commitSubject.getValue()}"
 
     if (subject is ValidToken) {
       // Replace an existing subject

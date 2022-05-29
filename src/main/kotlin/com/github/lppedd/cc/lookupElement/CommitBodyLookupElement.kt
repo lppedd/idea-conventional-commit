@@ -1,7 +1,8 @@
 package com.github.lppedd.cc.lookupElement
 
 import com.github.lppedd.cc.*
-import com.github.lppedd.cc.completion.providers.BodyProviderWrapper
+import com.github.lppedd.cc.api.CommitBody
+import com.github.lppedd.cc.api.CommitToken
 import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.psiElement.CommitBodyPsiElement
 import com.intellij.codeInsight.completion.InsertionContext
@@ -12,33 +13,25 @@ import kotlin.math.max
  * @author Edoardo Luppi
  */
 internal class CommitBodyLookupElement(
-    index: Int,
-    provider: BodyProviderWrapper,
     private val psiElement: CommitBodyPsiElement,
-) : CommitLookupElement(index, CC.Tokens.PriorityBody, provider) {
-  private val commitBody = psiElement.commitBody
+    private val commitBody: CommitBody,
+) : CommitTokenLookupElement() {
+  override fun getToken(): CommitToken =
+    commitBody
 
   override fun getPsiElement(): CommitBodyPsiElement =
     psiElement
 
   override fun getLookupString(): String =
-    commitBody.value
+    commitBody.getValue()
 
-  override fun getDisplayedText(): String =
-    commitBody.text
+  override fun getItemText(): String =
+    commitBody.getText()
 
   override fun renderElement(presentation: LookupElementPresentation) {
-    presentation.also {
-      it.icon = CCIcons.Tokens.Body
-      it.itemText = lookupString.flattenWhitespaces().abbreviate(100)
-      it.isTypeIconRightAligned = true
-
-      val rendering = commitBody.getRendering()
-      it.isItemTextBold = rendering.bold
-      it.isItemTextItalic = rendering.italic
-      it.isStrikeout = rendering.strikeout
-      it.setTypeText(rendering.type, rendering.icon)
-    }
+    presentation.icon = CCIcons.Tokens.Body
+    super.renderElement(presentation)
+    presentation.itemText = commitBody.getText().flattenWhitespaces().abbreviate(100)
   }
 
   override fun handleInsert(context: InsertionContext) {
@@ -87,7 +80,7 @@ internal class CommitBodyLookupElement(
     }
 
     if (replaceUntilOffset >= lineStartOffset) {
-      editor.replaceString(lineStartOffset, replaceUntilOffset, commitBody.value)
+      editor.replaceString(lineStartOffset, replaceUntilOffset, commitBody.getValue())
 
       if (addNewLine) {
         editor.insertStringAtCaret("\n", moveCaret = false)

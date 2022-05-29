@@ -103,7 +103,7 @@ internal class CCProvidersConfigurableGui {
   }
 
   private fun buildTablePanel(table: JBTable, title: String): JPanel {
-    TableSpeedSearch(table, Convertor { (it as CommitTokenProvider).getPresentation().name })
+    TableSpeedSearch(table, Convertor { (it as CommitTokenProvider).getPresentation().getName() })
 
     val toolbarBorder = JBUI.Borders.customLine(CCUI.BorderColor, 0, 1, 0, 0)
     val panelBorder = JBUI.Borders.customLine(CCUI.BorderColor)

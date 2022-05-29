@@ -1,19 +1,21 @@
 package com.github.lppedd.cc.documentation
 
 import com.github.lppedd.cc.CCBundle
-import com.github.lppedd.cc.api.*
+import com.github.lppedd.cc.api.CommitToken
 import com.github.lppedd.cc.brighter
 import com.github.lppedd.cc.darker
-import com.github.lppedd.cc.lookupElement.CommitLookupElement
+import com.github.lppedd.cc.lookupElement.CommitTokenLookupElement
 import com.github.lppedd.cc.psiElement.*
 import com.intellij.lang.documentation.AbstractDocumentationProvider
 import com.intellij.lang.documentation.DocumentationMarkup
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
+import com.intellij.psi.impl.FakePsiElement
 import com.intellij.ui.ColorUtil
 import com.intellij.ui.JBColor
 import com.intellij.util.ui.UIUtil
 import java.awt.Color
+import javax.swing.Icon
 
 /**
  * @author Edoardo Luppi
@@ -21,63 +23,46 @@ import java.awt.Color
 private class CommitTokenDocumentationProvider : AbstractDocumentationProvider() {
   private val lineSeparatorRegex = Regex("\r\n|\n\r|\n|\r")
 
-  override fun generateDoc(element: PsiElement?, originalElement: PsiElement?): String? {
-    if (element !is CommitFakePsiElement) {
-      return null
+  override fun generateDoc(element: PsiElement?, originalElement: PsiElement?): String? =
+    when (element) {
+      is CommitTokenDocumentationElement -> generateCommitTokenDoc(element)
+      else -> super.generateDoc(element, originalElement)
     }
-
-    val description = when (element) {
-      is CommitTypePsiElement -> buildTypeDoc(element.commitType)
-      is CommitScopePsiElement -> buildScopeDoc(element.commitScope)
-      is CommitSubjectPsiElement -> buildSubjectDoc(element.commitSubject)
-      is CommitBodyPsiElement -> buildBodyDoc(element.commitBody)
-      is CommitFooterTypePsiElement -> buildFooterTypeDoc(element.commitFooterType)
-      is CommitFooterValuePsiElement -> buildFooterValueDoc(element.commitFooterValue)
-      else -> null
-    }
-
-    // TODO: maybe create a CommitTokenDocumentationProvider API
-    return description?.ifBlank { null }
-  }
 
   override fun getDocumentationElementForLookupItem(
       psiManager: PsiManager?,
       obj: Any?,
-      element: PsiElement?,
-  ) = if (obj is CommitLookupElement) {
-    obj.psiElement
-  } else {
-    super.getDocumentationElementForLookupItem(psiManager, obj, element)
+      element: PsiElement,
+  ): PsiElement? =
+    if (obj is CommitTokenLookupElement) {
+      CommitTokenDocumentationElement(obj.getToken(), obj.psiElement, element)
+    } else {
+      super.getDocumentationElementForLookupItem(psiManager, obj, element)
+    }
+
+  private fun generateCommitTokenDoc(element: CommitTokenDocumentationElement): String? {
+    val title = when (element.tokenPsiElement) {
+      is CommitTypePsiElement -> CCBundle["cc.completion.documentation.definition.type"]
+      is CommitScopePsiElement -> CCBundle["cc.completion.documentation.definition.scope"]
+      is CommitSubjectPsiElement -> CCBundle["cc.completion.documentation.definition.subject"]
+      is CommitBodyPsiElement -> CCBundle["cc.completion.documentation.definition.body"]
+      is CommitFooterTypePsiElement -> CCBundle["cc.completion.documentation.definition.footerType"]
+      is CommitFooterValuePsiElement -> CCBundle["cc.completion.documentation.definition.footerValue"]
+      else -> return null
+    }
+
+    return buildHtml(element.token, title)
   }
 
-  private fun buildTypeDoc(type: CommitType): String =
-    buildHtml(type, CCBundle["cc.completion.documentation.definition.type"])
-
-  private fun buildScopeDoc(scope: CommitScope): String =
-    buildHtml(scope, CCBundle["cc.completion.documentation.definition.scope"])
-
-  private fun buildSubjectDoc(subject: CommitSubject): String =
-    buildHtml(subject, CCBundle["cc.completion.documentation.definition.subject"])
-
-  private fun buildBodyDoc(body: CommitBody): String =
-    buildHtml(body, CCBundle["cc.completion.documentation.definition.body"])
-
-  private fun buildFooterTypeDoc(footerType: CommitFooterType): String =
-    buildHtml(footerType, CCBundle["cc.completion.documentation.definition.footerType"])
-
-  private fun buildFooterValueDoc(footerValue: CommitFooterValue): String =
-    buildHtml(footerValue, CCBundle["cc.completion.documentation.definition.footerValue"])
-
-  private fun buildHtml(token: CommitTokenElement, definition: String): String {
-    val description = token.description.trim()
-    val value = token.value.trim()
-    val hasCustomDocumentation = description.isNotEmpty() && token.getRendering().hasCustomDocumentation
+  private fun buildHtml(token: CommitToken, title: String): String {
+    val description = token.getDescription().trim()
+    val value = token.getValue().trim()
+    val hasCustomDocumentation = description.isNotEmpty() && token.getPresentation().hasCustomDocumentation()
     val totalLength = value.length + description.length
     val sb = StringBuilder(if (totalLength == 0) return "" else totalLength + 140)
-
     val grayedColorHex = ColorUtil.toHex(UIUtil.getContextHelpForeground())
-    sb.append("<div style='border-bottom: none; padding: 4px 7px 2px; font-style: italic'>")
-      .append("<span style='font-size: 90%; color: #$grayedColorHex'>$definition</span>")
+    sb.append("<div style='border-bottom: none; padding: 4px 7px 2px'>")
+      .append("<span style='color: #$grayedColorHex'>$title</span>")
       .append("</div>")
 
     // See DocumentationMarkup.CONTENT_START
@@ -127,5 +112,20 @@ private class CommitTokenDocumentationProvider : AbstractDocumentationProvider()
     } else {
       color.darker(0.97)
     }
+  }
+
+  private class CommitTokenDocumentationElement(
+      val token: CommitToken,
+      val tokenPsiElement: CommitTokenPsiElement,
+      private val parent: PsiElement,
+  ) : FakePsiElement() {
+    override fun getParent(): PsiElement =
+      parent
+
+    override fun getPresentableText(): String? =
+      tokenPsiElement.presentableText
+
+    override fun getIcon(open: Boolean): Icon? =
+      tokenPsiElement.getIcon(open)
   }
 }

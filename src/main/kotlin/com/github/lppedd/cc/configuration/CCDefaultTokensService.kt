@@ -1,9 +1,7 @@
 package com.github.lppedd.cc.configuration
 
 import com.github.lppedd.cc.CC
-import com.github.lppedd.cc.configuration.CCDefaultTokensService.JsonCommitFooterType
-import com.github.lppedd.cc.configuration.CCDefaultTokensService.JsonCommitScope
-import com.github.lppedd.cc.configuration.CCDefaultTokensService.JsonCommitType
+import com.github.lppedd.cc.configuration.CCDefaultTokensService.*
 import com.github.lppedd.cc.getResourceAsStream
 import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.Logger
@@ -12,6 +10,7 @@ import com.intellij.openapi.vfs.LocalFileSystem
 import org.everit.json.schema.Schema
 import org.everit.json.schema.Validator
 import org.everit.json.schema.loader.SchemaLoader
+import org.jetbrains.annotations.ApiStatus.*
 import org.json.JSONArray
 import org.json.JSONObject
 import org.json.JSONTokener
@@ -37,6 +36,7 @@ private val logger = Logger.getInstance(CCDefaultTokensService::class.java)
  *
  * @author Edoardo Luppi
  */
+@Internal
 internal class CCDefaultTokensService(private val project: Project) {
   /** JSON Schema used to validate the default commit types and scopes JSON file. */
   private val defaultsSchema by lazy {

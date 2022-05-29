@@ -1,24 +1,30 @@
-package com.github.lppedd.cc.api
+package com.github.lppedd.cc.api.impl
 
 import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.CCIcons
 import com.github.lppedd.cc.CCNotificationService
+import com.github.lppedd.cc.api.*
 import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.configuration.CCDefaultTokensService
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import org.everit.json.schema.ValidationException
 import org.jetbrains.annotations.ApiStatus.*
+import javax.swing.Icon
 
 /**
  * @author Edoardo Luppi
  */
 @Internal
-internal class DefaultCommitTokenProvider(private val project: Project) :
+internal class InternalCommitTokenProvider(private val project: Project) :
     CommitTypeProvider,
     CommitScopeProvider,
     CommitFooterTypeProvider,
     CommitFooterValueProvider {
+  companion object {
+    const val ID: String = "e9d4e8de-79a0-48b8-b1ba-b4161e2572c0"
+  }
+
   private val configService = project.service<CCConfigService>()
   private val defaultsService = project.service<CCDefaultTokensService>()
   private val defaults
@@ -29,26 +35,23 @@ internal class DefaultCommitTokenProvider(private val project: Project) :
       defaultsService.getBuiltInDefaults()
     }
 
-  override fun getId(): String = ID
+  override fun getId(): String =
+    ID
 
   override fun getPresentation(): ProviderPresentation =
-    ProviderPresentation(CCBundle["cc.config.providers.default"], CCIcons.Logo)
+    DefaultProviderPresentation
 
-  override fun getCommitTypes(prefix: String?): Collection<CommitType> =
-    defaults.types.map { CommitType(it.key, it.value.description) }
+  override fun getCommitTypes(prefix: String): Collection<CommitType> =
+    defaults.types.map { DefaultCommitToken(it.key, it.value.description) }
 
-  override fun getCommitScopes(commitType: String?): Collection<CommitScope> =
-    when (commitType) {
-      null -> emptyList()
-      else ->
-        defaults.types[commitType]
-          ?.scopes
-          ?.map { CommitScope(it.name, it.description) }
-        ?: emptyList()
-    }
+  override fun getCommitScopes(commitType: String): Collection<CommitScope> =
+    defaults.types[commitType]
+      ?.scopes
+      ?.map { DefaultCommitToken(it.name, it.description) }
+    ?: emptyList()
 
   override fun getCommitFooterTypes(): Collection<CommitFooterType> =
-    defaults.footerTypes.map { CommitFooterType(it.name, it.description) }
+    defaults.footerTypes.map { DefaultCommitToken(it.name, it.description) }
 
   override fun getCommitFooterValues(
       footerType: String,
@@ -57,7 +60,7 @@ internal class DefaultCommitTokenProvider(private val project: Project) :
       commitSubject: String?,
   ): Collection<CommitFooterValue> =
     if ("co-authored-by".equals(footerType, true)) {
-      defaultsService.getCoAuthors().take(3).map(::CommitFooterValue)
+      defaultsService.getCoAuthors().take(3).map { DefaultCommitToken(it, "") }
     } else {
       emptyList()
     }
@@ -72,7 +75,33 @@ internal class DefaultCommitTokenProvider(private val project: Project) :
     CCNotificationService.createErrorNotification(message).notify(project)
   }
 
-  companion object {
-    const val ID: String = "e9d4e8de-79a0-48b8-b1ba-b4161e2572c0"
+  private object DefaultProviderPresentation : ProviderPresentation {
+    override fun getName(): String =
+      CCBundle["cc.config.providers.default"]
+
+    override fun getIcon(): Icon =
+      CCIcons.Logo
+  }
+
+  private object DefaultTokenPresentation : TokenPresentation
+
+  private class DefaultCommitToken(
+      private val text: String,
+      private val description: String,
+  ) : CommitType,
+      CommitScope,
+      CommitFooterType,
+      CommitFooterValue {
+    override fun getText(): String =
+      text
+
+    override fun getValue(): String =
+      getText()
+
+    override fun getDescription(): String =
+      description
+
+    override fun getPresentation(): TokenPresentation =
+      DefaultTokenPresentation
   }
 }

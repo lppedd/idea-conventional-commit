@@ -5,7 +5,7 @@ import com.github.lppedd.cc.api.CommitInspectionProvider
 /**
  * @author Edoardo Luppi
  */
-private class DefaultCommitInspectionProvider : CommitInspectionProvider {
+private class InternalCommitInspectionProvider : CommitInspectionProvider {
   override fun getInspections(): Collection<CommitBaseInspection> =
     listOf(
         CommitFormatInspection(),

@@ -18,7 +18,6 @@ import com.github.lppedd.cc.parser.FooterContext.FooterTypeContext
 import com.github.lppedd.cc.parser.FooterContext.FooterValueContext
 import com.intellij.codeInsight.completion.*
 import com.intellij.codeInsight.completion.CompletionType.BASIC
-import com.intellij.codeInsight.completion.impl.CompletionSorterImpl
 import com.intellij.codeInsight.completion.impl.PreferStartMatching
 import com.intellij.codeInsight.lookup.*
 import com.intellij.codeInsight.lookup.impl.LookupImpl
@@ -35,7 +34,6 @@ import java.util.*
 import java.util.Collections.newSetFromMap
 import java.util.Collections.synchronizedMap
 import java.util.concurrent.ConcurrentHashMap
-import kotlin.LazyThreadSafetyMode.PUBLICATION
 
 /**
  * Provides context-based completion items inside the VCS commit dialog.
@@ -49,15 +47,15 @@ private class CommitCompletionContributor : CompletionContributor() {
     private val lookupEnhancers = synchronizedMap(IdentityHashMap<Lookup, LookupEnhancer>(16))
   }
 
-  private val myArrangerField: Field by lazy(PUBLICATION) {
+  private val myArrangerField: Field by lazy(LazyThreadSafetyMode.PUBLICATION) {
     findField(CompletionProgressIndicator::class.java, null, "myArranger")
   }
 
-  private val myFrozenItemsField: Field by lazy(PUBLICATION) {
+  private val myFrozenItemsField: Field by lazy(LazyThreadSafetyMode.PUBLICATION) {
     findField(CompletionLookupArrangerImpl::class.java, null, "myFrozenItems")
   }
 
-  private val myFreezeSemaphoreField: Field by lazy(PUBLICATION) {
+  private val myFreezeSemaphoreField: Field by lazy(LazyThreadSafetyMode.PUBLICATION) {
     findField(CompletionProgressIndicator::class.java, null, "myFreezeSemaphore")
   }
 
@@ -94,10 +92,15 @@ private class CommitCompletionContributor : CompletionContributor() {
 
     ProgressManager.checkCanceled()
 
+    val project = file.project
     val resultSet = result
       .caseInsensitive()
       .withPrefixMatcher(FlatPrefixMatcher(parameters.getCompletionPrefix()))
-      .withRelevanceSorter(sorter(CommitLookupElementWeigher))
+      .withRelevanceSorter(
+          CompletionSorter.emptySorter()
+            .weigh(PreferStartMatching())
+            .weigh(CommitLookupElementWeigher(project.service()))
+      )
 
     val editor = parameters.editor
     val isTemplateActive = editor.isTemplateActive()
@@ -108,7 +111,6 @@ private class CommitCompletionContributor : CompletionContributor() {
       ContextResultSet(resultSet)
     }
 
-    val project = file.project
     val configService = project.service<CCConfigService>()
     val process = parameters.process
 
@@ -197,7 +199,7 @@ private class CommitCompletionContributor : CompletionContributor() {
       ProgressManager.checkCanceled()
       provider.complete(myResultSet)
 
-      if (provider.stopHere) {
+      if (provider.stopHere()) {
         break
       }
     }
@@ -206,11 +208,6 @@ private class CommitCompletionContributor : CompletionContributor() {
       myResultSet.stopHere()
     }
   }
-
-  private fun sorter(weigher: LookupElementWeigher): CompletionSorter =
-    (CompletionSorter.emptySorter() as CompletionSorterImpl)
-      .withClassifier(CompletionSorterImpl.weighingFactory(PreferStartMatching()))
-      .withClassifier(CompletionSorterImpl.weighingFactory(weigher))
 
   private fun enhanceCompletionProcessIndicator(
       process: CompletionProcess,
@@ -238,7 +235,7 @@ private class CommitCompletionContributor : CompletionContributor() {
       completionProviders
         .asSequence()
         .take(n)
-        .flatMap(CompletionProvider<*>::providers)
+        .flatMap(CompletionProvider<*>::getProviders)
         // Removing duplicated token providers avoids having duplicated
         // filtering actions in the menu
         .distinctBy(CommitTokenProvider::getId)

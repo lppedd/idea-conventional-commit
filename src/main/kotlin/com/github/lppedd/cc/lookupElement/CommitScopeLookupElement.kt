@@ -1,7 +1,8 @@
 package com.github.lppedd.cc.lookupElement
 
 import com.github.lppedd.cc.*
-import com.github.lppedd.cc.completion.providers.ScopeProviderWrapper
+import com.github.lppedd.cc.api.CommitScope
+import com.github.lppedd.cc.api.CommitToken
 import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.ValidToken
 import com.github.lppedd.cc.psiElement.CommitScopePsiElement
@@ -14,33 +15,24 @@ import com.intellij.codeInsight.lookup.LookupElementPresentation
  * @author Edoardo Luppi
  */
 internal class CommitScopeLookupElement(
-    index: Int,
-    provider: ScopeProviderWrapper,
     private val psiElement: CommitScopePsiElement,
-) : CommitLookupElement(index, CC.Tokens.PriorityScope, provider) {
-  private val commitScope = psiElement.commitScope
+    private val commitScope: CommitScope,
+) : CommitTokenLookupElement() {
+  override fun getToken(): CommitToken =
+    commitScope
 
   override fun getPsiElement(): CommitScopePsiElement =
     psiElement
 
   override fun getLookupString(): String =
-    commitScope.value
+    commitScope.getValue()
 
-  override fun getDisplayedText(): String =
-    commitScope.text
+  override fun getItemText(): String =
+    commitScope.getText()
 
   override fun renderElement(presentation: LookupElementPresentation) {
-    presentation.also {
-      it.icon = CCIcons.Tokens.Scope
-      it.itemText = getDisplayedText()
-      it.isTypeIconRightAligned = true
-
-      val rendering = commitScope.getRendering()
-      it.isItemTextBold = rendering.bold
-      it.isItemTextItalic = rendering.italic
-      it.isStrikeout = rendering.strikeout
-      it.setTypeText(rendering.type, rendering.icon)
-    }
+    presentation.icon = CCIcons.Tokens.Scope
+    super.renderElement(presentation)
   }
 
   @Suppress("DuplicatedCode")
@@ -50,15 +42,15 @@ internal class CommitScopeLookupElement(
     val lineText = context.document.getSegment(lineStartOffset, lineEndOffset)
     val (_, scope, breakingChange, separator, subject) = CCParser.parseHeader(lineText)
 
-    if (scope !is ValidToken) {
-      throw InvalidTokenException("The scope token should be valid here. There might be a parser issue")
+    check(scope is ValidToken) {
+      "The scope token should be valid here. There might be a parser issue"
     }
 
     // Replace the old scope with the new one
     editor.replaceString(
         lineStartOffset + scope.range.startOffset,
         lineStartOffset + scope.range.endOffset,
-        commitScope.value,
+        commitScope.getValue(),
     )
 
     // If a closing scope's paren isn't already present, add it

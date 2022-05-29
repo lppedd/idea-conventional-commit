@@ -11,7 +11,6 @@ import kotlin.io.path.absolutePathString
 /**
  * @author Edoardo Luppi
  */
-@Suppress("UnstableApiUsage")
 private class CCApplicationLoadListener : ApplicationLoadListener {
   @Compatibility(description = """
     This method's signature is used by newer version of the Platform.

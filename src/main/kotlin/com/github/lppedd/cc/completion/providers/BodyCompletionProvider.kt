@@ -1,10 +1,10 @@
 package com.github.lppedd.cc.completion.providers
 
 import com.github.lppedd.cc.CC
-import com.github.lppedd.cc.api.BODY_EP
+import com.github.lppedd.cc.api.CommitBody
 import com.github.lppedd.cc.api.CommitBodyProvider
+import com.github.lppedd.cc.api.CommitTokenProviderService
 import com.github.lppedd.cc.completion.resultset.ResultSet
-import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.lookupElement.CommitBodyLookupElement
 import com.github.lppedd.cc.parser.CommitTokens
 import com.github.lppedd.cc.parser.FooterContext.FooterTypeContext
@@ -22,36 +22,36 @@ internal class BodyCompletionProvider(
     private val context: FooterTypeContext,
     private val commitTokens: CommitTokens,
 ) : CompletionProvider<CommitBodyProvider> {
-  override val providers: List<CommitBodyProvider> = BODY_EP.getExtensions(project)
-  override val stopHere = false
+  override fun getProviders(): Collection<CommitBodyProvider> =
+    project.service<CommitTokenProviderService>().getBodyProviders()
+
+  override fun stopHere(): Boolean =
+    false
 
   override fun complete(resultSet: ResultSet) {
-    val rs = resultSet.withPrefixMatcher(context.type)
-    val config = project.service<CCConfigService>()
+    val prefixedResultSet = resultSet.withPrefixMatcher(context.type)
+    val bodies = LinkedHashSet<ProviderCommitToken<CommitBody>>(64)
 
-    providers.asSequence()
-      .sortedBy(config::getProviderOrder)
-      .flatMap { provider ->
-        safeRunWithCheckCanceled {
-          val wrapper = BodyProviderWrapper(project, provider)
-          provider.getCommitBodies(
-              (commitTokens.type as? ValidToken)?.value,
-              (commitTokens.scope as? ValidToken)?.value,
-              (commitTokens.subject as? ValidToken)?.value,
-          )
-            .asSequence()
-            .take(CC.Provider.MaxItems)
-            .map { wrapper to it }
-        }
-      }
-      .mapIndexed { index, (provider, commitBody) ->
-        CommitBodyLookupElement(
-            index,
-            provider,
-            CommitBodyPsiElement(project, commitBody),
+    getProviders().forEach { provider ->
+      safeRunWithCheckCanceled {
+        val commitBodies = provider.getCommitBodies(
+            (commitTokens.type as? ValidToken)?.value ?: "",
+            (commitTokens.scope as? ValidToken)?.value ?: "",
+            (commitTokens.subject as? ValidToken)?.value ?: "",
         )
+
+        commitBodies.asSequence()
+          .take(CC.Provider.MaxItems)
+          .forEach { bodies.add(ProviderCommitToken(provider, it)) }
       }
-      .distinctBy(CommitBodyLookupElement::getLookupString)
-      .forEach(rs::addElement)
+    }
+
+    bodies.forEachIndexed { index, (provider, commitBody) ->
+      val psiElement = CommitBodyPsiElement(project, commitBody.getText())
+      val element = CommitBodyLookupElement(psiElement, commitBody)
+      element.putUserData(ELEMENT_INDEX, index)
+      element.putUserData(ELEMENT_PROVIDER, provider)
+      prefixedResultSet.addElement(element)
+    }
   }
 }

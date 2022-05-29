@@ -1,7 +1,8 @@
 package com.github.lppedd.cc.lookupElement
 
 import com.github.lppedd.cc.*
-import com.github.lppedd.cc.completion.providers.TypeProviderWrapper
+import com.github.lppedd.cc.api.CommitToken
+import com.github.lppedd.cc.api.CommitType
 import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.ValidToken
 import com.github.lppedd.cc.psiElement.CommitTypePsiElement
@@ -14,33 +15,24 @@ import com.intellij.codeInsight.lookup.LookupElementPresentation
  * @author Edoardo Luppi
  */
 internal open class CommitTypeLookupElement(
-    index: Int,
-    provider: TypeProviderWrapper,
     private val psiElement: CommitTypePsiElement,
-) : CommitLookupElement(index, CC.Tokens.PriorityType, provider) {
-  private val commitType = psiElement.commitType
+    private val commitType: CommitType,
+) : CommitTokenLookupElement() {
+  override fun getToken(): CommitToken =
+    commitType
 
   override fun getPsiElement(): CommitTypePsiElement =
     psiElement
 
   override fun getLookupString(): String =
-    commitType.value
+    commitType.getValue()
 
-  override fun getDisplayedText(): String =
-    commitType.text
+  override fun getItemText(): String =
+    commitType.getText()
 
   override fun renderElement(presentation: LookupElementPresentation) {
-    presentation.also {
-      it.icon = CCIcons.Tokens.Type
-      it.itemText = getDisplayedText()
-      it.isTypeIconRightAligned = true
-
-      val rendering = commitType.getRendering()
-      it.isItemTextBold = rendering.bold
-      it.isItemTextItalic = rendering.italic
-      it.isStrikeout = rendering.strikeout
-      it.setTypeText(rendering.type, rendering.icon)
-    }
+    presentation.icon = CCIcons.Tokens.Type
+    super.renderElement(presentation)
   }
 
   override fun handleInsert(context: InsertionContext) {
@@ -55,10 +47,10 @@ internal open class CommitTypeLookupElement(
       editor.replaceString(
           lineStartOffset + type.range.startOffset,
           lineStartOffset + type.range.endOffset,
-          commitType.value,
+          commitType.getValue(),
       )
     } else {
-      editor.insertStringAtCaret(commitType.value)
+      editor.insertStringAtCaret(commitType.getValue())
     }
   }
 }

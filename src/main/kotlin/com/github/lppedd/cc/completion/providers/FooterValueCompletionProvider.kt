@@ -1,20 +1,18 @@
-@file:Suppress("deprecation")
-
 package com.github.lppedd.cc.completion.providers
 
 import com.github.lppedd.cc.CC
+import com.github.lppedd.cc.api.CommitFooterValue
 import com.github.lppedd.cc.api.CommitFooterValueProvider
-import com.github.lppedd.cc.api.FOOTER_VALUE_EP
+import com.github.lppedd.cc.api.CommitTokenProviderService
 import com.github.lppedd.cc.completion.resultset.ResultSet
-import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.lookupElement.CommitFooterValueLookupElement
-import com.github.lppedd.cc.lookupElement.CommitLookupElement
 import com.github.lppedd.cc.lookupElement.ShowMoreCoAuthorsLookupElement
 import com.github.lppedd.cc.parser.CommitTokens
 import com.github.lppedd.cc.parser.FooterContext.FooterValueContext
 import com.github.lppedd.cc.parser.ValidToken
 import com.github.lppedd.cc.psiElement.CommitFooterValuePsiElement
 import com.github.lppedd.cc.safeRunWithCheckCanceled
+import com.github.lppedd.cc.vcs.RecentCommitsService
 import com.intellij.codeInsight.completion.CompletionProcess
 import com.intellij.codeInsight.completion.CompletionProgressIndicator
 import com.intellij.openapi.components.service
@@ -29,55 +27,56 @@ internal class FooterValueCompletionProvider(
     private val commitTokens: CommitTokens,
     private val process: CompletionProcess,
 ) : CompletionProvider<CommitFooterValueProvider> {
-  override val providers: List<CommitFooterValueProvider> = FOOTER_VALUE_EP.getExtensions(project)
-  override val stopHere = true
+  override fun getProviders(): Collection<CommitFooterValueProvider> =
+    project.service<CommitTokenProviderService>().getFooterValueProviders()
+
+  override fun stopHere(): Boolean =
+    true
 
   override fun complete(resultSet: ResultSet) {
     val prefix = context.value.trimStart()
-    val rs = resultSet.withPrefixMatcher(prefix)
-    val config = project.service<CCConfigService>()
+    val prefixedResultSet = resultSet.withPrefixMatcher(prefix)
+    val recentCommitsService = project.service<RecentCommitsService>()
+    val recentFooterValues = recentCommitsService.getRecentFooterValues()
+    val footerValues = LinkedHashSet<ProviderCommitToken<CommitFooterValue>>(64)
 
-    providers.asSequence()
-      .sortedBy(config::getProviderOrder)
-      .flatMap { provider ->
-        safeRunWithCheckCanceled {
-          val wrapper = FooterValueProviderWrapper(project, provider)
-          provider.getCommitFooterValues(
-              context.type,
-              (commitTokens.type as? ValidToken)?.value,
-              (commitTokens.scope as? ValidToken)?.value,
-              (commitTokens.subject as? ValidToken)?.value,
-          )
-            .asSequence()
-            .take(CC.Provider.MaxItems)
-            .map { wrapper to it }
-        }
-      }
-      .mapIndexed { index, (provider, commitFooterValue) ->
-        CommitFooterValueLookupElement(
-            index,
-            provider,
-            CommitFooterValuePsiElement(project, commitFooterValue),
+    // See comment in TypeCompletionProvider
+    getProviders().forEach { provider ->
+      safeRunWithCheckCanceled {
+        val commitFooterValues = provider.getCommitFooterValues(
+            context.type,
+            (commitTokens.type as? ValidToken)?.value,
+            (commitTokens.scope as? ValidToken)?.value,
+            (commitTokens.subject as? ValidToken)?.value,
         )
+
+        commitFooterValues.asSequence()
+          .take(CC.Provider.MaxItems)
+          .forEach { footerValues.add(ProviderCommitToken(provider, it)) }
       }
-      .distinctBy(CommitFooterValueLookupElement::getLookupString)
-      .forEach(rs::addElement)
+    }
+
+    footerValues.forEachIndexed { index, (provider, commitFooterValue) ->
+      val psiElement = CommitFooterValuePsiElement(project, commitFooterValue.getText())
+      val element = CommitFooterValueLookupElement(psiElement, commitFooterValue)
+      element.putUserData(ELEMENT_INDEX, index)
+      element.putUserData(ELEMENT_PROVIDER, provider)
+      element.putUserData(ELEMENT_IS_RECENT, recentFooterValues.contains(commitFooterValue.getValue()))
+      prefixedResultSet.addElement(element)
+    }
 
     if ("co-authored-by".equals(context.type, true)) {
-      rs.addElement(buildShowMoreLookupElement(prefix))
+      val element = ShowMoreCoAuthorsLookupElement(project, prefix)
+      element.putUserData(ELEMENT_INDEX, Int.MAX_VALUE)
+
+      @Suppress("UnstableApiUsage")
+      if (process is CompletionProgressIndicator) {
+        process.lookup.addPrefixChangeListener(element, process.lookup)
+      }
+
+      prefixedResultSet.addElement(element)
     }
 
-    rs.stopHere()
-  }
-
-  private fun buildShowMoreLookupElement(prefix: String): CommitLookupElement {
-    val lookupElement = ShowMoreCoAuthorsLookupElement(project, prefix)
-
-    @Suppress("UnstableApiUsage")
-    if (process is CompletionProgressIndicator) {
-      process.lookup.addPrefixChangeListener(lookupElement, process.lookup)
-    }
-
-    return lookupElement
+    prefixedResultSet.stopHere()
   }
 }

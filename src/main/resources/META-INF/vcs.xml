@@ -19,6 +19,12 @@
     />
   </actions>
   <actions>
+    <!-- Clear saved commit message history -->
+    <action
+        id="cc.vcs.clearLocalMessageHistory"
+        class="com.github.lppedd.cc.vcs.ClearLocalMessageHistoryAction">
+      <add-to-group group-id="Vcs.MessageActionGroup" anchor="first" />
+    </action>
     <!-- Commit builder dialog -->
     <action
         id="cc.commitbuilder.dialog.open"
@@ -41,17 +47,19 @@
   </actions>
 
   <extensions defaultExtensionNs="com.intellij">
-    <projectService serviceImplementation="com.github.lppedd.cc.vcs.CCVcsHandler" />
+    <projectService
+        serviceInterface="com.github.lppedd.cc.vcs.VcsService"
+        serviceImplementation="com.github.lppedd.cc.vcs.InternalVcsService"
+    />
+    <projectService
+        serviceInterface="com.github.lppedd.cc.vcs.RecentCommitsService"
+        serviceImplementation="com.github.lppedd.cc.vcs.InternalRecentCommitsService"
+    />
     <actionPromoter implementation="com.github.lppedd.cc.inspection.ReformatActionPromoter" order="last" />
     <actionPromoter implementation="com.github.lppedd.cc.vcs.commitbuilder.CommitBuilderActionPromoter" order="last" />
   </extensions>
 
   <extensions defaultExtensionNs="com.github.lppedd.idea-conventional-commit">
-    <commitTypeProvider order="first" implementation="com.github.lppedd.cc.vcs.RecentCommitTokenProvider" />
-    <commitScopeProvider order="first" implementation="com.github.lppedd.cc.vcs.RecentCommitTokenProvider" />
-    <commitSubjectProvider order="first" implementation="com.github.lppedd.cc.vcs.RecentCommitTokenProvider" />
-    <commitFooterValueProvider order="first" implementation="com.github.lppedd.cc.vcs.RecentCommitTokenProvider" />
-
     <commitTypeProvider order="first" implementation="com.github.lppedd.cc.vcs.VcsCommitTokenProvider" />
     <commitScopeProvider order="first" implementation="com.github.lppedd.cc.vcs.VcsCommitTokenProvider" />
     <commitSubjectProvider order="first" implementation="com.github.lppedd.cc.vcs.VcsCommitTokenProvider" />

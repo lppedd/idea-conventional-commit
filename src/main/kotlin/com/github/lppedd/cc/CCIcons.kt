@@ -11,12 +11,12 @@ object CCIcons {
 
   object General {
     @JvmField val ArrowRight: Icon = getIcon("general/arrowRight.svg")
+    @JvmField val ClearMessageHistory: Icon = getIcon("general/clearMessageHistory.svg")
   }
 
   object Provider {
     @JvmField val Unknown: Icon = getIcon("provider/unknown.svg")
     @JvmField val Disabled: Icon = getIcon("provider/disabled.svg")
-    @JvmField val Recent: Icon = getIcon("provider/recent.svg")
     @JvmField val Vcs: Icon = getIcon("provider/vcs.svg")
   }
 

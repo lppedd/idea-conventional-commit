@@ -1,9 +1,10 @@
+@file:Suppress("DEPRECATION")
+
 package com.github.lppedd.cc.vcs.commitbuilder
 
-import com.github.lppedd.cc.CC.Provider
-import com.github.lppedd.cc.CCBundle
-import com.github.lppedd.cc.api.FOOTER_TYPE_EP
-import com.github.lppedd.cc.api.FOOTER_VALUE_EP
+import com.github.lppedd.cc.*
+import com.github.lppedd.cc.api.CommitToken
+import com.github.lppedd.cc.api.CommitTokenProviderService
 import com.github.lppedd.cc.completion.providers.*
 import com.github.lppedd.cc.completion.resultset.TextFieldResultSet
 import com.github.lppedd.cc.configuration.CCConfigService
@@ -15,11 +16,10 @@ import com.github.lppedd.cc.parser.FooterContext.FooterTypeContext
 import com.github.lppedd.cc.parser.ValidToken
 import com.github.lppedd.cc.psiElement.CommitFooterTypePsiElement
 import com.github.lppedd.cc.psiElement.CommitFooterValuePsiElement
-import com.github.lppedd.cc.scaled
-import com.github.lppedd.cc.setName
 import com.github.lppedd.cc.ui.CCDialogWrapper
 import com.github.lppedd.cc.ui.CCDialogWrapper.ValidationNavigable
 import com.github.lppedd.cc.ui.MnemonicAwareCheckBox
+import com.github.lppedd.cc.vcs.RecentCommitsService
 import com.github.lppedd.cc.vcs.commitbuilder.CommitBuilderService.CommitFooter
 import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.ide.util.PropertiesComponent
@@ -167,6 +167,7 @@ internal class CommitBuilderDialog(private val project: Project)
         sb.append("\n\n")
           .append("${breakingChange.type}: ")
           .append(formatFooterValue(breakingChange.value))
+
       processedFooters.isNotEmpty() ->
         sb.append("\n")
     }
@@ -639,7 +640,7 @@ internal class CommitBuilderDialog(private val project: Project)
       val footers: List<CommitFooter>,
   )
 
-  private inner class CommitTypeCompletionProvider : CommitTokenCompletionProvider() {
+  private inner class CommitTypeCompletionProvider : CommitTokenTextCompletionProvider(project) {
     override fun fillVariants(prefix: String, resultSet: CompletionResultSet) {
       val context = TypeCommitContext(prefix)
       val provider = TypeCompletionProvider(project, context)
@@ -647,7 +648,7 @@ internal class CommitBuilderDialog(private val project: Project)
     }
   }
 
-  private inner class CommitScopeCompletionProvider : CommitTokenCompletionProvider() {
+  private inner class CommitScopeCompletionProvider : CommitTokenTextCompletionProvider(project) {
     override fun fillVariants(prefix: String, resultSet: CompletionResultSet) {
       val context = ScopeCommitContext(typeTextField.text, prefix)
       val provider = ScopeCompletionProvider(project, context)
@@ -655,7 +656,7 @@ internal class CommitBuilderDialog(private val project: Project)
     }
   }
 
-  private inner class CommitSubjectCompletionProvider : CommitTokenCompletionProvider() {
+  private inner class CommitSubjectCompletionProvider : CommitTokenTextCompletionProvider(project) {
     override fun fillVariants(prefix: String, resultSet: CompletionResultSet) {
       val context = SubjectCommitContext(typeTextField.text, scopeTextField.text, prefix)
       val provider = SubjectCompletionProvider(project, context)
@@ -663,7 +664,7 @@ internal class CommitBuilderDialog(private val project: Project)
     }
   }
 
-  private inner class CommitBodyCompletionProvider : CommitTokenCompletionProvider() {
+  private inner class CommitBodyCompletionProvider : CommitTokenTextCompletionProvider(project) {
     override fun fillVariants(prefix: String, resultSet: CompletionResultSet) {
       val commitTokens = CommitTokens(
           type = ValidToken(typeTextField.text, TextRange.EMPTY_RANGE),
@@ -675,67 +676,75 @@ internal class CommitBuilderDialog(private val project: Project)
     }
   }
 
-  private inner class CommitFooterTypeCompletionProvider : CommitTokenCompletionProvider() {
+  private inner class CommitFooterTypeCompletionProvider : CommitTokenTextCompletionProvider(project) {
     override fun fillVariants(prefix: String, resultSet: CompletionResultSet) {
-      val rs = TextFieldResultSet(resultSet).withPrefixMatcher(prefix)
+      val prefixedResultSet = TextFieldResultSet(resultSet).withPrefixMatcher(prefix)
+      val providerService = project.service<CommitTokenProviderService>()
+      val providers = providerService.getFooterTypeProviders()
+      val recentCommitsService = project.service<RecentCommitsService>()
+      val recentTypes = recentCommitsService.getRecentTypes()
 
-      FOOTER_TYPE_EP.getExtensions(project).asSequence()
-        .sortedBy(configService::getProviderOrder)
-        .flatMap { provider ->
-          val wrapper = FooterTypeProviderWrapper(project, provider)
+      // See comment in TypeCompletionProvider
+      for (provider in providers.sortedBy(configService::getProviderOrder)) {
+        safeRunWithCheckCanceled {
           provider.getCommitFooterTypes()
             .asSequence()
             // We don't have to display a "BREAKING CHANGE" footer type
             // as it is already covered with its own text field
-            .filterNot { it.value.matches(breakingChangeRegex) }
-            .take(Provider.MaxItems)
-            .map { wrapper to it }
+            .filterNot { it.getValue().matches(breakingChangeRegex) }
+            .take(CC.Provider.MaxItems)
+            .distinctBy(CommitToken::getValue)
+            .forEachIndexed { index, commitFooterType ->
+              val value = commitFooterType.getValue()
+              val psiElement = CommitFooterTypePsiElement(project, value)
+              val element = CommitFooterTypeLookupElement(psiElement, commitFooterType)
+              element.putUserData(ELEMENT_INDEX, index)
+              element.putUserData(ELEMENT_PROVIDER, provider)
+              element.putUserData(ELEMENT_IS_RECENT, recentTypes.contains(value))
+              prefixedResultSet.addElement(element)
+            }
         }
-        .mapIndexed { index, (provider, commitFooterType) ->
-          CommitFooterTypeLookupElement(
-              index,
-              provider,
-              CommitFooterTypePsiElement(project, commitFooterType),
-          )
-        }
-        .distinctBy(CommitFooterTypeLookupElement::getLookupString)
-        .forEach(rs::addElement)
+      }
 
-      rs.stopHere()
+      prefixedResultSet.stopHere()
     }
   }
 
   private inner class CommitFooterValueCompletionProvider(
       val footerTypeProducer: () -> String,
-  ) : CommitTokenCompletionProvider() {
+  ) : CommitTokenTextCompletionProvider(project) {
     override fun fillVariants(prefix: String, resultSet: CompletionResultSet) {
-      val rs = TextFieldResultSet(resultSet).withPrefixMatcher(prefix)
+      val prefixedResultSet = TextFieldResultSet(resultSet).withPrefixMatcher(prefix)
+      val providerService = project.service<CommitTokenProviderService>()
+      val recentCommitsService = project.service<RecentCommitsService>()
+      val recentTypes = recentCommitsService.getRecentTypes()
+      val providers = providerService.getFooterValueProviders()
 
-      FOOTER_VALUE_EP.getExtensions(project).asSequence()
-        .sortedBy(configService::getProviderOrder)
-        .flatMap { provider ->
-          val wrapper = FooterValueProviderWrapper(project, provider)
-          provider.getCommitFooterValues(
+      for (provider in providers.sortedBy(configService::getProviderOrder)) {
+        safeRunWithCheckCanceled {
+          val commitFooterValues = provider.getCommitFooterValues(
               footerTypeProducer().trim(),
               typeTextField.text.trim(),
               scopeTextField.text.trim(),
               subjectTextField.text.trim(),
           )
-            .asSequence()
-            .take(Provider.MaxItems)
-            .map { wrapper to it }
-        }
-        .mapIndexed { index, (provider, commitFooterValue) ->
-          CommitFooterValueLookupElement(
-              index,
-              provider,
-              CommitFooterValuePsiElement(project, commitFooterValue),
-          )
-        }
-        .distinctBy(CommitFooterValueLookupElement::getLookupString)
-        .forEach(rs::addElement)
 
-      rs.stopHere()
+          commitFooterValues.asSequence()
+            .take(CC.Provider.MaxItems)
+            .distinctBy(CommitToken::getValue)
+            .forEachIndexed { index, commitFooterValue ->
+              val value = commitFooterValue.getValue()
+              val psiElement = CommitFooterValuePsiElement(project, value)
+              val element = CommitFooterValueLookupElement(psiElement, commitFooterValue)
+              element.putUserData(ELEMENT_INDEX, index)
+              element.putUserData(ELEMENT_PROVIDER, provider)
+              element.putUserData(ELEMENT_IS_RECENT, recentTypes.contains(value))
+              prefixedResultSet.addElement(element)
+            }
+        }
+      }
+
+      prefixedResultSet.stopHere()
     }
   }
 }

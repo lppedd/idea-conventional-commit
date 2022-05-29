@@ -1,10 +1,22 @@
 package com.github.lppedd.cc.psiElement
 
-import com.github.lppedd.cc.api.CommitBody
+import com.github.lppedd.cc.CCIcons
 import com.intellij.openapi.project.Project
+import javax.swing.Icon
 
 /**
  * @author Edoardo Luppi
  */
-internal class CommitBodyPsiElement(project: Project, val commitBody: CommitBody) :
-    CommitFakePsiElement(project, commitBody.text)
+internal class CommitBodyPsiElement(
+    private val project: Project,
+    private val presentableText: String,
+) : CommitTokenPsiElement() {
+  override fun getProject(): Project =
+    project
+
+  override fun getPresentableText(): String =
+    presentableText
+
+  override fun getIcon(unused: Boolean): Icon =
+    CCIcons.Tokens.Body
+}

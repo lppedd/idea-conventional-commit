@@ -2,7 +2,6 @@ package com.github.lppedd.cc.vcs
 
 import com.github.lppedd.cc.*
 import com.github.lppedd.cc.api.*
-import com.github.lppedd.cc.api.CommitTokenElement.CommitTokenRendering
 import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.CommitTokens
 import com.github.lppedd.cc.parser.FooterTokens
@@ -12,6 +11,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.registry.Registry
 import org.jetbrains.annotations.ApiStatus.*
 import java.util.*
+import javax.swing.Icon
 import kotlin.text.RegexOption.MULTILINE
 
 /**
@@ -31,17 +31,18 @@ internal class VcsCommitTokenProvider(project: Project)
 
     private val regexBeginEndWs = Regex("""^\s+|\s+$""")
     private val regexBlankLines = Regex("""^\s*$""", MULTILINE)
-    private val vscCommitRendering = CommitTokenRendering(type = "VCS")
   }
 
-  private val vcsHandler = project.service<CCVcsHandler>()
+  private val vcsHandler = project.service<VcsService>()
+  private val tokenProviderService = project.service<CommitTokenProviderService>()
 
-  override fun getId(): String = ID
+  override fun getId(): String =
+    ID
 
   override fun getPresentation(): ProviderPresentation =
-    ProviderPresentation("VCS", CCIcons.Provider.Vcs)
+    VcsProviderPresentation
 
-  override fun getCommitTypes(prefix: String?): Collection<CommitType> =
+  override fun getCommitTypes(prefix: String): Collection<CommitType> =
     getOrderedVcsCommitMessages()
       .map { it.lines().firstOrNull(String::isNotBlank) }
       .filterNotNull()
@@ -55,10 +56,10 @@ internal class VcsCommitTokenProvider(project: Project)
       .filterNotEmpty()
       .distinct()
       .take(MAX_ELEMENTS)
-      .map(::VcsCommitType)
+      .map(::VcsCommitToken)
       .toList()
 
-  override fun getCommitScopes(commitType: String?): Collection<CommitScope> =
+  override fun getCommitScopes(commitType: String): Collection<CommitScope> =
     getOrderedVcsCommitMessages()
       .map { it.lines().firstOrNull(String::isNotBlank) }
       .filterNotNull()
@@ -72,10 +73,10 @@ internal class VcsCommitTokenProvider(project: Project)
       .filterNotEmpty()
       .distinct()
       .take(MAX_ELEMENTS)
-      .map(::VcsCommitScope)
+      .map(::VcsCommitToken)
       .toList()
 
-  override fun getCommitSubjects(commitType: String?, commitScope: String?): Collection<CommitSubject> =
+  override fun getCommitSubjects(commitType: String, commitScope: String): Collection<CommitSubject> =
     getOrderedVcsCommitMessages()
       .map { it.lines().firstOrNull(String::isNotBlank) }
       .filterNotNull()
@@ -88,7 +89,7 @@ internal class VcsCommitTokenProvider(project: Project)
       .filterNotEmpty()
       .distinctBy { it.lowercase(Locale.getDefault()) }
       .take(MAX_ELEMENTS)
-      .map(::VcsCommitSubject)
+      .map(::VcsCommitToken)
       .toList()
 
   override fun getCommitFooterValues(
@@ -102,7 +103,7 @@ internal class VcsCommitTokenProvider(project: Project)
       .flatMap(::getFooterValues)
       .distinctBy { it.lowercase(Locale.getDefault()) }
       .take(n)
-      .map(::VcsCommitFooterValue)
+      .map(::VcsCommitToken)
       .toList()
   }
 
@@ -131,19 +132,34 @@ internal class VcsCommitTokenProvider(project: Project)
       .map { it.fullMessage }
   }
 
-  private class VcsCommitType(text: String) : CommitType(text) {
-    override fun getRendering() = vscCommitRendering
+  private object VcsProviderPresentation : ProviderPresentation {
+    override fun getName(): String =
+      "VCS"
+
+    override fun getIcon(): Icon =
+      CCIcons.Provider.Vcs
   }
 
-  private class VcsCommitScope(text: String) : CommitScope(text) {
-    override fun getRendering() = vscCommitRendering
+  private object VcsTokenPresentation : TokenPresentation {
+    override fun getType(): String =
+      "VCS"
   }
 
-  private class VcsCommitSubject(text: String) : CommitSubject(text) {
-    override fun getRendering() = vscCommitRendering
-  }
+  private class VcsCommitToken(private val text: String) :
+      CommitType,
+      CommitScope,
+      CommitSubject,
+      CommitFooterValue {
+    override fun getText(): String =
+      text
 
-  private class VcsCommitFooterValue(text: String) : CommitFooterValue(text) {
-    override fun getRendering() = vscCommitRendering
+    override fun getValue(): String =
+      getText()
+
+    override fun getDescription(): String =
+      ""
+
+    override fun getPresentation() =
+      VcsTokenPresentation
   }
 }

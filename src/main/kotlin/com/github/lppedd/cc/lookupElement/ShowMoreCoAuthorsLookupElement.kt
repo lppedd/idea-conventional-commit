@@ -2,7 +2,8 @@ package com.github.lppedd.cc.lookupElement
 
 import com.github.lppedd.cc.*
 import com.github.lppedd.cc.api.CommitFooterValue
-import com.github.lppedd.cc.completion.providers.FakeProviderWrapper
+import com.github.lppedd.cc.api.CommitToken
+import com.github.lppedd.cc.api.TokenPresentation
 import com.github.lppedd.cc.configuration.component.CoAuthorsDialog
 import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.ValidToken
@@ -19,18 +20,15 @@ import com.intellij.psi.PsiDocumentManager
 /**
  * @author Edoardo Luppi
  */
-internal class ShowMoreCoAuthorsLookupElement : CommitLookupElement, PrefixChangeListener {
-  @Suppress("JoinDeclarationAndAssignment")
+internal class ShowMoreCoAuthorsLookupElement : CommitTokenLookupElement, PrefixChangeListener {
   private var userInsertedText: StringBuilder
   private val psiElement: CommitFooterValuePsiElement
 
-  constructor(project: Project, completionPrefix: String)
-      : super(2000, CC.Tokens.PriorityFooterValue, FakeProviderWrapper) {
+  constructor(project: Project, completionPrefix: String) : super() {
     userInsertedText = StringBuilder(50).append(completionPrefix)
-    psiElement = CommitFooterValuePsiElement(
-        project,
-        CommitFooterValue("", CCBundle["cc.config.coAuthors.description"])
-    )
+
+    val token = ShowMoreCoAuthorsCommitFooterValue
+    psiElement = CommitFooterValuePsiElement(project, token.getValue())
   }
 
   override fun beforeAppend(char: Char) {
@@ -41,21 +39,22 @@ internal class ShowMoreCoAuthorsLookupElement : CommitLookupElement, PrefixChang
     userInsertedText.deleteLast()
   }
 
+  override fun getToken(): CommitToken =
+    ShowMoreCoAuthorsCommitFooterValue
+
   override fun getPsiElement(): CommitFooterValuePsiElement =
     psiElement
 
   override fun getLookupString(): String =
-    "${CCBundle["cc.completion.showMore"]}$userInsertedText"
+    "${getToken().getValue()}$userInsertedText"
 
-  override fun getDisplayedText(): String =
+  override fun getItemText(): String =
     lookupString
 
   override fun renderElement(presentation: LookupElementPresentation) {
-    presentation.also {
-      it.itemText = CCBundle["cc.completion.showMore"]
-      it.isTypeIconRightAligned = true
-      it.isItemTextBold = true
-    }
+    presentation.itemText = getToken().getText()
+    presentation.isTypeIconRightAligned = true
+    presentation.isItemTextBold = true
   }
 
   override fun handleInsert(context: InsertionContext) {
@@ -109,5 +108,19 @@ internal class ShowMoreCoAuthorsLookupElement : CommitLookupElement, PrefixChang
         runnable,
         PsiDocumentManager.getInstance(context.project).getPsiFile(document),
     )
+  }
+
+  private object ShowMoreCoAuthorsCommitFooterValue : CommitFooterValue {
+    override fun getText(): String =
+      getValue()
+
+    override fun getValue(): String =
+      CCBundle["cc.completion.showMore"]
+
+    override fun getDescription(): String =
+      CCBundle["cc.config.coAuthors.description"]
+
+    override fun getPresentation(): TokenPresentation =
+      object : TokenPresentation {}
   }
 }

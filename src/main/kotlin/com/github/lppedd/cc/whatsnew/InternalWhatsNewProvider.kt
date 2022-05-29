@@ -1,10 +1,12 @@
 package com.github.lppedd.cc.whatsnew
 
 import com.github.lppedd.cc.CC
+import com.github.lppedd.cc.api.WhatsNewPage
 import com.github.lppedd.cc.api.WhatsNewProvider
 import com.intellij.ide.plugins.IdeaPluginDescriptor
 import com.intellij.ide.plugins.PluginManagerCore
 import com.intellij.ide.util.PropertiesComponent
+import com.intellij.openapi.extensions.PluginDescriptor
 import com.intellij.openapi.extensions.PluginId
 import java.util.*
 import kotlin.math.max
@@ -14,23 +16,32 @@ import kotlin.math.max
  *
  * @author Edoardo Luppi
  */
-internal class DefaultWhatsNewProvider : WhatsNewProvider() {
+internal class InternalWhatsNewProvider : WhatsNewProvider {
   companion object {
     const val PROPERTY_VERSION = "com.github.lppedd.cc.version"
   }
 
+  private lateinit var pluginDescriptor: PluginDescriptor
+
   private val whatsNewPages = listOf(
-      WhatsNewPage("0.20.1", "0_20_1.html"),
-      WhatsNewPage("0.20.0", "0_20_0.html"),
-      WhatsNewPage("0.19.0", "0_19_0.html"),
-      WhatsNewPage("0.18.0", "0_18_0.html"),
-      WhatsNewPage("0.17.0", "0_17_0.html"),
+      DefaultWhatsNewPage("0.20.1", "0_20_1.html"),
+      DefaultWhatsNewPage("0.20.0", "0_20_0.html"),
+      DefaultWhatsNewPage("0.19.0", "0_19_0.html"),
+      DefaultWhatsNewPage("0.18.0", "0_18_0.html"),
+      DefaultWhatsNewPage("0.17.0", "0_17_0.html"),
   )
+
+  override fun getPluginDescriptor(): PluginDescriptor =
+    pluginDescriptor
+
+  override fun setPluginDescriptor(pluginDescriptor: PluginDescriptor) {
+    this.pluginDescriptor = pluginDescriptor
+  }
 
   override fun getDisplayName(): String =
     "Core"
 
-  override fun shouldDisplay(): Boolean {
+  override fun shouldDisplayAtStartup(): Boolean {
     val properties = PropertiesComponent.getInstance()
     val installedVersion = getPlugin()?.version ?: return false
     val registeredVersion = properties.getValue(PROPERTY_VERSION, "0.0.0")
@@ -38,16 +49,16 @@ internal class DefaultWhatsNewProvider : WhatsNewProvider() {
     if (PluginVersion(installedVersion) > PluginVersion(registeredVersion)) {
       properties.setValue(PROPERTY_VERSION, installedVersion)
       val showOnEveryUpdate = properties.getValue(WhatsNewDialog.PROPERTY_SHOW, "true").toBoolean()
-      return showOnEveryUpdate && getWhatsNewPages().any { it.version == installedVersion }
+      return showOnEveryUpdate && getPages().any { it.getVersion() == installedVersion }
     }
 
     return false
   }
 
-  override fun basePath(): String =
+  override fun getBasePath(): String =
     "/whatsnew/"
 
-  override fun getWhatsNewPages(): List<WhatsNewPage> =
+  override fun getPages(): List<WhatsNewPage> =
     whatsNewPages
 
   private fun getPlugin(): IdeaPluginDescriptor? =
@@ -79,5 +90,16 @@ internal class DefaultWhatsNewProvider : WhatsNewProvider() {
 
       return 0
     }
+  }
+
+  private class DefaultWhatsNewPage(
+      private val version: String,
+      private val fileName: String,
+  ) : WhatsNewPage {
+    override fun getVersion(): String =
+      version
+
+    override fun getFileName(): String =
+      fileName
   }
 }

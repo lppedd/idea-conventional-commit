@@ -19,7 +19,6 @@ import javax.swing.Box
 import javax.swing.BoxLayout
 import javax.swing.JComponent
 import javax.swing.JPanel
-import kotlin.internal.InlineOnly
 
 /**
  * @author Edoardo Luppi
@@ -49,22 +48,22 @@ internal class CommitFormatInspectionOptions : ConfigurableUi<Project> {
   }
 
   override fun reset(project: Project) {
-    charComboModel.setSelectedItem(config(project).scopeReplaceChar)
+    val configService = project.service<CCConfigService>()
+    charComboModel.setSelectedItem(configService.scopeReplaceChar)
   }
 
-  override fun isModified(project: Project): Boolean =
-    charComboModel.selected.char != config(project).scopeReplaceChar
+  override fun isModified(project: Project): Boolean {
+    val configService = project.service<CCConfigService>()
+    return charComboModel.selected.char != configService.scopeReplaceChar
+  }
 
   override fun apply(project: Project) {
-    config(project).scopeReplaceChar = charComboModel.selected.char
+    val configService = project.service<CCConfigService>()
+    configService.scopeReplaceChar = charComboModel.selected.char
   }
 
   override fun getComponent(): JComponent =
     myMainPanel
-
-  @InlineOnly
-  private inline fun config(project: Project) =
-    project.service<CCConfigService>()
 }
 
 private class CharEntryModel(items: List<CharEntry>) : MutableCollectionComboBoxModel<CharEntry>(items) {

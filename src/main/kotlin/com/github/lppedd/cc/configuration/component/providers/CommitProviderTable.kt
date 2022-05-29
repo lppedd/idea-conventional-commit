@@ -80,7 +80,9 @@ internal class CommitProviderTable<T : CommitTokenProvider> : CCTable() {
 
     private fun setValue(value: Any?, useDarkIcon: Boolean) {
       if (value is CommitTokenProvider) {
-        val (name, icon) = value.getPresentation()
+        val presentation = value.getPresentation()
+        val name = presentation.getName()
+        val icon = presentation.getIcon()
         val fixedIcon = getIconOrUnknown(icon)
         setIcon(if (useDarkIcon) IconLoader.getDarkIcon(fixedIcon, true) else fixedIcon)
         append(name)
@@ -93,7 +95,7 @@ internal class CommitProviderTable<T : CommitTokenProvider> : CCTable() {
         icon
       } else {
         // The icon doesn't match the size prerequisite.
-        // Thus we display a generic one
+        // Thus, we display a generic one
         CCIcons.Provider.Unknown
       }
     }

@@ -1,6 +1,6 @@
 package com.github.lppedd.cc
 
-import com.github.lppedd.cc.vcs.CCVcsHandler
+import com.github.lppedd.cc.vcs.VcsService
 import com.github.lppedd.cc.vcs.commitbuilder.CommitBuilderService
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.service
@@ -21,8 +21,8 @@ internal class CCProjectManagerListener : ProjectManagerListener {
       }
 
       ApplicationManager.getApplication().executeOnPooledThread {
-        val vcsHandler = project.service<CCVcsHandler>()
-        vcsHandler.reset()
+        val vcsHandler = project.service<VcsService>()
+        vcsHandler.refresh()
       }
     }
 

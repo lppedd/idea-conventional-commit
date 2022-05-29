@@ -126,7 +126,7 @@ internal class LookupEnhancer(
       this.menuButton = menuButton
     } catch (_: ReflectiveOperationException) {
       // This should never happen, but in case I can't do anything about it,
-      // so I'll just clean-up and let the user continue without applying any change
+      // so I'll just clean up and let the user continue without applying any change
       lookup.removeLookupListener(this)
     }
   }
@@ -151,6 +151,7 @@ internal class LookupEnhancer(
     filterActions.forEach { it.filterItems(false) }
   }
 
+  @Suppress("override_deprecation")
   override fun beforeActionPerformed(action: AnAction, dataContext: DataContext, event: AnActionEvent) {
     if (action.javaClass == menuActionClass && !Registry.`is`(SHOW_GROUP_IN_POPUP, false)) {
       val disposable = Disposer.newDisposable()

@@ -5,11 +5,11 @@ import com.github.lppedd.cc.completion.FlatPrefixMatcher
 import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.codeInsight.completion.CompletionSorter
-import com.intellij.codeInsight.completion.impl.CompletionSorterImpl
 import com.intellij.codeInsight.completion.impl.PreferStartMatching
 import com.intellij.codeInsight.lookup.CharFilter.Result
-import com.intellij.codeInsight.lookup.LookupElementWeigher
+import com.intellij.openapi.components.service
 import com.intellij.openapi.project.DumbAware
+import com.intellij.openapi.project.Project
 import com.intellij.util.textCompletion.TextCompletionProvider
 
 /**
@@ -18,7 +18,9 @@ import com.intellij.util.textCompletion.TextCompletionProvider
  * @author Edoardo Luppi
  * @see CommitBuilderDialog
  */
-internal abstract class CommitTokenCompletionProvider : TextCompletionProvider, DumbAware {
+internal abstract class CommitTokenTextCompletionProvider(private val project: Project) :
+    TextCompletionProvider,
+    DumbAware {
   abstract fun fillVariants(prefix: String, resultSet: CompletionResultSet)
 
   override fun getAdvertisement(): String? =
@@ -31,7 +33,11 @@ internal abstract class CommitTokenCompletionProvider : TextCompletionProvider, 
     resultSet
       .caseInsensitive()
       .withPrefixMatcher(FlatPrefixMatcher(prefix))
-      .withRelevanceSorter(sorter(CommitLookupElementWeigher))
+      .withRelevanceSorter(
+          CompletionSorter.emptySorter()
+            .weigh(PreferStartMatching())
+            .weigh(CommitLookupElementWeigher(project.service()))
+      )
 
   override fun acceptChar(ch: Char): Result? =
     null
@@ -44,9 +50,4 @@ internal abstract class CommitTokenCompletionProvider : TextCompletionProvider, 
     fillVariants(prefix, resultSet)
     resultSet.stopHere()
   }
-
-  private fun sorter(weigher: LookupElementWeigher): CompletionSorter =
-    (CompletionSorter.emptySorter() as CompletionSorterImpl)
-      .withClassifier(CompletionSorterImpl.weighingFactory(PreferStartMatching()))
-      .withClassifier(CompletionSorterImpl.weighingFactory(weigher))
 }

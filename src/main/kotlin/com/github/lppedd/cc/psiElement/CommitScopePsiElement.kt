@@ -1,10 +1,22 @@
 package com.github.lppedd.cc.psiElement
 
-import com.github.lppedd.cc.api.CommitScope
+import com.github.lppedd.cc.CCIcons
 import com.intellij.openapi.project.Project
+import javax.swing.Icon
 
 /**
  * @author Edoardo Luppi
  */
-internal class CommitScopePsiElement(project: Project, val commitScope: CommitScope) :
-    CommitFakePsiElement(project, commitScope.text)
+internal class CommitScopePsiElement(
+    private val project: Project,
+    private val presentableText: String,
+) : CommitTokenPsiElement() {
+  override fun getProject(): Project =
+    project
+
+  override fun getPresentableText(): String =
+    presentableText
+
+  override fun getIcon(unused: Boolean): Icon =
+    CCIcons.Tokens.Scope
+}

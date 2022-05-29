@@ -1,24 +1,24 @@
 package com.github.lppedd.cc
 
-import com.github.lppedd.cc.api.BODY_EP
-import com.github.lppedd.cc.api.FOOTER_TYPE_EP
-import com.github.lppedd.cc.api.FOOTER_VALUE_EP
-import com.github.lppedd.cc.api.SUBJECT_EP
+import com.github.lppedd.cc.api.CommitTokenProviderService
 import com.github.lppedd.cc.provider.TestProvider
+import com.intellij.openapi.components.service
 import com.intellij.openapi.vcs.ui.CommitMessage
 import com.intellij.testFramework.UsefulTestCase
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase
 
 private const val TEST_FILE_NAME = "test.txt"
 
+@Suppress("ReplaceNotNullAssertionWithElvisReturn")
 abstract class BaseTest : LightJavaCodeInsightFixtureTestCase() {
   override fun setUp() {
     super.setUp()
 
-    SUBJECT_EP.getPoint(project).registerExtension(TestProvider, myFixture.testRootDisposable)
-    BODY_EP.getPoint(project).registerExtension(TestProvider, myFixture.testRootDisposable)
-    FOOTER_TYPE_EP.getPoint(project).registerExtension(TestProvider, myFixture.testRootDisposable)
-    FOOTER_VALUE_EP.getPoint(project).registerExtension(TestProvider, myFixture.testRootDisposable)
+    val providerService = project.service<CommitTokenProviderService>()
+    providerService.registerSubjectProvider(TestProvider, myFixture.testRootDisposable)
+    providerService.registerBodyProvider(TestProvider, myFixture.testRootDisposable)
+    providerService.registerFooterTypeProvider(TestProvider, myFixture.testRootDisposable)
+    providerService.registerFooterValueProvider(TestProvider, myFixture.testRootDisposable)
   }
 
   protected fun testCompletionVariants(text: String, vararg variants: String) {

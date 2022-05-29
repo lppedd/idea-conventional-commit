@@ -1,7 +1,8 @@
 package com.github.lppedd.cc.lookupElement
 
 import com.github.lppedd.cc.*
-import com.github.lppedd.cc.completion.providers.FooterValueProviderWrapper
+import com.github.lppedd.cc.api.CommitFooterValue
+import com.github.lppedd.cc.api.CommitToken
 import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.ValidToken
 import com.github.lppedd.cc.psiElement.CommitFooterValuePsiElement
@@ -12,33 +13,24 @@ import com.intellij.codeInsight.lookup.LookupElementPresentation
  * @author Edoardo Luppi
  */
 internal class CommitFooterValueLookupElement(
-    index: Int,
-    provider: FooterValueProviderWrapper,
     private val psiElement: CommitFooterValuePsiElement,
-) : CommitLookupElement(index, CC.Tokens.PriorityFooterValue, provider) {
-  private val commitFooterValue = psiElement.commitFooterValue
+    private val commitFooterValue: CommitFooterValue,
+) : CommitTokenLookupElement() {
+  override fun getToken(): CommitToken =
+    commitFooterValue
 
   override fun getPsiElement(): CommitFooterValuePsiElement =
     psiElement
 
   override fun getLookupString(): String =
-    commitFooterValue.value
+    commitFooterValue.getValue()
 
-  override fun getDisplayedText(): String =
-    commitFooterValue.text
+  override fun getItemText(): String =
+    commitFooterValue.getText()
 
   override fun renderElement(presentation: LookupElementPresentation) {
-    presentation.also {
-      it.icon = CCIcons.Tokens.Footer
-      it.itemText = getDisplayedText().flattenWhitespaces().abbreviate(100)
-      it.isTypeIconRightAligned = true
-
-      val rendering = commitFooterValue.getRendering()
-      it.isItemTextBold = rendering.bold
-      it.isItemTextItalic = rendering.italic
-      it.isStrikeout = rendering.strikeout
-      it.setTypeText(rendering.type, rendering.icon)
-    }
+    presentation.icon = CCIcons.Tokens.Footer
+    super.renderElement(presentation)
   }
 
   override fun handleInsert(context: InsertionContext) {
@@ -47,7 +39,7 @@ internal class CommitFooterValueLookupElement(
     val (lineStartOffset) = editor.getCurrentLineRange()
     val lineText = document.getSegment(lineStartOffset, document.textLength)
     val footer = CCParser.parseFooter(lineText).footer
-    val newFooterValueString = " ${commitFooterValue.value}"
+    val newFooterValueString = " ${commitFooterValue.getValue()}"
 
     if (footer is ValidToken) {
       // Replace an existing footer value

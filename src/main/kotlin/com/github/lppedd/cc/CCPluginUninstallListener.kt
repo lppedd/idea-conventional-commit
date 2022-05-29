@@ -1,7 +1,7 @@
 package com.github.lppedd.cc
 
 import com.github.lppedd.cc.vcs.commitbuilder.CommitBuilderDialog
-import com.github.lppedd.cc.whatsnew.DefaultWhatsNewProvider
+import com.github.lppedd.cc.whatsnew.InternalWhatsNewProvider
 import com.github.lppedd.cc.whatsnew.WhatsNewDialog
 import com.intellij.ide.plugins.IdeaPluginDescriptor
 import com.intellij.ide.plugins.PluginStateListener
@@ -28,7 +28,7 @@ internal class CCPluginUninstallListener : PluginStateListener {
   private fun cleanupOptions() = try {
     PropertiesComponent.getInstance().let {
       it.unsetValue(CommitBuilderDialog.PROPERTY_HOWTO_SHOW)
-      it.unsetValue(DefaultWhatsNewProvider.PROPERTY_VERSION)
+      it.unsetValue(InternalWhatsNewProvider.PROPERTY_VERSION)
       it.unsetValue(WhatsNewDialog.PROPERTY_SHOW)
     }
   } catch (_: Exception) {

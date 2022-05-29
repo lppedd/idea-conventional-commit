@@ -1,14 +1,15 @@
 package com.github.lppedd.cc.completion.providers
 
 import com.github.lppedd.cc.CC
+import com.github.lppedd.cc.api.CommitScope
 import com.github.lppedd.cc.api.CommitScopeProvider
-import com.github.lppedd.cc.api.SCOPE_EP
+import com.github.lppedd.cc.api.CommitTokenProviderService
 import com.github.lppedd.cc.completion.resultset.ResultSet
-import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.lookupElement.CommitScopeLookupElement
 import com.github.lppedd.cc.parser.CommitContext.ScopeCommitContext
 import com.github.lppedd.cc.psiElement.CommitScopePsiElement
 import com.github.lppedd.cc.safeRunWithCheckCanceled
+import com.github.lppedd.cc.vcs.RecentCommitsService
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 
@@ -19,32 +20,35 @@ internal class ScopeCompletionProvider(
     private val project: Project,
     private val context: ScopeCommitContext,
 ) : CompletionProvider<CommitScopeProvider> {
-  override val providers: List<CommitScopeProvider> = SCOPE_EP.getExtensions(project)
-  override val stopHere = false
+  override fun getProviders(): Collection<CommitScopeProvider> =
+    project.service<CommitTokenProviderService>().getScopeProviders()
+
+  override fun stopHere(): Boolean =
+    false
 
   override fun complete(resultSet: ResultSet) {
-    val rs = resultSet.withPrefixMatcher(context.scope.trim())
-    val config = project.service<CCConfigService>()
+    val prefixedResultSet = resultSet.withPrefixMatcher(context.scope.trim())
+    val recentCommitsService = project.service<RecentCommitsService>()
+    val recentScopes = recentCommitsService.getRecentScopes()
+    val scopes = LinkedHashSet<ProviderCommitToken<CommitScope>>(64)
 
-    providers.asSequence()
-      .sortedBy(config::getProviderOrder)
-      .flatMap { provider ->
-        safeRunWithCheckCanceled {
-          val wrapper = ScopeProviderWrapper(project, provider)
-          provider.getCommitScopes(context.type)
-            .asSequence()
-            .take(CC.Provider.MaxItems)
-            .map { wrapper to it }
-        }
+    // See comment in TypeCompletionProvider
+    getProviders().forEach { provider ->
+      safeRunWithCheckCanceled {
+        provider.getCommitScopes(context.type)
+          .asSequence()
+          .take(CC.Provider.MaxItems)
+          .forEach { scopes.add(ProviderCommitToken(provider, it)) }
       }
-      .mapIndexed { index, (provider, commitScope) ->
-        CommitScopeLookupElement(
-            index,
-            provider,
-            CommitScopePsiElement(project, commitScope),
-        )
-      }
-      .distinctBy(CommitScopeLookupElement::getLookupString)
-      .forEach(rs::addElement)
+    }
+
+    scopes.forEachIndexed { index, (provider, commitScope) ->
+      val psiElement = CommitScopePsiElement(project, commitScope.getText())
+      val element = CommitScopeLookupElement(psiElement, commitScope)
+      element.putUserData(ELEMENT_INDEX, index)
+      element.putUserData(ELEMENT_PROVIDER, provider)
+      element.putUserData(ELEMENT_IS_RECENT, recentScopes.contains(commitScope.getValue()))
+      prefixedResultSet.addElement(element)
+    }
   }
 }

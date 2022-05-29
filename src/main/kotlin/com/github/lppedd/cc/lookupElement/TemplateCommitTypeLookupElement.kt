@@ -1,6 +1,6 @@
 package com.github.lppedd.cc.lookupElement
 
-import com.github.lppedd.cc.completion.providers.TypeProviderWrapper
+import com.github.lppedd.cc.api.CommitType
 import com.github.lppedd.cc.getTemplateState
 import com.github.lppedd.cc.insertStringAtCaret
 import com.github.lppedd.cc.liveTemplate.CCTemplateEditingListener
@@ -24,10 +24,9 @@ internal const val INDEX_FOOTER_VALUE = 4
  * @see com.intellij.codeInsight.template.impl.Variable
  */
 internal class TemplateCommitTypeLookupElement(
-    index: Int,
-    provider: TypeProviderWrapper,
     psiElement: CommitTypePsiElement,
-) : CommitTypeLookupElement(index, provider, psiElement) {
+    commitType: CommitType,
+) : CommitTypeLookupElement(psiElement, commitType) {
   private val templateSettings = TemplateSettings.getInstance()
 
   /**
@@ -57,7 +56,7 @@ internal class TemplateCommitTypeLookupElement(
 
     // We populate the macro type context with the chosen commit type
     runWriteAction {
-      editor.insertStringAtCaret(psiElement.commitType.value)
+      editor.insertStringAtCaret(getToken().getValue())
     }
 
     // ...and we confirm it by navigating to the subject context

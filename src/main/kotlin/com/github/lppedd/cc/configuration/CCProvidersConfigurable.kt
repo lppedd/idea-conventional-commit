@@ -2,7 +2,7 @@ package com.github.lppedd.cc.configuration
 
 import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.CCBundle
-import com.github.lppedd.cc.api.*
+import com.github.lppedd.cc.api.CommitTokenProviderService
 import com.intellij.openapi.components.service
 import com.intellij.openapi.options.SearchableConfigurable
 import com.intellij.openapi.project.Project
@@ -13,6 +13,7 @@ import javax.swing.JPanel
  */
 private class CCProvidersConfigurable(private val project: Project) : SearchableConfigurable {
   private val configService = project.service<CCConfigService>()
+  private val providerService = project.service<CommitTokenProviderService>()
   private lateinit var gui: CCProvidersConfigurableGui
 
   override fun getId(): String =
@@ -24,12 +25,12 @@ private class CCProvidersConfigurable(private val project: Project) : Searchable
   override fun createComponent(): JPanel {
     gui = CCProvidersConfigurableGui()
     gui.setProviders(
-        TYPE_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
-        SCOPE_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
-        SUBJECT_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
-        BODY_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
-        FOOTER_TYPE_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
-        FOOTER_VALUE_EP.getExtensions(project).sortedBy(configService::getProviderOrder),
+        providerService.getTypeProviders(),
+        providerService.getScopeProviders(),
+        providerService.getSubjectProviders(),
+        providerService.getBodyProviders(),
+        providerService.getFooterTypeProviders(),
+        providerService.getFooterValueProviders(),
     )
 
     return gui.rootPanel

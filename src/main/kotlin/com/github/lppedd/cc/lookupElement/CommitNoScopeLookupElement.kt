@@ -1,35 +1,47 @@
 package com.github.lppedd.cc.lookupElement
 
-import com.github.lppedd.cc.CC
-import com.github.lppedd.cc.completion.providers.FakeProviderWrapper
-import com.github.lppedd.cc.psiElement.CommitFakePsiElement
+import com.github.lppedd.cc.CCBundle
+import com.github.lppedd.cc.api.CommitScope
+import com.github.lppedd.cc.api.CommitToken
+import com.github.lppedd.cc.api.TokenPresentation
+import com.github.lppedd.cc.psiElement.CommitTokenPsiElement
+import com.github.lppedd.cc.psiElement.NoScopeCommitPsiElement
 import com.intellij.codeInsight.lookup.LookupElementPresentation
-import com.intellij.openapi.project.Project
 
 /**
  * @author Edoardo Luppi
  */
-internal class CommitNoScopeLookupElement(project: Project) :
-    CommitLookupElement(
-        -1,
-        CC.Tokens.PriorityScope,
-        FakeProviderWrapper,
-    ) {
-  private val psiElement = object : CommitFakePsiElement(project, "No scope") {}
+internal class CommitNoScopeLookupElement(
+    private val psiElement: NoScopeCommitPsiElement,
+) : CommitTokenLookupElement() {
+  override fun getToken(): CommitToken =
+    NoScopeCommitScope
 
-  override fun getPsiElement(): CommitFakePsiElement =
+  override fun getPsiElement(): CommitTokenPsiElement =
     psiElement
 
   override fun getLookupString(): String =
     ""
 
-  override fun getDisplayedText(): String =
-    "No scope"
+  override fun getItemText(): String =
+    psiElement.presentableText
 
   override fun renderElement(presentation: LookupElementPresentation) {
-    presentation.also {
-      it.itemText = getDisplayedText()
-      it.isItemTextItalic = true
-    }
+    presentation.itemText = getItemText()
+    presentation.isItemTextItalic = true
+  }
+
+  private object NoScopeCommitScope : CommitScope {
+    override fun getText(): String =
+      CCBundle["cc.completion.noScope"]
+
+    override fun getValue(): String =
+      ""
+
+    override fun getDescription(): String =
+      ""
+
+    override fun getPresentation(): TokenPresentation =
+      object : TokenPresentation {}
   }
 }

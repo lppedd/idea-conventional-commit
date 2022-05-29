@@ -1,7 +1,8 @@
 package com.github.lppedd.cc.whatsnew
 
-import com.github.lppedd.cc.api.WHATS_NEW_EP
 import com.github.lppedd.cc.api.WhatsNewProvider
+import com.github.lppedd.cc.api.WhatsNewProviderService
+import com.intellij.openapi.components.service
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.StartupActivity
@@ -20,10 +21,11 @@ private class WhatsNewStartupActivity : StartupActivity, DumbAware {
       return
     }
 
-    val shouldDisplay = WHATS_NEW_EP.extensions
+    val shouldDisplay = service<WhatsNewProviderService>()
+      .getWhatsNewProviders()
       .asSequence()
-      .filter(WhatsNewProvider::shouldDisplay)
-      .any { it.getWhatsNewPages().isNotEmpty() }
+      .filter(WhatsNewProvider::shouldDisplayAtStartup)
+      .any { it.getPages().isNotEmpty() }
 
     if (shouldDisplay) {
       EdtScheduledExecutorService.getInstance().schedule({

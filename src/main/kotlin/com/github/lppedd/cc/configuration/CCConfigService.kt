@@ -2,8 +2,8 @@ package com.github.lppedd.cc.configuration
 
 import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.api.*
+import com.github.lppedd.cc.api.impl.InternalCommitTokenProvider
 import com.github.lppedd.cc.configuration.CCConfigService.PresentableNameGetter
-import com.github.lppedd.cc.vcs.RecentCommitTokenProvider
 import com.github.lppedd.cc.vcs.VcsCommitTokenProvider
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.State
@@ -12,24 +12,30 @@ import com.intellij.util.xmlb.XmlSerializerUtil
 import com.intellij.util.xmlb.annotations.Attribute
 import com.intellij.util.xmlb.annotations.Transient
 import com.intellij.util.xmlb.annotations.XMap
+import org.jetbrains.annotations.ApiStatus.*
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
-import kotlin.collections.Map.Entry
-import kotlin.math.min
 
 /**
  * @author Edoardo Luppi
  */
+@Internal
 @State(
     name = "general",
     storages = [Storage(CC.Settings.File)],
     presentableName = PresentableNameGetter::class,
 )
 internal class CCConfigService : PersistentStateComponent<CCConfigService> {
+  @Transient
+  private companion object {
+    private const val CURRENT_VERSION = 2
+  }
+
   @Attribute
-  private var version: Int = 1
+  private var version: Int = 2
 
   var completionType: CompletionType = CompletionType.POPUP
+  var isPrioritizeRecentlyUsed: Boolean = true
   var providerFilterType: ProviderFilterType = ProviderFilterType.HIDE_SELECTED
   var customFilePath: String? = null
   var customCoAuthorsFilePath: String? = null
@@ -134,21 +140,13 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
   }
 
   override fun noStateLoaded() {
-    typeProvidersMap.putIfAbsent(RecentCommitTokenProvider.ID, 0)
-    typeProvidersMap.putIfAbsent(DefaultCommitTokenProvider.ID, 1)
+    typeProvidersMap.putIfAbsent(InternalCommitTokenProvider.ID, 1)
     typeProvidersMap.putIfAbsent(VcsCommitTokenProvider.ID, 2)
-
-    scopeProvidersMap.putIfAbsent(RecentCommitTokenProvider.ID, 0)
-    scopeProvidersMap.putIfAbsent(DefaultCommitTokenProvider.ID, 1)
+    scopeProvidersMap.putIfAbsent(InternalCommitTokenProvider.ID, 1)
     scopeProvidersMap.putIfAbsent(VcsCommitTokenProvider.ID, 2)
-
-    subjectProvidersMap.putIfAbsent(RecentCommitTokenProvider.ID, 0)
     subjectProvidersMap.putIfAbsent(VcsCommitTokenProvider.ID, 1)
-
-    footerTypeProvidersMap.putIfAbsent(DefaultCommitTokenProvider.ID, 0)
-
-    footerValueProvidersMap.putIfAbsent(RecentCommitTokenProvider.ID, 0)
-    footerValueProvidersMap.putIfAbsent(DefaultCommitTokenProvider.ID, 1)
+    footerTypeProvidersMap.putIfAbsent(InternalCommitTokenProvider.ID, 0)
+    footerValueProvidersMap.putIfAbsent(InternalCommitTokenProvider.ID, 1)
     footerValueProvidersMap.putIfAbsent(VcsCommitTokenProvider.ID, 2)
   }
 
@@ -164,7 +162,10 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
     //  with XML itself
     if (version < 1) {
       // 0.17.0
-      updateProvidersOrdering()
+      version++
+    }
+
+    if (version < 2) {
       version++
     }
 
@@ -173,13 +174,6 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
     }
 
     version = CURRENT_VERSION
-  }
-
-  private fun updateProvidersOrdering() {
-    updateProviderOrder(typeProvidersMap, RecentCommitTokenProvider.ID, 0)
-    updateProviderOrder(scopeProvidersMap, RecentCommitTokenProvider.ID, 0)
-    updateProviderOrder(subjectProvidersMap, RecentCommitTokenProvider.ID, 0)
-    updateProviderOrder(footerValueProvidersMap, RecentCommitTokenProvider.ID, 0)
   }
 
   override fun equals(other: Any?): Boolean {
@@ -223,30 +217,5 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
 
   class PresentableNameGetter : State.NameGetter() {
     override fun get() = "Conventional Commit Configuration"
-  }
-
-  @Transient
-  private companion object {
-    private const val CURRENT_VERSION = 1
-
-    @Suppress("SameParameterValue")
-    private fun updateProviderOrder(
-        providers: MutableMap<String, Int>,
-        providerId: String,
-        newPosition: Int,
-    ) {
-      // Set a decent ordering without gaps
-      val map = providers.asSequence()
-        .filterNot { it.key == providerId }
-        .sortedBy(Entry<String, Int>::value)
-        // i + 1 to leave the position to the updating Provider
-        .mapIndexed { i, e -> e.key to if (i < newPosition) i else i + 1 }
-        .associateBy(Pair<String, Int>::first, Pair<String, Int>::second)
-        .toMutableMap()
-
-      // Insert new provider
-      map[providerId] = min(newPosition, map.size)
-      providers.putAll(map)
-    }
   }
 }
