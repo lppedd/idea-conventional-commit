@@ -34,7 +34,6 @@ internal class VcsCommitTokenProvider(project: Project)
   }
 
   private val vcsHandler = project.service<VcsService>()
-  private val tokenProviderService = project.service<CommitTokenProviderService>()
 
   override fun getId(): String =
     ID
