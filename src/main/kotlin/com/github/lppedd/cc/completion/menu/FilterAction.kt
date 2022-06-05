@@ -42,8 +42,8 @@ internal class FilterAction(
       .asSequence()
       .filterIsInstance<CommitTokenLookupElement>()
       .filter {
-        val provider = it.getUserData(ELEMENT_PROVIDER)!!
-        provider.getId() == provider.getId()
+        val elementProvider = it.getUserData(ELEMENT_PROVIDER)!!
+        provider.getId() == elementProvider.getId()
       }.onEach {
         val delegatePrefixMatcher = arranger.itemMatcher(it)
         val newPrefixMatcher = FilterPrefixMatcher(delegatePrefixMatcher)
