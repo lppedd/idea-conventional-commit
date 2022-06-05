@@ -5,6 +5,7 @@ import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.inspection.quickfix.AddWhitespaceQuickFix
 import com.github.lppedd.cc.inspection.quickfix.RemoveRangeQuickFix
 import com.github.lppedd.cc.inspection.quickfix.ReplaceRangeQuickFix
+import com.github.lppedd.cc.language.psi.ConventionalCommitMessagePsiElement
 import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.ValidToken
 import com.intellij.codeInspection.InspectionManager
@@ -18,6 +19,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.vcs.ui.CommitMessage
 import com.intellij.psi.PsiDocumentManager
+import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiPlainText
 import com.intellij.psi.util.PsiTreeUtil
@@ -47,16 +49,20 @@ internal class CommitFormatInspection : CommitBaseInspection() {
         ?.editor
         ?.isTemplateActive() == true
 
-    return if (isTemplateActive || document.lineCount == 0) {
-      emptyArray()
-    } else {
-      val psiPlainText = PsiTreeUtil.getRequiredChildOfType(file, PsiPlainText::class.java)
-      checkHeader(psiPlainText, document, manager).toTypedArray()
+    if (isTemplateActive || document.lineCount == 0) {
+      return emptyArray()
     }
+
+    val psiElement = PsiTreeUtil.getChildOfAnyType(
+        file,
+        ConventionalCommitMessagePsiElement::class.java, PsiPlainText::class.java,
+    ) ?: return emptyArray()
+
+    return checkHeader(psiElement, document, manager).toTypedArray()
   }
 
   private fun checkHeader(
-      psiPlainText: PsiPlainText,
+      psiElement: PsiElement,
       document: Document,
       manager: InspectionManager,
   ): List<ProblemDescriptor> {
@@ -65,15 +71,15 @@ internal class CommitFormatInspection : CommitBaseInspection() {
     val problems = mutableListOf<ProblemDescriptor>()
 
     if (type is ValidToken) {
-      problems += handleType(type, manager, psiPlainText, firstLine)
+      problems += handleType(type, manager, psiElement, firstLine)
     }
 
     if (scope is ValidToken) {
-      problems += handleScope(scope, manager, psiPlainText, firstLine)
+      problems += handleScope(scope, manager, psiElement, firstLine)
     }
 
     if (subject is ValidToken) {
-      handleSubject(subject, manager, psiPlainText)?.let {
+      handleSubject(subject, manager, psiElement)?.let {
         problems += it
       }
     }
@@ -84,7 +90,7 @@ internal class CommitFormatInspection : CommitBaseInspection() {
   private fun handleType(
       type: ValidToken,
       manager: InspectionManager,
-      psiPlainText: PsiPlainText,
+      psiElement: PsiElement,
       firstLine: CharSequence,
   ): List<ProblemDescriptor> {
     val start = type.range.startOffset
@@ -109,7 +115,7 @@ internal class CommitFormatInspection : CommitBaseInspection() {
         }
 
         manager.createProblemDescriptor(
-            psiPlainText,
+            psiElement,
             it,
             CCBundle["cc.inspection.nonStdMessage.text"],
             GENERIC_ERROR_OR_WARNING,
@@ -122,7 +128,7 @@ internal class CommitFormatInspection : CommitBaseInspection() {
   private fun handleScope(
       scope: ValidToken,
       manager: InspectionManager,
-      psiPlainText: PsiPlainText,
+      psiElement: PsiElement,
       firstLine: CharSequence,
   ): List<ProblemDescriptor> {
     val (start, end) = scope.range
@@ -130,7 +136,7 @@ internal class CommitFormatInspection : CommitBaseInspection() {
 
     if (value.isBlank() && ')' == firstLine.getOrNull(end)) {
       return listOf(manager.createProblemDescriptor(
-          psiPlainText,
+          psiElement,
           TextRange(start - 1, end + 1),
           CCBundle["cc.inspection.nonStdMessage.emptyScope"],
           GENERIC_ERROR_OR_WARNING,
@@ -153,7 +159,7 @@ internal class CommitFormatInspection : CommitBaseInspection() {
           }
 
         manager.createProblemDescriptor(
-            psiPlainText,
+            psiElement,
             it,
             CCBundle["cc.inspection.nonStdMessage.text"],
             GENERIC_ERROR_OR_WARNING,
@@ -167,7 +173,7 @@ internal class CommitFormatInspection : CommitBaseInspection() {
   private fun handleSubject(
       subject: ValidToken,
       manager: InspectionManager,
-      psiPlainText: PsiPlainText,
+      psiElement: PsiElement,
   ): ProblemDescriptor? {
     val value = subject.value
     val (start, end) = subject.range
@@ -176,7 +182,7 @@ internal class CommitFormatInspection : CommitBaseInspection() {
         val nonWsIndex = value.indexOfFirst { !it.isWhitespace() }
         val newEnd = if (nonWsIndex < 0) end else start + nonWsIndex
         manager.createProblemDescriptor(
-            psiPlainText,
+            psiElement,
             TextRange(start + 1, newEnd),
             CCBundle["cc.inspection.nonStdMessage.text"],
             GENERIC_ERROR_OR_WARNING,
@@ -187,7 +193,7 @@ internal class CommitFormatInspection : CommitBaseInspection() {
       }
       value.isNotEmpty() && !value.firstIsWhitespace() -> {
         manager.createProblemDescriptor(
-            psiPlainText,
+            psiElement,
             TextRange(start, start + 1),
             CCBundle["cc.inspection.nonStdMessage.text"],
             GENERIC_ERROR_OR_WARNING,

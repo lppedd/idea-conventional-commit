@@ -49,6 +49,8 @@ public class CCMainConfigurableGui {
   private final JBRadioButton isTemplate = new JBRadioButton(CCBundle.get("cc.config.template"));
 
   private JPanel completionOptionsPanel;
+  private final JBCheckBox isEnableLanguageSupport =
+      new JBCheckBox(CCBundle.get("cc.config.enableLanguageSupport"));
   private final JBCheckBox isPrioritizeRecentlyUsed =
       new JBCheckBox(CCBundle.get("cc.config.prioritizeRecentlyUsed"));
   private final JBCheckBox isAutoInsertSpaceAfterColon =
@@ -87,6 +89,10 @@ public class CCMainConfigurableGui {
     throw new IllegalStateException("A radio button should be selected");
   }
 
+  public boolean isEnableLanguageSupport() {
+    return isEnableLanguageSupport.isSelected();
+  }
+
   public boolean isPrioritizeRecentlyUsed() {
     return isPrioritizeRecentlyUsed.isSelected();
   }
@@ -116,6 +122,10 @@ public class CCMainConfigurableGui {
       default:
         break;
     }
+  }
+
+  public void setEnableLanguageSupport(final boolean isEnableLanguageSupport) {
+    this.isEnableLanguageSupport.setSelected(isEnableLanguageSupport);
   }
 
   public void setPrioritizeRecentlyUsed(final boolean isPrioritizeRecentlyUsed) {
@@ -177,6 +187,8 @@ public class CCMainConfigurableGui {
 
     completionOptionsPanel.setLayout(new BoxLayout(completionOptionsPanel, BoxLayout.Y_AXIS));
     completionOptionsPanel.setBorder(JBUI.Borders.emptyTop(10));
+    completionOptionsPanel.add(isEnableLanguageSupport);
+    completionOptionsPanel.add(Box.createVerticalStrut(5));
     completionOptionsPanel.add(isPrioritizeRecentlyUsed);
     completionOptionsPanel.add(Box.createVerticalStrut(5));
     completionOptionsPanel.add(isAutoInsertSpaceAfterColon);
