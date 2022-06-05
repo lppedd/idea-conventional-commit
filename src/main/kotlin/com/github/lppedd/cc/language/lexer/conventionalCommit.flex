@@ -117,7 +117,7 @@ FooterType = [^:\s]+ | BREAKING\ CHANGE
       }
 
       // Closes #16
-      ^{FooterType} / (\ +#.*) {
+      ^{FooterType} / \ +#.* {
         yybegin(FOOTER_VALUE);
         return getFooterType();
       }
@@ -145,7 +145,8 @@ FooterType = [^:\s]+ | BREAKING\ CHANGE
 
 <FOOTERS> {
       // Closes: #16
-      ^{FooterType}\ * {
+      ^{FooterType}\ *: {
+        yypushback(1);
         return getFooterType();
       }
 

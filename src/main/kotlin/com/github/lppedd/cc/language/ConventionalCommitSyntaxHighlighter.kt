@@ -13,7 +13,7 @@ import com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributes
 /**
  * @author Edoardo Luppi
  */
-class ConventionalCommitSyntaxHighlighter : SyntaxHighlighterBase() {
+internal class ConventionalCommitSyntaxHighlighter : SyntaxHighlighterBase() {
   companion object {
     @JvmField val TYPE: TextAttributesKey = attrs("CONVENTIONAL_COMMIT_TYPE", TEXT)
     @JvmField val SCOPE: TextAttributesKey = attrs("CONVENTIONAL_COMMIT_SCOPE", TEXT)

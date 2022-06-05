@@ -11,7 +11,6 @@ import com.intellij.lang.PsiParser
 import com.intellij.lexer.Lexer
 import com.intellij.openapi.project.Project
 import com.intellij.psi.FileViewProvider
-import com.intellij.psi.PlainTextTokenTypes
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IFileElementType
@@ -35,10 +34,10 @@ internal class ConventionalCommitParserDefinition : ParserDefinition {
     FILE
 
   override fun getCommentTokens(): TokenSet =
-    TokenSet.WHITE_SPACE
+    TokenSet.EMPTY
 
   override fun getStringLiteralElements(): TokenSet =
-    TokenSet.create(PlainTextTokenTypes.PLAIN_TEXT)
+    TokenSet.EMPTY
 
   override fun createElement(astNode: ASTNode): PsiElement =
     when (astNode.elementType) {

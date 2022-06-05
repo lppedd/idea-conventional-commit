@@ -35,6 +35,7 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
   private var version: Int = 2
 
   var completionType: CompletionType = CompletionType.POPUP
+  var isEnableLanguageSupport: Boolean = true
   var isPrioritizeRecentlyUsed: Boolean = true
   var isAutoInsertSpaceAfterColon: Boolean = true
   var providerFilterType: ProviderFilterType = ProviderFilterType.HIDE_SELECTED

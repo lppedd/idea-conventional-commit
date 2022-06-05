@@ -26,6 +26,7 @@ private class CCMainConfigurable(private val project: Project) : SearchableConfi
   override fun createComponent(): JComponent {
     gui = CCMainConfigurableGui(project, disposable)
     gui.completionType = configService.completionType
+    gui.isEnableLanguageSupport = configService.isEnableLanguageSupport
     gui.isPrioritizeRecentlyUsed = configService.isPrioritizeRecentlyUsed
     gui.isAutoInsertSpaceAfterColon = configService.isAutoInsertSpaceAfterColon
     gui.customTokensFilePath = configService.customFilePath
@@ -44,6 +45,7 @@ private class CCMainConfigurable(private val project: Project) : SearchableConfi
   override fun isModified(): Boolean =
     gui.isValid && (
         gui.completionType != configService.completionType ||
+        gui.isEnableLanguageSupport != configService.isEnableLanguageSupport ||
         gui.isPrioritizeRecentlyUsed != configService.isPrioritizeRecentlyUsed ||
         gui.isAutoInsertSpaceAfterColon != configService.isAutoInsertSpaceAfterColon ||
         gui.customCoAuthorsFilePath != configService.customCoAuthorsFilePath ||
@@ -51,23 +53,29 @@ private class CCMainConfigurable(private val project: Project) : SearchableConfi
 
   override fun apply() {
     configService.completionType = gui.completionType
+    configService.isEnableLanguageSupport = gui.isEnableLanguageSupport
     configService.isPrioritizeRecentlyUsed = gui.isPrioritizeRecentlyUsed
     configService.isAutoInsertSpaceAfterColon = gui.isAutoInsertSpaceAfterColon
     configService.customCoAuthorsFilePath = gui.customCoAuthorsFilePath
     configService.customFilePath = gui.customTokensFilePath
 
-    val tokens = try {
-      defaultsService.getDefaultsFromCustomFile(configService.customFilePath)
+    try {
+      val tokens = defaultsService.getDefaultsFromCustomFile(configService.customFilePath)
+      gui.setTokens(tokens.types)
     } catch (e: Exception) {
       gui.revalidate()
-      return
     }
 
-    gui.setTokens(tokens.types)
+    // Notify that settings have been changed
+    val publisher = project.messageBus.syncPublisher(ConfigurationChangedListener.TOPIC)
+    publisher.onConfigurationChanged()
   }
 
   override fun reset() {
     gui.completionType = configService.completionType
+    gui.isEnableLanguageSupport = configService.isEnableLanguageSupport
+    gui.isPrioritizeRecentlyUsed = configService.isPrioritizeRecentlyUsed
+    gui.isAutoInsertSpaceAfterColon = configService.isAutoInsertSpaceAfterColon
     gui.customCoAuthorsFilePath = configService.customCoAuthorsFilePath
     gui.customTokensFilePath = configService.customFilePath
   }
