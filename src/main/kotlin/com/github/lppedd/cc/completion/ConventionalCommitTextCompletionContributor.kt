@@ -21,12 +21,16 @@ import com.intellij.codeInsight.completion.CompletionType.BASIC
 import com.intellij.codeInsight.completion.impl.PreferStartMatching
 import com.intellij.codeInsight.lookup.*
 import com.intellij.codeInsight.lookup.impl.LookupImpl
+import com.intellij.lang.LanguageMatcher
 import com.intellij.openapi.components.service
 import com.intellij.openapi.fileTypes.PlainTextLanguage
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
+import com.intellij.patterns.PatternCondition
 import com.intellij.patterns.PlatformPatterns
+import com.intellij.psi.PsiElement
+import com.intellij.util.ProcessingContext
 import com.intellij.util.ReflectionUtil.findField
 import com.intellij.util.concurrency.Semaphore
 import java.lang.reflect.Field
@@ -40,9 +44,15 @@ import java.util.concurrent.ConcurrentHashMap
  *
  * @author Edoardo Luppi
  */
-private class CommitCompletionContributor : CompletionContributor() {
+internal class ConventionalCommitTextCompletionContributor : CompletionContributor() {
   private companion object {
-    private val plainTextPattern = PlatformPatterns.psiElement().withLanguage(PlainTextLanguage.INSTANCE)
+    private val pattern = PlatformPatterns.psiElement().with(object : PatternCondition<PsiElement>(null) {
+      override fun accepts(psiElement: PsiElement, context: ProcessingContext?): Boolean {
+        val matcher = LanguageMatcher.matchWithDialects(PlainTextLanguage.INSTANCE)
+        return matcher.matchesLanguage(psiElement.language)
+      }
+    })
+
     private val registeredProjects = newSetFromMap(ConcurrentHashMap<Project, Boolean>(16))
     private val lookupEnhancers = synchronizedMap(IdentityHashMap<Lookup, LookupEnhancer>(16))
   }
@@ -79,7 +89,7 @@ private class CommitCompletionContributor : CompletionContributor() {
   }
 
   override fun fillCompletionVariants(parameters: CompletionParameters, result: CompletionResultSet) {
-    if (parameters.completionType != BASIC || !plainTextPattern.accepts(parameters.position)) {
+    if (parameters.completionType != BASIC || !pattern.accepts(parameters.position)) {
       return
     }
 
@@ -99,7 +109,7 @@ private class CommitCompletionContributor : CompletionContributor() {
       .withRelevanceSorter(
           CompletionSorter.emptySorter()
             .weigh(PreferStartMatching())
-            .weigh(CommitLookupElementWeigher(project.service()))
+            .weigh(ConventionalCommitLookupElementWeigher(project.service()))
       )
 
     val editor = parameters.editor

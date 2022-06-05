@@ -57,6 +57,7 @@
     />
     <actionPromoter implementation="com.github.lppedd.cc.inspection.ReformatActionPromoter" order="last" />
     <actionPromoter implementation="com.github.lppedd.cc.vcs.commitbuilder.CommitBuilderActionPromoter" order="last" />
+    <editChangelistSupport order="first" implementation="com.github.lppedd.cc.vcs.ConventionalCommitEditChangelistSupport" />
   </extensions>
 
   <extensions defaultExtensionNs="com.github.lppedd.idea-conventional-commit">

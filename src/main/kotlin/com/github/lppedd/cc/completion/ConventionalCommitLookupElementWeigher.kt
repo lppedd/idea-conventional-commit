@@ -12,7 +12,7 @@ import com.intellij.codeInsight.lookup.LookupElementWeigher
 /**
  * @author Edoardo Luppi
  */
-internal class CommitLookupElementWeigher(
+internal class ConventionalCommitLookupElementWeigher(
     private val configService: CCConfigService,
 ) : LookupElementWeigher("commitLookupElementWeigher") {
   private companion object {

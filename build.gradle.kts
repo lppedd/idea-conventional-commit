@@ -44,6 +44,14 @@ java {
   targetCompatibility = JavaVersion.VERSION_11
 }
 
+sourceSets {
+  main {
+    java {
+      srcDir("src/main/gen")
+    }
+  }
+}
+
 /** Points to the Java executable (usually `java.exe`) of a DCEVM-enabled JVM. */
 val dcevmExecutable: String? by project
 
