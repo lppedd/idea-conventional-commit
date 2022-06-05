@@ -38,6 +38,7 @@ class ConventionalCommitSyntaxHighlighter : SyntaxHighlighterBase() {
       it[ConventionalCommitTokenType.SUBJECT] = attrsSubject
       it[ConventionalCommitTokenType.BODY] = attrsBody
       it[ConventionalCommitTokenType.FOOTER_TYPE] = attrsFooterType
+      it[ConventionalCommitTokenType.FOOTER_TYPE_BREAKING_CHANGE] = attrsBreakingChange
       it[ConventionalCommitTokenType.FOOTER_VALUE] = attrsFooterValue
     }
   }
