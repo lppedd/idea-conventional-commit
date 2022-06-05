@@ -10,12 +10,12 @@ Looking for the latest **plugin binaries**? Get them [here][2] as `.zip`
 
 <strong>Additional Providers</strong> are available by installing other lightweight plugins.  
 
-| Context & GitHub | Plugins Repository | Type | Scope | Subject | Body | Footer type | Footer value |
-| --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| [Angular (2+)][6] | :heavy_check_mark: [Install][7] | | :heavy_check_mark: | | | | |
-| [Commitlint][8] | :heavy_check_mark: [Install][9] | :heavy_check_mark: | :heavy_check_mark: | | | | |
-| GitHub | Coming soon... | | | | | | |
-| VCS (extended) | Coming soon... | | | | | | |
+| Context & GitHub  |              Plugins Repository              |        Type        |       Scope        | Subject | Body | Footer type | Footer value |
+|-------------------|:--------------------------------------------:|:------------------:|:------------------:|:-------:|:----:|:-----------:|:------------:|
+| [Angular (2+)][6] | :heavy_check_mark: [Install][7] (Deprecated) |                    | :heavy_check_mark: |         |      |             |              |
+| [Commitlint][8]   | :heavy_check_mark: [Install][9] (Deprecated) | :heavy_check_mark: | :heavy_check_mark: |         |      |             |              |
+| GitHub            |                Coming soon...                |                    |                    |         |      |             |              |
+| VCS (extended)    |                Coming soon...                |                    |                    |         |      |             |              |
 
 -----
 
