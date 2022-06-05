@@ -1,4 +1,4 @@
-package com.github.lppedd.cc.completion
+package com.github.lppedd.cc.completion.schema
 
 import com.intellij.openapi.project.Project
 import com.jetbrains.jsonSchema.extension.JsonSchemaFileProvider

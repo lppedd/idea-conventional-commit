@@ -1,4 +1,4 @@
-package com.github.lppedd.cc.completion
+package com.github.lppedd.cc.completion.schema
 
 import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.CCBundle
