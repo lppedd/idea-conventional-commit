@@ -52,6 +52,7 @@ internal class LookupEnhancer(
   private val actionManager = ActionManagerEx.getInstanceEx()
   private val config = lookup.project.service<CCConfigService>()
 
+  @Volatile private var lookupPopupMenuListenerDisposable: Disposable? = null
   @Volatile private var allActions = emptyList<AnAction>()
   @Volatile private var filterActions = emptyList<FilterAction>()
   @Volatile private var lastKeptAction: FilterAction? = null
@@ -154,8 +155,11 @@ internal class LookupEnhancer(
   @Suppress("override_deprecation")
   override fun beforeActionPerformed(action: AnAction, dataContext: DataContext, event: AnActionEvent) {
     if (action.javaClass == menuActionClass && !Registry.`is`(SHOW_GROUP_IN_POPUP, false)) {
-      val disposable = Disposer.newDisposable()
+      var disposable = lookupPopupMenuListenerDisposable
+      disposable?.dispose()
+      disposable = Disposer.newDisposable(lookup, "LookupEnhancer popup menu listener")
       actionManager.addActionPopupMenuListener(LookupPopupMenuListener(disposable), disposable)
+      lookupPopupMenuListenerDisposable = disposable
       closeMenu = true
     }
   }
