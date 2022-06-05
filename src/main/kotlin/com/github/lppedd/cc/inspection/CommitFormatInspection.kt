@@ -5,7 +5,6 @@ import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.inspection.quickfix.AddWhitespaceQuickFix
 import com.github.lppedd.cc.inspection.quickfix.RemoveRangeQuickFix
 import com.github.lppedd.cc.inspection.quickfix.ReplaceRangeQuickFix
-import com.github.lppedd.cc.language.psi.ConventionalCommitMessagePsiElement
 import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.ValidToken
 import com.intellij.codeInspection.InspectionManager
@@ -21,8 +20,6 @@ import com.intellij.openapi.vcs.ui.CommitMessage
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
-import com.intellij.psi.PsiPlainText
-import com.intellij.psi.util.PsiTreeUtil
 
 /**
  * @author Edoardo Luppi
@@ -38,7 +35,7 @@ internal class CommitFormatInspection : CommitBaseInspection() {
     CommitFormatInspectionOptions()
 
   override fun checkFile(
-      file: PsiFile,
+      psiFile: PsiFile,
       document: Document,
       manager: InspectionManager,
       isOnTheFly: Boolean,
@@ -53,12 +50,7 @@ internal class CommitFormatInspection : CommitBaseInspection() {
       return emptyArray()
     }
 
-    val psiElement = PsiTreeUtil.getChildOfAnyType(
-        file,
-        ConventionalCommitMessagePsiElement::class.java, PsiPlainText::class.java,
-    ) ?: return emptyArray()
-
-    return checkHeader(psiElement, document, manager).toTypedArray()
+    return checkHeader(psiFile, document, manager).toTypedArray()
   }
 
   private fun checkHeader(

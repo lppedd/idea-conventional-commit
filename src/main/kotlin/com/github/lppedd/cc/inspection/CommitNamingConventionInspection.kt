@@ -2,22 +2,21 @@ package com.github.lppedd.cc.inspection
 
 import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.configuration.CCConfigService
-import com.github.lppedd.cc.document
 import com.github.lppedd.cc.getLine
 import com.github.lppedd.cc.isTemplateActive
 import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.ValidToken
 import com.github.lppedd.cc.util.RangeValidator
+import com.intellij.codeInspection.InspectionManager
+import com.intellij.codeInspection.ProblemDescriptor
 import com.intellij.codeInspection.ProblemHighlightType
-import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.openapi.components.service
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.options.ConfigurableUi
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.vcs.ui.CommitMessage
-import com.intellij.psi.PsiElementVisitor
-import com.intellij.psi.PsiPlainText
+import com.intellij.psi.PsiFile
 
 /**
  * Checks if symbols outside the legal ones, specified in the inspection options
@@ -36,33 +35,36 @@ internal class CommitNamingConventionInspection : CommitBaseInspection() {
   override fun createOptionsConfigurable(): ConfigurableUi<Project> =
     CommitNamingConventionInspectionOptions()
 
-  override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor =
-    object : PsiElementVisitor() {
-      override fun visitPlainText(psiPlainText: PsiPlainText) {
-        val document = psiPlainText.containingFile.document ?: return
-        val isTemplateActive =
-          document.getUserData(CommitMessage.DATA_KEY)
-            ?.editorField
-            ?.editor
-            ?.isTemplateActive() == true
+  override fun checkFile(
+      file: PsiFile,
+      document: Document,
+      manager: InspectionManager,
+      isOnTheFly: Boolean,
+  ): Array<ProblemDescriptor> {
+    val isTemplateActive =
+      document.getUserData(CommitMessage.DATA_KEY)
+        ?.editorField
+        ?.editor
+        ?.isTemplateActive() == true
 
-        if (isTemplateActive || document.lineCount == 0) {
-          return
-        }
-
-        val config = holder.project.service<CCConfigService>()
-        val invalidRanges = checkHeader(config, document)
-
-        invalidRanges.forEach {
-          holder.registerProblem(
-              psiPlainText,
-              CCBundle["cc.inspection.namingConvention.text"],
-              ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
-              it,
-          )
-        }
-      }
+    if (isTemplateActive || document.lineCount == 0) {
+      return emptyArray()
     }
+
+    val config = manager.project.service<CCConfigService>()
+    val invalidRanges = checkHeader(config, document)
+    val problemDescriptors = invalidRanges.map {
+      manager.createProblemDescriptor(
+          file,
+          it,
+          CCBundle["cc.inspection.namingConvention.text"],
+          ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
+          true
+      )
+    }
+
+    return problemDescriptors.toTypedArray()
+  }
 
   private fun checkHeader(config: CCConfigService, document: Document): List<TextRange> =
     buildList {
