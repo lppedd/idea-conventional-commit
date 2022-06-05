@@ -1,6 +1,6 @@
 package com.github.lppedd.cc.vcs.commitbuilder
 
-import com.github.lppedd.cc.completion.CommitLookupElementWeigher
+import com.github.lppedd.cc.completion.ConventionalCommitLookupElementWeigher
 import com.github.lppedd.cc.completion.FlatPrefixMatcher
 import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.codeInsight.completion.CompletionResultSet
@@ -36,7 +36,7 @@ internal abstract class CommitTokenTextCompletionProvider(private val project: P
       .withRelevanceSorter(
           CompletionSorter.emptySorter()
             .weigh(PreferStartMatching())
-            .weigh(CommitLookupElementWeigher(project.service()))
+            .weigh(ConventionalCommitLookupElementWeigher(project.service()))
       )
 
   override fun acceptChar(ch: Char): Result? =

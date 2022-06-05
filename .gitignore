@@ -58,6 +58,7 @@ local.properties
 *.orig
 classes/
 out/
+gen/
 
 ######################
 # Visual Studio Code
@@ -120,6 +121,7 @@ Desktop.ini
 ######################
 # Others
 ######################
+*.skeleton
 *.class
 *.*~
 *~

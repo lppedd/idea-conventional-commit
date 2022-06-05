@@ -1,0 +1,25 @@
+<?xml version='1.0'?>
+<list>
+  <option name="CONVENTIONAL_COMMIT_TYPE">
+    <value>
+      <option name="FOREGROUND" value="000080" />
+      <option name="FONT_TYPE" value="1" />
+    </value>
+  </option>
+  <option name="CONVENTIONAL_COMMIT_SCOPE">
+    <value>
+      <option name="FOREGROUND" value="4078D2" />
+    </value>
+  </option>
+  <option name="CONVENTIONAL_COMMIT_BREAKING_CHANGE">
+    <value>
+      <option name="FOREGROUND" value="CD0000" />
+      <option name="FONT_TYPE" value="1" />
+    </value>
+  </option>
+  <option name="CONVENTIONAL_COMMIT_FOOTER_TYPE">
+    <value>
+      <option name="FOREGROUND" value="808000" />
+    </value>
+  </option>
+</list>
