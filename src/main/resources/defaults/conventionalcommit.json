@@ -53,6 +53,10 @@
       "description": "The commit implements features"
     },
     {
+      "name": "Author",
+      "description": "The commit's author"
+    },
+    {
       "name": "Co-authored-by",
       "description": "The commit is co-authored by another person.<br/>For multiple people use one line each"
     },
