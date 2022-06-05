@@ -36,7 +36,7 @@ intellij {
   version.set(properties("platformVersion"))
   downloadSources.set(true)
   pluginName.set("idea-conventional-commit")
-  plugins.set(listOf("java"))
+  plugins.set(listOf("java", "JavaScript"))
 }
 
 java {

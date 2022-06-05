@@ -11,6 +11,7 @@
 
   <depends>com.intellij.modules.platform</depends>
   <depends optional="true" config-file="vcs.xml">com.intellij.modules.vcs</depends>
+  <depends optional="true" config-file="JavaScript.xml">JavaScript</depends>
 
   <resource-bundle>messages.ConventionalCommitBundle</resource-bundle>
 
