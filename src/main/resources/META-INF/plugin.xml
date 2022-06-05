@@ -106,6 +106,10 @@
         language="ConventionalCommit"
         implementationClass="com.github.lppedd.cc.language.ConventionalCommitSyntaxHighlighter"
     />
+    <spellchecker.support
+        language="ConventionalCommit"
+        implementationClass="com.github.lppedd.cc.language.ConventionalCommitSpellcheckingStrategy"
+    />
 
     <colorSettingsPage implementation="com.github.lppedd.cc.language.ConventionalCommitColorSettingsPage" />
     <additionalTextAttributes scheme="Default" file="colorSchemes/ConventionalCommitDefault.xml" />
