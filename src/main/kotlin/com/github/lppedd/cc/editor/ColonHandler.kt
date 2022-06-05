@@ -67,7 +67,7 @@ private class ColonHandler : BaseTypedHandler(':') {
       // type:| my desc
       val caretShift = if (subject.value.startsWith(' ')) 1 else 0
       editor.moveCaretRelatively(caretShift)
-    } else if (project.service<CCConfigService>().isAutoInsertSpaceAfterColon) {
+    } else if (project.service<CCConfigService>().autoInsertSpaceAfterColon) {
       // type:|
       editor.insertStringAtCaret(" ")
     }

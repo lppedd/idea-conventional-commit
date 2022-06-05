@@ -26,9 +26,9 @@ private class CCMainConfigurable(private val project: Project) : SearchableConfi
   override fun createComponent(): JComponent {
     gui = CCMainConfigurableGui(project, disposable)
     gui.completionType = configService.completionType
-    gui.isEnableLanguageSupport = configService.isEnableLanguageSupport
-    gui.isPrioritizeRecentlyUsed = configService.isPrioritizeRecentlyUsed
-    gui.isAutoInsertSpaceAfterColon = configService.isAutoInsertSpaceAfterColon
+    gui.isEnableLanguageSupport = configService.enableLanguageSupport
+    gui.isPrioritizeRecentlyUsed = configService.prioritizeRecentlyUsed
+    gui.isAutoInsertSpaceAfterColon = configService.autoInsertSpaceAfterColon
     gui.customTokensFilePath = configService.customFilePath
     gui.customCoAuthorsFilePath = configService.customCoAuthorsFilePath
 
@@ -45,17 +45,17 @@ private class CCMainConfigurable(private val project: Project) : SearchableConfi
   override fun isModified(): Boolean =
     gui.isValid && (
         gui.completionType != configService.completionType ||
-        gui.isEnableLanguageSupport != configService.isEnableLanguageSupport ||
-        gui.isPrioritizeRecentlyUsed != configService.isPrioritizeRecentlyUsed ||
-        gui.isAutoInsertSpaceAfterColon != configService.isAutoInsertSpaceAfterColon ||
+        gui.isEnableLanguageSupport != configService.enableLanguageSupport ||
+        gui.isPrioritizeRecentlyUsed != configService.prioritizeRecentlyUsed ||
+        gui.isAutoInsertSpaceAfterColon != configService.autoInsertSpaceAfterColon ||
         gui.customCoAuthorsFilePath != configService.customCoAuthorsFilePath ||
         gui.customTokensFilePath != configService.customFilePath)
 
   override fun apply() {
     configService.completionType = gui.completionType
-    configService.isEnableLanguageSupport = gui.isEnableLanguageSupport
-    configService.isPrioritizeRecentlyUsed = gui.isPrioritizeRecentlyUsed
-    configService.isAutoInsertSpaceAfterColon = gui.isAutoInsertSpaceAfterColon
+    configService.enableLanguageSupport = gui.isEnableLanguageSupport
+    configService.prioritizeRecentlyUsed = gui.isPrioritizeRecentlyUsed
+    configService.autoInsertSpaceAfterColon = gui.isAutoInsertSpaceAfterColon
     configService.customCoAuthorsFilePath = gui.customCoAuthorsFilePath
     configService.customFilePath = gui.customTokensFilePath
 
@@ -73,9 +73,9 @@ private class CCMainConfigurable(private val project: Project) : SearchableConfi
 
   override fun reset() {
     gui.completionType = configService.completionType
-    gui.isEnableLanguageSupport = configService.isEnableLanguageSupport
-    gui.isPrioritizeRecentlyUsed = configService.isPrioritizeRecentlyUsed
-    gui.isAutoInsertSpaceAfterColon = configService.isAutoInsertSpaceAfterColon
+    gui.isEnableLanguageSupport = configService.enableLanguageSupport
+    gui.isPrioritizeRecentlyUsed = configService.prioritizeRecentlyUsed
+    gui.isAutoInsertSpaceAfterColon = configService.autoInsertSpaceAfterColon
     gui.customCoAuthorsFilePath = configService.customCoAuthorsFilePath
     gui.customTokensFilePath = configService.customFilePath
   }

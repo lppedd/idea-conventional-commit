@@ -56,7 +56,7 @@ internal class ConventionalCommitEditChangelistSupport(project: Project) : EditC
       if (editor != null && !editor.isDisposed) {
         val configService = it.project.service<CCConfigService>()
 
-        if (configService.isEnableLanguageSupport) {
+        if (configService.enableLanguageSupport) {
           installConventionalCommitLanguage(it, it.project)
         } else {
           installPlainTextLanguage(it, it.project)
@@ -69,7 +69,7 @@ internal class ConventionalCommitEditChangelistSupport(project: Project) : EditC
     textFields.add(comment)
     val project = comment.project
 
-    if (!project.service<CCConfigService>().isEnableLanguageSupport) {
+    if (!project.service<CCConfigService>().enableLanguageSupport) {
       return
     }
 

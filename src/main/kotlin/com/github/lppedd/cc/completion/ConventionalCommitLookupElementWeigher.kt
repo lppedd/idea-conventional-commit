@@ -54,7 +54,7 @@ internal class ConventionalCommitLookupElementWeigher(
     // Indicate if the token has been used recently by the user.
     // This flag is set by each CompletionProvider
     val isRecentToken = element.getUserData(ELEMENT_IS_RECENT) ?: false
-    val isRecentlyUsed = configService.isPrioritizeRecentlyUsed && isRecentToken
+    val isRecentlyUsed = configService.prioritizeRecentlyUsed && isRecentToken
 
     return CommitTokenWeight(tokenPriority, isRecentlyUsed, providerPriority, index)
   }
