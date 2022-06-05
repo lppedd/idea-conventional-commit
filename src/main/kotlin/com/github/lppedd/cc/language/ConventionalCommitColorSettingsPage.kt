@@ -45,6 +45,8 @@ internal class ConventionalCommitColorSettingsPage : ColorSettingsPage {
       The entire code of the stream processor
       has been rewritten to improve the overall quality
       
+      BREAKING-CHANGE: compatibility with releases up to 2.0
+        has been dropped
       Closes: #16
     """.trimIndent()
 

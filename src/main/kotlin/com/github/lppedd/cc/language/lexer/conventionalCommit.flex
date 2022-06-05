@@ -1,5 +1,6 @@
 package com.github.lppedd.cc.language.lexer;
 
+import org.jetbrains.annotations.NotNull;
 import com.github.lppedd.cc.parser.Token;
 import com.intellij.psi.PlainTextTokenTypes;
 import com.intellij.psi.tree.IElementType;
@@ -21,6 +22,14 @@ import com.intellij.lexer.FlexLexer;
 
   private int yyline = 0;
   private int yycolumn = 0;
+
+  @NotNull
+  private IElementType getFooterType() {
+    final String text = yytext().toString().trim();
+    return "BREAKING CHANGE".equals(text) || "BREAKING-CHANGE".equals(text)
+      ? ConventionalCommitTokenType.FOOTER_TYPE_BREAKING_CHANGE
+      : ConventionalCommitTokenType.FOOTER_TYPE;
+  }
 
 %}
 
@@ -100,17 +109,17 @@ FooterType = [^:\s]+ | BREAKING\ CHANGE
       }
 
       // Closes: #16
-      ^{FooterType}: {
+      ^{FooterType}\ *: {
         // The ':' char should not be part of the footer type
         yypushback(1);
         yybegin(FOOTERS);
-        return ConventionalCommitTokenType.FOOTER_TYPE;
+        return getFooterType();
       }
 
       // Closes #16
       ^{FooterType} / (\ +#.*) {
         yybegin(FOOTER_VALUE);
-        return ConventionalCommitTokenType.FOOTER_TYPE;
+        return getFooterType();
       }
 
       [^] {
@@ -124,7 +133,7 @@ FooterType = [^:\s]+ | BREAKING\ CHANGE
       // multiple lines.
       //
       // Closes: 16
-      {Body} / \n(\ *\n\ *)+{FooterType}:[^]* | \n(\ *\n\ *)+{FooterType}\ +#[^]* {
+      {Body} / \n(\ *\n\ *)+{FooterType}\ *:[^]* | \n(\ *\n\ *)+{FooterType}\ +#[^]* {
         yybegin(FOOTERS);
         return ConventionalCommitTokenType.BODY;
       }
@@ -136,14 +145,14 @@ FooterType = [^:\s]+ | BREAKING\ CHANGE
 
 <FOOTERS> {
       // Closes: #16
-      ^{FooterType} {
-        return ConventionalCommitTokenType.FOOTER_TYPE;
+      ^{FooterType}\ * {
+        return getFooterType();
       }
 
       // Closes #16
       ^{FooterType} / \ +#.* {
         yybegin(FOOTER_VALUE);
-        return ConventionalCommitTokenType.FOOTER_TYPE;
+        return getFooterType();
       }
 
       : {

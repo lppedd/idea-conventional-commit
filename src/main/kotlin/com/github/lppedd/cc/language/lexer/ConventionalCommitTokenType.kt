@@ -17,6 +17,7 @@ class ConventionalCommitTokenType(debugName: String) : IElementType(debugName, C
     @JvmField val SUBJECT: IElementType = ConventionalCommitTokenType("SUBJECT")
     @JvmField val BODY: IElementType = ConventionalCommitTokenType("BODY")
     @JvmField val FOOTER_TYPE: IElementType = ConventionalCommitTokenType("FOOTER_TYPE")
+    @JvmField val FOOTER_TYPE_BREAKING_CHANGE: IElementType = ConventionalCommitTokenType("FOOTER_TYPE_BREAKING_CHANGE")
     @JvmField val FOOTER_VALUE: IElementType = ConventionalCommitTokenType("FOOTER_VALUE")
   }
 }
