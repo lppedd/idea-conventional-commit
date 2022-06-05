@@ -72,7 +72,6 @@ internal class ConventionalCommitLookupElementWeigher(
       is CommitFooterTypeLookupElement -> footerTypePriority
       is CommitFooterValueLookupElement -> footerValuePriority
       is ShowMoreCoAuthorsLookupElement -> footerValuePriority
-      else -> Int.MAX_VALUE
     }
 
   private fun getProviderPriority(provider: CommitTokenProvider?): Int =
