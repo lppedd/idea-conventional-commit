@@ -1,6 +1,14 @@
 package com.github.lppedd.cc.language
 
+import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.CCIcons
+import com.github.lppedd.cc.language.ConventionalCommitSyntaxHighlighter.Companion.BODY
+import com.github.lppedd.cc.language.ConventionalCommitSyntaxHighlighter.Companion.BREAKING_CHANGE
+import com.github.lppedd.cc.language.ConventionalCommitSyntaxHighlighter.Companion.FOOTER_TYPE
+import com.github.lppedd.cc.language.ConventionalCommitSyntaxHighlighter.Companion.FOOTER_VALUE
+import com.github.lppedd.cc.language.ConventionalCommitSyntaxHighlighter.Companion.SCOPE
+import com.github.lppedd.cc.language.ConventionalCommitSyntaxHighlighter.Companion.SUBJECT
+import com.github.lppedd.cc.language.ConventionalCommitSyntaxHighlighter.Companion.TYPE
 import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.fileTypes.SyntaxHighlighter
 import com.intellij.openapi.options.colors.AttributesDescriptor
@@ -14,13 +22,13 @@ import javax.swing.Icon
 internal class ConventionalCommitColorSettingsPage : ColorSettingsPage {
   private companion object {
     private val descriptors = arrayOf(
-        AttributesDescriptor("Type", ConventionalCommitSyntaxHighlighter.TYPE),
-        AttributesDescriptor("Scope", ConventionalCommitSyntaxHighlighter.SCOPE),
-        AttributesDescriptor("Breaking change", ConventionalCommitSyntaxHighlighter.BREAKING_CHANGE),
-        AttributesDescriptor("Subject", ConventionalCommitSyntaxHighlighter.SUBJECT),
-        AttributesDescriptor("Body", ConventionalCommitSyntaxHighlighter.BODY),
-        AttributesDescriptor("Footer type", ConventionalCommitSyntaxHighlighter.FOOTER_TYPE),
-        AttributesDescriptor("Footer value", ConventionalCommitSyntaxHighlighter.FOOTER_VALUE),
+        AttributesDescriptor(CCBundle["cc.language.token.type"], TYPE),
+        AttributesDescriptor(CCBundle["cc.language.token.scope"], SCOPE),
+        AttributesDescriptor(CCBundle["cc.language.token.breakingChange"], BREAKING_CHANGE),
+        AttributesDescriptor(CCBundle["cc.language.token.subject"], SUBJECT),
+        AttributesDescriptor(CCBundle["cc.language.token.body"], BODY),
+        AttributesDescriptor(CCBundle["cc.language.token.footerType"], FOOTER_TYPE),
+        AttributesDescriptor(CCBundle["cc.language.token.footerValue"], FOOTER_VALUE),
     )
   }
 

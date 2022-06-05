@@ -14,7 +14,7 @@ import com.jetbrains.jsonSchema.extension.SchemaType
  */
 internal class ConventionalCommitSchemaFileProvider : JsonSchemaFileProvider, DumbAware {
   override fun getName(): String =
-    CCBundle["cc.plugin.name"]
+    CCBundle["cc.language.name"]
 
   override fun getSchemaFile(): VirtualFile? =
     JsonSchemaProviderFactory.getResourceFile(this::class.java, "/defaults/${CC.Tokens.SchemaFile}")
