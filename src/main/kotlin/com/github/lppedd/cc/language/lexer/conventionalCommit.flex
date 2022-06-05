@@ -39,19 +39,19 @@ FooterType = [^:\s]+ | BREAKING\ CHANGE
 %%
 
 <YYINITIAL> {
-		[^ ] {
+      [^ ] {
         yypushback(yylength());
         yybegin(TYPE);
       }
 }
 
 <TYPE, SCOPE, SUMMARY_SEPARATOR, SUBJECT> {
-		\n {
+      \n {
         yybegin(BODY_OR_FOOTERS);
         return TokenType.WHITE_SPACE;
       }
 
-		\! / : {
+      \! / : {
         return ConventionalCommitTokenType.BREAKING_CHANGE;
       }
 
@@ -62,7 +62,7 @@ FooterType = [^:\s]+ | BREAKING\ CHANGE
 }
 
 <TYPE> {
-		^[^(:\n]+\!? {
+      ^[^(:\n]+\!? {
         if (yycharat(yylength() - 1) == '!') {
           yypushback(1);
         }
@@ -77,7 +77,7 @@ FooterType = [^:\s]+ | BREAKING\ CHANGE
 }
 
 <SCOPE> {
-		[^)\n]+ {
+      [^)\n]+ {
         return ConventionalCommitTokenType.SCOPE;
       }
 
@@ -88,14 +88,14 @@ FooterType = [^:\s]+ | BREAKING\ CHANGE
 }
 
 <SUBJECT> {
-		[^\n]+ {
+      [^\n]+ {
         yybegin(TYPE);
         return ConventionalCommitTokenType.SUBJECT;
       }
 }
 
 <BODY_OR_FOOTERS> {
-		\n {
+      \n {
         return TokenType.WHITE_SPACE;
       }
 
@@ -113,18 +113,18 @@ FooterType = [^:\s]+ | BREAKING\ CHANGE
         return ConventionalCommitTokenType.FOOTER_TYPE;
       }
 
-		[^] {
+      [^] {
         yypushback(yylength());
         yybegin(BODY);
       }
 }
 
 <BODY> {
-		// My body which spawns
-		// multiple lines.
-		//
-		// Closes: 16
-		{Body} / \n(\ *\n\ *)+{FooterType}:[^]* | \n(\ *\n\ *)+{FooterType}\ +#[^]* {
+      // My body which spawns
+      // multiple lines.
+      //
+      // Closes: 16
+      {Body} / \n(\ *\n\ *)+{FooterType}:[^]* | \n(\ *\n\ *)+{FooterType}\ +#[^]* {
         yybegin(FOOTERS);
         return ConventionalCommitTokenType.BODY;
       }
@@ -135,13 +135,13 @@ FooterType = [^:\s]+ | BREAKING\ CHANGE
 }
 
 <FOOTERS> {
-		// Closes: #16
-		^{FooterType} {
+      // Closes: #16
+      ^{FooterType} {
         return ConventionalCommitTokenType.FOOTER_TYPE;
       }
 
-		// Closes #16
-		^{FooterType} / \ +#.* {
+      // Closes #16
+      ^{FooterType} / \ +#.* {
         yybegin(FOOTER_VALUE);
         return ConventionalCommitTokenType.FOOTER_TYPE;
       }
@@ -153,11 +153,11 @@ FooterType = [^:\s]+ | BREAKING\ CHANGE
 }
 
 <FOOTER_VALUE> {
-		.+(\n\ +.+)* {
+      .+(\n\ +.+)* {
         return ConventionalCommitTokenType.FOOTER_VALUE;
       }
 
-		\n {
+      \n {
         yybegin(FOOTERS);
         return TokenType.WHITE_SPACE;
       }
@@ -172,5 +172,5 @@ FooterType = [^:\s]+ | BREAKING\ CHANGE
 }
 
 [^] {
-	return PlainTextTokenTypes.PLAIN_TEXT;
+   return PlainTextTokenTypes.PLAIN_TEXT;
 }

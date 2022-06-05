@@ -4,8 +4,6 @@
       <value>
         <option name="INDENT_SIZE" value="3" />
         <option name="TAB_SIZE" value="3" />
-        <option name="USE_TAB_CHARACTER" value="true" />
-        <option name="SMART_TABS" value="true" />
       </value>
     </option>
     <option name="LINE_SEPARATOR" value="&#10;" />
