@@ -1,0 +1,6 @@
+<!--suppress PluginXmlValidity -->
+<idea-plugin>
+  <extensions defaultExtensionNs="JavaScript">
+    <JsonSchema.ProviderFactory implementation="com.github.lppedd.cc.completion.ConventionalCommitSchemaProviderFactory" />
+  </extensions>
+</idea-plugin>
