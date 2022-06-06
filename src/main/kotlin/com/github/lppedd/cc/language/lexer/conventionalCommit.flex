@@ -1,16 +1,14 @@
 package com.github.lppedd.cc.language.lexer;
 
 import org.jetbrains.annotations.NotNull;
-import com.github.lppedd.cc.parser.Token;
 import com.intellij.psi.PlainTextTokenTypes;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.TokenType;
-import com.intellij.lexer.FlexLexer;
 
 %%
 
 %class ConventionalCommitFlexLexer
-%implements FlexLexer
+%implements EofCapableFlexLexer
 %function advance
 %type IElementType
 %unicode
@@ -20,8 +18,19 @@ import com.intellij.lexer.FlexLexer;
 
 %{
 
-  private int yyline = 0;
-  private int yycolumn = 0;
+  private boolean isEof;
+  private int yyline;
+  private int yycolumn;
+
+  @Override
+  public boolean isEof() {
+    return isEof;
+  }
+
+  @Override
+  public void setEof(final boolean isEof) {
+    this.isEof = isEof;
+  }
 
   @NotNull
   private IElementType getFooterType() {
@@ -33,8 +42,10 @@ import com.intellij.lexer.FlexLexer;
 
 %}
 
-Body       = .+\n?(.*\n?)*
-FooterType = [^:\s]+ | BREAKING\ CHANGE
+NewLine     = \r\n | \r | \n
+Space       = [ \t]
+Body        = .+\n?(.*\n?)*
+FooterType  = [^:\s]+ | BREAKING\ CHANGE
 
 %state TYPE
 %state SCOPE
@@ -55,7 +66,7 @@ FooterType = [^:\s]+ | BREAKING\ CHANGE
 }
 
 <TYPE, SCOPE, SUMMARY_SEPARATOR, SUBJECT> {
-      \n {
+      {NewLine} {
         yybegin(BODY_OR_FOOTERS);
         return TokenType.WHITE_SPACE;
       }
@@ -71,7 +82,7 @@ FooterType = [^:\s]+ | BREAKING\ CHANGE
 }
 
 <TYPE> {
-      ^[^(:\n]+\!? {
+      ^[^(:\r\n]+\!? {
         if (yycharat(yylength() - 1) == '!') {
           yypushback(1);
         }
@@ -86,7 +97,7 @@ FooterType = [^:\s]+ | BREAKING\ CHANGE
 }
 
 <SCOPE> {
-      [^)\n]+ {
+      [^)\r\n]+ {
         return ConventionalCommitTokenType.SCOPE;
       }
 
@@ -97,19 +108,15 @@ FooterType = [^:\s]+ | BREAKING\ CHANGE
 }
 
 <SUBJECT> {
-      [^\n]+ {
+      [^\r\n]+ {
         yybegin(TYPE);
         return ConventionalCommitTokenType.SUBJECT;
       }
 }
 
 <BODY_OR_FOOTERS> {
-      \n {
-        return TokenType.WHITE_SPACE;
-      }
-
       // Closes: #16
-      ^{FooterType}\ *: {
+      ^{FooterType} {Space}*: {
         // The ':' char should not be part of the footer type
         yypushback(1);
         yybegin(FOOTERS);
@@ -117,9 +124,19 @@ FooterType = [^:\s]+ | BREAKING\ CHANGE
       }
 
       // Closes #16
-      ^{FooterType} / \ +#.* {
+      ^{FooterType} {Space}+ / #.* {
         yybegin(FOOTER_VALUE);
         return getFooterType();
+      }
+
+      // Skip all blank lines after the summary
+      ^{Space}*{NewLine} {
+        return TokenType.WHITE_SPACE;
+      }
+
+      ^{Space}+ {
+        yypushback(yylength());
+        yybegin(BODY);
       }
 
       [^] {
@@ -129,29 +146,35 @@ FooterType = [^:\s]+ | BREAKING\ CHANGE
 }
 
 <BODY> {
-      // My body which spawns
-      // multiple lines.
-      //
-      // Closes: 16
-      {Body} / \n(\ *\n\ *)+{FooterType}\ *:[^]* | \n(\ *\n\ *)+{FooterType}\ +#[^]* {
+      {NewLine}{Space}*{NewLine} ({FooterType}{Space}*: | {FooterType}{Space}+#) {
+        yypushback(yylength());
         yybegin(FOOTERS);
         return ConventionalCommitTokenType.BODY;
       }
 
-      {Body} {
+      [^] | {Space}+ {
+        // Skip
+      }
+
+      <<EOF>> {
+        if (isEof()) {
+          return null;
+        }
+
+        setEof(true);
         return ConventionalCommitTokenType.BODY;
       }
 }
 
 <FOOTERS> {
       // Closes: #16
-      ^{FooterType}\ *: {
+      ^{FooterType} {Space}*: {
         yypushback(1);
         return getFooterType();
       }
 
       // Closes #16
-      ^{FooterType} / \ +#.* {
+      ^{FooterType} {Space}+ / #.* {
         yybegin(FOOTER_VALUE);
         return getFooterType();
       }
@@ -163,21 +186,24 @@ FooterType = [^:\s]+ | BREAKING\ CHANGE
 }
 
 <FOOTER_VALUE> {
-      .+(\n\ +.+)* {
+      // Closes #16           | .+
+      //  multiline footer    | ({NewLine}{Space}+([^\s]+{Space}*)+)*
+      //  value               | ({NewLine}{Space}+([^\s]+{Space}*)+)*
+      .+ ({NewLine}{Space}+([^\s]+{Space}*)+)* {
         return ConventionalCommitTokenType.FOOTER_VALUE;
       }
 
-      \n {
+      {NewLine} {
         yybegin(FOOTERS);
         return TokenType.WHITE_SPACE;
       }
 }
 
-\ + {
+{Space}+ {
   return TokenType.WHITE_SPACE;
 }
 
-\n {
+{NewLine} {
   return TokenType.WHITE_SPACE;
 }
 
