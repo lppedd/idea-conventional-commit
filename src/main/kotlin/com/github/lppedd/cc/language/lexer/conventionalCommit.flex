@@ -13,14 +13,10 @@ import com.intellij.psi.TokenType;
 %type IElementType
 %unicode
 %ignorecase
-%line
-%column
 
 %{
 
   private boolean isEof;
-  private int yyline;
-  private int yycolumn;
 
   @Override
   public boolean isEof() {
