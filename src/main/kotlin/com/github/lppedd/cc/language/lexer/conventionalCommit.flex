@@ -59,7 +59,7 @@ FooterType  = [^:\s]+ | BREAKING\ CHANGE
 %%
 
 <YYINITIAL> {
-      [^ ] {
+      [^] {
         yypushback(yylength());
         yybegin(TYPE);
       }
@@ -199,7 +199,7 @@ FooterType  = [^:\s]+ | BREAKING\ CHANGE
       }
 }
 
-{Space}+ {
+{Space} {
   return TokenType.WHITE_SPACE;
 }
 
