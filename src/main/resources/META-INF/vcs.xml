@@ -1,4 +1,4 @@
-<!--suppress PluginXmlValidity -->
+<!--suppress PluginXmlValidity, PluginXmlDynamicPlugin -->
 <idea-plugin>
   <actions resource-bundle="messages.ActionsBundle">
     <!-- Overridden standard actions -->
@@ -46,6 +46,13 @@
     />
   </actions>
 
+  <extensionPoints>
+    <extensionPoint
+        qualifiedName="com.github.lppedd.idea-conventional-commit.commitInspectionProvider"
+        interface="com.github.lppedd.cc.api.CommitInspectionProvider"
+    />
+  </extensionPoints>
+
   <extensions defaultExtensionNs="com.intellij">
     <projectService
         serviceInterface="com.github.lppedd.cc.vcs.VcsService"
@@ -66,6 +73,7 @@
     <commitScopeProvider order="first" implementation="com.github.lppedd.cc.vcs.VcsCommitTokenProvider" />
     <commitSubjectProvider order="first" implementation="com.github.lppedd.cc.vcs.VcsCommitTokenProvider" />
     <commitFooterValueProvider order="first" implementation="com.github.lppedd.cc.vcs.VcsCommitTokenProvider" />
+    <commitInspectionProvider order="first" implementation="com.github.lppedd.cc.inspection.InternalCommitInspectionProvider" />
     <!-- @formatter:on -->
   </extensions>
 </idea-plugin>

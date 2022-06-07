@@ -130,7 +130,6 @@
     <extensionPoint name="commitBodyProvider" interface="com.github.lppedd.cc.api.CommitBodyProvider" area="IDEA_PROJECT" />
     <extensionPoint name="commitFooterTypeProvider" interface="com.github.lppedd.cc.api.CommitFooterTypeProvider" area="IDEA_PROJECT" />
     <extensionPoint name="commitFooterValueProvider" interface="com.github.lppedd.cc.api.CommitFooterValueProvider" area="IDEA_PROJECT" />
-    <extensionPoint name="commitInspectionProvider" interface="com.github.lppedd.cc.api.CommitInspectionProvider" />
     <extensionPoint name="whatsNewProvider" interface="com.github.lppedd.cc.api.WhatsNewProvider" />
     <!-- @formatter:on -->
   </extensionPoints>
@@ -141,7 +140,6 @@
     <commitScopeProvider order="first" implementation="com.github.lppedd.cc.api.impl.InternalCommitTokenProvider" />
     <commitFooterTypeProvider order="first" implementation="com.github.lppedd.cc.api.impl.InternalCommitTokenProvider" />
     <commitFooterValueProvider order="first" implementation="com.github.lppedd.cc.api.impl.InternalCommitTokenProvider" />
-    <commitInspectionProvider order="first" implementation="com.github.lppedd.cc.inspection.InternalCommitInspectionProvider" />
     <whatsNewProvider order="first" implementation="com.github.lppedd.cc.whatsnew.InternalWhatsNewProvider" />
     <!-- @formatter:on -->
   </extensions>
