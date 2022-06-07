@@ -24,6 +24,7 @@ internal class InternalWhatsNewProvider : WhatsNewProvider {
   private lateinit var pluginDescriptor: PluginDescriptor
 
   private val whatsNewPages = listOf(
+      DefaultWhatsNewPage("0.21.0", "0_21_0.html"),
       DefaultWhatsNewPage("0.20.1", "0_20_1.html"),
       DefaultWhatsNewPage("0.20.0", "0_20_0.html"),
       DefaultWhatsNewPage("0.19.0", "0_19_0.html"),

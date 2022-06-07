@@ -1,0 +1,138 @@
+<!--suppress HtmlRequiredTitleElement -->
+<html lang="en">
+  <head>
+    <style>
+        code, pre {
+            font-family: monospace;
+        }
+
+        h1 {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+
+        #table-of-contents h2 {
+            font-size: 1em;
+            font-weight: normal;
+            margin: 0 0 5px 0;
+        }
+
+        #table-of-contents p {
+            font-size: 0.96em;
+            margin: 0 0 0 9px;
+        }
+
+        #contributors h2 {
+            margin-top: 20px;
+            margin-bottom: 0;
+        }
+    </style>
+  </head>
+  <div id="table-of-contents">
+    <h2>Table of contents:</h2>
+    <p>&#8226; API changes</p>
+    <p>&#8226; Deprecation of Commitlint and Angular support</p>
+    <p>&#8226; Going forward, a.k.a. future plans</p>
+    <p>&#8226; Quality of life improvements</p>
+    <p>&#8226; Conventional Commits as a language</p>
+    <p>&#8226; Other improvements and fixes in 0.21.0</p>
+  </div>
+  <h1>API changes</h1>
+  <p>
+    The entire plugin extensions' API has been rewritten taking into account long term maintenance cost,
+    possible future changes, and interoperability between JVM languages.
+    The API is now exposed as a set of well documented interfaces only.
+  </p>
+  <h1>Deprecation of Commitlint and Angular support</h1>
+  <p>
+    Sadly, I came to the realization that I can't support the Core plugin and multiple extensions, as separate plugins, too.
+    The added work is too much as of now, mostly because Conventional Commit hasn't reached a stable state yet,
+    and I tend to break the API now and then (although I'll try not to anymore).
+  </p>
+  <p>
+    I've published another release of Commitlint Conventional Commit - <code>0.1.3</code> - which supports the new Core API.
+    That's going to be the last supported one.
+  </p>
+  <p>
+    Angular Conventional Commit development is already stalled since months and the last supported
+    Platform version is 2020.3. Like Commitlint, there won't be new releases in the future.
+  </p>
+  <h1>Going forward, a.k.a. future plans</h1>
+  <p>
+    But hey, deprecation doesn't mean these extensions are dead forever.<br/>
+    Development of Conventional Commit as an IDE plugin started in late 2019, as a simple tool to help
+    colleagues write better and standardized commit messages (the first version spawned a live template only!).
+    Since then, I've provided many new features each release, while also exploring the IntelliJ Platform codebase and ecosystem,
+    and having fun after all.
+  </p>
+  <p>
+    While the plugin was growing in features, and as I was seeing a big interest in the Conventional Commits standard,
+    I decided to publish the sources on GitHub, and offer it to everyone through the Marketplace.<br/>
+    Up until now I see about 50 thousands total unique downloads, so it seems it was a good idea, and I couldn't be happier.
+  </p>
+  <p>
+    The mindset I've applied while writing the plugin's code has always been the same: developers should focus only
+    on code, everything else should be done through tooling to save time and mental workload. Even a minute every day is
+    important, and we commit <strong>a lot</strong> of times during the day. (And in general I hate CLIs, but don't tell anyone).
+  </p>
+  <p>
+    <strong>What are the future plans?</strong><br/>
+    A key aspect of this plugin is that it is open source, free of charge, and extensible. Going forward I'd like to keep
+    the Core plugin as it is, I'd like to keep improving it with users' feedback and suggestions.<br/>
+    However, I'd also like to offer another version, on top of the Core codebase, that includes additional and feature-rich
+    extensions (e.g. for GitHub, GitLab, Jira, Angular, Commitlint). And that would be a paid version.<br/>
+    Why? First of all, if this idea will move forward, I really don't plan in asking for more than an Italian coffee per month.
+    But the reasons are a couple: a revenue, even if small, is a motivation to keep coding and improving things.
+    Also, I'm starting another job in another city, so an additional income would be helpful in paying for accommodation.
+  </p>
+  <p>
+    I wanted to share plans so that the community could answer with useful feedback. To do that, simply use
+    <a href="https://github.com/lppedd/idea-conventional-commit/discussions/87">this feedback discussion</a> on GitHub.
+    I'm looking forward to reading your opinions or suggestions!
+  </p>
+  <h1>Quality of life improvements</h1>
+  <p>
+    This release solves some long outstanding issues that interfered with productivity.
+  </p>
+  <p>
+    The logic behind recently used tokens has been completely rewritten. The old "Recently used" tokens' Provider
+    has been removed, and now tokens of any Provider can be categorized and weighed as <i>recent</i>.
+    Also, the token's text and description (the one you see in the documentation popup) remain intact.<br/>
+    A new option - <i>Prioritize recently used tokens</i> - has been added and is on by default.
+  </p>
+  <p>
+    When you need custom tokens, you're able to use a custom <code>conventionalcommit.json</code> file in the project's
+    root folder, or to set a specific path to it. However, it is not immediately clear how that JSON file should be written.
+    To solve the issue, the plugin now provides an embedded JSON Schema that is automatically associated to the file,
+    or that you can easily find in the JSON Schema chooser popup under the <i>Conventional Commit</i> name.
+  </p>
+  <p>
+    Automatic insertion of a space after inputting a colon (<code>:</code>) is nice, most of the time.
+    If a user is accustomed to writing a commit message without looking at the screen, it's important
+    to avoid unexpected behaviors, such as inserting a space.<br/>
+    The automatic insertion can be turned off via the new option <i>Automatically insert a space after the colon</i>.<br/>
+    It might not be perfect, so please report issues, if any.
+  </p>
+  <h1>Conventional Commits as a language</h1>
+  <p>
+    Big news! Conventional Commits is officially a language in IDEA. I've implemented a lexer and a basic parser
+    which, as a starting point, provide syntax highlighting of tokens. Highlighting colors can obviously be customized
+    via <i>Editor > Color Scheme > Conventional Commit</i>.<br/>
+    The language injection in the commit panel can be toggled via the new option <i>Highlight syntax</i>.
+  </p>
+  <p>
+    Looking ahead, having a full-fledged language means many new features can be added. As an example,
+    other languages can be injected when writing code snippets in the message body.
+    It also becomes easier to provide inspections and other minor details that works with PSI/AST tree.
+  </p>
+  <h1>Other improvements and fixes in 0.21.0</h1>
+  <ul>
+    <li>Removed a memory leak generated when opening the Quick Documentation's popup menu</li>
+    <li>Correctly filtered out tokens when using the quick filters via Quick Documentation's popup menu</li>
+    <li>Made the commit inspection's options panel scrollable</li>
+    <li><a href="https://github.com/lppedd/idea-conventional-commit/issues/67">#67 - Don't automatically add a space after the colon</a></li>
+    <li><a href="https://github.com/lppedd/idea-conventional-commit/issues/71">#71 - Fatal crash, preventing launch of JetBrains Gateway Client</a></li>
+    <li><a href="https://github.com/lppedd/idea-conventional-commit/issues/73">#73 - Recently used tokens lose description</a></li>
+    <li><a href="https://github.com/lppedd/idea-conventional-commit/issues/80">#80 - Don't lowercase recently used tokens in autocompletion</a></li>
+  </ul>
+</html>
