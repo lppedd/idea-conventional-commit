@@ -11,7 +11,7 @@ import javax.swing.JPanel
 /**
  * @author Edoardo Luppi
  */
-private class CCProvidersConfigurable(private val project: Project) : SearchableConfigurable {
+private class CCProvidersConfigurable(project: Project) : SearchableConfigurable {
   private val configService = project.service<CCConfigService>()
   private val providerService = project.service<CommitTokenProviderService>()
   private lateinit var gui: CCProvidersConfigurableGui
