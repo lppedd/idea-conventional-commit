@@ -4,7 +4,7 @@ import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.configuration.CCDefaultTokensService.*
 import com.github.lppedd.cc.getResourceAsStream
 import com.intellij.openapi.components.service
-import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
 import org.everit.json.schema.Schema
@@ -27,10 +27,6 @@ internal typealias CommitTypeMap = Map<String, JsonCommitType>
 internal typealias CommitScopeList = Collection<JsonCommitScope>
 internal typealias CommitFooterTypeList = Collection<JsonCommitFooterType>
 
-private val EMPTY_JSON_OBJECT = JSONObject()
-private val EMPTY_JSON_ARRAY = JSONArray()
-private val logger = Logger.getInstance(CCDefaultTokensService::class.java)
-
 /**
  * Manages default commit types and scopes.
  *
@@ -38,6 +34,10 @@ private val logger = Logger.getInstance(CCDefaultTokensService::class.java)
  */
 @Internal
 internal class CCDefaultTokensService(private val project: Project) {
+  private companion object {
+    private val logger = logger<CCDefaultTokensService>()
+  }
+
   /** JSON Schema used to validate the default commit types and scopes JSON file. */
   private val defaultsSchema by lazy {
     val schemaInputStream = getResourceAsStream("/defaults/${CC.Tokens.SchemaFile}")
@@ -167,7 +167,7 @@ internal class CCDefaultTokensService(private val project: Project) {
     }
 
   private fun buildScopes(jsonObject: JSONObject?): CommitScopeList {
-    val jsonScopes = jsonObject ?: EMPTY_JSON_OBJECT
+    val jsonScopes = jsonObject ?: JSONObject()
     return jsonScopes.keySet().map {
       val descriptor = jsonScopes.getJSONObject(it)
       JsonCommitScope(it, descriptor.optString("description", ""))
@@ -175,7 +175,7 @@ internal class CCDefaultTokensService(private val project: Project) {
   }
 
   private fun buildFooterTypes(jsonArray: JSONArray?): List<JsonCommitFooterType> =
-    (jsonArray ?: EMPTY_JSON_ARRAY)
+    (jsonArray ?: JSONArray())
       .asSequence()
       .map {
         it as JSONObject
@@ -186,12 +186,12 @@ internal class CCDefaultTokensService(private val project: Project) {
   class JsonCommitType(val description: String, val scopes: CommitScopeList)
   class JsonCommitScope(val name: String, val description: String)
   class JsonCommitFooterType(val name: String, val description: String)
-}
 
-/** Validate a JSON object against this JSON Schema. */
-private fun Schema.validateJson(jsonObject: JSONObject) {
-  Validator.builder()
-    .failEarly()
-    .build()
-    .performValidation(this, jsonObject)
+  /** Validate a JSON object against this JSON Schema. */
+  private fun Schema.validateJson(jsonObject: JSONObject) {
+    Validator.builder()
+      .failEarly()
+      .build()
+      .performValidation(this, jsonObject)
+  }
 }
