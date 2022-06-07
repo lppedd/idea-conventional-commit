@@ -10,7 +10,7 @@ import javax.swing.JComponent
 import javax.swing.KeyStroke
 
 /**
- * A check box that does not request focus when its mnemonic is used.
+ * A checkbox that does not request focus when its mnemonic is used.
  *
  * Note: if screen reader support is active the behavior is the same
  * as the platform [JBCheckBox].

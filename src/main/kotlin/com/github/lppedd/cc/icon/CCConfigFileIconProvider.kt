@@ -12,7 +12,7 @@ import com.intellij.util.PathUtil
 import javax.swing.Icon
 
 /**
- * Provides an icon for the currently in use custom default tokens file, if any.
+ * Provides an icon for the currently-in-use custom default tokens file, if any.
  *
  * It could be:
  *  - a custom JSON file picked via settings

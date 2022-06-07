@@ -130,7 +130,7 @@ internal class CoAuthorsTable(tableModel: CoAuthorsTableModel) : CCTable(tableMo
     // as the minimum width for the checkbox column.
     // Earlier it was set to 15px, which became a mess with scaling,
     // while now we try to calculate the minimum width using a JCheckBox instance,
-    // or we fallback to a scaled value
+    // or we fall back to a scaled value
     val minimumWidth = max(19.scaled, JBCheckBox().minimumSize.width + 1)
     val maxWidth = 300
     val columnModel = columnModel
