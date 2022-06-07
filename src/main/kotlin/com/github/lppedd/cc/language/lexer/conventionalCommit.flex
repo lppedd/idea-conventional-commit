@@ -40,7 +40,7 @@ import com.intellij.psi.TokenType;
 
 NewLine     = \r\n | \r | \n
 Space       = [ \t]
-Body        = .+\n?(.*\n?)*
+Body        = .+{NewLine}?(.*{NewLine}?)*
 FooterType  = [^:\s]+ | BREAKING\ CHANGE
 
 %state TYPE
