@@ -8,9 +8,9 @@ import org.jetbrains.annotations.ApiStatus.*
 @Experimental
 interface CommitScopeProvider : CommitTokenProvider {
   /**
-   * Returns commit scopes, optionally considering a commit type.
+   * Returns commit scopes, optionally considering the user-inputted commit type.
    *
-   * @param commitType a commit type to optionally filter down commit scopes
+   * @param commitType a type to optionally filter down scopes, or an empty string
    */
   fun getCommitScopes(commitType: String): Collection<CommitScope>
 }

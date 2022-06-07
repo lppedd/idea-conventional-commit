@@ -7,5 +7,6 @@ import org.jetbrains.annotations.ApiStatus.*
  */
 @Experimental
 interface CommitFooterTypeProvider : CommitTokenProvider {
+  /** Returns commit footer types. */
   fun getCommitFooterTypes(): Collection<CommitFooterType>
 }
