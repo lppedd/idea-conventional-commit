@@ -7,7 +7,7 @@ fun properties(key: String) = project.findProperty(key).toString()
 plugins {
   java
   id("org.jetbrains.intellij") version "1.6.0"
-  kotlin("jvm") version "1.7.0-RC2"
+  kotlin("jvm") version "1.7.0"
 }
 
 group = "com.github.lppedd"
@@ -19,7 +19,7 @@ repositories {
 }
 
 dependencies {
-  implementation(kotlin("stdlib-jdk8", "1.7.0-RC2"))
+  implementation(kotlin("stdlib-jdk8", "1.7.0"))
 
   implementation("commons-validator", "commons-validator", "1.7") {
     exclude("commons-beanutils", "commons-beanutils")
@@ -74,9 +74,9 @@ tasks {
       "-Xno-param-assertions",
       "-Xjvm-default=all",
       "-Xallow-kotlin-package",
-      "-Xopt-in=kotlin.ExperimentalStdlibApi",
-      "-Xopt-in=kotlin.ExperimentalUnsignedTypes",
-      "-Xopt-in=kotlin.contracts.ExperimentalContracts",
+      "-opt-in=kotlin.ExperimentalStdlibApi",
+      "-opt-in=kotlin.ExperimentalUnsignedTypes",
+      "-opt-in=kotlin.contracts.ExperimentalContracts",
       "-XXLanguage:+InlineClasses",
       "-XXLanguage:+UnitConversion"
     )
