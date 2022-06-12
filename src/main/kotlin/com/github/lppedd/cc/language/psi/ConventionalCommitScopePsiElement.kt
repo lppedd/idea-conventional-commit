@@ -1,12 +1,14 @@
 package com.github.lppedd.cc.language.psi
 
-import com.intellij.psi.impl.source.tree.LeafPsiElement
-import com.intellij.psi.tree.IElementType
+import com.intellij.psi.PsiNameIdentifierOwner
 
 /**
  * @author Edoardo Luppi
  */
-class ConventionalCommitScopePsiElement(type: IElementType, text: CharSequence) : LeafPsiElement(type, text) {
-  override fun toString(): String =
-    "ConventionalCommitScopePsiElement"
+interface ConventionalCommitScopePsiElement : PsiNameIdentifierOwner {
+  /** Returns if the scope has been completed with a closing parenthesis, or not. */
+  fun hasClosingParenthesis(): Boolean
+
+  /** Returns the actual value of the scope token. */
+  fun getValue(): String
 }

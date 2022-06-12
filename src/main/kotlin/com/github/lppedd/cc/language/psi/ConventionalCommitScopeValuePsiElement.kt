@@ -7,15 +7,18 @@ import com.intellij.psi.tree.IElementType
 /**
  * @author Edoardo Luppi
  */
-class ConventionalCommitTypePsiElement(type: IElementType, text: CharSequence) : LeafPsiElement(type, text) {
+class ConventionalCommitScopeValuePsiElement(
+    type: IElementType,
+    text: CharSequence,
+) : LeafPsiElement(type, text) {
   override fun accept(visitor: PsiElementVisitor) {
     if (visitor is ConventionalCommitPsiElementVisitor) {
-      visitor.visitType(this)
+      visitor.visitScopeValue(this)
     } else {
       visitor.visitElement(this)
     }
   }
 
   override fun toString(): String =
-    "ConventionalCommitTypePsiElement"
+    "ConventionalCommitScopeValuePsiElement"
 }

@@ -17,7 +17,8 @@ internal class AddWhitespaceQuickFix(
     CCBundle["cc.inspection.nonStdMessage.addWs"]
 
   override fun applyFix(project: Project, document: Document, descriptor: ProblemDescriptor) {
-    val start = descriptor.textRangeInElement.startOffset
-    document.insertString(start, " ".repeat(toAdd))
+    val element = descriptor.psiElement
+    val startOffset = element.textRange.startOffset
+    document.insertString(startOffset, " ".repeat(toAdd))
   }
 }
