@@ -1,5 +1,6 @@
 package com.github.lppedd.cc.language.parser
 
+import com.github.lppedd.cc.language.lexer.ConventionalCommitTokenType
 import com.intellij.lang.ASTNode
 import com.intellij.lang.PsiBuilder
 import com.intellij.lang.PsiParser
@@ -14,6 +15,12 @@ internal class ConventionalCommitPsiParser : PsiParser {
     val message = builder.mark()
 
     while (!builder.eof()) {
+      val tokenType = builder.tokenType
+
+      if (tokenType == ConventionalCommitTokenType.PAREN_LEFT) {
+        parseScope(builder)
+      }
+
       builder.advanceLexer()
     }
 
@@ -21,5 +28,25 @@ internal class ConventionalCommitPsiParser : PsiParser {
     file.done(root)
 
     return builder.treeBuilt
+  }
+
+  private fun parseScope(builder: PsiBuilder) {
+    val mark = builder.mark()
+    var token = builder.advanceAndGet()
+
+    if (token == ConventionalCommitTokenType.SCOPE) {
+      token = builder.advanceAndGet()
+    }
+
+    if (token == ConventionalCommitTokenType.PAREN_RIGHT) {
+      builder.advanceLexer()
+    }
+
+    mark.done(ConventionalCommitElementType.SCOPE)
+  }
+
+  private fun PsiBuilder.advanceAndGet(): IElementType? {
+    advanceLexer()
+    return tokenType
   }
 }

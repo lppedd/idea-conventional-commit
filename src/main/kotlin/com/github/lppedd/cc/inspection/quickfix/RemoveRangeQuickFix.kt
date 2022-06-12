@@ -19,7 +19,9 @@ internal class RemoveRangeQuickFix(
     message
 
   override fun applyFix(project: Project, document: Document, descriptor: ProblemDescriptor) {
-    val (start, end) = descriptor.textRangeInElement
-    document.deleteString(start, end)
+    val element = descriptor.psiElement
+    val (start) = element.textRange
+    val (startInElement, endInElement) = descriptor.textRangeInElement
+    document.deleteString(start + startInElement, start + endInElement)
   }
 }

@@ -52,6 +52,7 @@ class NoContentTabbedPaneWrapper(disposable: Disposable) : TabbedPaneWrapper(dis
       // TODO: maybe there is a less hacky way
       if (event.propertyName == JBUIScale.USER_SCALE_FACTOR_PROPERTY) {
         invokeLaterOnEdt {
+          @Suppress("UnstableApiUsage")
           IdeEventQueue.getInstance().flushQueue()
           revalidate()
           repaint()

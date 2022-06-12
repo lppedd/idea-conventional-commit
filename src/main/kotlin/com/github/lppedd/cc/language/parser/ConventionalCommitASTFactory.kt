@@ -21,7 +21,7 @@ internal class ConventionalCommitASTFactory : ASTFactory() {
 
   init {
     tokensMap[TYPE] = ::ConventionalCommitTypePsiElement
-    tokensMap[SCOPE] = ::ConventionalCommitScopePsiElement
+    tokensMap[SCOPE] = ::ConventionalCommitScopeValuePsiElement
     tokensMap[SUBJECT] = ::ConventionalCommitSubjectPsiElement
     tokensMap[BODY] = ::ConventionalCommitBodyPsiElement
     tokensMap[FOOTER_TYPE] = ::ConventionalCommitFooterTypePsiElement

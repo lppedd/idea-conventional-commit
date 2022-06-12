@@ -19,7 +19,9 @@ internal class ReplaceRangeQuickFix(
     CCBundle["cc.inspection.nonStdMessage.replaceWs", replaceChar]
 
   override fun applyFix(project: Project, document: Document, descriptor: ProblemDescriptor) {
-    val (start, end) = descriptor.textRangeInElement
-    document.replaceString(start, end, replaceChar)
+    val element = descriptor.psiElement
+    val (start) = element.textRange
+    val (startInElement, endInElement) = descriptor.textRangeInElement
+    document.replaceString(start + startInElement, start + endInElement, replaceChar)
   }
 }

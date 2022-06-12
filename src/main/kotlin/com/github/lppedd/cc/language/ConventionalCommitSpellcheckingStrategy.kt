@@ -22,7 +22,7 @@ internal class ConventionalCommitSpellcheckingStrategy : SpellcheckingStrategy()
 
   override fun isMyContext(element: PsiElement): Boolean {
     return element is ConventionalCommitTypePsiElement ||
-           element is ConventionalCommitScopePsiElement ||
+           element is ConventionalCommitScopeValuePsiElement ||
            element is ConventionalCommitSubjectPsiElement ||
            element is ConventionalCommitBodyPsiElement ||
            element is ConventionalCommitFooterTypePsiElement ||
