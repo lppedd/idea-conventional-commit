@@ -10,7 +10,6 @@ import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.registry.Registry
 import org.jetbrains.annotations.ApiStatus.*
-import java.util.*
 import javax.swing.Icon
 import kotlin.text.RegexOption.MULTILINE
 
@@ -45,8 +44,7 @@ internal class VcsCommitTokenProvider(project: Project)
     getOrderedVcsCommitMessages()
       .map { it.lines().firstOrNull(String::isNotBlank) }
       .filterNotNull()
-      .mapToLowerCase()
-      .distinct()
+      .distinctBy(String::lowercase)
       .map(CCParser::parseHeader)
       .filter { it.type is ValidToken && it.separator.isPresent }
       .map { it.type as ValidToken }
@@ -62,8 +60,7 @@ internal class VcsCommitTokenProvider(project: Project)
     getOrderedVcsCommitMessages()
       .map { it.lines().firstOrNull(String::isNotBlank) }
       .filterNotNull()
-      .mapToLowerCase()
-      .distinct()
+      .distinctBy(String::lowercase)
       .map(CCParser::parseHeader)
       .map(CommitTokens::scope)
       .filterIsInstance<ValidToken>()
@@ -79,14 +76,14 @@ internal class VcsCommitTokenProvider(project: Project)
     getOrderedVcsCommitMessages()
       .map { it.lines().firstOrNull(String::isNotBlank) }
       .filterNotNull()
-      .distinctBy { it.lowercase(Locale.getDefault()) }
+      .distinctBy(String::lowercase)
       .map(CCParser::parseHeader)
       .map(CommitTokens::subject)
       .filterIsInstance<ValidToken>()
       .map(ValidToken::value)
       .trim()
       .filterNotEmpty()
-      .distinctBy { it.lowercase(Locale.getDefault()) }
+      .distinctBy(String::lowercase)
       .take(MAX_ELEMENTS)
       .map(::VcsCommitToken)
       .toList()
@@ -100,7 +97,7 @@ internal class VcsCommitTokenProvider(project: Project)
     val n = if ("co-authored-by".equals(footerType, true)) 5 else MAX_ELEMENTS
     return getOrderedVcsCommitMessages()
       .flatMap(::getFooterValues)
-      .distinctBy { it.lowercase(Locale.getDefault()) }
+      .distinctBy(String::lowercase)
       .take(n)
       .map(::VcsCommitToken)
       .toList()
