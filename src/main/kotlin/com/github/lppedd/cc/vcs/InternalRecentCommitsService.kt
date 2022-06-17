@@ -12,6 +12,7 @@ import com.intellij.openapi.util.registry.Registry
 import com.intellij.openapi.vcs.VcsConfiguration
 import com.intellij.vcs.log.VcsCommitMetadata
 import org.jetbrains.annotations.ApiStatus.*
+import kotlin.math.max
 import kotlin.text.RegexOption.MULTILINE
 
 /**
@@ -20,7 +21,7 @@ import kotlin.text.RegexOption.MULTILINE
 @Internal
 internal class InternalRecentCommitsService(private val project: Project) : RecentCommitsService {
   private companion object {
-    private const val MAX_ELEMENTS = 3
+    private const val MAX_ELEMENTS = 5
 
     /**
      * Regexp to match beginning and ending whitespace characters,
@@ -122,7 +123,7 @@ internal class InternalRecentCommitsService(private val project: Project) : Rece
       .map(FooterTokens::footer)
       .filterIsInstance<ValidToken>()
       .map(ValidToken::value)
-      .take(MAX_ELEMENTS - footerValues.size)
+      .take(max(MAX_ELEMENTS - footerValues.size, 0))
       .trim()
       .toList()
 
