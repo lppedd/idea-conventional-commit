@@ -59,6 +59,12 @@
     </projectConfigurable>
 
     <applicationService
+        serviceInterface="com.intellij.ui.EditorTextFieldProvider"
+        serviceImplementation="com.github.lppedd.cc.editor.ConventionalCommitEditorTextFieldProvider"
+        overrides="true"
+    />
+
+    <applicationService
         serviceInterface="com.github.lppedd.cc.api.WhatsNewProviderService"
         serviceImplementation="com.github.lppedd.cc.api.impl.InternalWhatsNewProviderService"
     />
@@ -108,9 +114,9 @@
         language="ConventionalCommit"
         implementationClass="com.github.lppedd.cc.language.parser.ConventionalCommitASTFactory"
     />
-    <lang.syntaxHighlighter
+    <lang.syntaxHighlighterFactory
         language="ConventionalCommit"
-        implementationClass="com.github.lppedd.cc.language.ConventionalCommitSyntaxHighlighter"
+        implementationClass="com.github.lppedd.cc.language.ConventionalCommitSyntaxHighlighterFactory"
     />
     <spellchecker.support
         language="ConventionalCommit"

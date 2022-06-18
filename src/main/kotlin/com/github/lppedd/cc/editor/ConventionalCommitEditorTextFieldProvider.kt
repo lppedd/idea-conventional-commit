@@ -1,0 +1,171 @@
+package com.github.lppedd.cc.editor
+
+import com.github.lppedd.cc.annotation.Compatibility
+import com.github.lppedd.cc.configuration.ConfigurationChangedListener
+import com.github.lppedd.cc.document
+import com.github.lppedd.cc.isCommitMessage
+import com.github.lppedd.cc.language.ConventionalCommitFileType
+import com.github.lppedd.cc.language.ConventionalCommitLanguage
+import com.intellij.lang.Language
+import com.intellij.openapi.components.service
+import com.intellij.openapi.editor.event.DocumentEvent
+import com.intellij.openapi.editor.event.DocumentListener
+import com.intellij.openapi.editor.ex.EditorEx
+import com.intellij.openapi.editor.ex.util.LexerEditorHighlighter
+import com.intellij.openapi.fileTypes.PlainTextLanguage
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.Key
+import com.intellij.openapi.vcs.changes.Change
+import com.intellij.openapi.vcs.ui.CommitMessage
+import com.intellij.psi.PsiFileFactory
+import com.intellij.ui.EditorCustomization
+import com.intellij.ui.EditorTextField
+import com.intellij.ui.EditorTextFieldProviderImpl
+import com.intellij.ui.LanguageTextField
+import com.intellij.util.LocalTimeCounter
+import java.awt.event.HierarchyEvent
+import java.lang.reflect.Field
+import java.util.*
+import java.util.function.Supplier
+
+/**
+ * @author Edoardo Luppi
+ */
+internal class ConventionalCommitEditorTextFieldProvider : EditorTextFieldProviderImpl() {
+  private val projects = Collections.newSetFromMap<Project>(WeakHashMap(8))
+  private val editorFields = Collections.newSetFromMap<LanguageTextField>(WeakHashMap(32))
+  private val keysMapField by lazy(::findMyKeysMapField)
+  private val changesSupplierKeyField by lazy(::findChangesSupplierKeyField)
+
+  override fun getEditorField(
+      language: Language,
+      project: Project,
+      features: Iterable<EditorCustomization>,
+  ): EditorTextField {
+    if (!projects.contains(project)) {
+      connectProject(project)
+      projects.add(project)
+    }
+
+    val editorField = super.getEditorField(language, project, features)
+
+    if (editorField is LanguageTextField && language is PlainTextLanguage) {
+      editorField.addHierarchyListener {
+        if (it.changeFlags and HierarchyEvent.SHOWING_CHANGED.toLong() != 0L && it.changed.isShowing) {
+          adaptEditorField(editorField, project)
+        }
+      }
+    }
+
+    return editorField
+  }
+
+  private fun connectProject(project: Project) {
+    val handler = MyConfigurationChangedListener(project)
+    val connection = project.messageBus.connect()
+    connection.subscribe(ConfigurationChangedListener.TOPIC, handler)
+  }
+
+  private fun adaptEditorField(editorField: LanguageTextField, project: Project) {
+    if (!editorFields.contains(editorField)) {
+      val editor = editorField.editor
+
+      if (editor != null && !editor.isDisposed && editor.document.isCommitMessage()) {
+        editorFields.add(editorField)
+        installConventionalCommitLanguage(editorField, project)
+      }
+    }
+  }
+
+  private fun refreshEditor(editor: EditorEx) {
+    val highlighter = editor.highlighter
+    val field = keysMapField
+
+    if (field != null && highlighter is LexerEditorHighlighter) {
+      val keysMap = field.get(highlighter) as MutableMap<*, *>
+      keysMap.clear()
+    }
+
+    editor.reinitSettings()
+  }
+
+  private fun installConventionalCommitLanguage(editorField: LanguageTextField, project: Project) {
+    val psiFileFactory = project.service<PsiFileFactory>()
+    val oldDocument = editorField.document
+    val psiFile = psiFileFactory.createFileFromText(
+        "Dummy." + ConventionalCommitFileType.defaultExtension,
+        ConventionalCommitFileType,
+        oldDocument.charsSequence,
+        LocalTimeCounter.currentTime(),
+        true,
+        false,
+    )
+
+    val document = psiFile.document ?: return
+    val commitMessage = oldDocument.getUserData(CommitMessage.DATA_KEY)
+    document.putUserData(CommitMessage.DATA_KEY, commitMessage)
+
+    val changesSupplierKey = getChangesSupplierKey()
+
+    if (changesSupplierKey != null) {
+      document.putUserData(changesSupplierKey, oldDocument.getUserData(changesSupplierKey))
+    }
+
+    document.addDocumentListener(object : DocumentListener {
+      override fun documentChanged(event: DocumentEvent) {
+        val editor = editorField.editor ?: return
+        editor.contentComponent.repaint()
+      }
+    })
+
+    editorField.setLanguage(ConventionalCommitLanguage)
+    editorField.setNewDocumentAndFileType(ConventionalCommitFileType, document)
+  }
+
+  @Compatibility(
+      minVersion = "213.3714.440",
+      replaceWith = "CommitMessage.CHANGES_SUPPLIER_KEY"
+  )
+  @Suppress("unchecked_cast")
+  private fun getChangesSupplierKey(): Key<Supplier<Iterable<Change>>>? =
+    changesSupplierKeyField?.get(null) as? Key<Supplier<Iterable<Change>>>
+
+  private fun LanguageTextField.setLanguage(language: Language) {
+    val languageField = LanguageTextField::class.java.getDeclaredField("myLanguage")
+    languageField.trySetAccessible()
+    languageField.set(this, language)
+  }
+
+  private fun findMyKeysMapField(): Field? {
+    for (field in LexerEditorHighlighter::class.java.declaredFields) {
+      if (field.name == "myKeysMap") {
+        field.trySetAccessible()
+        return field
+      }
+    }
+
+    return null
+  }
+
+  private fun findChangesSupplierKeyField(): Field? {
+    for (field in CommitMessage::class.java.declaredFields) {
+      if (field.name == "CHANGES_SUPPLIER_KEY") {
+        field.trySetAccessible()
+        return field
+      }
+    }
+
+    return null
+  }
+
+  private inner class MyConfigurationChangedListener(private val project: Project) : ConfigurationChangedListener {
+    override fun onConfigurationChanged() {
+      editorFields.asSequence()
+        .filter { it.project == project }
+        .map(EditorTextField::getEditor)
+        .filterIsInstance<EditorEx>()
+        .filterNot(EditorEx::isDisposed)
+        .forEach(::refreshEditor)
+    }
+  }
+}

@@ -1,11 +1,14 @@
 package com.github.lppedd.cc.language
 
+import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.language.lexer.ConventionalCommitLexer
 import com.github.lppedd.cc.language.lexer.ConventionalCommitTokenType
 import com.intellij.lexer.Lexer
+import com.intellij.openapi.components.service
 import com.intellij.openapi.editor.HighlighterColors.TEXT
 import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase
+import com.intellij.openapi.project.Project
 import com.intellij.psi.tree.IElementType
 import java.util.*
 import com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributesKey as attrs
@@ -13,7 +16,7 @@ import com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributes
 /**
  * @author Edoardo Luppi
  */
-internal class ConventionalCommitSyntaxHighlighter : SyntaxHighlighterBase() {
+internal class ConventionalCommitSyntaxHighlighter(project: Project?) : SyntaxHighlighterBase() {
   companion object {
     @JvmField val TYPE: TextAttributesKey = attrs("CONVENTIONAL_COMMIT_TYPE", TEXT)
     @JvmField val SCOPE: TextAttributesKey = attrs("CONVENTIONAL_COMMIT_SCOPE", TEXT)
@@ -43,9 +46,15 @@ internal class ConventionalCommitSyntaxHighlighter : SyntaxHighlighterBase() {
     }
   }
 
+  private val configService = project?.service<CCConfigService>()
+
   override fun getHighlightingLexer(): Lexer =
     ConventionalCommitLexer()
 
   override fun getTokenHighlights(tokenType: IElementType): Array<TextAttributesKey> =
-    attrsMap.getOrDefault(tokenType, attrsText)
+    if (configService == null || configService.enableLanguageSupport) {
+      attrsMap.getOrDefault(tokenType, attrsText)
+    } else {
+      TextAttributesKey.EMPTY_ARRAY
+    }
 }

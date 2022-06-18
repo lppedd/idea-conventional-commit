@@ -36,7 +36,7 @@ internal class ConventionalCommitColorSettingsPage : ColorSettingsPage {
     CCIcons.Logo
 
   override fun getHighlighter(): SyntaxHighlighter =
-    ConventionalCommitSyntaxHighlighter()
+    ConventionalCommitSyntaxHighlighter(null)
 
   override fun getDemoText(): String =
     """
