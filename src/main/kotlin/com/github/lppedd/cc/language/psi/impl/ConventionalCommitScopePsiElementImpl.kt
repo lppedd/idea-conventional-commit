@@ -1,6 +1,8 @@
-package com.github.lppedd.cc.language.psi
+package com.github.lppedd.cc.language.psi.impl
 
 import com.github.lppedd.cc.language.lexer.ConventionalCommitTokenType
+import com.github.lppedd.cc.language.psi.ConventionalCommitPsiElementVisitor
+import com.github.lppedd.cc.language.psi.ConventionalCommitScopePsiElement
 import com.intellij.extapi.psi.ASTWrapperPsiElement
 import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiElement

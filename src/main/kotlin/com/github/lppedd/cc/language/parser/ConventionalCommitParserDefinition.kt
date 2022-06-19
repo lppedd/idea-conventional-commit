@@ -5,7 +5,7 @@ import com.github.lppedd.cc.language.ConventionalCommitLanguage
 import com.github.lppedd.cc.language.lexer.ConventionalCommitLexer
 import com.github.lppedd.cc.language.psi.ConventionalCommitMessagePsiElement
 import com.github.lppedd.cc.language.psi.ConventionalCommitPsiFile
-import com.github.lppedd.cc.language.psi.ConventionalCommitScopePsiElementImpl
+import com.github.lppedd.cc.language.psi.impl.ConventionalCommitScopePsiElementImpl
 import com.intellij.lang.ASTNode
 import com.intellij.lang.ParserDefinition
 import com.intellij.lang.PsiParser
