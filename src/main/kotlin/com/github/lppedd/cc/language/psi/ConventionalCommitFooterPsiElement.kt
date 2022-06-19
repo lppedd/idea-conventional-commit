@@ -6,9 +6,9 @@ import com.intellij.psi.PsiElement
  * @author Edoardo Luppi
  */
 interface ConventionalCommitFooterPsiElement : PsiElement {
-  /** Returns the actual text of the footer's type. */
-  fun getFooterType(): String
+  /** Returns the footer's type token. */
+  fun getType(): ConventionalCommitFooterTypePsiElement
 
-  /** Returns the actual text of the footer's value, or `null` if not present. */
-  fun getFooterValue(): String?
+  /** Returns the footer's value token, or `null` if not present. */
+  fun getValue(): ConventionalCommitFooterValuePsiElement?
 }

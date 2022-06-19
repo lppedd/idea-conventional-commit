@@ -3,30 +3,27 @@ package com.github.lppedd.cc.language.psi.impl
 import com.github.lppedd.cc.language.lexer.ConventionalCommitTokenType
 import com.github.lppedd.cc.language.psi.ConventionalCommitPsiElementVisitor
 import com.github.lppedd.cc.language.psi.ConventionalCommitScopePsiElement
+import com.github.lppedd.cc.language.psi.ConventionalCommitScopeValuePsiElement
 import com.intellij.extapi.psi.ASTWrapperPsiElement
 import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementVisitor
-import com.intellij.psi.impl.source.tree.LeafPsiElement
 
 /**
  * @author Edoardo Luppi
  */
 internal class ConventionalCommitScopePsiElementImpl(node: ASTNode) : ASTWrapperPsiElement(node), ConventionalCommitScopePsiElement {
+  override fun getValue(): ConventionalCommitScopeValuePsiElement? =
+    findChildByType(ConventionalCommitTokenType.SCOPE)
+
   override fun hasClosingParenthesis(): Boolean =
     node.findChildByType(ConventionalCommitTokenType.PAREN_RIGHT) != null
 
-  override fun getValue(): String {
-    val valuePsiElement = node.findChildByType(ConventionalCommitTokenType.SCOPE)
-    return valuePsiElement?.text ?: ""
-  }
-
   override fun getNameIdentifier(): PsiElement? =
-    findChildByType(ConventionalCommitTokenType.SCOPE)
+    getValue()
 
   override fun setName(name: String): PsiElement {
-    val valuePsiElement = node.findChildByType(ConventionalCommitTokenType.SCOPE) as LeafPsiElement?
-    valuePsiElement?.replaceWithText(name)
+    getValue()?.replaceWithText(name)
     return this
   }
 

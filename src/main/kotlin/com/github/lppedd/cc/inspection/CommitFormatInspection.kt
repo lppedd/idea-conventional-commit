@@ -114,9 +114,9 @@ internal class CommitFormatInspection : CommitBaseInspection() {
     }
 
     override fun visitScope(element: ConventionalCommitScopePsiElement) {
-      val value = element.getValue()
+      val scopeValue = element.getValue()?.text ?: ""
 
-      if (value.isBlank()) {
+      if (scopeValue.isBlank()) {
         if (element.hasClosingParenthesis()) {
           holder.registerProblem(
               element,
@@ -134,7 +134,7 @@ internal class CommitFormatInspection : CommitBaseInspection() {
       val valuePsiElement = element.nameIdentifier ?: return
       val (valueStart, valueEnd) = valuePsiElement.textRangeInParent
       val char = holder.project.service<CCConfigService>().scopeReplaceChar
-      val ranges = WHITESPACE_REGEX.findAll(value)
+      val ranges = WHITESPACE_REGEX.findAll(scopeValue)
         .map(MatchResult::range)
         .map { TextRange(/* Account for ( */ it.first + 1, it.last + 2) }
         .toList()
