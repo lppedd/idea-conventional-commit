@@ -1,5 +1,6 @@
-@file:Suppress("TrailingComma")
+@file:Suppress("TrailingComma", "PublicApiImplicitType")
 
+import org.jetbrains.grammarkit.tasks.GenerateLexerTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 fun properties(key: String) = project.findProperty(key).toString()
@@ -7,6 +8,7 @@ fun properties(key: String) = project.findProperty(key).toString()
 plugins {
   java
   id("org.jetbrains.intellij") version "1.6.0"
+  id("org.jetbrains.grammarkit") version "2021.2.2"
   kotlin("jvm") version "1.7.0"
 }
 
@@ -39,6 +41,11 @@ intellij {
   plugins.set(listOf("java"))
 }
 
+grammarKit {
+  jflexRelease.set("1.7.0-1")
+  grammarKitRelease.set("2021.1.2")
+}
+
 java {
   sourceCompatibility = JavaVersion.VERSION_11
   targetCompatibility = JavaVersion.VERSION_11
@@ -54,6 +61,12 @@ sourceSets {
 
 /** Points to the Java executable (usually `java.exe`) of a DCEVM-enabled JVM. */
 val dcevmExecutable: String? by project
+val generateConventionalCommitLexer = task<GenerateLexerTask>("generateConventionalCommitLexer") {
+  source.set("src/main/kotlin/com/github/lppedd/cc/language/lexer/conventionalCommit.flex")
+  targetDir.set("src/main/gen/com/github/lppedd/cc/language/lexer")
+  targetClass.set("ConventionalCommitFlexLexer")
+  purgeOldFiles.set(true)
+}
 
 tasks {
   runIde {
@@ -80,6 +93,8 @@ tasks {
       "-XXLanguage:+InlineClasses",
       "-XXLanguage:+UnitConversion"
     )
+
+    dependsOn(generateConventionalCommitLexer)
   }
 
   compileKotlin(kotlinSettings)
