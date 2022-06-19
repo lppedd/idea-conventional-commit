@@ -34,7 +34,7 @@ internal class ConventionalCommitScopePsiElementImpl(node: ASTNode) : ASTWrapper
     if (visitor is ConventionalCommitPsiElementVisitor) {
       visitor.visitScope(this)
     } else {
-      visitor.visitElement(this)
+      super.accept(visitor)
     }
   }
 }

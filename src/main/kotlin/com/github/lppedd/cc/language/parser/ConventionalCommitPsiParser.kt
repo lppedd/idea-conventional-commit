@@ -11,27 +11,26 @@ import com.intellij.psi.tree.IElementType
  */
 internal class ConventionalCommitPsiParser : PsiParser {
   override fun parse(root: IElementType, builder: PsiBuilder): ASTNode {
-    val file = builder.mark()
-    val message = builder.mark()
+    val fileMarker = builder.mark()
+    val messageMarker = builder.mark()
 
     while (!builder.eof()) {
-      val tokenType = builder.tokenType
-
-      if (tokenType == ConventionalCommitTokenType.PAREN_LEFT) {
-        parseScope(builder)
+      when (builder.tokenType) {
+        ConventionalCommitTokenType.PAREN_LEFT -> parseScope(builder)
+        ConventionalCommitTokenType.FOOTER_TYPE -> parseFooter(builder)
+        ConventionalCommitTokenType.FOOTER_TYPE_BREAKING_CHANGE -> parseFooter(builder)
+        else -> builder.advanceLexer()
       }
-
-      builder.advanceLexer()
     }
 
-    message.done(ConventionalCommitElementType.COMMIT_MESSAGE)
-    file.done(root)
+    messageMarker.done(ConventionalCommitElementType.COMMIT_MESSAGE)
+    fileMarker.done(root)
 
     return builder.treeBuilt
   }
 
   private fun parseScope(builder: PsiBuilder) {
-    val mark = builder.mark()
+    val marker = builder.mark()
     var token = builder.advanceAndGet()
 
     if (token == ConventionalCommitTokenType.SCOPE) {
@@ -42,7 +41,22 @@ internal class ConventionalCommitPsiParser : PsiParser {
       builder.advanceLexer()
     }
 
-    mark.done(ConventionalCommitElementType.SCOPE)
+    marker.done(ConventionalCommitElementType.SCOPE)
+  }
+
+  private fun parseFooter(builder: PsiBuilder) {
+    val marker = builder.mark()
+    var token = builder.advanceAndGet()
+
+    if (token == ConventionalCommitTokenType.SEPARATOR) {
+      token = builder.advanceAndGet()
+    }
+
+    if (token == ConventionalCommitTokenType.FOOTER_VALUE) {
+      builder.advanceLexer()
+    }
+
+    marker.done(ConventionalCommitElementType.FOOTER)
   }
 
   private fun PsiBuilder.advanceAndGet(): IElementType? {

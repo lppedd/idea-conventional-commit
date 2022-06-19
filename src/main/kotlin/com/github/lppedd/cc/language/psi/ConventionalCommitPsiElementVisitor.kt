@@ -13,4 +13,10 @@ abstract class ConventionalCommitPsiElementVisitor : PsiElementVisitor() {
   open fun visitScopeValue(element: ConventionalCommitScopeValuePsiElement) {}
 
   open fun visitSubject(element: ConventionalCommitSubjectPsiElement) {}
+
+  open fun visitFooter(element: ConventionalCommitFooterPsiElement) {}
+
+  open fun visitFooterType(element: ConventionalCommitFooterTypePsiElement) {}
+
+  open fun visitFooterValue(element: ConventionalCommitFooterValuePsiElement) {}
 }

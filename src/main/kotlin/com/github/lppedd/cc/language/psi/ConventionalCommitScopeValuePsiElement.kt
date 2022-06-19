@@ -15,7 +15,7 @@ class ConventionalCommitScopeValuePsiElement(
     if (visitor is ConventionalCommitPsiElementVisitor) {
       visitor.visitScopeValue(this)
     } else {
-      visitor.visitElement(this)
+      super.accept(visitor)
     }
   }
 

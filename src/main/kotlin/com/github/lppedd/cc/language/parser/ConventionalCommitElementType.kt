@@ -10,5 +10,6 @@ class ConventionalCommitElementType(debugName: String) : IElementType(debugName,
   companion object {
     @JvmField val COMMIT_MESSAGE: IElementType = ConventionalCommitElementType("COMMIT_MESSAGE")
     @JvmField val SCOPE: IElementType = ConventionalCommitElementType("SCOPE")
+    @JvmField val FOOTER: IElementType = ConventionalCommitElementType("FOOTER")
   }
 }

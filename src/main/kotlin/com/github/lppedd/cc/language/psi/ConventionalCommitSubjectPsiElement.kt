@@ -12,7 +12,7 @@ class ConventionalCommitSubjectPsiElement(type: IElementType, text: CharSequence
     if (visitor is ConventionalCommitPsiElementVisitor) {
       visitor.visitSubject(this)
     } else {
-      visitor.visitElement(this)
+      super.accept(visitor)
     }
   }
 

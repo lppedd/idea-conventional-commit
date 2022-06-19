@@ -9,6 +9,6 @@ interface ConventionalCommitScopePsiElement : PsiNameIdentifierOwner {
   /** Returns if the scope has been completed with a closing parenthesis, or not. */
   fun hasClosingParenthesis(): Boolean
 
-  /** Returns the actual value of the scope token. */
+  /** Returns the actual text of the scope token. */
   fun getValue(): String
 }
