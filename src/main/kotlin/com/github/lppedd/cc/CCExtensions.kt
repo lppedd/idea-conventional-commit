@@ -21,13 +21,13 @@ import com.intellij.openapi.vcs.ui.CommitMessage
 import com.intellij.openapi.vfs.VFileProperty
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDocumentManager
+import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.ui.TextFieldWithAutoCompletionListProvider
 import com.intellij.ui.scale.JBUIScale
 import java.awt.Color
 import java.awt.Robot
 import java.io.InputStream
-import java.util.*
 import java.util.concurrent.CancellationException
 import javax.swing.Action
 import javax.swing.BorderFactory
@@ -40,6 +40,13 @@ import kotlin.internal.InlineOnly
 import kotlin.math.max
 import kotlin.math.min
 
+// region PsiElement
+
+@InlineOnly
+internal inline val PsiElement.endOffset
+  get() = textRange.endOffset
+
+// endregion
 // region Action
 
 @InlineOnly
@@ -321,10 +328,6 @@ internal inline operator fun <T, C : MutableList<T>> T.plus(list: C): C {
 
 // endregion
 // region Sequence
-
-@InlineOnly
-internal inline fun Sequence<String>.mapToLowerCase(): Sequence<String> =
-  map { it.lowercase(Locale.getDefault()) }
 
 @InlineOnly
 internal inline fun Sequence<String>.filterNotEmpty(): Sequence<String> =

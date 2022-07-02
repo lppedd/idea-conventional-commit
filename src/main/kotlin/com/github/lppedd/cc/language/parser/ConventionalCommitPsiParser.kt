@@ -48,7 +48,7 @@ internal class ConventionalCommitPsiParser : PsiParser {
     val marker = builder.mark()
     var token = builder.advanceAndGet()
 
-    if (token == ConventionalCommitTokenType.SEPARATOR) {
+    if (token == ConventionalCommitTokenType.FOOTER_SEPARATOR) {
       token = builder.advanceAndGet()
     }
 

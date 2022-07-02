@@ -3,9 +3,9 @@ package com.github.lppedd.cc.language.parser
 import com.github.lppedd.cc.language.ConventionalCommitFileType
 import com.github.lppedd.cc.language.ConventionalCommitLanguage
 import com.github.lppedd.cc.language.lexer.ConventionalCommitLexer
-import com.github.lppedd.cc.language.psi.ConventionalCommitMessagePsiElement
 import com.github.lppedd.cc.language.psi.ConventionalCommitPsiFile
 import com.github.lppedd.cc.language.psi.impl.ConventionalCommitFooterPsiElementImpl
+import com.github.lppedd.cc.language.psi.impl.ConventionalCommitMessagePsiElementImpl
 import com.github.lppedd.cc.language.psi.impl.ConventionalCommitScopePsiElementImpl
 import com.intellij.lang.ASTNode
 import com.intellij.lang.ParserDefinition
@@ -43,7 +43,7 @@ internal class ConventionalCommitParserDefinition : ParserDefinition {
 
   override fun createElement(astNode: ASTNode): PsiElement =
     when (astNode.elementType) {
-      ConventionalCommitElementType.COMMIT_MESSAGE -> ConventionalCommitMessagePsiElement(astNode)
+      ConventionalCommitElementType.COMMIT_MESSAGE -> ConventionalCommitMessagePsiElementImpl(astNode)
       ConventionalCommitElementType.SCOPE -> ConventionalCommitScopePsiElementImpl(astNode)
       ConventionalCommitElementType.FOOTER -> ConventionalCommitFooterPsiElementImpl(astNode)
       else -> throw IllegalStateException("Node not supported: $astNode")
