@@ -87,7 +87,7 @@ FooterType  = [^:\s]+ | BREAKING\ CHANGE
 
       \( {
         yybegin(SCOPE);
-        return ConventionalCommitTokenType.PAREN_LEFT;
+        return ConventionalCommitTokenType.SCOPE_OPEN_PAREN;
       }
 }
 
@@ -98,7 +98,7 @@ FooterType  = [^:\s]+ | BREAKING\ CHANGE
 
       \) {
         yybegin(SUMMARY_SEPARATOR);
-        return ConventionalCommitTokenType.PAREN_RIGHT;
+        return ConventionalCommitTokenType.SCOPE_CLOSE_PAREN;
       }
 }
 
@@ -176,7 +176,7 @@ FooterType  = [^:\s]+ | BREAKING\ CHANGE
 
       : {
         yybegin(FOOTER_VALUE);
-        return ConventionalCommitTokenType.FOOTER_SEPARATOR;
+        return ConventionalCommitTokenType.SEPARATOR;
       }
 }
 

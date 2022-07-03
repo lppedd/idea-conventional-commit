@@ -17,7 +17,7 @@ internal class ConventionalCommitScopePsiElementImpl(node: ASTNode) : ASTWrapper
     findChildByType(ConventionalCommitTokenType.SCOPE)
 
   override fun hasClosingParenthesis(): Boolean =
-    node.findChildByType(ConventionalCommitTokenType.PAREN_RIGHT) != null
+    node.findChildByType(ConventionalCommitTokenType.SCOPE_CLOSE_PAREN) != null
 
   override fun getNameIdentifier(): PsiElement? =
     getValue()

@@ -159,6 +159,10 @@ internal fun Document.isCommitMessage(): Boolean =
 // region Editor
 
 @InlineOnly
+internal inline fun Editor.getCaretOffset(): Int =
+  caretModel.offset
+
+@InlineOnly
 internal inline fun Editor.scheduleAutoPopup() {
   AutoPopupController.getInstance(project ?: return).scheduleAutoPopup(this)
 }

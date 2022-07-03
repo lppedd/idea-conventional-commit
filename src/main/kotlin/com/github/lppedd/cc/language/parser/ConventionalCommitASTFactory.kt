@@ -5,6 +5,9 @@ import com.github.lppedd.cc.language.lexer.ConventionalCommitTokenType.Companion
 import com.github.lppedd.cc.language.lexer.ConventionalCommitTokenType.Companion.FOOTER_TYPE_BREAKING_CHANGE
 import com.github.lppedd.cc.language.lexer.ConventionalCommitTokenType.Companion.FOOTER_VALUE
 import com.github.lppedd.cc.language.lexer.ConventionalCommitTokenType.Companion.SCOPE
+import com.github.lppedd.cc.language.lexer.ConventionalCommitTokenType.Companion.SCOPE_CLOSE_PAREN
+import com.github.lppedd.cc.language.lexer.ConventionalCommitTokenType.Companion.SCOPE_OPEN_PAREN
+import com.github.lppedd.cc.language.lexer.ConventionalCommitTokenType.Companion.SEPARATOR
 import com.github.lppedd.cc.language.lexer.ConventionalCommitTokenType.Companion.SUBJECT
 import com.github.lppedd.cc.language.lexer.ConventionalCommitTokenType.Companion.TYPE
 import com.github.lppedd.cc.language.psi.*
@@ -21,7 +24,10 @@ internal class ConventionalCommitASTFactory : ASTFactory() {
 
   init {
     tokensMap[TYPE] = ::ConventionalCommitTypePsiElement
+    tokensMap[SCOPE_OPEN_PAREN] = ::ConventionalCommitScopeOpenParenPsiElement
     tokensMap[SCOPE] = ::ConventionalCommitScopeValuePsiElement
+    tokensMap[SCOPE_CLOSE_PAREN] = ::ConventionalCommitScopeCloseParenPsiElement
+    tokensMap[SEPARATOR] = ::ConventionalCommitSeparatorPsiElement
     tokensMap[SUBJECT] = ::ConventionalCommitSubjectPsiElement
     tokensMap[BODY] = ::ConventionalCommitBodyPsiElement
     tokensMap[FOOTER_TYPE] = ::ConventionalCommitFooterTypePsiElement

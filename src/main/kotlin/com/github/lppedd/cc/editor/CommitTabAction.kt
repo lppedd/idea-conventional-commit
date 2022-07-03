@@ -1,34 +1,41 @@
 package com.github.lppedd.cc.editor
 
-import com.github.lppedd.cc.getLine
-import com.github.lppedd.cc.isCommitMessage
+import com.github.lppedd.cc.getCaretOffset
+import com.github.lppedd.cc.language.ConventionalCommitLanguage
+import com.github.lppedd.cc.language.psi.*
 import com.github.lppedd.cc.moveCaretRelatively
-import com.github.lppedd.cc.parser.CCParser
-import com.github.lppedd.cc.parser.ValidToken
 import com.github.lppedd.cc.scheduleAutoPopup
 import com.intellij.openapi.actionSystem.DataContext
+import com.intellij.openapi.components.service
 import com.intellij.openapi.editor.Caret
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.actions.TabAction
 import com.intellij.openapi.util.Key
+import com.intellij.psi.PsiDocumentManager
 
 /**
+ * Allows jumping over certain message elements with the Tab key.
+ * Currently, the following elements are supported:
+ *   - opening scope parenthesis
+ *   - closing scope parenthesis
+ *   - subject and footer separator
+ *
  * @author Edoardo Luppi
  */
-private class CommitTabAction : TabAction() {
+internal class CommitTabAction : TabAction() {
   init {
     setupHandler(CommitTabHandler)
   }
 
   private object CommitTabHandler : Handler() {
-    private val moveCaretKey = Key.create<Unit>("Vcs.CommitMessage.moveCaret")
+    private val moveCaretKey = Key.create<Int>("Vcs.CommitMessage.moveCaret")
 
     override fun executeWriteAction(editor: Editor, caret: Caret?, dataContext: DataContext) {
-      val document = editor.document
+      val steps = editor.getUserData(moveCaretKey)
 
-      if (document.getUserData(moveCaretKey) != null) {
-        document.putUserData(moveCaretKey, null)
-        editor.moveCaretRelatively(1)
+      if (steps != null) {
+        editor.putUserData(moveCaretKey, null)
+        editor.moveCaretRelatively(steps)
         editor.scheduleAutoPopup()
       } else {
         super.executeWriteAction(editor, caret, dataContext)
@@ -37,18 +44,35 @@ private class CommitTabAction : TabAction() {
 
     @Suppress("override_deprecation")
     override fun isEnabled(editor: Editor, dataContext: DataContext): Boolean {
-      val document = editor.document
+      val project = editor.project
 
-      if (document.isCommitMessage()) {
-        val logicalPosition = editor.caretModel.logicalPosition
-        val lineText = document.getLine(logicalPosition.line)
-        val scope = CCParser.parseHeader(lineText).scope
+      if (project != null) {
+        val psiFile = project.service<PsiDocumentManager>().getPsiFile(editor.document)
 
-        if (scope is ValidToken && (
-                logicalPosition.column == scope.range.startOffset - 1 ||
-                logicalPosition.column == scope.range.endOffset)) {
-          document.putUserData(moveCaretKey, Unit)
-          return true
+        if (psiFile != null) {
+          val elementAtCaret = psiFile.findElementAt(editor.getCaretOffset())
+
+          if (elementAtCaret != null) {
+            if (elementAtCaret is ConventionalCommitScopeOpenParenPsiElement ||
+                elementAtCaret is ConventionalCommitScopeCloseParenPsiElement) {
+              editor.putUserData(moveCaretKey, 1)
+              return true
+            } else if (elementAtCaret is ConventionalCommitSeparatorPsiElement) {
+              // Let's find where the subject/footer value text begins,
+              // or just place the cursor at the right place if it doesn't exist yet
+              val nextSibling = elementAtCaret.nextSibling
+
+              if (nextSibling is ConventionalCommitSubjectPsiElement ||
+                  nextSibling is ConventionalCommitFooterValuePsiElement) {
+                val text = nextSibling.text
+                editor.putUserData(moveCaretKey, if (text[0].isWhitespace()) 2 else 1)
+              } else {
+                editor.putUserData(moveCaretKey, 1)
+              }
+
+              return true
+            }
+          }
         }
       }
 
@@ -56,11 +80,22 @@ private class CommitTabAction : TabAction() {
       return super.isEnabled(editor, dataContext)
     }
 
-    override fun isEnabledForCaret(editor: Editor, caret: Caret, dataContext: DataContext?): Boolean =
-      if (editor.document.isCommitMessage()) {
-        true
-      } else {
-        super.isEnabledForCaret(editor, caret, dataContext)
+    override fun isEnabledForCaret(editor: Editor, caret: Caret, dataContext: DataContext?): Boolean {
+      val project = editor.project
+
+      if (project != null) {
+        val psiFile = project.service<PsiDocumentManager>().getPsiFile(editor.document)
+
+        if (psiFile != null) {
+          val elementAtCaret = psiFile.findElementAt(caret.offset)
+
+          if (elementAtCaret != null && elementAtCaret.language.isKindOf(ConventionalCommitLanguage)) {
+            return true
+          }
+        }
       }
+
+      return super.isEnabledForCaret(editor, caret, dataContext)
+    }
   }
 }

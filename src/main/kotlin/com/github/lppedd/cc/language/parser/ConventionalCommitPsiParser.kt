@@ -16,7 +16,7 @@ internal class ConventionalCommitPsiParser : PsiParser {
 
     while (!builder.eof()) {
       when (builder.tokenType) {
-        ConventionalCommitTokenType.PAREN_LEFT -> parseScope(builder)
+        ConventionalCommitTokenType.SCOPE_OPEN_PAREN -> parseScope(builder)
         ConventionalCommitTokenType.FOOTER_TYPE -> parseFooter(builder)
         ConventionalCommitTokenType.FOOTER_TYPE_BREAKING_CHANGE -> parseFooter(builder)
         else -> builder.advanceLexer()
@@ -37,7 +37,7 @@ internal class ConventionalCommitPsiParser : PsiParser {
       token = builder.advanceAndGet()
     }
 
-    if (token == ConventionalCommitTokenType.PAREN_RIGHT) {
+    if (token == ConventionalCommitTokenType.SCOPE_CLOSE_PAREN) {
       builder.advanceLexer()
     }
 
@@ -48,7 +48,7 @@ internal class ConventionalCommitPsiParser : PsiParser {
     val marker = builder.mark()
     var token = builder.advanceAndGet()
 
-    if (token == ConventionalCommitTokenType.FOOTER_SEPARATOR) {
+    if (token == ConventionalCommitTokenType.SEPARATOR) {
       token = builder.advanceAndGet()
     }
 
