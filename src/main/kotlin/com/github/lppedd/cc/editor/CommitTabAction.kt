@@ -48,31 +48,26 @@ internal class CommitTabAction : TabAction() {
 
       if (project != null) {
         val psiFile = project.service<PsiDocumentManager>().getPsiFile(editor.document)
+        val elementAtCaret = psiFile?.findElementAt(editor.getCaretOffset())
 
-        if (psiFile != null) {
-          val elementAtCaret = psiFile.findElementAt(editor.getCaretOffset())
+        if (elementAtCaret is ConventionalCommitScopeOpenParenPsiElement ||
+            elementAtCaret is ConventionalCommitScopeCloseParenPsiElement) {
+          editor.putUserData(moveCaretKey, 1)
+          return true
+        } else if (elementAtCaret is ConventionalCommitSeparatorPsiElement) {
+          // Let's find where the subject/footer value text begins,
+          // or just place the cursor at the right place if it doesn't exist yet
+          val nextSibling = elementAtCaret.nextSibling
 
-          if (elementAtCaret != null) {
-            if (elementAtCaret is ConventionalCommitScopeOpenParenPsiElement ||
-                elementAtCaret is ConventionalCommitScopeCloseParenPsiElement) {
-              editor.putUserData(moveCaretKey, 1)
-              return true
-            } else if (elementAtCaret is ConventionalCommitSeparatorPsiElement) {
-              // Let's find where the subject/footer value text begins,
-              // or just place the cursor at the right place if it doesn't exist yet
-              val nextSibling = elementAtCaret.nextSibling
-
-              if (nextSibling is ConventionalCommitSubjectPsiElement ||
-                  nextSibling is ConventionalCommitFooterValuePsiElement) {
-                val text = nextSibling.text
-                editor.putUserData(moveCaretKey, if (text[0].isWhitespace()) 2 else 1)
-              } else {
-                editor.putUserData(moveCaretKey, 1)
-              }
-
-              return true
-            }
+          if (nextSibling is ConventionalCommitSubjectPsiElement ||
+              nextSibling is ConventionalCommitFooterValuePsiElement) {
+            val text = nextSibling.text
+            editor.putUserData(moveCaretKey, if (text[0].isWhitespace()) 2 else 1)
+          } else {
+            editor.putUserData(moveCaretKey, 1)
           }
+
+          return true
         }
       }
 
