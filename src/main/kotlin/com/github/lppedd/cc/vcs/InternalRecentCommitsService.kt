@@ -21,7 +21,7 @@ import kotlin.text.RegexOption.MULTILINE
 @Internal
 internal class InternalRecentCommitsService(private val project: Project) : RecentCommitsService {
   private companion object {
-    private const val MAX_ELEMENTS = 5
+    private const val MAX_ELEMENTS = 4
 
     /**
      * Regexp to match beginning and ending whitespace characters,
