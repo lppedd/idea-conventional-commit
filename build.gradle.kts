@@ -9,7 +9,7 @@ plugins {
   java
   id("org.jetbrains.intellij") version "1.6.0"
   id("org.jetbrains.grammarkit") version "2021.2.2"
-  kotlin("jvm") version "1.7.0"
+  kotlin("jvm") version "1.7.10"
 }
 
 group = "com.github.lppedd"
@@ -21,7 +21,7 @@ repositories {
 }
 
 dependencies {
-  implementation(kotlin("stdlib-jdk8", "1.7.0"))
+  implementation(kotlin("stdlib-jdk8", "1.7.10"))
 
   implementation("commons-validator", "commons-validator", "1.7") {
     exclude("commons-beanutils", "commons-beanutils")
