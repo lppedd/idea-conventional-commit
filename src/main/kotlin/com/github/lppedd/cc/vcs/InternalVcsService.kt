@@ -81,13 +81,12 @@ internal class InternalVcsService(private val project: Project) : VcsService {
   }
 
   private fun refreshCachedValues() {
-    cachedCurrentUserLock.write {
-      cachedCurrentUser = fetchCurrentUsers()
-    }
+    // fetch methods are executed outside the write locks to reduce the _write lock_ acquisition time
+    val refreshedCurrentUsers = fetchCurrentUsers()
+    cachedCurrentUserLock.write { cachedCurrentUser = refreshedCurrentUsers }
 
-    cachedCommitsLock.write {
-      cachedCommits = fetchCommits(sortBy = VcsCommitMetadata::getCommitTime)
-    }
+    val refreshedCommits = fetchCommits(sortBy = VcsCommitMetadata::getCommitTime)
+    cachedCommitsLock.write { cachedCommits = refreshedCommits }
   }
 
   private fun fetchCurrentUsers(): Set<VcsUser> =
