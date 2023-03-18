@@ -64,26 +64,26 @@ internal class CommitFormatInspectionOptions : ConfigurableUi<Project> {
 
   override fun getComponent(): JComponent =
     myMainPanel
-}
 
-private class CharEntryModel(items: List<CharEntry>) : MutableCollectionComboBoxModel<CharEntry>(items) {
-  override fun getSelected(): CharEntry =
-    super.getSelected()!!
+  private class CharEntryModel(items: List<CharEntry>) : MutableCollectionComboBoxModel<CharEntry>(items) {
+    override fun getSelected(): CharEntry =
+      super.getSelected()!!
 
-  fun setSelectedItem(item: String) {
-    if (mySelection.char != item) {
-      this.selectedItem = this.internalList.find { it.char == item }
+    fun setSelectedItem(item: String) {
+      if (mySelection.char != item) {
+        this.selectedItem = this.internalList.find { it.char == item }
+      }
     }
   }
-}
 
-private class CharEntry(val char: String, val description: String) {
-  override fun toString(): String =
-    description
+  private class CharEntry(val char: String, val description: String) {
+    override fun toString(): String =
+      description
 
-  override fun hashCode(): Int =
-    Objects.hashCode(description)
+    override fun hashCode(): Int =
+      Objects.hashCode(description)
 
-  override fun equals(other: Any?): Boolean =
-    description == (other as? CharEntry)?.description
+    override fun equals(other: Any?): Boolean =
+      description == (other as? CharEntry)?.description
+  }
 }
