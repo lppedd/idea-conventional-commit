@@ -72,16 +72,16 @@ internal fun Presentation.updateIcons(withIcon: Icon) {
 // endregion
 // region Color
 
-@Suppress("unused")
+@Suppress("unused", "UseJBColor")
 internal fun Color.darker(factor: Double): Color =
   Color(
       max((red * factor).toInt(), 0),
       max((green * factor).toInt(), 0),
       max((blue * factor).toInt(), 0),
-      alpha
+      alpha,
   )
 
-@Suppress("ConvertTwoComparisonsToRangeCheck")
+@Suppress("ConvertTwoComparisonsToRangeCheck", "UseJBColor")
 internal fun Color.brighter(factor: Double): Color {
   var r = red
   var g = green
@@ -101,7 +101,7 @@ internal fun Color.brighter(factor: Double): Color {
       min((r / factor).toInt(), 255),
       min((g / factor).toInt(), 255),
       min((b / factor).toInt(), 255),
-      alpha
+      alpha,
   )
 }
 
@@ -281,11 +281,11 @@ internal fun CharSequence.firstIsWhitespace(): Boolean =
 // endregion
 // region String
 
-private val NON_THIN_REGEX = Regex("[^iIl1.,']")
+private val nonThinRegex = Regex("[^iIl1.,']")
 
 @InlineOnly
 private inline fun textWidth(str: String): Int =
-  str.length - NON_THIN_REGEX.replace(str, "").length / 2
+  str.length - nonThinRegex.replace(str, "").length / 2
 
 // Adapted from https://stackoverflow.com/questions/3597550/ideal-method-to-truncate-a-string-with-ellipsis
 internal fun String.abbreviate(max: Int, suffix: CharSequence = "..."): String {
