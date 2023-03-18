@@ -75,13 +75,16 @@ internal class CCTemplateEditingListener : TemplateEditingAdapter() {
     // If the body is empty it means the user didn't need to insert it,
     // thus we can reposition the cursor at the end of the subject
     val newOffset = templateState.getSegmentRange(INDEX_SUBJECT).endOffset
-    val editor = templateState.editor
-    val toDo = Runnable {
-      editor.document.deleteString(newOffset, bodyOrFooterTypeRange.endOffset)
-      editor.moveCaretToOffset(newOffset)
-    }
 
-    WriteCommandAction.runWriteCommandAction(editor.project, "Reposition cursor after subject", "", toDo)
+    if (newOffset <= bodyOrFooterTypeRange.endOffset) {
+      val editor = templateState.editor
+      val action = Runnable {
+        editor.document.deleteString(newOffset, bodyOrFooterTypeRange.endOffset)
+        editor.moveCaretToOffset(newOffset)
+      }
+
+      WriteCommandAction.runWriteCommandAction(editor.project, "Reposition cursor after subject", "", action)
+    }
   }
 
   private fun deleteScopeParenthesesIfEmpty(templateState: TemplateState) {
@@ -94,11 +97,11 @@ internal class CCTemplateEditingListener : TemplateEditingAdapter() {
       val document = editor.document
       val startOffset = max(scopeStart - 1, 0)
       val endOffset = min(scopeEnd + 1, document.textLength)
-      val toDo = Runnable {
+      val action = Runnable {
         document.deleteString(startOffset, endOffset)
       }
 
-      WriteCommandAction.runWriteCommandAction(editor.project, "Delete scope's parentheses", "", toDo)
+      WriteCommandAction.runWriteCommandAction(editor.project, "Delete scope's parentheses", "", action)
     }
   }
 

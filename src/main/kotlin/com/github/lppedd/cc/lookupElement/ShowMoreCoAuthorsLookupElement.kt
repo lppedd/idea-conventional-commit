@@ -96,7 +96,7 @@ internal class ShowMoreCoAuthorsLookupElement : CommitTokenLookupElement, Prefix
       TextRange(lineStart, lineEnd)
     }
 
-    val runnable = Runnable {
+    val action = Runnable {
       context.editor.removeSelection()
       editor.replaceString(footerStart, footerEnd, text)
     }
@@ -105,7 +105,7 @@ internal class ShowMoreCoAuthorsLookupElement : CommitTokenLookupElement, Prefix
         context.project,
         commandName,
         commandGroupId,
-        runnable,
+        action,
         PsiDocumentManager.getInstance(context.project).getPsiFile(document),
     )
   }
