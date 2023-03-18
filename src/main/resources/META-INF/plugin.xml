@@ -2,12 +2,7 @@
 <idea-plugin>
   <id>com.github.lppedd.idea-conventional-commit</id>
   <name>Conventional Commit</name>
-  <vendor
-      email="lp.edoardo@gmail.com"
-      url="https://github.com/lppedd/idea-conventional-commit"
-  >
-    Edoardo Luppi
-  </vendor>
+  <vendor email="lp.edoardo@gmail.com" url="https://github.com/lppedd/idea-conventional-commit">Edoardo Luppi</vendor>
 
   <depends>com.intellij.modules.platform</depends>
   <depends optional="true" config-file="vcs.xml">com.intellij.modules.vcs</depends>
@@ -129,7 +124,6 @@
   </extensions>
 
   <extensionPoints>
-    <!-- @formatter:off -->
     <extensionPoint name="commitTypeProvider" interface="com.github.lppedd.cc.api.CommitTypeProvider" area="IDEA_PROJECT" />
     <extensionPoint name="commitScopeProvider" interface="com.github.lppedd.cc.api.CommitScopeProvider" area="IDEA_PROJECT" />
     <extensionPoint name="commitSubjectProvider" interface="com.github.lppedd.cc.api.CommitSubjectProvider" area="IDEA_PROJECT" />
@@ -137,16 +131,13 @@
     <extensionPoint name="commitFooterTypeProvider" interface="com.github.lppedd.cc.api.CommitFooterTypeProvider" area="IDEA_PROJECT" />
     <extensionPoint name="commitFooterValueProvider" interface="com.github.lppedd.cc.api.CommitFooterValueProvider" area="IDEA_PROJECT" />
     <extensionPoint name="whatsNewProvider" interface="com.github.lppedd.cc.api.WhatsNewProvider" />
-    <!-- @formatter:on -->
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.github.lppedd.idea-conventional-commit">
-    <!-- @formatter:off -->
     <commitTypeProvider order="first" implementation="com.github.lppedd.cc.api.impl.InternalCommitTokenProvider" />
     <commitScopeProvider order="first" implementation="com.github.lppedd.cc.api.impl.InternalCommitTokenProvider" />
     <commitFooterTypeProvider order="first" implementation="com.github.lppedd.cc.api.impl.InternalCommitTokenProvider" />
     <commitFooterValueProvider order="first" implementation="com.github.lppedd.cc.api.impl.InternalCommitTokenProvider" />
     <whatsNewProvider order="first" implementation="com.github.lppedd.cc.whatsnew.InternalWhatsNewProvider" />
-    <!-- @formatter:on -->
   </extensions>
 </idea-plugin>

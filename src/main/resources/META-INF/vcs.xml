@@ -67,12 +67,10 @@
   </extensions>
 
   <extensions defaultExtensionNs="com.github.lppedd.idea-conventional-commit">
-    <!-- @formatter:off -->
     <commitTypeProvider order="first" implementation="com.github.lppedd.cc.vcs.VcsCommitTokenProvider" />
     <commitScopeProvider order="first" implementation="com.github.lppedd.cc.vcs.VcsCommitTokenProvider" />
     <commitSubjectProvider order="first" implementation="com.github.lppedd.cc.vcs.VcsCommitTokenProvider" />
     <commitFooterValueProvider order="first" implementation="com.github.lppedd.cc.vcs.VcsCommitTokenProvider" />
     <commitInspectionProvider order="first" implementation="com.github.lppedd.cc.inspection.InternalCommitInspectionProvider" />
-    <!-- @formatter:on -->
   </extensions>
 </idea-plugin>
