@@ -42,6 +42,10 @@
     />
   </actions>
 
+  <applicationListeners>
+    <listener topic="com.intellij.openapi.project.ProjectManagerListener" class="com.github.lppedd.cc.vcs.VcsProjectManagerListener" />
+  </applicationListeners>
+
   <extensionPoints>
     <extensionPoint
         qualifiedName="com.github.lppedd.idea-conventional-commit.commitInspectionProvider"

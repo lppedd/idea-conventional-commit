@@ -16,6 +16,10 @@
     </action>
   </actions>
 
+  <applicationListeners>
+    <listener topic="com.intellij.openapi.project.ProjectManagerListener" class="com.github.lppedd.cc.CCProjectManagerListener" />
+  </applicationListeners>
+
   <extensions defaultExtensionNs="com.intellij">
     <ApplicationLoadListener implementation="com.github.lppedd.cc.CCApplicationLoadListener" />
 
