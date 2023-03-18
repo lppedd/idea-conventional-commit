@@ -88,11 +88,7 @@ tasks {
         "-Xno-param-assertions",
         "-Xjvm-default=all",
         "-Xallow-kotlin-package",
-        "-opt-in=kotlin.ExperimentalStdlibApi",
-        "-opt-in=kotlin.ExperimentalUnsignedTypes",
         "-opt-in=kotlin.contracts.ExperimentalContracts",
-        "-XXLanguage:+InlineClasses",
-        "-XXLanguage:+UnitConversion"
     )
 
     dependsOn(generateConventionalCommitLexer)
