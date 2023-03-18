@@ -2,11 +2,7 @@
 <idea-plugin>
   <actions resource-bundle="messages.ActionsBundle">
     <!-- Overridden standard actions -->
-    <action
-        id="EditorTab"
-        overrides="true"
-        class="com.github.lppedd.cc.editor.CommitTabAction"
-    />
+    <!-- EditorTab is overridden via an actionConfigurationCustomizer, for Rider compatibility -->
     <action
         id="GotoNextError"
         overrides="true"
@@ -64,6 +60,7 @@
     />
     <actionPromoter implementation="com.github.lppedd.cc.inspection.ReformatActionPromoter" order="last" />
     <actionPromoter implementation="com.github.lppedd.cc.vcs.commitbuilder.CommitBuilderActionPromoter" order="last" />
+    <actionConfigurationCustomizer implementation="com.github.lppedd.cc.editor.CommitTabActionConfigurationCustomizer" order="last" />
   </extensions>
 
   <extensions defaultExtensionNs="com.github.lppedd.idea-conventional-commit">
