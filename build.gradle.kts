@@ -7,9 +7,9 @@ fun properties(key: String) = project.findProperty(key).toString()
 
 plugins {
   java
-  id("org.jetbrains.intellij") version "1.13.0"
+  id("org.jetbrains.intellij") version "1.13.2"
   id("org.jetbrains.grammarkit") version "2021.2.2"
-  kotlin("jvm") version "1.7.10"
+  kotlin("jvm") version "1.8.10"
 }
 
 group = "com.github.lppedd"
@@ -21,14 +21,14 @@ repositories {
 }
 
 dependencies {
-  implementation(kotlin("stdlib-jdk8", "1.7.10"))
+  implementation(kotlin("stdlib", "1.8.10"))
 
   implementation("commons-validator", "commons-validator", "1.7") {
     exclude("commons-beanutils", "commons-beanutils")
   }
 
-  implementation("org.json", "json", "20220320")
-  implementation("com.github.everit-org.json-schema", "org.everit.json.schema", "1.14.1")
+  implementation("org.json", "json", "20230227")
+  implementation("com.github.everit-org.json-schema", "org.everit.json.schema", "1.14.2")
 
   testImplementation("junit:junit:4.13.2")
 }
@@ -60,7 +60,6 @@ sourceSets {
 }
 
 /** Points to the Java executable (usually `java.exe`) of a DCEVM-enabled JVM. */
-val dcevmExecutable: String? by project
 val generateConventionalCommitLexer = task<GenerateLexerTask>("generateConventionalCommitLexer") {
   source.set("src/main/kotlin/com/github/lppedd/cc/language/lexer/conventionalCommit.flex")
   targetDir.set("src/main/gen/com/github/lppedd/cc/language/lexer")
@@ -69,29 +68,31 @@ val generateConventionalCommitLexer = task<GenerateLexerTask>("generateConventio
 }
 
 tasks {
-  runIde {
-    if (project.hasProperty("dcevmExecutable")) {
-      val dcevm = dcevmExecutable ?: return@runIde
+  wrapper {
+    distributionType = Wrapper.DistributionType.ALL
+  }
 
-      if (dcevm.isNotBlank()) {
-        setExecutable(dcevm)
-      }
+  runIde {
+    val dcevm = project.findProperty("dcevmExecutable")
+
+    if (dcevm is String && dcevm.isNotBlank()) {
+      executable = dcevm
     }
   }
 
   val kotlinSettings: KotlinCompile.() -> Unit = {
     kotlinOptions.jvmTarget = "11"
     kotlinOptions.freeCompilerArgs += listOf(
-      "-Xno-call-assertions",
-      "-Xno-receiver-assertions",
-      "-Xno-param-assertions",
-      "-Xjvm-default=all",
-      "-Xallow-kotlin-package",
-      "-opt-in=kotlin.ExperimentalStdlibApi",
-      "-opt-in=kotlin.ExperimentalUnsignedTypes",
-      "-opt-in=kotlin.contracts.ExperimentalContracts",
-      "-XXLanguage:+InlineClasses",
-      "-XXLanguage:+UnitConversion"
+        "-Xno-call-assertions",
+        "-Xno-receiver-assertions",
+        "-Xno-param-assertions",
+        "-Xjvm-default=all",
+        "-Xallow-kotlin-package",
+        "-opt-in=kotlin.ExperimentalStdlibApi",
+        "-opt-in=kotlin.ExperimentalUnsignedTypes",
+        "-opt-in=kotlin.contracts.ExperimentalContracts",
+        "-XXLanguage:+InlineClasses",
+        "-XXLanguage:+UnitConversion"
     )
 
     dependsOn(generateConventionalCommitLexer)
