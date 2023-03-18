@@ -8,30 +8,26 @@ import com.intellij.ide.plugins.PluginStateListener
 import com.intellij.ide.util.PropertiesComponent
 
 /**
- * Listens to plugin uninstallation for cleaning-up things.
+ * Listens to plugin uninstallation to clean-up stuff.
  *
  * @author Edoardo Luppi
  */
-internal class CCPluginUninstallListener : PluginStateListener {
+internal class CCPluginStateListener : PluginStateListener {
   override fun uninstall(descriptor: IdeaPluginDescriptor) {
-    if (descriptor.pluginId.idString != CC.PluginId) {
-      return
+    if (CC.PluginId == descriptor.pluginId.idString) {
+      cleanupOptions()
     }
-
-    cleanupOptions()
   }
 
   override fun install(descriptor: IdeaPluginDescriptor) {
     // Can't do anything here
   }
 
-  private fun cleanupOptions() = try {
+  private fun cleanupOptions() {
     PropertiesComponent.getInstance().let {
       it.unsetValue(CommitBuilderDialog.PROPERTY_HOWTO_SHOW)
       it.unsetValue(InternalWhatsNewProvider.PROPERTY_VERSION)
       it.unsetValue(WhatsNewDialog.PROPERTY_SHOW)
     }
-  } catch (_: Exception) {
-    //
   }
 }
