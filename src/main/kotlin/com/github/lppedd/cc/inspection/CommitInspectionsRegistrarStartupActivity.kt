@@ -12,7 +12,7 @@ import com.intellij.vcs.commit.message.CommitMessageInspectionProfile
 /**
  * @author Edoardo Luppi
  */
-private class CommitInspectionsRegistrarStartupActivity : StartupActivity, DumbAware {
+internal class CommitInspectionsRegistrarStartupActivity : StartupActivity, DumbAware {
   override fun runActivity(project: Project) {
     val inspectionProviderService = service<CommitInspectionProviderService>()
     val inspections = inspectionProviderService.getInspectionProviders()

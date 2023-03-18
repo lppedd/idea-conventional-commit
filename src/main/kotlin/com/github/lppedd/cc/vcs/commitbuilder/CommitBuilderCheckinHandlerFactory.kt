@@ -12,7 +12,7 @@ import com.intellij.openapi.vcs.checkin.CheckinHandlerFactory
  *
  * @author Edoardo Luppi
  */
-private class CommitBuilderCheckinHandlerFactory : CheckinHandlerFactory() {
+internal class CommitBuilderCheckinHandlerFactory : CheckinHandlerFactory() {
   override fun createHandler(panel: CheckinProjectPanel, commitContext: CommitContext): CheckinHandler =
     MyCheckinHandler(panel.project)
 

@@ -13,7 +13,7 @@ import com.intellij.openapi.project.Project
 /**
  * @author Edoardo Luppi
  */
-private class OpenParenHandler : BaseTypedHandler('(') {
+internal class OpenParenHandler : BaseTypedHandler('(') {
   override fun beforeCharTyped(commitTokens: CommitTokens, project: Project, editor: Editor): Result {
     val type = commitTokens.type as ValidToken
     val lineOffset = editor.caretModel.logicalPosition.column

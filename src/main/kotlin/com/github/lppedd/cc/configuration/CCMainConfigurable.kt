@@ -11,7 +11,7 @@ import javax.swing.JComponent
 /**
  * @author Edoardo Luppi
  */
-private class CCMainConfigurable(private val project: Project) : SearchableConfigurable {
+internal class CCMainConfigurable(private val project: Project) : SearchableConfigurable {
   private val defaultsService = project.service<CCDefaultTokensService>()
   private val configService = project.service<CCConfigService>()
   private val disposable = Disposer.newDisposable("CCMainConfigurable")

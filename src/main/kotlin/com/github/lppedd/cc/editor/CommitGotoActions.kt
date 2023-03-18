@@ -16,7 +16,7 @@ import com.intellij.openapi.vcs.ui.Refreshable
  *
  * @author Edoardo Luppi
  */
-private class CommitGotoNextErrorAction : GotoNextErrorAction() {
+internal class CommitGotoNextErrorAction : GotoNextErrorAction() {
   init {
     isEnabledInModalContext = true
   }
@@ -33,7 +33,7 @@ private class CommitGotoNextErrorAction : GotoNextErrorAction() {
  *
  * @author Edoardo Luppi
  */
-private class CommitGotoPreviousErrorAction : GotoPreviousErrorAction() {
+internal class CommitGotoPreviousErrorAction : GotoPreviousErrorAction() {
   init {
     isEnabledInModalContext = true
   }

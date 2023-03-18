@@ -11,7 +11,7 @@ import com.intellij.openapi.actionSystem.DataContext
  *
  * @author Edoardo Luppi
  */
-private class CommitBuilderActionPromoter : ActionPromoter {
+internal class CommitBuilderActionPromoter : ActionPromoter {
   override fun promote(actions: List<AnAction>, context: DataContext): List<AnAction> =
     if (isApplicable(context)) {
       actions.sortedWith(CommitBuilderActionComparator)

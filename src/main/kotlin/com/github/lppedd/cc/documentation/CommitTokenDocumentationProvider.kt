@@ -20,7 +20,7 @@ import javax.swing.Icon
 /**
  * @author Edoardo Luppi
  */
-private class CommitTokenDocumentationProvider : AbstractDocumentationProvider() {
+internal class CommitTokenDocumentationProvider : AbstractDocumentationProvider() {
   private val lineSeparatorRegex = Regex("\r\n|\n\r|\n|\r")
 
   override fun generateDoc(element: PsiElement?, originalElement: PsiElement?): String? =

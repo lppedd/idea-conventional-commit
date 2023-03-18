@@ -8,7 +8,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent
  *
  * @author Edoardo Luppi
  */
-private class DialogGotoPreviousErrorAction : DialogGotoErrorAction() {
+internal class DialogGotoPreviousErrorAction : DialogGotoErrorAction() {
   override fun actionPerformed(event: AnActionEvent) {
     @Suppress("ReplaceNotNullAssertionWithElvisReturn")
     val dialog = event.getData(ValidationNavigable.DIALOG)!!

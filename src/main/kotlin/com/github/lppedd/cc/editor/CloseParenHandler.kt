@@ -11,7 +11,7 @@ import com.intellij.openapi.project.Project
 /**
  * @author Edoardo Luppi
  */
-private class CloseParenHandler : BaseTypedHandler(')') {
+internal class CloseParenHandler : BaseTypedHandler(')') {
   override fun beforeCharTyped(commitTokens: CommitTokens, project: Project, editor: Editor): Result {
     if (commitTokens.scope !is ValidToken) {
       return CONTINUE

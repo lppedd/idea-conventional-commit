@@ -20,7 +20,7 @@ import javax.swing.Icon
  *
  * @author Edoardo Luppi
  */
-private class CCConfigFileIconProvider : IconProvider(), DumbAware {
+internal class CCConfigFileIconProvider : IconProvider(), DumbAware {
   override fun getIcon(psiElement: PsiElement, flags: Int): Icon? {
     if (psiElement !is JsonFile) {
       return null

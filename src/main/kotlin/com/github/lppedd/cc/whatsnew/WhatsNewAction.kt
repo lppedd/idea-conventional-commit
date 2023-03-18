@@ -10,7 +10,7 @@ import com.intellij.openapi.project.DumbAwareAction
  * @author Edoardo Luppi
  * @see [WhatsNewDialog]
  */
-private class WhatsNewAction : DumbAwareAction() {
+internal class WhatsNewAction : DumbAwareAction() {
   init {
     templatePresentation.icon = CCIcons.Logo
   }

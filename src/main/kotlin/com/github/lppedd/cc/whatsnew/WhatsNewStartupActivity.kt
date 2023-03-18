@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit
  * @author Edoardo Luppi
  * @see [WhatsNewDialog]
  */
-private class WhatsNewStartupActivity : StartupActivity, DumbAware {
+internal class WhatsNewStartupActivity : StartupActivity, DumbAware {
   override fun runActivity(project: Project) {
     if (System.getProperty("com.github.lppedd.cc.whatsnew.disable") != null) {
       return

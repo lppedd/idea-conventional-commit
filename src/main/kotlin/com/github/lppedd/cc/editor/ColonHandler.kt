@@ -17,7 +17,7 @@ import com.intellij.openapi.project.Project
 /**
  * @author Edoardo Luppi
  */
-private class ColonHandler : BaseTypedHandler(':') {
+internal class ColonHandler : BaseTypedHandler(':') {
   override fun beforeCharTyped(commitTokens: CommitTokens, project: Project, editor: Editor): Result {
     val type = commitTokens.type as ValidToken
     val scope = commitTokens.scope
