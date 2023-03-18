@@ -36,10 +36,10 @@ internal class WhatsNewPanel : JPanel(BorderLayout()), DoNotAskOption {
     JBDimension(550, 270)
 
   override fun isToBeShown(): Boolean =
-    PropertiesComponent.getInstance().getValue(WhatsNewDialog.PROPERTY_SHOW, "true").toBoolean().not()
+    !PropertiesComponent.getInstance().getValue(WhatsNewDialog.PROPERTY_SHOW, "true").toBoolean()
 
   override fun setToBeShown(toBeShown: Boolean, exitCode: Int) {
-    PropertiesComponent.getInstance().setValue(WhatsNewDialog.PROPERTY_SHOW, toBeShown.not().toString())
+    PropertiesComponent.getInstance().setValue(WhatsNewDialog.PROPERTY_SHOW, (!toBeShown).toString())
   }
 
   override fun canBeHidden(): Boolean =

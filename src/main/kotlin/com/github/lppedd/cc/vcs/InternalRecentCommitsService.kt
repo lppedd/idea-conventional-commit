@@ -76,7 +76,7 @@ internal class InternalRecentCommitsService(private val project: Project) : Rece
   }
 
   private fun getOrderedVcsCommitMessages(): Collection<String> {
-    if (Registry.`is`(CC.Registry.VcsEnabled, false).not()) {
+    if (!Registry.`is`(CC.Registry.VcsEnabled, false)) {
       return emptyList()
     }
 

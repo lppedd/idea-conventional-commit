@@ -53,7 +53,7 @@ internal class InternalVcsService(private val project: Project) : VcsService {
       // even if more than one is mapped to the same VcsLogProvider.
       // We do this to avoid multiple refreshes each time the VCS configuration changes
       for ((root, vcsLogProvider) in vcsLogProviders) {
-        if (subscribedVcsLogProviders.contains(vcsLogProvider).not()) {
+        if (!subscribedVcsLogProviders.contains(vcsLogProvider)) {
           subscribedVcsLogProviders.add(vcsLogProvider)
           vcsLogProvider.subscribeToRootRefreshEvents(listOf(root), vcsLogRefresher)
         }

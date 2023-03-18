@@ -33,7 +33,7 @@ internal class VerifiableExtendableTextField(
   }
 
   private fun showError() {
-    if (isContentValid.not()) {
+    if (!isContentValid) {
       isContentValid = true
       removeExtension(errorIconExtension)
       putClientProperty("JComponent.outline", null)

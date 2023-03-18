@@ -45,7 +45,7 @@ internal open class CCFileChooserDescriptor(
       FileElement.isFileHidden(file) ->
         if (file.isDirectory) super.getIcon(file)
         else IconLoader.getTransparentIcon(CCIcons.FileTypes.Generic)
-      file.isDirectory.not() -> IconLoader.getTransparentIcon(CCIcons.FileTypes.Generic, 0.82F)
+      !file.isDirectory -> IconLoader.getTransparentIcon(CCIcons.FileTypes.Generic, 0.82F)
       else -> IconLoader.getTransparentIcon(super.getIcon(file), 0.82F)
     }
   }

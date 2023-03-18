@@ -119,7 +119,7 @@ internal class VcsCommitTokenProvider(project: Project)
       .filterNotEmpty()
 
   private fun getOrderedVcsCommitMessages(): Sequence<String> {
-    if (Registry.`is`(CC.Registry.VcsEnabled, false).not()) {
+    if (!Registry.`is`(CC.Registry.VcsEnabled, false)) {
       return emptySequence()
     }
 
