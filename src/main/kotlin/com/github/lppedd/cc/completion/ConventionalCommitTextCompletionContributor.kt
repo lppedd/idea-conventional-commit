@@ -25,6 +25,7 @@ import com.intellij.lang.LanguageMatcher
 import com.intellij.openapi.components.service
 import com.intellij.openapi.fileTypes.PlainTextLanguage
 import com.intellij.openapi.progress.ProgressManager
+import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
 import com.intellij.patterns.PatternCondition
@@ -44,7 +45,7 @@ import java.util.concurrent.ConcurrentHashMap
  *
  * @author Edoardo Luppi
  */
-internal class ConventionalCommitTextCompletionContributor : CompletionContributor() {
+internal class ConventionalCommitTextCompletionContributor : CompletionContributor(), DumbAware {
   private companion object {
     private val pattern = PlatformPatterns.psiElement().with(object : PatternCondition<PsiElement>(null) {
       override fun accepts(psiElement: PsiElement, context: ProcessingContext?): Boolean {
