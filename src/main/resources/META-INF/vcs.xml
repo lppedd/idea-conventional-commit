@@ -42,10 +42,6 @@
     />
   </actions>
 
-  <applicationListeners>
-    <listener topic="com.intellij.openapi.project.ProjectManagerListener" class="com.github.lppedd.cc.vcs.VcsProjectManagerListener" />
-  </applicationListeners>
-
   <extensionPoints>
     <extensionPoint
         qualifiedName="com.github.lppedd.idea-conventional-commit.commitInspectionProvider"
@@ -61,6 +57,10 @@
     <projectService
         serviceInterface="com.github.lppedd.cc.vcs.RecentCommitsService"
         serviceImplementation="com.github.lppedd.cc.vcs.InternalRecentCommitsService"
+    />
+    <postStartupActivity
+        order="first"
+        implementation="com.github.lppedd.cc.vcs.VcsStartupActivity"
     />
     <actionPromoter implementation="com.github.lppedd.cc.inspection.ReformatActionPromoter" order="last" />
     <actionPromoter implementation="com.github.lppedd.cc.vcs.commitbuilder.CommitBuilderActionPromoter" order="last" />
