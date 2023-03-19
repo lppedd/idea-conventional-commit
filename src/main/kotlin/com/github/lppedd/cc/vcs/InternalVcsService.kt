@@ -199,8 +199,8 @@ internal class InternalVcsService(private val project: Project) : VcsService {
   @Compatibility(minVersion = "203.3645.34")
   private fun ensureLogCreated(): Boolean {
     val method =
-      VcsProjectLog::class.java.getDeclaredMethod("ensureLogCreated", Project::class.java)   // 203.3645.34+
-      ?: VcsProjectLog::class.java.getDeclaredMethod("getOrCreateLog", Project::class.java)  // 201.3803.32+
+      VcsProjectLog::class.java.getDeclaredMethod("ensureLogCreated", Project::class.java)   // IDEA 203.3645.34+
+      ?: VcsProjectLog::class.java.getDeclaredMethod("getOrCreateLog", Project::class.java)  // IDEA 201.3803.32+
       ?: VcsLogContentUtil::class.java.getDeclaredMethod("getOrCreateLog", Project::class.java)
       ?: return false
 

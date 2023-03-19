@@ -62,17 +62,20 @@ internal class CCDialogWrapperPeer(
     return null
   }
 
-  private fun getCustomHeader(customFrameDialogContent: Any): Any =
-    customFrameDialogContentClass.getDeclaredField("header").let {
-      it.isAccessible = true
-      it.get(customFrameDialogContent)
-    }
+  private fun getCustomHeader(customFrameDialogContent: Any): Any {
+    val field = customFrameDialogContentClass.getDeclaredField("header")
+    field.isAccessible = true
+    return field.get(customFrameDialogContent)
+  }
 
   private fun setIcon(customHeader: Any) {
-    customHeaderClass.getDeclaredField("myIconProvider").let {
-      it.isAccessible = true
-      it.set(customHeader, ScaleContext.Cache(::scaleAndGetIcon))
-    }
+    val field = customHeaderClass.declaredFields.find { field ->
+      field.name == "myIconProvider" || // IDEA 192.4205.41+
+      field.name == "iconProvider"      // IDEA 231.4840.387+
+    } ?: throw NoSuchFieldException("${customHeaderClass.name} does not have an icon provider field")
+
+    field.isAccessible = true
+    field.set(customHeader, ScaleContext.Cache(::scaleAndGetIcon))
   }
 
   private fun scaleAndGetIcon(ctx: ScaleContext): Icon {
