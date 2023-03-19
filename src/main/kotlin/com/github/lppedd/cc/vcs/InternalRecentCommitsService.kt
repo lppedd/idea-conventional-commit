@@ -101,15 +101,15 @@ internal class InternalRecentCommitsService(private val project: Project) : Rece
     val (type, scope, _, _, subject) = CCParser.parseHeader(headerLine)
 
     if (type is ValidToken && types.size < MAX_ELEMENTS) {
-      types.add(type.value)
+      types.add(type.value.trim())
     }
 
     if (scope is ValidToken && scopes.size < MAX_ELEMENTS) {
-      scopes.add(scope.value)
+      scopes.add(scope.value.trim())
     }
 
     if (subject is ValidToken && subjects.size < MAX_ELEMENTS) {
-      subjects.add(subject.value)
+      subjects.add(subject.value.trim())
     }
 
     val values = message.replace(regexBeginEndWs, "")
