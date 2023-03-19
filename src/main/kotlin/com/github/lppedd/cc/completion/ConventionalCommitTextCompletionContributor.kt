@@ -79,6 +79,7 @@ internal class ConventionalCommitTextCompletionContributor : CompletionContribut
     val project = context.project
 
     if (registeredProjects.add(project)) {
+      @Suppress("IncorrectParentDisposable")
       Disposer.register(project) {
         registeredProjects.remove(project)
       }

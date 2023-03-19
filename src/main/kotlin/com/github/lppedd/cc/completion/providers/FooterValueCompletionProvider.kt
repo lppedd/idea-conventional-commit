@@ -76,7 +76,5 @@ internal class FooterValueCompletionProvider(
 
       prefixedResultSet.addElement(element)
     }
-
-    prefixedResultSet.stopHere()
   }
 }

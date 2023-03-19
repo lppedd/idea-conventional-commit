@@ -1,6 +1,7 @@
 package com.github.lppedd.cc.language.psi
 
 import com.intellij.psi.PsiElementVisitor
+import com.intellij.psi.PsiPlainText
 import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.intellij.psi.tree.IElementType
 
@@ -10,7 +11,7 @@ import com.intellij.psi.tree.IElementType
 class ConventionalCommitScopeValuePsiElement(
     type: IElementType,
     text: CharSequence,
-) : LeafPsiElement(type, text) {
+) : LeafPsiElement(type, text), PsiPlainText {
   override fun accept(visitor: PsiElementVisitor) {
     if (visitor is ConventionalCommitPsiElementVisitor) {
       visitor.visitScopeValue(this)
