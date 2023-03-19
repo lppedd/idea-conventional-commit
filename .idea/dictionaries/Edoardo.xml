@@ -21,6 +21,7 @@
       <w>nodep</w>
       <w>revalidate</w>
       <w>roamable</w>
+      <w>signoff</w>
       <w>substitutor</w>
       <w>suppressions</w>
       <w>tokener</w>
