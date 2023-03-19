@@ -10,7 +10,7 @@
       "description": "Changes which introduce a new feature"
     },
     "build": {
-      "description": "Changes which affect the build system or external dependencies.<br/>Example scopes: gulp, broccoli, npm",
+      "description": "Changes which affect the build system or external dependencies.<br>Example scopes: gulp, broccoli, npm",
       "scopes": {
         "npm": {},
         "gulp": {},
@@ -18,13 +18,13 @@
       }
     },
     "chore": {
-      "description": "Changes which aren't user-facing"
+      "description": "Changes which are not user-facing"
     },
     "style": {
-      "description": "Changes which don't affect code logic, such as white-spaces, formatting, missing semi-colons"
+      "description": "Changes which do not affect code logic, such as whitespaces, formatting, missing semicolons"
     },
     "test": {
-      "description": "Changes which add missing tests or correct existing tests"
+      "description": "Changes which add missing tests or fix existing ones"
     },
     "docs": {
       "description": "Changes which affect documentation"
@@ -33,7 +33,7 @@
       "description": "Changes which improve performance"
     },
     "ci": {
-      "description": "Changes which affect CI configuration files and scripts.<br/>Example scopes: travis, circle, browser-stack, sauce-labs"
+      "description": "Changes which affect CI configuration files and scripts.<br>Example scopes: travis, circle, browser-stack, sauce-labs"
     },
     "revert": {
       "description": "Changes which revert a previous commit"
@@ -58,11 +58,27 @@
     },
     {
       "name": "Co-authored-by",
-      "description": "The commit is co-authored by another person.<br/>For multiple people use one line each"
+      "description": "The specified person co-authored the commit's changes"
+    },
+    {
+      "name": "Signed-off-by",
+      "description": "A signoff may certify that the committer has the rights to submit the work under the project's license or agrees to some contributor representation, such as a Developer Certificate of Origin"
+    },
+    {
+      "name": "Acked-by",
+      "description": "The specified person liked the commit's changes"
+    },
+    {
+      "name": "Reviewed-by",
+      "description": "The specified person reviewed and is completely satisfied with the commit's changes"
+    },
+    {
+      "name": "Tested-by",
+      "description": "The specified person applied the commit's changes and found them to have the desired effect"
     },
     {
       "name": "Refs",
-      "description": "The commit references other commits by their hash ID.<br/>For multiple hash IDs use a comma as separator"
+      "description": "The commit references another commit by its hash ID.<br>For multiple hash IDs, use a comma as separator"
     }
   ]
 }
