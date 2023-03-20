@@ -89,4 +89,7 @@ internal sealed class CommitTokenPsiElement : PsiElementBase(), ItemPresentation
 
   override fun getLocationString(): String? =
     null
+
+  override fun getPresentation(): ItemPresentation =
+    this
 }
