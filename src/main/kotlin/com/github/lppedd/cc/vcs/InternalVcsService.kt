@@ -18,9 +18,6 @@ import com.intellij.vcs.log.visible.filters.VcsLogFilterObject
 import org.jetbrains.annotations.ApiStatus.*
 import java.util.*
 import java.util.Collections.newSetFromMap
-import java.util.concurrent.locks.ReentrantReadWriteLock
-import kotlin.concurrent.read
-import kotlin.concurrent.write
 import kotlin.io.path.notExists
 
 /**
@@ -35,11 +32,11 @@ internal class InternalVcsService(private val project: Project) : VcsService {
   private val vcsLogMultiRepoJoiner = VcsLogMultiRepoJoiner<Hash, VcsCommitMetadata>()
   private val subscribedVcsLogProviders = newSetFromMap<VcsLogProvider>(IdentityHashMap(16))
 
+  @Volatile
   private var cachedCurrentUser: Collection<VcsUser> = emptyList()
-  private val cachedCurrentUserLock = ReentrantReadWriteLock()
 
+  @Volatile
   private var cachedCommits: Collection<VcsCommitMetadata> = emptyList()
-  private val cachedCommitsLock = ReentrantReadWriteLock()
 
   override fun refresh() {
     val vcsLogProviders = getVcsLogProviders()
@@ -66,28 +63,17 @@ internal class InternalVcsService(private val project: Project) : VcsService {
     }
   }
 
-  override fun getCurrentUsers(): Collection<VcsUser> =
-    cachedCurrentUserLock.read {
-      cachedCurrentUser
-    }
+  override fun getCurrentUsers(): Collection<VcsUser> = cachedCurrentUser
 
-  override fun getOrderedTopCommits(): Collection<VcsCommitMetadata> =
-    cachedCommitsLock.read {
-      cachedCommits
-    }
+  override fun getOrderedTopCommits(): Collection<VcsCommitMetadata> = cachedCommits
 
   override fun addListener(listener: VcsListener) {
     refreshListeners.add(listener)
   }
 
   private fun refreshCachedValues() {
-    cachedCurrentUserLock.write {
-      cachedCurrentUser = fetchCurrentUsers()
-    }
-
-    cachedCommitsLock.write {
-      cachedCommits = fetchCommits(sortBy = VcsCommitMetadata::getCommitTime)
-    }
+    cachedCurrentUser = fetchCurrentUsers()
+    cachedCommits = fetchCommits(sortBy = VcsCommitMetadata::getCommitTime)
   }
 
   private fun fetchCurrentUsers(): Set<VcsUser> =
