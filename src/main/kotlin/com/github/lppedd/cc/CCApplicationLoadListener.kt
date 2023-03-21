@@ -11,14 +11,6 @@ import kotlin.io.path.absolutePathString
  * @author Edoardo Luppi
  */
 internal class CCApplicationLoadListener : ApplicationLoadListener {
-  @Compatibility(description = """
-    This method's signature is used by newer version of the Platform.
-    beforeApplicationLoaded(Application, String) has been removed starting from 221.3427.89
-  """)
-  fun beforeApplicationLoaded(application: Application, configPath: Path) {
-    beforeApplicationLoaded(application, configPath.absolutePathString())
-  }
-
   override fun beforeApplicationLoaded(application: Application, configPath: String) {
     PluginInstaller.addStateListener(CCPluginStateListener())
   }
