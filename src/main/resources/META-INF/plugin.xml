@@ -21,7 +21,7 @@
   </applicationListeners>
 
   <extensions defaultExtensionNs="com.intellij">
-    <postStartupActivity implementation="com.github.lppedd.cc.CCRegisterPluginUninstallCleanup" />
+    <ApplicationLoadListener implementation="com.github.lppedd.cc.CCApplicationLoadListener" />
 
     <iconProvider implementation="com.github.lppedd.cc.icon.CCConfigFileIconProvider" />
 
