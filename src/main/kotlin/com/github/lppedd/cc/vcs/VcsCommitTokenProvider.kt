@@ -30,6 +30,14 @@ internal class VcsCommitTokenProvider(project: Project)
 
     private val regexBeginEndWs = Regex("""^\s+|\s+$""")
     private val regexBlankLines = Regex("""^\s*$""", MULTILINE)
+    private val specialFooterTypes = setOf(
+        "author",
+        "co-authored-by",
+        "signed-off-by",
+        "acked-by",
+        "reviewed-by",
+        "tested-by",
+    )
   }
 
   private val vcsHandler = project.service<VcsService>()
@@ -94,16 +102,17 @@ internal class VcsCommitTokenProvider(project: Project)
       commitScope: String?,
       commitSubject: String?,
   ): Collection<CommitFooterValue> {
-    val n = if ("co-authored-by".equals(footerType, true)) 5 else MAX_ELEMENTS
+    val matchFooterType = specialFooterTypes.contains(footerType.lowercase())
+    val maxElements = if (matchFooterType) 5 else MAX_ELEMENTS
     return getOrderedVcsCommitMessages()
-      .flatMap(::getFooterValues)
+      .flatMap { getFooterValues(it, if (matchFooterType) footerType else null) }
       .distinctBy(String::lowercase)
-      .take(n)
+      .take(maxElements)
       .map(::VcsCommitToken)
       .toList()
   }
 
-  private fun getFooterValues(message: String): Sequence<String> =
+  private fun getFooterValues(message: String, footerType: String?): Sequence<String> =
     message.replace(regexBeginEndWs, "")
       .split(regexBlankLines)
       .drop(1)
@@ -111,7 +120,7 @@ internal class VcsCommitTokenProvider(project: Project)
       .map { it.replace(regexBeginEndWs, "") }
       .filterNotBlank()
       .map(CCParser::parseFooter)
-      .filter { it.type is ValidToken }
+      .filter { it.type is ValidToken && (footerType == null || it.type.value.equals(footerType, true)) }
       .map(FooterTokens::footer)
       .filterIsInstance<ValidToken>()
       .map(ValidToken::value)

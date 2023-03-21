@@ -60,7 +60,11 @@ internal class InternalCommitTokenProvider(private val project: Project) :
       commitSubject: String?,
   ): Collection<CommitFooterValue> =
     if ("co-authored-by".equals(footerType, true)) {
-      defaultsService.getCoAuthors().take(3).map { DefaultCommitToken(it, "") }
+      defaultsService.getCoAuthors()
+        .asSequence()
+        .take(3)
+        .map { DefaultCommitToken(it, "", true) }
+        .toList()
     } else {
       emptyList()
     }
@@ -84,10 +88,15 @@ internal class InternalCommitTokenProvider(private val project: Project) :
   }
 
   private object DefaultTokenPresentation : TokenPresentation
+  private object CoAuthorTokenPresentation : TokenPresentation {
+    override fun getType(): String =
+      "Co-author"
+  }
 
   private class DefaultCommitToken(
       private val text: String,
       private val description: String,
+      private val isCoAuthor: Boolean = false,
   ) : CommitType,
       CommitScope,
       CommitFooterType,
@@ -102,6 +111,10 @@ internal class InternalCommitTokenProvider(private val project: Project) :
       description
 
     override fun getPresentation(): TokenPresentation =
-      DefaultTokenPresentation
+      if (isCoAuthor) {
+        CoAuthorTokenPresentation
+      } else {
+        DefaultTokenPresentation
+      }
   }
 }
