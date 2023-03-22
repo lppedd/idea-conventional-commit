@@ -59,20 +59,21 @@ sourceSets {
   }
 }
 
-/** Points to the Java executable (usually `java.exe`) of a DCEVM-enabled JVM. */
-val generateConventionalCommitLexer = task<GenerateLexerTask>("generateConventionalCommitLexer") {
-  source.set("src/main/kotlin/com/github/lppedd/cc/language/lexer/conventionalCommit.flex")
-  targetDir.set("src/main/gen/com/github/lppedd/cc/language/lexer")
-  targetClass.set("ConventionalCommitFlexLexer")
-  purgeOldFiles.set(true)
-}
-
 tasks {
   wrapper {
     distributionType = Wrapper.DistributionType.ALL
   }
 
+  val generateLexer = task<GenerateLexerTask>("generateConventionalCommitLexer") {
+    source.set("src/main/kotlin/com/github/lppedd/cc/language/lexer/conventionalCommit.flex")
+    targetDir.set("src/main/gen/com/github/lppedd/cc/language/lexer")
+    targetClass.set("ConventionalCommitFlexLexer")
+    purgeOldFiles.set(true)
+  }
+
   val kotlinSettings: KotlinCompile.() -> Unit = {
+    dependsOn(generateLexer)
+
     kotlinOptions.jvmTarget = "11"
     kotlinOptions.freeCompilerArgs += listOf(
         "-Xno-call-assertions",
@@ -82,8 +83,6 @@ tasks {
         "-Xallow-kotlin-package",
         "-opt-in=kotlin.contracts.ExperimentalContracts",
     )
-
-    dependsOn(generateConventionalCommitLexer)
   }
 
   compileKotlin(kotlinSettings)
@@ -97,6 +96,25 @@ tasks {
     val projectPath = projectDir.path
     pluginDescription.set((File("$projectPath/plugin-description.html").readText(Charsets.UTF_8)))
     changeNotes.set((File("$projectPath/change-notes/${version.get().replace('.', '_')}.html").readText(Charsets.UTF_8)))
+  }
+
+  val buildApiSourceJar = task<Jar>("buildConventionalCommitApiSourceJar") {
+    dependsOn(generateLexer)
+
+    from(kotlin.sourceSets.main.get().kotlin) {
+      include("com/github/lppedd/cc/api/*.kt")
+    }
+
+    destinationDirectory.set(layout.buildDirectory.dir("libs"))
+    archiveClassifier.set("src")
+  }
+
+  buildPlugin {
+    dependsOn(buildApiSourceJar)
+
+    from(buildApiSourceJar) {
+      into("lib/src")
+    }
   }
 
   runPluginVerifier {
