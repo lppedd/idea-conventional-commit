@@ -1,5 +1,5 @@
 <!--suppress PluginXmlValidity, PluginXmlDynamicPlugin -->
-<idea-plugin>
+<idea-plugin require-restart="true">
   <id>com.github.lppedd.idea-conventional-commit</id>
   <name>Conventional Commit</name>
   <vendor email="lp.edoardo@gmail.com" url="https://github.com/lppedd/idea-conventional-commit">Edoardo Luppi</vendor>
