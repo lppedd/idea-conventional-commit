@@ -1,6 +1,7 @@
 package com.github.lppedd.cc.language.parser
 
 import com.github.lppedd.cc.language.lexer.ConventionalCommitTokenType.Companion.BODY
+import com.github.lppedd.cc.language.lexer.ConventionalCommitTokenType.Companion.BREAKING_CHANGE
 import com.github.lppedd.cc.language.lexer.ConventionalCommitTokenType.Companion.FOOTER_TYPE
 import com.github.lppedd.cc.language.lexer.ConventionalCommitTokenType.Companion.FOOTER_TYPE_BREAKING_CHANGE
 import com.github.lppedd.cc.language.lexer.ConventionalCommitTokenType.Companion.FOOTER_VALUE
@@ -27,6 +28,7 @@ internal class ConventionalCommitASTFactory : ASTFactory() {
     tokensMap[SCOPE_OPEN_PAREN] = ::ConventionalCommitScopeOpenParenPsiElement
     tokensMap[SCOPE] = ::ConventionalCommitScopeValuePsiElement
     tokensMap[SCOPE_CLOSE_PAREN] = ::ConventionalCommitScopeCloseParenPsiElement
+    tokensMap[BREAKING_CHANGE] = ::ConventionalCommitBreakingChangePsiElement
     tokensMap[SEPARATOR] = ::ConventionalCommitSeparatorPsiElement
     tokensMap[SUBJECT] = ::ConventionalCommitSubjectPsiElement
     tokensMap[BODY] = ::ConventionalCommitBodyPsiElement

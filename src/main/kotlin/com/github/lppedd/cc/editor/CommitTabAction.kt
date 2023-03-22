@@ -56,7 +56,8 @@ internal class CommitTabAction : TabAction() {
         val elementAtCaret = psiFile?.findElementAt(editor.getCaretOffset())
 
         if (elementAtCaret is ConventionalCommitScopeOpenParenPsiElement ||
-            elementAtCaret is ConventionalCommitScopeCloseParenPsiElement) {
+            elementAtCaret is ConventionalCommitScopeCloseParenPsiElement ||
+            elementAtCaret is ConventionalCommitBreakingChangePsiElement) {
           editor.putUserData(moveCaretKey, 1)
           return true
         } else if (elementAtCaret is ConventionalCommitSeparatorPsiElement) {
