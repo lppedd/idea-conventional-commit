@@ -72,14 +72,6 @@ tasks {
     distributionType = Wrapper.DistributionType.ALL
   }
 
-  runIde {
-    val dcevm = project.findProperty("dcevmExecutable")
-
-    if (dcevm is String && dcevm.isNotBlank()) {
-      executable = dcevm
-    }
-  }
-
   val kotlinSettings: KotlinCompile.() -> Unit = {
     kotlinOptions.jvmTarget = "11"
     kotlinOptions.freeCompilerArgs += listOf(
@@ -105,5 +97,22 @@ tasks {
     val projectPath = projectDir.path
     pluginDescription.set((File("$projectPath/plugin-description.html").readText(Charsets.UTF_8)))
     changeNotes.set((File("$projectPath/change-notes/${version.get().replace('.', '_')}.html").readText(Charsets.UTF_8)))
+  }
+
+  runPluginVerifier {
+    ideVersions.set(listOf(
+        "IC-2020.2.1",
+        "IC-2021.1",
+        "IC-2022.1",
+        "IC-2023.1",
+    ))
+  }
+
+  runIde {
+    val dcevm = project.findProperty("dcevmExecutable")
+
+    if (dcevm is String && dcevm.isNotBlank()) {
+      executable = dcevm
+    }
   }
 }
