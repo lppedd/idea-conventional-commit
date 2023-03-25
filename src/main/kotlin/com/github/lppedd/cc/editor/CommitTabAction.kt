@@ -31,11 +31,7 @@ internal class CommitTabAction : TabAction() {
   private object CommitTabHandler : Handler() {
     private val moveCaretKey = Key.create<Int>("Vcs.CommitMessage.moveCaret")
 
-    @Compatibility(description = """
-      This method's signature has changed overtime in the Platform.
-      to executeWriteAction(Editor, Caret, DataContext) i.e. non nullable Caret.
-    """)
-    override fun executeWriteAction(editor: Editor, caret: Caret?, dataContext: DataContext) {
+    override fun executeWriteAction(editor: Editor, caret: Caret, dataContext: DataContext) {
       val steps = editor.getUserData(moveCaretKey)
 
       if (steps != null) {

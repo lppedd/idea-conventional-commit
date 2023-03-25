@@ -91,6 +91,11 @@
 
     <checkinHandlerFactory implementation="com.github.lppedd.cc.vcs.commitbuilder.CommitBuilderCheckinHandlerFactory" />
 
+    <notificationGroup id="com.github.lppedd.cc.notifications"
+                       displayType="STICKY_BALLOON"
+                       isLogByDefault="true"
+                       key="cc.notification.group.name"/>
+
     <registryKey
         key="com.github.lppedd.cc.providers.vcs"
         description="Enable/disable the new VCS Provider"
