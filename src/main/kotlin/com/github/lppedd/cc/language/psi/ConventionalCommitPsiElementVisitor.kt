@@ -5,12 +5,12 @@ import com.intellij.psi.PsiElementVisitor
 /**
  * @author Edoardo Luppi
  */
-abstract class ConventionalCommitPsiElementVisitor : PsiElementVisitor() {
-  open fun visitType(element: ConventionalCommitTypePsiElement) {}
-  open fun visitScope(element: ConventionalCommitScopePsiElement) {}
-  open fun visitScopeValue(element: ConventionalCommitScopeValuePsiElement) {}
-  open fun visitSubject(element: ConventionalCommitSubjectPsiElement) {}
-  open fun visitFooter(element: ConventionalCommitFooterPsiElement) {}
-  open fun visitFooterType(element: ConventionalCommitFooterTypePsiElement) {}
-  open fun visitFooterValue(element: ConventionalCommitFooterValuePsiElement) {}
+public abstract class ConventionalCommitPsiElementVisitor : PsiElementVisitor() {
+  public open fun visitType(element: ConventionalCommitTypePsiElement) {}
+  public open fun visitScope(element: ConventionalCommitScopePsiElement) {}
+  public open fun visitScopeValue(element: ConventionalCommitScopeValuePsiElement) {}
+  public open fun visitSubject(element: ConventionalCommitSubjectPsiElement) {}
+  public open fun visitFooter(element: ConventionalCommitFooterPsiElement) {}
+  public open fun visitFooterType(element: ConventionalCommitFooterTypePsiElement) {}
+  public open fun visitFooterValue(element: ConventionalCommitFooterValuePsiElement) {}
 }

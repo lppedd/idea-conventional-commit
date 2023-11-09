@@ -5,7 +5,7 @@ import com.github.lppedd.cc.CCUI
 import com.github.lppedd.cc.api.*
 import com.github.lppedd.cc.configuration.component.providers.CommitProviderTable
 import com.github.lppedd.cc.scaled
-import com.github.lppedd.cc.ui.JBGridLayout
+import com.github.lppedd.cc.ui.ScaledGridLayout
 import com.github.lppedd.cc.ui.TitledPanel
 import com.intellij.openapi.actionSystem.ActionToolbarPosition.RIGHT
 import com.intellij.ui.TableSpeedSearch
@@ -89,7 +89,7 @@ internal class CCProvidersConfigurableGui {
   }
 
   private fun finishUpComponents() {
-    val providersPanel = JPanel(JBGridLayout(6, 1, 0, 15)).also {
+    val providersPanel = JPanel(ScaledGridLayout(6, 1, 0, 15)).also {
       it.add(buildTablePanel(types, CCBundle["cc.config.providers.type.title"]))
       it.add(buildTablePanel(scopes, CCBundle["cc.config.providers.scope.title"]))
       it.add(buildTablePanel(subjects, CCBundle["cc.config.providers.subject.title"]))

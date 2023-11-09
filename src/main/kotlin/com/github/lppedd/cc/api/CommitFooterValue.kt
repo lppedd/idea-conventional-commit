@@ -6,4 +6,4 @@ package com.github.lppedd.cc.api
  * @author Edoardo Luppi
  * @see CommitFooterType
  */
-interface CommitFooterValue : CommitToken
+public interface CommitFooterValue : CommitToken

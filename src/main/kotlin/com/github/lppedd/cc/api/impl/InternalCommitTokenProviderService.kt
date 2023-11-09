@@ -6,31 +6,29 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.service
 import com.intellij.openapi.extensions.ProjectExtensionPointName
 import com.intellij.openapi.project.Project
-import org.jetbrains.annotations.ApiStatus.*
 import org.jetbrains.annotations.TestOnly
 
 /**
  * @author Edoardo Luppi
  */
-@Internal
 internal class InternalCommitTokenProviderService(private val project: Project) : CommitTokenProviderService {
   private companion object {
-    val typeEpName: ProjectExtensionPointName<CommitTypeProvider> =
+    private val typeEpName: ProjectExtensionPointName<CommitTypeProvider> =
       ProjectExtensionPointName("com.github.lppedd.idea-conventional-commit.commitTypeProvider")
 
-    val scopeEpName: ProjectExtensionPointName<CommitScopeProvider> =
+    private val scopeEpName: ProjectExtensionPointName<CommitScopeProvider> =
       ProjectExtensionPointName("com.github.lppedd.idea-conventional-commit.commitScopeProvider")
 
-    val subjectEpName: ProjectExtensionPointName<CommitSubjectProvider> =
+    private val subjectEpName: ProjectExtensionPointName<CommitSubjectProvider> =
       ProjectExtensionPointName("com.github.lppedd.idea-conventional-commit.commitSubjectProvider")
 
-    val bodyEpName: ProjectExtensionPointName<CommitBodyProvider> =
+    private val bodyEpName: ProjectExtensionPointName<CommitBodyProvider> =
       ProjectExtensionPointName("com.github.lppedd.idea-conventional-commit.commitBodyProvider")
 
-    val footerTypeEpName: ProjectExtensionPointName<CommitFooterTypeProvider> =
+    private val footerTypeEpName: ProjectExtensionPointName<CommitFooterTypeProvider> =
       ProjectExtensionPointName("com.github.lppedd.idea-conventional-commit.commitFooterTypeProvider")
 
-    val footerValueEpName: ProjectExtensionPointName<CommitFooterValueProvider> =
+    private val footerValueEpName: ProjectExtensionPointName<CommitFooterValueProvider> =
       ProjectExtensionPointName("com.github.lppedd.idea-conventional-commit.commitFooterValueProvider")
   }
 

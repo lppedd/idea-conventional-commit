@@ -6,7 +6,7 @@ import com.intellij.psi.tree.IElementType
 /**
  * @author Edoardo Luppi
  */
-class ConventionalCommitScopeOpenParenPsiElement(
+public class ConventionalCommitScopeOpenParenPsiElement(
     type: IElementType,
     text: CharSequence,
 ) : LeafPsiElement(type, text) {

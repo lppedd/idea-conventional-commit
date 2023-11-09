@@ -6,19 +6,19 @@ import org.jetbrains.annotations.ApiStatus.*
  * @author Edoardo Luppi
  */
 @Experimental
-interface CommitFooterValueProvider : CommitTokenProvider {
+public interface CommitFooterValueProvider : CommitTokenProvider {
   /**
    * Returns commit footer values, optionally considering other user-inputted tokens.
    *
-   * @param footerType a footer type to optionally filter down footer values, or an empty string
-   * @param commitType a type to optionally filter down footer values, or an empty string
-   * @param commitScope a subject to optionally filter down footer values, or an empty string
-   * @param commitSubject a subject to optionally filter down footer values, or an empty string
+   * @param footerType A footer type to optionally filter down footer values, or an empty string
+   * @param type A type to optionally filter down footer values, or an empty string
+   * @param scope A subject to optionally filter down footer values, or an empty string
+   * @param subject A subject to optionally filter down footer values, or an empty string
    */
-  fun getCommitFooterValues(
+  public fun getCommitFooterValues(
       footerType: String,
-      commitType: String?,
-      commitScope: String?,
-      commitSubject: String?,
+      type: String?,
+      scope: String?,
+      subject: String?,
   ): Collection<CommitFooterValue>
 }

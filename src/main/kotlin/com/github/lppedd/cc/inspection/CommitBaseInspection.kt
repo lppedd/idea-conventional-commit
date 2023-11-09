@@ -5,7 +5,7 @@ import com.intellij.vcs.commit.message.BaseCommitMessageInspection
 /**
  * @author Edoardo Luppi
  */
-abstract class CommitBaseInspection : BaseCommitMessageInspection() {
+public abstract class CommitBaseInspection : BaseCommitMessageInspection() {
   final override fun getGroupDisplayName(): String =
     super.getGroupDisplayName()
 
@@ -13,5 +13,5 @@ abstract class CommitBaseInspection : BaseCommitMessageInspection() {
     super.getStaticDescription()
 
   @Suppress("exposed_super_class")
-  object ConventionalCommitReformatQuickFix : ReformatCommitMessageQuickFix()
+  public object ConventionalCommitReformatQuickFix : ReformatCommitMessageQuickFix()
 }

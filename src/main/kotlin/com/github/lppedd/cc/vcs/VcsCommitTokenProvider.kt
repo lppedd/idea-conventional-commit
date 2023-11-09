@@ -9,7 +9,6 @@ import com.github.lppedd.cc.parser.ValidToken
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.registry.Registry
-import org.jetbrains.annotations.ApiStatus.*
 import javax.swing.Icon
 import kotlin.text.RegexOption.MULTILINE
 
@@ -18,12 +17,12 @@ import kotlin.text.RegexOption.MULTILINE
  *
  * @author Edoardo Luppi
  */
-@Internal
 internal class VcsCommitTokenProvider(project: Project)
   : CommitTypeProvider,
     CommitScopeProvider,
     CommitSubjectProvider,
     CommitFooterValueProvider {
+  @Suppress("CompanionObjectInExtension")
   companion object {
     const val ID = "e9ce9acf-f4a6-4b36-b43c-531169556c29"
     const val MAX_ELEMENTS = 15
@@ -64,7 +63,7 @@ internal class VcsCommitTokenProvider(project: Project)
       .map(::VcsCommitToken)
       .toList()
 
-  override fun getCommitScopes(commitType: String): Collection<CommitScope> =
+  override fun getCommitScopes(type: String): Collection<CommitScope> =
     getOrderedVcsCommitMessages()
       .map { it.lines().firstOrNull(String::isNotBlank) }
       .filterNotNull()
@@ -80,7 +79,7 @@ internal class VcsCommitTokenProvider(project: Project)
       .map(::VcsCommitToken)
       .toList()
 
-  override fun getCommitSubjects(commitType: String, commitScope: String): Collection<CommitSubject> =
+  override fun getCommitSubjects(type: String, scope: String): Collection<CommitSubject> =
     getOrderedVcsCommitMessages()
       .map { it.lines().firstOrNull(String::isNotBlank) }
       .filterNotNull()
@@ -98,9 +97,9 @@ internal class VcsCommitTokenProvider(project: Project)
 
   override fun getCommitFooterValues(
       footerType: String,
-      commitType: String?,
-      commitScope: String?,
-      commitSubject: String?,
+      type: String?,
+      scope: String?,
+      subject: String?,
   ): Collection<CommitFooterValue> {
     val matchFooterType = specialFooterTypes.contains(footerType.lowercase())
     val maxElements = if (matchFooterType) 5 else MAX_ELEMENTS

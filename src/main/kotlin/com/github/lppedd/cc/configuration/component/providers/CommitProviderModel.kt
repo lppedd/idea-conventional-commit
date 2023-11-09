@@ -7,32 +7,36 @@ import com.github.lppedd.cc.configuration.component.AbstractTableEditableModel
  * @author Edoardo Luppi
  */
 internal class CommitProviderModel<T : CommitTokenProvider> : AbstractTableEditableModel() {
-  companion object {
-    private const val serialVersionUID = 1L
-  }
+  private var internalProviders = mutableListOf<T>()
 
-  private var providers = mutableListOf<T>()
+  var providers: List<T>
+    get() = internalProviders
+    set(value) {
+      internalProviders = value.toMutableList()
+      fireTableDataChanged()
+    }
 
-  fun getProviders() = providers
-  fun setProviders(providers: MutableList<T>) {
-    this.providers = providers
-    fireTableDataChanged()
-  }
+  override fun getColumnCount() =
+    1
 
-  override fun getColumnCount() = 1
-  override fun getColumnName(column: Int) = ""
+  override fun getColumnName(column: Int) =
+    ""
 
-  override fun getRowCount() = providers.size
+  override fun getRowCount() =
+    internalProviders.size
+
   override fun getValueAt(rowIndex: Int, columnIndex: Int): Any? =
-    if (rowIndex >= 0 && rowIndex < providers.size) {
-      providers[rowIndex]
+    if (rowIndex >= 0 && rowIndex < internalProviders.size) {
+      internalProviders[rowIndex]
     } else {
       null
     }
 
-  override fun canExchangeRows(oldIndex: Int, newIndex: Int) = true
+  override fun canExchangeRows(oldIndex: Int, newIndex: Int) =
+    true
+
   override fun exchangeRows(oldIndex: Int, newIndex: Int) {
-    providers.add(newIndex, providers.removeAt(oldIndex))
+    internalProviders.add(newIndex, internalProviders.removeAt(oldIndex))
     fireTableRowsUpdated(oldIndex.coerceAtMost(newIndex), oldIndex.coerceAtLeast(newIndex))
   }
 }

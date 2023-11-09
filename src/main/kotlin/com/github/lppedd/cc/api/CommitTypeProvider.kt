@@ -6,11 +6,11 @@ import org.jetbrains.annotations.ApiStatus.*
  * @author Edoardo Luppi
  */
 @Experimental
-interface CommitTypeProvider : CommitTokenProvider {
+public interface CommitTypeProvider : CommitTokenProvider {
   /**
    * Returns commit types, optionally based on a user-inputted prefix.
    *
-   * @param prefix a prefix to optionally filter down types, or an empty string
+   * @param prefix A prefix to optionally filter down types, or an empty string
    */
-  fun getCommitTypes(prefix: String): Collection<CommitType>
+  public fun getCommitTypes(prefix: String): Collection<CommitType>
 }

@@ -5,4 +5,4 @@ package com.github.lppedd.cc.api
  *
  * @author Edoardo Luppi
  */
-interface CommitType : CommitToken
+public interface CommitType : CommitToken

@@ -2,11 +2,10 @@ package com.github.lppedd.cc.configuration.component
 
 import com.github.lppedd.cc.setName
 import com.intellij.openapi.fileChooser.PathChooserDialog
-import com.intellij.openapi.fileChooser.impl.FileChooserFactoryImpl.createNativePathChooserIfEnabled
+import com.intellij.openapi.fileChooser.impl.FileChooserFactoryImpl
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.TextBrowseFolderListener
 import com.intellij.openapi.wm.WindowManager
-import java.awt.Component
 
 /**
  * The sole purpose of this subclass is allowing the use of our custom [CCFileChooserDialogImpl].
@@ -19,18 +18,27 @@ internal class CCTextBrowseFolderListener(
     project: Project? = null,
 ) : TextBrowseFolderListener(fileChooserDescriptor, project) {
   override fun run() {
-    getPathChooserDialog().choose(initialFile) { chosenFiles -> onFileChosen(chosenFiles[0]) }
+    val dialog = getPathChooserDialog()
+    dialog.choose(initialFile) { chosenFiles ->
+      onFileChosen(chosenFiles[0])
+    }
   }
 
   private fun getPathChooserDialog(): PathChooserDialog {
-    val parentComponent: Component? = if (myTextComponent != null) {
+    val parentComponent = if (myTextComponent != null) {
       myTextComponent
     } else {
       WindowManager.getInstance().suggestParentWindow(project)
     }
 
-    createNativePathChooserIfEnabled(myFileChooserDescriptor, project, parentComponent)?.let {
-      return it
+    val nativePathChooser = FileChooserFactoryImpl.createNativePathChooserIfEnabled(
+        myFileChooserDescriptor,
+        project,
+        parentComponent,
+    )
+
+    if (nativePathChooser != null) {
+      return nativePathChooser
     }
 
     val chooser = if (parentComponent != null) {

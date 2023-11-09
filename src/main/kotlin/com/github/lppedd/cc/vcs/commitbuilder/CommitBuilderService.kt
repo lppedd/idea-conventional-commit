@@ -7,17 +7,16 @@ import com.intellij.openapi.components.StoragePathMacros
 import com.intellij.util.xmlb.XmlSerializerUtil
 import com.intellij.util.xmlb.annotations.Tag
 import com.intellij.util.xmlb.annotations.XMap
-import org.jetbrains.annotations.ApiStatus.*
 import java.util.*
 
 /**
  * @author Edoardo Luppi
  */
-@Internal
 @State(
     name = "com.github.lppedd.cc.CommitBuilderDialog",
     storages = [Storage(StoragePathMacros.WORKSPACE_FILE)],
 )
+@Suppress("LightServiceMigrationCode")
 internal class CommitBuilderService : PersistentStateComponent<CommitBuilderService> {
   @JvmField @Tag var shouldRemember: Boolean = true
   @JvmField @Tag var type: String = ""

@@ -6,34 +6,34 @@ import javax.swing.Icon
 /**
  * @author Edoardo Luppi
  */
-object CCIcons {
-  @JvmField val Logo: Icon = getIcon("logo.svg")
+public object CCIcons {
+  @JvmField public val Logo: Icon = getIcon("logo.svg")
 
-  object General {
-    @JvmField val ArrowRight: Icon = getIcon("general/arrowRight.svg")
-    @JvmField val ClearMessageHistory: Icon = getIcon("general/clearMessageHistory.svg")
+  public object General {
+    @JvmField public val ArrowRight: Icon = getIcon("general/arrowRight.svg")
+    @JvmField public val ClearMessageHistory: Icon = getIcon("general/clearMessageHistory.svg")
   }
 
-  object Provider {
-    @JvmField val Unknown: Icon = getIcon("provider/unknown.svg")
-    @JvmField val Disabled: Icon = getIcon("provider/disabled.svg")
-    @JvmField val Vcs: Icon = getIcon("provider/vcs.svg")
+  public object Provider {
+    @JvmField public val Unknown: Icon = getIcon("provider/unknown.svg")
+    @JvmField public val Disabled: Icon = getIcon("provider/disabled.svg")
+    @JvmField public val Vcs: Icon = getIcon("provider/vcs.svg")
   }
 
-  object Tokens {
-    @JvmField val Type: Icon = getIcon("tokens/commitType.svg")
-    @JvmField val Scope: Icon = getIcon("tokens/commitScope.svg")
-    @JvmField val Subject: Icon = getIcon("tokens/commitDescription.svg")
-    @JvmField val Body: Icon = getIcon("tokens/commitBody.svg")
-    @JvmField val Footer: Icon = getIcon("tokens/commitFooter.svg")
+  public object Tokens {
+    @JvmField public val Type: Icon = getIcon("tokens/commitType.svg")
+    @JvmField public val Scope: Icon = getIcon("tokens/commitScope.svg")
+    @JvmField public val Subject: Icon = getIcon("tokens/commitDescription.svg")
+    @JvmField public val Body: Icon = getIcon("tokens/commitBody.svg")
+    @JvmField public val Footer: Icon = getIcon("tokens/commitFooter.svg")
   }
 
-  object FileTypes {
-    @JvmField val Generic: Icon = getIcon("fileTypes/generic.svg")
-    @JvmField val Json: Icon = getIcon("fileTypes/json.svg")
-    @JvmField val CoAuthors: Icon = getIcon("fileTypes/coauthors.svg")
+  public object FileTypes {
+    @JvmField public val Generic: Icon = getIcon("fileTypes/generic.svg")
+    @JvmField public val Json: Icon = getIcon("fileTypes/json.svg")
+    @JvmField public val CoAuthors: Icon = getIcon("fileTypes/coauthors.svg")
   }
 
-  @JvmStatic
-  private fun getIcon(path: String) = IconLoader.getIcon("/icons/$path", CCIcons::class.java)
+  private fun getIcon(path: String) =
+    IconLoader.getIcon("/icons/$path", CCIcons::class.java)
 }

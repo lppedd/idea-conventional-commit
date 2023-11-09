@@ -12,17 +12,13 @@ internal object TestProvider :
     CommitBodyProvider,
     CommitFooterTypeProvider,
     CommitFooterValueProvider {
-  override fun getCommitSubjects(commitType: String, commitScope: String): Collection<CommitSubject> =
+  override fun getCommitSubjects(type: String, scope: String): Collection<CommitSubject> =
     listOf(
         TestCommitToken("subject one"),
         TestCommitToken("and subject two"),
     )
 
-  override fun getCommitBodies(
-      commitType: String,
-      commitScope: String,
-      commitSubject: String,
-  ): Collection<CommitBody> =
+  override fun getCommitBodies(type: String, scope: String, subject: String): Collection<CommitBody> =
     listOf(
         TestCommitToken("Example body"),
         TestCommitToken("Example of a\nmultiline body\nas it spawns multiple lines."),
@@ -34,9 +30,9 @@ internal object TestProvider :
 
   override fun getCommitFooterValues(
       footerType: String,
-      commitType: String?,
-      commitScope: String?,
-      commitSubject: String?,
+      type: String?,
+      scope: String?,
+      subject: String?,
   ): Collection<CommitFooterValue> =
     listOf(
         TestCommitToken("Footer one"),

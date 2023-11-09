@@ -46,6 +46,7 @@ import java.util.concurrent.ConcurrentHashMap
  * @author Edoardo Luppi
  */
 internal class ConventionalCommitTextCompletionContributor : CompletionContributor(), DumbAware {
+  @Suppress("CompanionObjectInExtension")
   private companion object {
     private val pattern = PlatformPatterns.psiElement().with(object : PatternCondition<PsiElement>(null) {
       override fun accepts(psiElement: PsiElement, context: ProcessingContext?): Boolean {

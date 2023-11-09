@@ -5,7 +5,7 @@ import com.intellij.lexer.FlexAdapter
 /**
  * @author Edoardo Luppi
  */
-class ConventionalCommitLexer : FlexAdapter(ConventionalCommitFlexLexer(null)) {
+public class ConventionalCommitLexer : FlexAdapter(ConventionalCommitFlexLexer(null)) {
   override fun getFlex(): EofCapableFlexLexer =
     super.getFlex() as EofCapableFlexLexer
 

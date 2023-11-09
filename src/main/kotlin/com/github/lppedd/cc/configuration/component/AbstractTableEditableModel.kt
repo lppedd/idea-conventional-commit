@@ -10,5 +10,6 @@ internal abstract class AbstractTableEditableModel : AbstractTableModel(), Edita
   override fun addRow() {}
   override fun removeRow(idx: Int) {}
   override fun exchangeRows(oldIndex: Int, newIndex: Int) {}
-  override fun canExchangeRows(oldIndex: Int, newIndex: Int) = false
+  override fun canExchangeRows(oldIndex: Int, newIndex: Int) =
+    false
 }

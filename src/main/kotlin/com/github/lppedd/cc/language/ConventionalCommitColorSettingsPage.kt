@@ -20,6 +20,7 @@ import javax.swing.Icon
  * @author Edoardo Luppi
  */
 internal class ConventionalCommitColorSettingsPage : ColorSettingsPage {
+  @Suppress("CompanionObjectInExtension")
   private companion object {
     private val descriptors = arrayOf(
         AttributesDescriptor(CCBundle["cc.language.token.type"], TYPE),

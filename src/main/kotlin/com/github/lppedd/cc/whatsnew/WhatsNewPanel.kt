@@ -57,7 +57,6 @@ internal class WhatsNewPanel : JPanel(BorderLayout()), DoNotAskOption {
     setInitialChangelog()
   }
 
-  @Suppress("AddOperatorModifier")
   fun hasNewer(): Boolean =
     nameIndex > 0
 

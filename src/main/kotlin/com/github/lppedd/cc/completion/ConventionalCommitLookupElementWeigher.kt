@@ -16,14 +16,14 @@ internal class ConventionalCommitLookupElementWeigher(
     private val configService: CCConfigService,
 ) : LookupElementWeigher("commitLookupElementWeigher") {
   private companion object {
-    private const val scopePriority = 1
-    private const val subjectPriority = 1
-    private const val footerValuePriority = 1
+    private const val PRIORITY_SCOPE = 1
+    private const val PRIORITY_SUBJECT = 1
+    private const val PRIORITY_FOOTER_VALUE = 1
 
     // Those three could appear in the same completion invocation
-    private const val typePriority = 3
-    private const val bodyPriority = 2
-    private const val footerTypePriority = 1
+    private const val PRIORITY_TYPE = 3
+    private const val PRIORITY_BODY = 2
+    private const val PRIORITY_FOOTER_TYPE = 1
 
     private val defaultWeight = CommitTokenWeight(0, false, 0, 0)
   }
@@ -64,14 +64,14 @@ internal class ConventionalCommitLookupElementWeigher(
       is ContextLookupElementDecorator -> getTokenPriority(element.getDelegate())
       is TemplateLookupElementDecorator -> getTokenPriority(element.getDelegate())
       is TextFieldLookupElementDecorator -> getTokenPriority(element.getDelegate())
-      is CommitTypeLookupElement -> typePriority
-      is CommitScopeLookupElement -> scopePriority
-      is CommitNoScopeLookupElement -> scopePriority
-      is CommitSubjectLookupElement -> subjectPriority
-      is CommitBodyLookupElement -> bodyPriority
-      is CommitFooterTypeLookupElement -> footerTypePriority
-      is CommitFooterValueLookupElement -> footerValuePriority
-      is ShowMoreCoAuthorsLookupElement -> footerValuePriority
+      is CommitTypeLookupElement -> PRIORITY_TYPE
+      is CommitScopeLookupElement -> PRIORITY_SCOPE
+      is CommitNoScopeLookupElement -> PRIORITY_SCOPE
+      is CommitSubjectLookupElement -> PRIORITY_SUBJECT
+      is CommitBodyLookupElement -> PRIORITY_BODY
+      is CommitFooterTypeLookupElement -> PRIORITY_FOOTER_TYPE
+      is CommitFooterValueLookupElement -> PRIORITY_FOOTER_VALUE
+      is ShowMoreCoAuthorsLookupElement -> PRIORITY_FOOTER_VALUE
     }
 
   private fun getProviderPriority(provider: CommitTokenProvider?): Int =

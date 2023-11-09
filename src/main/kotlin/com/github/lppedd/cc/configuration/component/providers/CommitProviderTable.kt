@@ -45,19 +45,19 @@ internal class CommitProviderTable<T : CommitTokenProvider> : CCTable() {
   }
 
   var providers: List<T>
-    get() = model.getProviders()
+    get() = model.providers
     set(providers) {
       latest = providers.toList()
-      model.setProviders(providers.toMutableList())
+      model.providers = providers
     }
 
   fun isModified(): Boolean {
-    val current = model.getProviders()
+    val current = model.providers
     return latest.size != current.size || latest != current
   }
 
   fun reset() {
-    model.setProviders(latest.toMutableList())
+    model.providers = latest
   }
 
   private class CommitProviderRenderer : ColoredTableCellRenderer() {

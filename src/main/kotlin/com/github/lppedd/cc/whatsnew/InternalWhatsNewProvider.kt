@@ -21,8 +21,6 @@ internal class InternalWhatsNewProvider : WhatsNewProvider {
     const val PROPERTY_VERSION = "com.github.lppedd.cc.version"
   }
 
-  private lateinit var pluginDescriptor: PluginDescriptor
-
   private val whatsNewPages = listOf(
       DefaultWhatsNewPage("0.21.0", "0_21_0.html"),
       DefaultWhatsNewPage("0.20.1", "0_20_1.html"),
@@ -31,6 +29,8 @@ internal class InternalWhatsNewProvider : WhatsNewProvider {
       DefaultWhatsNewPage("0.18.0", "0_18_0.html"),
       DefaultWhatsNewPage("0.17.0", "0_17_0.html"),
   )
+
+  private lateinit var pluginDescriptor: PluginDescriptor
 
   override fun getPluginDescriptor(): PluginDescriptor =
     pluginDescriptor
@@ -69,7 +69,9 @@ internal class InternalWhatsNewProvider : WhatsNewProvider {
     private val parts = version.split(".").map(String::toInt)
 
     init {
-      require(parts.isNotEmpty()) { "The plugin version is invalid" }
+      require(parts.isNotEmpty()) {
+        "The plugin version is invalid"
+      }
     }
 
     override fun equals(other: Any?): Boolean {
@@ -85,8 +87,14 @@ internal class InternalWhatsNewProvider : WhatsNewProvider {
       for (i in 0 until maxParts) {
         val thisPart = if (i < parts.size) parts[i] else 0
         val otherPart = if (i < other.parts.size) other.parts[i] else 0
-        if (thisPart < otherPart) return -1
-        if (thisPart > otherPart) return 1
+
+        if (thisPart < otherPart) {
+          return -1
+        }
+
+        if (thisPart > otherPart) {
+          return 1
+        }
       }
 
       return 0

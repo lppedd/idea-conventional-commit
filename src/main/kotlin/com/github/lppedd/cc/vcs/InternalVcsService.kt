@@ -14,7 +14,6 @@ import com.intellij.vcs.log.data.VcsLogMultiRepoJoiner
 import com.intellij.vcs.log.impl.VcsLogManager
 import com.intellij.vcs.log.impl.VcsProjectLog
 import com.intellij.vcs.log.visible.filters.VcsLogFilterObject
-import org.jetbrains.annotations.ApiStatus.*
 import java.util.*
 import java.util.Collections.newSetFromMap
 import kotlin.io.path.notExists
@@ -22,7 +21,6 @@ import kotlin.io.path.notExists
 /**
  * @author Edoardo Luppi
  */
-@Internal
 internal class InternalVcsService(private val project: Project) : VcsService {
   private val refreshListeners = mutableSetOf<VcsListener>()
   private val vcsLogRefresher = MyVcsLogRefresher()

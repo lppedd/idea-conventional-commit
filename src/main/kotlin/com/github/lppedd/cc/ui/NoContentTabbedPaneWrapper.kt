@@ -16,7 +16,7 @@ import javax.swing.JPanel
  *
  * @author Edoardo Luppi
  */
-class NoContentTabbedPaneWrapper(disposable: Disposable) : TabbedPaneWrapper(disposable), Disposable {
+internal class NoContentTabbedPaneWrapper(disposable: Disposable) : TabbedPaneWrapper(disposable), Disposable {
   init {
     Disposer.register(disposable, this)
   }

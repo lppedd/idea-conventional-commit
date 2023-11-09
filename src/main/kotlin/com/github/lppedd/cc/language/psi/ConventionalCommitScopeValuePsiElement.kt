@@ -8,7 +8,7 @@ import com.intellij.psi.tree.IElementType
 /**
  * @author Edoardo Luppi
  */
-class ConventionalCommitScopeValuePsiElement(
+public class ConventionalCommitScopeValuePsiElement(
     type: IElementType,
     text: CharSequence,
 ) : LeafPsiElement(type, text), PsiPlainText {

@@ -3,7 +3,9 @@ package com.github.lppedd.cc.api
 /**
  * @author Edoardo Luppi
  */
-interface CommitInspectionProviderService {
-  /** Returns all the registered commit inspections' providers. */
-  fun getInspectionProviders(): Collection<CommitInspectionProvider>
+public interface CommitInspectionProviderService {
+  /**
+   * Returns all the registered commit inspection providers.
+   */
+  public fun getInspectionProviders(): Collection<CommitInspectionProvider>
 }

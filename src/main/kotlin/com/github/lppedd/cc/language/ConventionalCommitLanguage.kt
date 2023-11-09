@@ -7,7 +7,7 @@ import com.intellij.openapi.fileTypes.PlainTextLanguage
 /**
  * @author Edoardo Luppi
  */
-object ConventionalCommitLanguage : Language(PlainTextLanguage.INSTANCE, "ConventionalCommit") {
+public object ConventionalCommitLanguage : Language(PlainTextLanguage.INSTANCE, "ConventionalCommit") {
   override fun getDisplayName(): String =
     CCBundle["cc.language.name"]
 

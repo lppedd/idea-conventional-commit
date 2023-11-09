@@ -12,19 +12,18 @@ import com.intellij.util.xmlb.XmlSerializerUtil
 import com.intellij.util.xmlb.annotations.Attribute
 import com.intellij.util.xmlb.annotations.Transient
 import com.intellij.util.xmlb.annotations.XMap
-import org.jetbrains.annotations.ApiStatus.*
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 /**
  * @author Edoardo Luppi
  */
-@Internal
 @State(
     name = "general",
     storages = [Storage(CC.Settings.File)],
     presentableName = PresentableNameGetter::class,
 )
+@Suppress("LightServiceMigrationCode")
 internal class CCConfigService : PersistentStateComponent<CCConfigService> {
   @Transient
   private companion object {

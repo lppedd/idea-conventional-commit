@@ -245,13 +245,16 @@ public class CCMainConfigurableGui {
     final var url = CCBundle.getWithDefault("cc.translation.translator.url", "");
 
     if (url.isEmpty()) {
-      label.setHyperlinkText(CCBundle.get("cc.translation.text") + " " + name, "", "");
+      label.setText(CCBundle.get("cc.translation.text") + " " + name);
     } else {
       if (new UrlValidator(new String[] {"http", "https"}, NO_FRAGMENTS).isValid(url)) {
-        label.setHyperlinkText(CCBundle.get("cc.translation.text") + " ", name, "");
+        final var hyperlink = "<hyperlink>" + name + "</hyperlink>";
+
+        // noinspection UnstableApiUsage
+        label.setTextWithHyperlink(CCBundle.get("cc.translation.text") + " " + hyperlink);
         label.setHyperlinkTarget(url);
       } else {
-        label.setHyperlinkText(CCBundle.get("cc.translation.text") + " " + name, "", "");
+        label.setText(CCBundle.get("cc.translation.text") + " " + name);
       }
     }
 

@@ -8,19 +8,24 @@ import java.awt.Color
 /**
  * @author Edoardo Luppi
  */
-object CCUI {
+public object CCUI {
   @JvmField
-  val BorderColor: Color = JBColor {
+  public val BorderColor: Color = JBColor {
     if (JBColor.isBright()) {
       JBColor.border()
     } else {
       val borderColor = JBColor.border()
-      if (isDark(borderColor)) UIUtil.getListBackground().brighter(0.75) else borderColor
+
+      if (isDark(borderColor)) {
+        UIUtil.getListBackground().brighter(0.75)
+      } else {
+        borderColor
+      }
     }
   }
 
   @JvmField
-  val ListBackgroundColor: Color = JBColor {
+  public val ListBackgroundColor: Color = JBColor {
     if (JBColor.isBright()) {
       UIUtil.getListBackground()
     } else {

@@ -6,11 +6,7 @@ import javax.swing.AbstractListModel
  * @author Edoardo Luppi
  */
 internal class CommitTokenModel : AbstractListModel<String>() {
-  companion object {
-    private const val serialVersionUID = 1L
-  }
-
-  private var tokens: List<String> = emptyList()
+  private var tokens = emptyList<String>()
 
   fun setTokens(tokens: List<String>) {
     val oldSize = this.tokens.size
@@ -18,6 +14,9 @@ internal class CommitTokenModel : AbstractListModel<String>() {
     fireContentsChanged(tokens, 0, oldSize - 1)
   }
 
-  override fun getSize() = tokens.size
-  override fun getElementAt(index: Int) = tokens[index]
+  override fun getSize() =
+    tokens.size
+
+  override fun getElementAt(index: Int) =
+    tokens[index]
 }

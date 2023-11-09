@@ -12,12 +12,11 @@ import org.jetbrains.annotations.ApiStatus.*
  * @see com.github.lppedd.cc.whatsnew.WhatsNewDialog
  */
 @Experimental
-interface WhatsNewProvider : PluginAware {
+public interface WhatsNewProvider : PluginAware {
   /**
-   * Returns the name to be displayed in the "What's new" dialog's tab
-   * representing this provider.
+   * Returns the name - representing this provider - to be displayed in a "What's new" dialog's tab.
    */
-  fun getDisplayName(): String
+  public fun getDisplayName(): String
 
   /**
    * Returns if the "What's new" pages should be displayed at IDE startup,
@@ -25,19 +24,22 @@ interface WhatsNewProvider : PluginAware {
    *
    * Typically, the dialog should be shown on every plugin update.
    */
-  fun shouldDisplayAtStartup(): Boolean
+  public fun shouldDisplayAtStartup(): Boolean
 
-  /** Returns the base path where [WhatsNewPage.getFileName] (s) are located. */
-  fun getBasePath(): String
+  /**
+   * Returns the path where [WhatsNewPage.getFileName]s are located.
+   */
+  public fun getBasePath(): String
 
   /**
    * Returns the "What's new" pages to be displayed.
    *
-   * The lowest index (`0`) represents the newest page and the highest index
-   * represents the oldest one.
+   * The lowest collection index `0` represents the newest page and the highest index represents the oldest one.
    */
-  fun getPages(): Collection<WhatsNewPage>
+  public fun getPages(): Collection<WhatsNewPage>
 
-  /** @see PluginAware.setPluginDescriptor */
-  fun getPluginDescriptor(): PluginDescriptor
+  /**
+   * @see PluginAware.setPluginDescriptor
+   */
+  public fun getPluginDescriptor(): PluginDescriptor
 }

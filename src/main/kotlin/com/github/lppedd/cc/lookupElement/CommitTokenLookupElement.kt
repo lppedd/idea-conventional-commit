@@ -68,10 +68,14 @@ internal sealed class CommitTokenLookupElement : LookupElement() {
     presentation.setTypeText(text, tokenPresentation.getIcon())
   }
 
-  /** The text shown to the user for the completion's item. */
+  /**
+   * The text shown to the user for the completion's item.
+   */
   abstract fun getItemText(): String
 
-  /** The commit token associated with this completion element. */
+  /**
+   * The commit token associated with this completion element.
+   */
   abstract fun getToken(): CommitToken
 
   abstract override fun getPsiElement(): CommitTokenPsiElement

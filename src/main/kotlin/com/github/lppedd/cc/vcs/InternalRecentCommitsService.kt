@@ -11,14 +11,12 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.registry.Registry
 import com.intellij.openapi.vcs.VcsConfiguration
 import com.intellij.vcs.log.VcsCommitMetadata
-import org.jetbrains.annotations.ApiStatus.*
 import kotlin.math.max
 import kotlin.text.RegexOption.MULTILINE
 
 /**
  * @author Edoardo Luppi
  */
-@Internal
 internal class InternalRecentCommitsService(private val project: Project) : RecentCommitsService {
   private companion object {
     private const val MAX_ELEMENTS = 4

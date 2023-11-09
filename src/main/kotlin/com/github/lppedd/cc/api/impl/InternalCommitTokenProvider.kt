@@ -9,13 +9,11 @@ import com.github.lppedd.cc.configuration.CCDefaultTokensService
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import org.everit.json.schema.ValidationException
-import org.jetbrains.annotations.ApiStatus.*
 import javax.swing.Icon
 
 /**
  * @author Edoardo Luppi
  */
-@Internal
 internal class InternalCommitTokenProvider(private val project: Project) :
     CommitTypeProvider,
     CommitScopeProvider,
@@ -44,8 +42,8 @@ internal class InternalCommitTokenProvider(private val project: Project) :
   override fun getCommitTypes(prefix: String): Collection<CommitType> =
     defaults.types.map { DefaultCommitToken(it.key, it.value.description) }
 
-  override fun getCommitScopes(commitType: String): Collection<CommitScope> =
-    defaults.types[commitType]
+  override fun getCommitScopes(type: String): Collection<CommitScope> =
+    defaults.types[type]
       ?.scopes
       ?.map { DefaultCommitToken(it.name, it.description) }
     ?: emptyList()
@@ -55,9 +53,9 @@ internal class InternalCommitTokenProvider(private val project: Project) :
 
   override fun getCommitFooterValues(
       footerType: String,
-      commitType: String?,
-      commitScope: String?,
-      commitSubject: String?,
+      type: String?,
+      scope: String?,
+      subject: String?,
   ): Collection<CommitFooterValue> =
     if ("co-authored-by".equals(footerType, true)) {
       defaultsService.getCoAuthors()

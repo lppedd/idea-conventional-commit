@@ -7,11 +7,15 @@ import com.intellij.vcs.log.VcsUser
 /**
  * @author Edoardo Luppi
  */
-interface VcsService {
-  /** Called on every [ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED]. */
+internal interface VcsService {
+  /**
+   * Called on every [ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED].
+   */
   fun refresh()
 
-  /** Returns the user data associated with the active VCS roots. */
+  /**
+   * Returns the user data associated with the active VCS roots.
+   */
   fun getCurrentUsers(): Collection<VcsUser>
 
   /**

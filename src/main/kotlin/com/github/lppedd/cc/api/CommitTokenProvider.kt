@@ -8,10 +8,14 @@ import org.jetbrains.annotations.ApiStatus.*
  * @author Edoardo Luppi
  */
 @Experimental
-interface CommitTokenProvider {
-  /** Returns the provider's global unique identifier. */
-  fun getId(): String
+public interface CommitTokenProvider {
+  /**
+   * Returns the provider's global unique identifier.
+   */
+  public fun getId(): String
 
-  /** Returns the provider's UI presentation options. */
-  fun getPresentation(): ProviderPresentation
+  /**
+   * Returns the provider's UI presentation options.
+   */
+  public fun getPresentation(): ProviderPresentation
 }

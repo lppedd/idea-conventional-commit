@@ -9,7 +9,6 @@ import com.intellij.openapi.project.ProjectManagerListener
  * @author Edoardo Luppi
  */
 internal class CCProjectManagerListener : ProjectManagerListener {
-  override fun projectClosingBeforeSave(project: Project) {
+  override fun projectClosingBeforeSave(project: Project) =
     project.service<CommitBuilderService>().clear()
-  }
 }

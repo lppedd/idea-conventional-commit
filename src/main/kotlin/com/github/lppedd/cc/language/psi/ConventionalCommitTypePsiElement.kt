@@ -7,7 +7,7 @@ import com.intellij.psi.tree.IElementType
 /**
  * @author Edoardo Luppi
  */
-class ConventionalCommitTypePsiElement(type: IElementType, text: CharSequence) : LeafPsiElement(type, text) {
+public class ConventionalCommitTypePsiElement(type: IElementType, text: CharSequence) : LeafPsiElement(type, text) {
   override fun accept(visitor: PsiElementVisitor) {
     if (visitor is ConventionalCommitPsiElementVisitor) {
       visitor.visitType(this)

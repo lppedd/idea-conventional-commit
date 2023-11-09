@@ -1,6 +1,5 @@
 package com.github.lppedd.cc.editor
 
-import com.github.lppedd.cc.annotation.Compatibility
 import com.github.lppedd.cc.getCaretOffset
 import com.github.lppedd.cc.language.ConventionalCommitLanguage
 import com.github.lppedd.cc.language.psi.*

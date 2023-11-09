@@ -6,12 +6,12 @@ import org.jetbrains.annotations.ApiStatus.*
  * @author Edoardo Luppi
  */
 @Experimental
-interface CommitSubjectProvider : CommitTokenProvider {
+public interface CommitSubjectProvider : CommitTokenProvider {
   /**
    * Returns commit subjects, optionally considering the user-inputted type and scope.
    *
-   * @param commitType a type to optionally filter down subjects, or an empty string
-   * @param commitScope a scope to optionally filter down subjects, or an empty string
+   * @param type A type to optionally filter down subjects, or an empty string
+   * @param scope A scope to optionally filter down subjects, or an empty string
    */
-  fun getCommitSubjects(commitType: String, commitScope: String): Collection<CommitSubject>
+  public fun getCommitSubjects(type: String, scope: String): Collection<CommitSubject>
 }

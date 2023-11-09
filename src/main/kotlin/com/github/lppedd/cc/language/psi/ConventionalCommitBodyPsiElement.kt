@@ -7,7 +7,7 @@ import com.intellij.psi.tree.IElementType
 /**
  * @author Edoardo Luppi
  */
-class ConventionalCommitBodyPsiElement(
+public class ConventionalCommitBodyPsiElement(
     type: IElementType,
     text: CharSequence,
 ) : LeafPsiElement(type, text), PsiPlainText {

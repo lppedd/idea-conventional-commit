@@ -6,13 +6,13 @@ import com.github.lppedd.cc.parser.FooterContext.FooterValueContext
 /**
  * @author Edoardo Luppi
  */
-data class FooterTokens(
+internal data class FooterTokens(
     val type: FooterType = InvalidToken,
     val separator: Separator = Separator(false),
     val footer: Footer = InvalidToken,
 ) {
-  fun getContext(offset: Int): FooterContext? {
-    return when {
+  fun getContext(offset: Int): FooterContext? =
+    when {
       offset == 0 -> FooterTypeContext("")
       separator.isPresent -> FooterValueContext(
           (type as ValidToken).value,
@@ -21,10 +21,9 @@ data class FooterTokens(
       type.isInContext(offset) -> FooterTypeContext(type.value)
       else -> null
     }
-  }
 }
 
-sealed class FooterContext {
+internal sealed class FooterContext {
   data class FooterTypeContext(val type: String) : FooterContext()
   data class FooterValueContext(val type: String, val value: String) : FooterContext()
 }

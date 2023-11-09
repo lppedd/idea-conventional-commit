@@ -10,7 +10,6 @@ import com.intellij.openapi.vfs.LocalFileSystem
 import org.everit.json.schema.Schema
 import org.everit.json.schema.Validator
 import org.everit.json.schema.loader.SchemaLoader
-import org.jetbrains.annotations.ApiStatus.*
 import org.json.JSONArray
 import org.json.JSONObject
 import org.json.JSONTokener
@@ -32,13 +31,15 @@ internal typealias CommitFooterTypeList = Collection<JsonCommitFooterType>
  *
  * @author Edoardo Luppi
  */
-@Internal
+@Suppress("LightServiceMigrationCode")
 internal class CCDefaultTokensService(private val project: Project) {
   private companion object {
     private val logger = logger<CCDefaultTokensService>()
   }
 
-  /** JSON Schema used to validate the default commit types and scopes JSON file. */
+  /**
+   * JSON Schema used to validate the default commit types and scopes JSON file.
+   */
   private val defaultsSchema by lazy {
     val schemaInputStream = getResourceAsStream("/defaults/${CC.Tokens.SchemaFile}")
     val schemaReader = BufferedReader(InputStreamReader(schemaInputStream, UTF_8))
@@ -46,7 +47,9 @@ internal class CCDefaultTokensService(private val project: Project) {
     SchemaLoader.load(schemaJson)
   }
 
-  /** Built-in default commit types and scopes. */
+  /**
+   * Built-in default commit types and scopes.
+   */
   private val builtInDefaultTokens by lazy {
     val inputStream = getResourceAsStream("/defaults/${CC.Tokens.File}")
     val reader = BufferedReader(InputStreamReader(inputStream, UTF_8))
@@ -58,10 +61,14 @@ internal class CCDefaultTokensService(private val project: Project) {
     return path?.let(::readDefaultsFromFile) ?: builtInDefaultTokens
   }
 
-  /** Returns the built-in commit types and scopes. */
+  /**
+   * Returns the built-in commit types and scopes.
+   */
   fun getBuiltInDefaults(): JsonDefaults = builtInDefaultTokens
 
-  /** Validates a file via the inputted absolute path. */
+  /**
+   * Validates a file via the inputted absolute path.
+   */
   fun validateDefaultsFile(filePath: String) {
     val path = FileSystems.getDefault().getPath(filePath)
 
@@ -74,7 +81,9 @@ internal class CCDefaultTokensService(private val project: Project) {
     }
   }
 
-  /** Returns the user-defined co-authors. */
+  /**
+   * Returns the user-defined co-authors.
+   */
   fun getCoAuthors(): Collection<String> {
     val customCoAuthorsFilePath = project.service<CCConfigService>().customCoAuthorsFilePath
     val fileSystem = FileSystems.getDefault()
@@ -133,7 +142,9 @@ internal class CCDefaultTokensService(private val project: Project) {
       ?.path
   }
 
-  /** Reads default commit types and scopes from a file in FS via its absolute path. */
+  /**
+   * Reads default commit types and scopes from a file in FS via its absolute path.
+   */
   private fun readDefaultsFromFile(filePath: String): JsonDefaults =
     Files.newBufferedReader(FileSystems.getDefault().getPath(filePath), UTF_8).use(::readFile)
 
@@ -187,7 +198,9 @@ internal class CCDefaultTokensService(private val project: Project) {
   class JsonCommitScope(val name: String, val description: String)
   class JsonCommitFooterType(val name: String, val description: String)
 
-  /** Validate a JSON object against this JSON Schema. */
+  /**
+   * Validate a JSON object against this JSON Schema.
+   */
   private fun Schema.validateJson(jsonObject: JSONObject) {
     Validator.builder()
       .failEarly()

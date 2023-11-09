@@ -5,9 +5,11 @@ package com.github.lppedd.cc.api
  *
  * @author Edoardo Luppi
  */
-interface CommitToken {
-  /** Returns the token's presentable text, to be shown in the completion's popup. */
-  fun getText(): String
+public interface CommitToken {
+  /**
+   * Returns the token's presentable text, to be shown in the completion's popup.
+   */
+  public fun getText(): String
 
   /**
    * Returns the token's actual value, to be applied to the commit message
@@ -15,14 +17,16 @@ interface CommitToken {
    *
    * The presentable text and the actual underlying value might be the same.
    */
-  fun getValue(): String
+  public fun getValue(): String
 
-  /** Returns the token's description, to be shown in the Quick Documentation popup. */
-  fun getDescription(): String
+  /**
+   * Returns the token's description, to be shown in the Quick Documentation popup.
+   */
+  public fun getDescription(): String
 
   /**
    * Returns the token's UI presentation options, which will impact how the token
    * is presented in the completion's popup.
    */
-  fun getPresentation(): TokenPresentation
+  public fun getPresentation(): TokenPresentation
 }

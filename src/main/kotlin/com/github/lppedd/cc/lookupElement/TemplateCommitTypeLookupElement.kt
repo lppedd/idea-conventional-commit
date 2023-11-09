@@ -11,6 +11,7 @@ import com.intellij.codeInsight.template.impl.TemplateImpl
 import com.intellij.codeInsight.template.impl.TemplateSettings
 import com.intellij.openapi.application.runWriteAction
 
+// TODO: move them inside an object/namespace
 internal const val INDEX_TYPE = 0
 internal const val INDEX_SCOPE = 1
 internal const val INDEX_SUBJECT = 2

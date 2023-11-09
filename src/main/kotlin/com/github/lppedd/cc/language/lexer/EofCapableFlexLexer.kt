@@ -5,8 +5,7 @@ import com.intellij.lexer.FlexLexer
 /**
  * @author Edoardo Luppi
  */
-interface EofCapableFlexLexer : FlexLexer {
-  fun isEof(): Boolean
-
-  fun setEof(isEof: Boolean)
+public interface EofCapableFlexLexer : FlexLexer {
+  public fun isEof(): Boolean
+  public fun setEof(isEof: Boolean)
 }

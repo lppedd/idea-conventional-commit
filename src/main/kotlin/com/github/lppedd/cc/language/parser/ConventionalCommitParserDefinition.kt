@@ -22,6 +22,7 @@ import com.intellij.psi.tree.TokenSet
  * @author Edoardo Luppi
  */
 internal class ConventionalCommitParserDefinition : ParserDefinition {
+  @Suppress("CompanionObjectInExtension")
   private companion object {
     private val FILE = IFileElementType(ConventionalCommitFileType.name, ConventionalCommitLanguage)
   }

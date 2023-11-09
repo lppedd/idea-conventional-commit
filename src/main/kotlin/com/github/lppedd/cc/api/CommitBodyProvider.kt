@@ -6,17 +6,13 @@ import org.jetbrains.annotations.ApiStatus.*
  * @author Edoardo Luppi
  */
 @Experimental
-interface CommitBodyProvider : CommitTokenProvider {
+public interface CommitBodyProvider : CommitTokenProvider {
   /**
    * Returns commit bodies, optionally considering other user-inputted tokens.
    *
-   * @param commitType a type to optionally filter down bodies, or an empty string
-   * @param commitScope a scope to optionally filter down bodies, or an empty string
-   * @param commitSubject a subject to optionally filter down bodies, or an empty string
+   * @param type A type to optionally filter down bodies, or an empty string
+   * @param scope A scope to optionally filter down bodies, or an empty string
+   * @param subject A subject to optionally filter down bodies, or an empty string
    */
-  fun getCommitBodies(
-      commitType: String,
-      commitScope: String,
-      commitSubject: String,
-  ): Collection<CommitBody>
+  public fun getCommitBodies(type: String, scope: String, subject: String): Collection<CommitBody>
 }

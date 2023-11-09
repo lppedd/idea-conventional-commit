@@ -23,8 +23,9 @@ internal class CommitInspectionsRegistrarStartupActivity : StartupActivity, Dumb
 
     if (inspections.isNotEmpty()) {
       val inspectionProfile = CommitMessageInspectionProfile.getInstance(project)
-      inspections.forEach {
-        inspectionProfile.addTool(project, it, emptyMap())
+
+      for (inspection in inspections) {
+        inspectionProfile.addTool(project, inspection, emptyMap())
       }
     }
   }

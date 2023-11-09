@@ -10,15 +10,15 @@ import com.intellij.psi.PsiElement
 /**
  * @author Edoardo Luppi
  */
-abstract class CommitBaseQuickFix : LocalQuickFix {
+public abstract class CommitBaseQuickFix : LocalQuickFix {
   final override fun applyFix(project: Project, descriptor: ProblemDescriptor) {
     applyFix(project, getDocument(descriptor.psiElement) ?: return, descriptor)
   }
 
   @Suppress("inapplicable_jvm_name")
   @get:JvmName("canReformat")
-  abstract val canReformat: Boolean
-  abstract fun applyFix(project: Project, document: Document, descriptor: ProblemDescriptor)
+  public abstract val canReformat: Boolean
+  public abstract fun applyFix(project: Project, document: Document, descriptor: ProblemDescriptor)
 
   private fun getDocument(element: PsiElement): Document? =
     PsiDocumentManager
