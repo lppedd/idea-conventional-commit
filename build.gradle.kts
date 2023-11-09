@@ -19,6 +19,7 @@ group = "com.github.lppedd"
 repositories {
   // For org.everit.json.schema
   maven("https://jitpack.io")
+  maven("https://packages.jetbrains.team/maven/p/ij/intellij-dependencies")
   mavenCentral()
 }
 
@@ -56,26 +57,30 @@ sourceSets {
   }
 }
 
+java {
+  sourceCompatibility = JavaVersion.VERSION_11
+  targetCompatibility = JavaVersion.VERSION_11
+}
+
+kotlin {
+  explicitApiWarning()
+  compilerOptions {
+    jvmTarget = JvmTarget.JVM_11
+    languageVersion = KotlinVersion.KOTLIN_1_9
+    optIn.add("kotlin.contracts.ExperimentalContracts")
+    freeCompilerArgs.addAll(
+        "-Xno-call-assertions",
+        "-Xno-receiver-assertions",
+        "-Xno-param-assertions",
+        "-Xjvm-default=all",
+        "-Xallow-kotlin-package",
+    )
+  }
+}
+
 tasks {
   wrapper {
     distributionType = Wrapper.DistributionType.ALL
-  }
-
-  kotlin {
-    explicitApiWarning()
-    jvmToolchain(11)
-    compilerOptions {
-      jvmTarget = JvmTarget.JVM_11
-      languageVersion = KotlinVersion.KOTLIN_1_9
-      optIn.add("kotlin.contracts.ExperimentalContracts")
-      freeCompilerArgs.addAll(
-          "-Xno-call-assertions",
-          "-Xno-receiver-assertions",
-          "-Xno-param-assertions",
-          "-Xjvm-default=all",
-          "-Xallow-kotlin-package",
-      )
-    }
   }
 
   val generateLexer = task<GenerateLexerTask>("generateConventionalCommitLexer") {
