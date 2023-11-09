@@ -2,8 +2,9 @@ package com.github.lppedd.cc.inspection
 
 import com.github.lppedd.cc.api.CommitInspectionProvider
 import com.github.lppedd.cc.api.CommitInspectionProviderService
+import com.github.lppedd.cc.application
+import com.github.lppedd.cc.service
 import com.intellij.codeInspection.ex.LocalInspectionToolWrapper
-import com.intellij.openapi.components.service
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.StartupActivity
@@ -14,7 +15,7 @@ import com.intellij.vcs.commit.message.CommitMessageInspectionProfile
  */
 internal class CommitInspectionsRegistrarStartupActivity : StartupActivity, DumbAware {
   override fun runActivity(project: Project) {
-    val inspectionProviderService = service<CommitInspectionProviderService>()
+    val inspectionProviderService = application.service<CommitInspectionProviderService>()
     val inspections = inspectionProviderService.getInspectionProviders()
       .asSequence()
       .flatMap(CommitInspectionProvider::getInspections)
