@@ -1,4 +1,4 @@
-<!--suppress PluginXmlValidity, PluginXmlDynamicPlugin -->
+<!--suppress PluginXmlDynamicPlugin, LightServiceMigrationXML -->
 <idea-plugin require-restart="true">
   <id>com.github.lppedd.idea-conventional-commit</id>
   <name>Conventional Commit</name>
@@ -21,10 +21,12 @@
   </applicationListeners>
 
   <extensions defaultExtensionNs="com.intellij">
+    <!--suppress PluginXmlValidity -->
     <ApplicationLoadListener implementation="com.github.lppedd.cc.CCApplicationLoadListener" />
 
     <iconProvider implementation="com.github.lppedd.cc.icon.CCConfigFileIconProvider" />
 
+    <!--suppress PluginXmlValidity -->
     <completion.contributor
         order="first, before commitCompletion, before coAuthoredCompletion"
         language="TEXT"
@@ -91,10 +93,12 @@
 
     <checkinHandlerFactory implementation="com.github.lppedd.cc.vcs.commitbuilder.CommitBuilderCheckinHandlerFactory" />
 
-    <notificationGroup id="com.github.lppedd.cc.notifications"
-                       displayType="STICKY_BALLOON"
-                       isLogByDefault="true"
-                       key="cc.notification.group.name"/>
+    <notificationGroup
+        id="com.github.lppedd.cc.notifications"
+        displayType="STICKY_BALLOON"
+        isLogByDefault="true"
+        key="cc.notification.group.name"
+    />
 
     <registryKey
         key="com.github.lppedd.cc.providers.vcs"
@@ -143,10 +147,19 @@
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.github.lppedd.idea-conventional-commit">
+    <!--suppress PluginXmlValidity -->
     <commitTypeProvider order="first" implementation="com.github.lppedd.cc.api.impl.InternalCommitTokenProvider" />
+
+    <!--suppress PluginXmlValidity -->
     <commitScopeProvider order="first" implementation="com.github.lppedd.cc.api.impl.InternalCommitTokenProvider" />
+
+    <!--suppress PluginXmlValidity -->
     <commitFooterTypeProvider order="first" implementation="com.github.lppedd.cc.api.impl.InternalCommitTokenProvider" />
+
+    <!--suppress PluginXmlValidity -->
     <commitFooterValueProvider order="first" implementation="com.github.lppedd.cc.api.impl.InternalCommitTokenProvider" />
+
+    <!--suppress PluginXmlValidity -->
     <whatsNewProvider order="first" implementation="com.github.lppedd.cc.whatsnew.InternalWhatsNewProvider" />
   </extensions>
 </idea-plugin>
