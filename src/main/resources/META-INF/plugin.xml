@@ -108,7 +108,7 @@
     />
 
     <fileType
-        name="Conventional Commit file"
+        name="Conventional Commit"
         implementationClass="com.github.lppedd.cc.language.ConventionalCommitFileType"
         fieldName="INSTANCE"
         language="ConventionalCommit"

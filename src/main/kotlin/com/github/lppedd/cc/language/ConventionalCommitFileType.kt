@@ -9,7 +9,7 @@ import javax.swing.Icon
  */
 public object ConventionalCommitFileType : LanguageFileType(ConventionalCommitLanguage) {
   override fun getName(): String =
-    "${language.displayName} file"
+    language.displayName
 
   override fun getDescription(): String =
     language.displayName
