@@ -116,6 +116,7 @@ internal class CCTemplateEditingListener : TemplateEditingAdapter() {
   }
 
   @Compatibility(
+      keepForHistoricReasons = true,
       minVersion = "202.4357.23",
       description = """
         NOTE: we keep this just to be safe!

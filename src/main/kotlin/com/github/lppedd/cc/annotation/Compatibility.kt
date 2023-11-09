@@ -13,6 +13,11 @@ package com.github.lppedd.cc.annotation
 @Retention(AnnotationRetention.SOURCE)
 internal annotation class Compatibility(
     /**
+     * Whether the annotated element should be kept regardless of [minVersion].
+     */
+    val keepForHistoricReasons: Boolean = false,
+
+    /**
      * The minimum supported IDE version that is required
      * for removing the annotated element.
      */

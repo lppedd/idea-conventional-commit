@@ -1,13 +1,11 @@
 package com.github.lppedd.cc.vcs
 
-import com.github.lppedd.cc.annotation.Compatibility
 import com.github.lppedd.cc.invokeLaterOnEdtAndWait
 import com.intellij.dvcs.repo.VcsRepositoryManager
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vcs.ProjectLevelVcsManager
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.util.Consumer
 import com.intellij.util.EmptyConsumer
 import com.intellij.vcs.log.*
 import com.intellij.vcs.log.data.VcsLogMultiRepoJoiner
@@ -115,17 +113,10 @@ internal class InternalVcsService(private val project: Project) : VcsService {
       return emptyList()
     }
 
-    return logProvider.readMetadataComp(root, matchingCommits.map { it.id.asString() })
-  }
-
-  @Compatibility(minVersion = "203.4203.26")
-  private fun VcsLogProvider.readMetadataComp(
-      root: VirtualFile,
-      commitsHashes: List<String>,
-  ): List<VcsCommitMetadata> {
-    return ArrayList<VcsCommitMetadata>(100).also {
-      readMetadata(root, commitsHashes, Consumer(it::add))
-    }
+    val commitsMetadata = ArrayList<VcsCommitMetadata>(100)
+    val hashes = matchingCommits.map { it.id.asString() }
+    logProvider.readMetadata(root, hashes, commitsMetadata::add)
+    return commitsMetadata
   }
 
   private fun getVcsLogProviders(): Map<VirtualFile, VcsLogProvider> {
