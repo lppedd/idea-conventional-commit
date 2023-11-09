@@ -1,54 +1,51 @@
-@file:Suppress("TrailingComma", "PublicApiImplicitType")
+@file:Suppress("VulnerableLibrariesLocal")
 
 import org.jetbrains.grammarkit.tasks.GenerateLexerTask
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
-fun properties(key: String) = project.findProperty(key).toString()
+fun properties(key: String): String =
+  property(key).toString()
 
 plugins {
   java
-  id("org.jetbrains.intellij") version "1.13.3"
-  id("org.jetbrains.grammarkit") version "2021.2.2"
-  kotlin("jvm") version "1.8.10"
+  alias(libs.plugins.jetbrains.intellij)
+  alias(libs.plugins.jetbrains.grammarkit)
+  alias(libs.plugins.kotlin.jvm)
 }
 
 group = "com.github.lppedd"
 
 repositories {
-  maven("https://packages.jetbrains.team/maven/p/ij/intellij-dependencies")
+  // For org.everit.json.schema
   maven("https://jitpack.io")
   mavenCentral()
 }
 
 dependencies {
-  implementation(kotlin("stdlib", "1.8.10"))
-
-  implementation("commons-validator", "commons-validator", "1.7") {
+  implementation(kotlin("stdlib"))
+  implementation(libs.commons.validator) {
     exclude("commons-beanutils", "commons-beanutils")
   }
 
-  implementation("org.json", "json", "20230227")
-  implementation("com.github.everit-org.json-schema", "org.everit.json.schema", "1.14.2")
+  implementation(libs.org.json)
+  implementation(libs.org.json.schema)
 
+  // TODO: move to catalog if it is really needed
   testImplementation("junit:junit:4.13.2")
 }
 
 intellij {
-  type.set(properties("platformType"))
-  version.set(properties("platformVersion"))
-  downloadSources.set(true)
-  pluginName.set("idea-conventional-commit")
-  plugins.set(listOf("java"))
+  type = properties("platformType")
+  version = properties("platformVersion")
+  downloadSources = true
+  pluginName = "idea-conventional-commit"
+  plugins = listOf("java")
 }
 
 grammarKit {
-  jflexRelease.set("1.7.0-1")
-  grammarKitRelease.set("2021.1.2")
-}
-
-java {
-  sourceCompatibility = JavaVersion.VERSION_11
-  targetCompatibility = JavaVersion.VERSION_11
+  jflexRelease = "1.7.0-1"
+  grammarKitRelease = "2021.1.2"
 }
 
 sourceSets {
@@ -64,70 +61,80 @@ tasks {
     distributionType = Wrapper.DistributionType.ALL
   }
 
+  kotlin {
+    jvmToolchain(11)
+    compilerOptions {
+      jvmTarget = JvmTarget.JVM_11
+      languageVersion = KotlinVersion.KOTLIN_1_9
+      optIn.add("kotlin.contracts.ExperimentalContracts")
+      freeCompilerArgs.addAll(
+          "-Xno-call-assertions",
+          "-Xno-receiver-assertions",
+          "-Xno-param-assertions",
+          "-Xjvm-default=all",
+          "-Xallow-kotlin-package",
+      )
+    }
+  }
+
   val generateLexer = task<GenerateLexerTask>("generateConventionalCommitLexer") {
-    source.set("src/main/kotlin/com/github/lppedd/cc/language/lexer/conventionalCommit.flex")
-    targetDir.set("src/main/gen/com/github/lppedd/cc/language/lexer")
-    targetClass.set("ConventionalCommitFlexLexer")
-    purgeOldFiles.set(true)
+    source = "src/main/kotlin/com/github/lppedd/cc/language/lexer/conventionalCommit.flex"
+    targetDir = "src/main/gen/com/github/lppedd/cc/language/lexer"
+    targetClass = "ConventionalCommitFlexLexer"
+    purgeOldFiles = true
   }
 
-  val kotlinSettings: KotlinCompile.() -> Unit = {
+  compileKotlin {
     dependsOn(generateLexer)
-
-    kotlinOptions.jvmTarget = "11"
-    kotlinOptions.freeCompilerArgs += listOf(
-        "-Xno-call-assertions",
-        "-Xno-receiver-assertions",
-        "-Xno-param-assertions",
-        "-Xjvm-default=all",
-        "-Xallow-kotlin-package",
-        "-opt-in=kotlin.contracts.ExperimentalContracts",
-    )
   }
 
-  compileKotlin(kotlinSettings)
-  compileTestKotlin(kotlinSettings)
+  compileTestKotlin {
+    dependsOn(generateLexer)
+  }
+
+  val versionStr = "$version"
+  val projectPath = layout.projectDirectory
 
   patchPluginXml {
-    version.set(project.version.toString())
-    sinceBuild.set(properties("pluginSinceBuild"))
-    untilBuild.set(properties("pluginUntilBuild"))
+    version = versionStr
+    sinceBuild = properties("pluginSinceBuild")
+    untilBuild = properties("pluginUntilBuild")
 
-    val projectPath = projectDir.path
-    pluginDescription.set((File("$projectPath/plugin-description.html").readText(Charsets.UTF_8)))
-    changeNotes.set((File("$projectPath/change-notes/${version.get().replace('.', '_')}.html").readText(Charsets.UTF_8)))
+    val pluginDescriptionFile = File("$projectPath/plugin-description.html")
+    pluginDescription = pluginDescriptionFile.readText()
+
+    val changeNotesFile = File("$projectPath/change-notes/${versionStr.replace('.', '_')}.html")
+    changeNotes = changeNotesFile.readText()
   }
 
   val buildApiSourceJar = task<Jar>("buildConventionalCommitApiSourceJar") {
     dependsOn(generateLexer)
-
     from(kotlin.sourceSets.main.get().kotlin) {
       include("com/github/lppedd/cc/api/*.kt")
     }
 
-    destinationDirectory.set(layout.buildDirectory.dir("libs"))
-    archiveClassifier.set("src")
+    destinationDirectory = layout.buildDirectory.dir("libs")
+    archiveClassifier = "src"
   }
 
   buildPlugin {
     dependsOn(buildApiSourceJar)
-
     from(buildApiSourceJar) {
       into("lib/src")
     }
   }
 
   runPluginVerifier {
-    ideVersions.set(listOf(
+    ideVersions = listOf(
         "IC-2020.2.1",
         "IC-2021.1",
         "IC-2022.1",
         "IC-2023.1",
-    ))
+    )
   }
 
   runIde {
-    val dcevm = project.findProperty("dcevmExecutable")
+    val dcevm = findProperty("dcevmExecutable")
 
     if (dcevm is String && dcevm.isNotBlank()) {
       executable = dcevm

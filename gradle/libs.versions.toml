@@ -1,0 +1,17 @@
+[versions]
+kotlin = "1.9.20"
+jetbrains-intellij = "1.16.0"
+jetbrains-grammarkit = "2021.2.2"
+commons-validator = "1.7"
+org-json = "20231013"
+org-json-schema = "1.14.3"
+
+[libraries]
+commons-validator = { group = "commons-validator", name = "commons-validator", version.ref = "commons-validator" }
+org-json = { group = "org.json", name = "json", version.ref = "org-json" }
+org-json-schema = { group = "com.github.everit-org.json-schema", name = "org.everit.json.schema", version.ref = "org-json-schema" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+jetbrains-intellij = { id = "org.jetbrains.intellij", version.ref = "jetbrains-intellij" }
+jetbrains-grammarkit = { id = "org.jetbrains.grammarkit", version.ref = "jetbrains-grammarkit" }
