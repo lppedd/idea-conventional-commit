@@ -301,6 +301,7 @@
       <option name="PRIMARY_KEY_NAME_TEMPLATE" value="{table}_{columns}_pk" />
     </PostgresCodeStyleSettings>
     <Properties>
+      <option name="SPACES_AROUND_KEY_VALUE_DELIMITER" value="true" />
       <option name="KEEP_BLANK_LINES" value="true" />
     </Properties>
     <SQLiteCodeStyleSettings version="6">
@@ -867,7 +868,7 @@
       </indentOptions>
     </codeStyleSettings>
     <codeStyleSettings language="kotlin">
-      <option name="RIGHT_MARGIN" value="110" />
+      <option name="RIGHT_MARGIN" value="130" />
       <option name="LINE_COMMENT_AT_FIRST_COLUMN" value="false" />
       <option name="BLOCK_COMMENT_AT_FIRST_COLUMN" value="false" />
       <option name="KEEP_BLANK_LINES_IN_DECLARATIONS" value="1" />
