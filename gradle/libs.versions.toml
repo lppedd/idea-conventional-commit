@@ -1,6 +1,6 @@
 [versions]
 kotlin = "1.9.20"
-jetbrains-intellij = "1.16.0"
+jetbrains-intellij = "1.17.0"
 jetbrains-grammarkit = "2021.2.2"
 commons-validator = "1.7"
 org-json = "20231013"
