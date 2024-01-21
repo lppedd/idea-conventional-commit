@@ -45,7 +45,8 @@ intellij {
 }
 
 grammarKit {
-  jflexRelease = "1.7.0-1"
+  // See https://github.com/JetBrains/intellij-deps-jflex/
+  jflexRelease = "1.9.2"
   grammarKitRelease = "2021.1.2"
 }
 
