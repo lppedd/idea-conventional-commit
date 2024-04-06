@@ -4,6 +4,7 @@ import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.CCIcons
 import com.github.lppedd.cc.moveCaretToOffset
 import com.github.lppedd.cc.removeSelection
+import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.command.CommandProcessor
 import com.intellij.openapi.project.DumbAwareAction
@@ -23,6 +24,9 @@ internal class CommitBuilderAction : DumbAwareAction() {
     isEnabledInModalContext = true
     templatePresentation.icon = CCIcons.Logo
   }
+
+  override fun getActionUpdateThread(): ActionUpdateThread =
+    ActionUpdateThread.EDT
 
   override fun update(event: AnActionEvent) {
     val isVisible = event.project != null && getCommitMessagePanel(event) != null

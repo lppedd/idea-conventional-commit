@@ -10,10 +10,7 @@ import com.github.lppedd.cc.configuration.CCConfigService.ProviderFilterType.KEE
 import com.github.lppedd.cc.updateIcons
 import com.intellij.codeInsight.lookup.impl.LookupImpl
 import com.intellij.icons.AllIcons
-import com.intellij.openapi.actionSystem.ActionGroup
-import com.intellij.openapi.actionSystem.AnAction
-import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.Separator
+import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.DumbAware
 import com.intellij.util.ui.UIUtil
@@ -47,10 +44,17 @@ internal class SettingsActions(
     Objects.hashCode(lookup)
 
   private inner class CompletionModeChangeAction : AnAction() {
+    override fun getActionUpdateThread(): ActionUpdateThread =
+      ActionUpdateThread.EDT
+
     override fun actionPerformed(e: AnActionEvent) {
       config.completionType =
-        if (config.completionType == TEMPLATE) POPUP
-        else TEMPLATE
+        if (config.completionType == TEMPLATE) {
+          POPUP
+        } else {
+          TEMPLATE
+        }
+
       enhancer.settingChanged()
     }
 
@@ -67,10 +71,17 @@ internal class SettingsActions(
   }
 
   private inner class FilterModeChangeAction : AnAction() {
+    override fun getActionUpdateThread(): ActionUpdateThread =
+      ActionUpdateThread.EDT
+
     override fun actionPerformed(e: AnActionEvent) {
       config.providerFilterType =
-        if (config.providerFilterType == HIDE_SELECTED) KEEP_SELECTED
-        else HIDE_SELECTED
+        if (config.providerFilterType == HIDE_SELECTED) {
+          KEEP_SELECTED
+        } else {
+          HIDE_SELECTED
+        }
+
       enhancer.settingChanged()
     }
 

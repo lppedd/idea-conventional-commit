@@ -8,6 +8,7 @@ import com.github.lppedd.cc.lookupElement.CommitTokenLookupElement
 import com.github.lppedd.cc.updateIcons
 import com.intellij.codeInsight.completion.PlainPrefixMatcher
 import com.intellij.codeInsight.lookup.impl.LookupImpl
+import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import java.util.*
@@ -68,6 +69,9 @@ internal class FilterAction(
 
     backupItems = emptyList()
   }
+
+  override fun getActionUpdateThread(): ActionUpdateThread =
+    ActionUpdateThread.EDT
 
   override fun actionPerformed(event: AnActionEvent) {
     if (enhancer.filterSelected(this)) {
