@@ -11,6 +11,8 @@ import java.nio.file.Path
  */
 @Suppress("UnstableApiUsage")
 internal class CCApplicationLoadListener : ApplicationLoadListener {
+  // This method is called from 223.* to < 241.8102.
+  // 241.8102.112 introduced a suspending alternative, which we have defined below
   @Compatibility(minVersion = "241.8102.112")
   override fun beforeApplicationLoaded(application: Application, configPath: Path) {
     PluginInstaller.addStateListener(CCPluginStateListener())

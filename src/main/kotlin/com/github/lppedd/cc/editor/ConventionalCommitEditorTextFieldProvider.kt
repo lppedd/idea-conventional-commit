@@ -1,6 +1,5 @@
 package com.github.lppedd.cc.editor
 
-import com.github.lppedd.cc.annotation.Compatibility
 import com.github.lppedd.cc.configuration.ConfigurationChangedListener
 import com.github.lppedd.cc.document
 import com.github.lppedd.cc.isCommitMessage
@@ -14,8 +13,6 @@ import com.intellij.openapi.editor.ex.EditorEx
 import com.intellij.openapi.editor.ex.util.LexerEditorHighlighter
 import com.intellij.openapi.fileTypes.PlainTextLanguage
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.Key
-import com.intellij.openapi.vcs.changes.Change
 import com.intellij.openapi.vcs.ui.CommitMessage
 import com.intellij.psi.PsiFileFactory
 import com.intellij.ui.EditorCustomization
@@ -26,7 +23,6 @@ import com.intellij.util.LocalTimeCounter
 import java.awt.event.HierarchyEvent
 import java.lang.reflect.Field
 import java.util.*
-import java.util.function.Supplier
 
 /**
  * @author Edoardo Luppi
@@ -35,7 +31,6 @@ internal class ConventionalCommitEditorTextFieldProvider : EditorTextFieldProvid
   private val projects = Collections.newSetFromMap<Project>(WeakHashMap(8))
   private val editorFields = Collections.newSetFromMap<LanguageTextField>(WeakHashMap(32))
   private val keysMapField by lazy(::findMyKeysMapField)
-  private val changesSupplierKeyField by lazy(::findChangesSupplierKeyField)
 
   override fun getEditorField(
       language: Language,
@@ -104,13 +99,7 @@ internal class ConventionalCommitEditorTextFieldProvider : EditorTextFieldProvid
     val document = psiFile.document ?: return
     val commitMessage = oldDocument.getUserData(CommitMessage.DATA_KEY)
     document.putUserData(CommitMessage.DATA_KEY, commitMessage)
-
-    val changesSupplierKey = getChangesSupplierKey()
-
-    if (changesSupplierKey != null) {
-      document.putUserData(changesSupplierKey, oldDocument.getUserData(changesSupplierKey))
-    }
-
+    document.putUserData(CommitMessage.CHANGES_SUPPLIER_KEY, oldDocument.getUserData(CommitMessage.CHANGES_SUPPLIER_KEY))
     document.addDocumentListener(object : DocumentListener {
       override fun documentChanged(event: DocumentEvent) {
         val editor = editorField.editor ?: return
@@ -122,14 +111,6 @@ internal class ConventionalCommitEditorTextFieldProvider : EditorTextFieldProvid
     editorField.setNewDocumentAndFileType(ConventionalCommitFileType, document)
   }
 
-  @Compatibility(
-      minVersion = "213.3714.440",
-      replaceWith = "CommitMessage.CHANGES_SUPPLIER_KEY"
-  )
-  @Suppress("unchecked_cast")
-  private fun getChangesSupplierKey(): Key<Supplier<Iterable<Change>>>? =
-    changesSupplierKeyField?.get(null) as? Key<Supplier<Iterable<Change>>>
-
   private fun LanguageTextField.setLanguage(language: Language) {
     val languageField = LanguageTextField::class.java.getDeclaredField("myLanguage")
     languageField.trySetAccessible()
@@ -139,17 +120,6 @@ internal class ConventionalCommitEditorTextFieldProvider : EditorTextFieldProvid
   private fun findMyKeysMapField(): Field? {
     for (field in LexerEditorHighlighter::class.java.declaredFields) {
       if (field.name == "myKeysMap") {
-        field.trySetAccessible()
-        return field
-      }
-    }
-
-    return null
-  }
-
-  private fun findChangesSupplierKeyField(): Field? {
-    for (field in CommitMessage::class.java.declaredFields) {
-      if (field.name == "CHANGES_SUPPLIER_KEY") {
         field.trySetAccessible()
         return field
       }
