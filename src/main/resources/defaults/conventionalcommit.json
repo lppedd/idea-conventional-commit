@@ -1,4 +1,5 @@
 {
+  "$schema": "https://github.com/lppedd/idea-conventional-commit/raw/master/src/main/resources/defaults/conventionalcommit.schema.json",
   "types": {
     "refactor": {
       "description": "Changes which neither fix a bug nor add a feature"
