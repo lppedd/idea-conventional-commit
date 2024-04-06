@@ -177,7 +177,6 @@
     <inspection_tool class="OptionalExpectation" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="OptionalOfNullableMisuseMerged" />
     <inspection_tool class="PackageDirectoryMismatch" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="PluginXmlDynamicPlugin" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="PluginXmlI18n" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="PointlessIndexOfComparison" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ProhibitJvmOverloadsOnConstructorsOfAnnotationClassesMigration" enabled="true" level="ERROR" enabled_by_default="true" />
@@ -283,6 +282,15 @@
           <option value="ConstantExpression" />
           <option value="deprecation" />
           <option value="UnstableApiUsage" />
+          <option value="VulnerableLibrariesLocal" />
+          <option value="unused" />
+          <option value="unused_parameter" />
+          <option value="RedundantSuspendModifier" />
+          <option value="ReplaceNotNullAssertionWithElvisReturn" />
+          <option value="override_deprecation" />
+          <option value="DEPRECATION" />
+          <option value="exposed_super_class" />
+          <option value="LightServiceMigrationCode" />
         </list>
       </option>
     </inspection_tool>
