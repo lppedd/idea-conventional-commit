@@ -1,5 +1,3 @@
-@file:Suppress("DEPRECATION")
-
 package com.github.lppedd.cc.vcs.commitbuilder
 
 import com.github.lppedd.cc.*
@@ -31,7 +29,7 @@ import com.intellij.openapi.editor.ex.EditorSettingsExternalizable
 import com.intellij.openapi.keymap.KeymapUtil
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.ComponentValidator
-import com.intellij.openapi.ui.DialogWrapper.DoNotAskOption
+import com.intellij.openapi.ui.DoNotAskOption
 import com.intellij.openapi.ui.ValidationInfo
 import com.intellij.openapi.util.TextRange
 import com.intellij.ui.AncestorListenerAdapter

@@ -6,7 +6,7 @@ import com.github.lppedd.cc.api.WhatsNewProvider
 import com.intellij.ide.util.PropertiesComponent
 import com.intellij.ide.util.TipUIUtil
 import com.intellij.ide.util.TipUIUtil.Browser
-import com.intellij.openapi.ui.DialogWrapper.DoNotAskOption
+import com.intellij.openapi.ui.DoNotAskOption
 import com.intellij.ui.JBColor
 import com.intellij.ui.ScrollPaneFactory
 import com.intellij.util.ResourceUtil

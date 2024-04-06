@@ -10,7 +10,7 @@ import java.awt.Color
  */
 public object CCUI {
   @JvmField
-  public val BorderColor: Color = JBColor {
+  public val BorderColor: Color = JBColor.lazy {
     if (JBColor.isBright()) {
       JBColor.border()
     } else {
@@ -25,7 +25,7 @@ public object CCUI {
   }
 
   @JvmField
-  public val ListBackgroundColor: Color = JBColor {
+  public val ListBackgroundColor: Color = JBColor.lazy {
     if (JBColor.isBright()) {
       UIUtil.getListBackground()
     } else {

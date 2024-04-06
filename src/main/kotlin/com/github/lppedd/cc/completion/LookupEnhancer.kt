@@ -16,7 +16,10 @@ import com.intellij.codeInsight.lookup.LookupListener
 import com.intellij.codeInsight.lookup.impl.LookupImpl
 import com.intellij.codeInsight.lookup.impl.PrefixChangeListener
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.actionSystem.*
+import com.intellij.openapi.actionSystem.ActionPopupMenu
+import com.intellij.openapi.actionSystem.AnAction
+import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx
 import com.intellij.openapi.actionSystem.ex.ActionPopupMenuListener
 import com.intellij.openapi.actionSystem.ex.AnActionListener
@@ -152,8 +155,7 @@ internal class LookupEnhancer(
     filterActions.forEach { it.filterItems(false) }
   }
 
-  @Suppress("override_deprecation")
-  override fun beforeActionPerformed(action: AnAction, dataContext: DataContext, event: AnActionEvent) {
+  override fun beforeActionPerformed(action: AnAction, event: AnActionEvent) {
     if (action.javaClass == menuActionClass && !Registry.`is`(SHOW_GROUP_IN_POPUP, false)) {
       var disposable = lookupPopupMenuListenerDisposable
       disposable?.dispose()
