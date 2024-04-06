@@ -4,8 +4,8 @@ import org.jetbrains.grammarkit.tasks.GenerateLexerTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
-fun properties(key: String): String =
-  property(key).toString()
+fun stringProperty(key: String, default: String? = null): String =
+  findProperty(key)?.toString() ?: default ?: error("Expected a valid property $key")
 
 plugins {
   java
@@ -17,10 +17,11 @@ plugins {
 group = "com.github.lppedd"
 
 repositories {
+  mavenCentral()
+
   // For org.everit.json.schema
   maven("https://jitpack.io")
   maven("https://packages.jetbrains.team/maven/p/ij/intellij-dependencies")
-  mavenCentral()
 }
 
 dependencies {
@@ -37,8 +38,8 @@ dependencies {
 }
 
 intellij {
-  type = properties("platformType")
-  version = properties("platformVersion")
+  type = stringProperty("platformType")
+  version = stringProperty("platformVersion")
   downloadSources = true
   pluginName = "idea-conventional-commit"
   plugins = listOf("java")
@@ -68,7 +69,6 @@ kotlin {
   compilerOptions {
     jvmTarget = JvmTarget.JVM_17
     languageVersion = KotlinVersion.KOTLIN_1_9
-    optIn.add("kotlin.contracts.ExperimentalContracts")
     freeCompilerArgs.addAll(
         "-Xno-call-assertions",
         "-Xno-receiver-assertions",
@@ -76,6 +76,8 @@ kotlin {
         "-Xjvm-default=all",
         "-Xallow-kotlin-package",
     )
+
+    optIn.add("kotlin.contracts.ExperimentalContracts")
   }
 }
 
@@ -104,8 +106,8 @@ tasks {
 
   patchPluginXml {
     version = versionStr
-    sinceBuild = properties("pluginSinceBuild")
-    untilBuild = properties("pluginUntilBuild")
+    sinceBuild = stringProperty("pluginSinceBuild")
+    untilBuild = stringProperty("pluginUntilBuild")
 
     val pluginDescriptionFile = File("$projectPath/plugin-description.html")
     pluginDescription = pluginDescriptionFile.readText()
@@ -136,13 +138,14 @@ tasks {
         "IC-2022.3",
         "IC-2023.1",
         "IC-2023.3",
+        "IC-2024.1",
     )
   }
 
   runIde {
-    val dcevm = findProperty("dcevmExecutable")
+    val dcevm = stringProperty("dcevmExecutable", default = "")
 
-    if (dcevm is String && dcevm.isNotBlank()) {
+    if (dcevm.isNotBlank()) {
       executable = dcevm
     }
   }
