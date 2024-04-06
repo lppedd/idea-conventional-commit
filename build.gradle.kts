@@ -59,14 +59,14 @@ sourceSets {
 }
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_11
-  targetCompatibility = JavaVersion.VERSION_11
+  sourceCompatibility = JavaVersion.VERSION_17
+  targetCompatibility = JavaVersion.VERSION_17
 }
 
 kotlin {
   explicitApiWarning()
   compilerOptions {
-    jvmTarget = JvmTarget.JVM_11
+    jvmTarget = JvmTarget.JVM_17
     languageVersion = KotlinVersion.KOTLIN_1_9
     optIn.add("kotlin.contracts.ExperimentalContracts")
     freeCompilerArgs.addAll(
@@ -133,8 +133,7 @@ tasks {
 
   runPluginVerifier {
     ideVersions = listOf(
-        "IC-2021.1",
-        "IC-2022.1",
+        "IC-2022.3",
         "IC-2023.1",
         "IC-2023.3",
     )
