@@ -6,8 +6,8 @@ import com.github.lppedd.cc.brighter
 import com.github.lppedd.cc.darker
 import com.github.lppedd.cc.lookupElement.CommitTokenLookupElement
 import com.github.lppedd.cc.psiElement.*
+import com.github.lppedd.cc.scaled
 import com.intellij.lang.documentation.AbstractDocumentationProvider
-import com.intellij.lang.documentation.DocumentationMarkup
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
 import com.intellij.psi.impl.FakePsiElement
@@ -21,7 +21,7 @@ import javax.swing.Icon
  * @author Edoardo Luppi
  */
 internal class CommitTokenDocumentationProvider : AbstractDocumentationProvider() {
-  private val lineSeparatorRegex = Regex("\r\n|\n\r|\n|\r")
+  private val lineSeparatorRegex = Regex("\r\n|\n|\r")
 
   override fun generateDoc(element: PsiElement?, originalElement: PsiElement?): String? =
     when (element) {
@@ -59,47 +59,56 @@ internal class CommitTokenDocumentationProvider : AbstractDocumentationProvider(
     val value = token.getValue().trim()
     val hasCustomDocumentation = description.isNotEmpty() && token.getPresentation().hasCustomDocumentation()
     val totalLength = value.length + description.length
-    val sb = StringBuilder(if (totalLength == 0) return "" else totalLength + 140)
-    val grayedColorHex = ColorUtil.toHex(UIUtil.getContextHelpForeground())
-    sb.append("<div style='border-bottom: none; padding: 4px 7px 2px'>")
-      .append("<span style='color: #$grayedColorHex'>$title</span>")
-      .append("</div>")
 
-    // See DocumentationMarkup.CONTENT_START
+    if (totalLength == 0) {
+      return ""
+    }
+
+    val grayedColorHex = ColorUtil.toHex(UIUtil.getContextHelpForeground())
+    val sb = StringBuilder(totalLength + 200)
+
+    val px2 = "${2.scaled}px"
+    val px4 = "${4.scaled}px"
+
+    // See DocumentationMarkup for the actual HTML elements used by default
     sb.append("<div class='content'")
 
     if (hasCustomDocumentation) {
-      sb.append(" style='padding: 0'>")
+      sb.append(" style='padding: 0;'>")
     } else {
       sb.append('>')
+      sb.append("<div style='color: #$grayedColorHex; margin-bottom: $px4;'>$title</div>")
     }
 
     if (description.isNotEmpty()) {
       sb.append(description)
     } else {
-      sb.append("<span style='color: #$grayedColorHex'>")
+      sb.append("<span style='color: #$grayedColorHex;'>")
         .append(CCBundle["cc.completion.documentation.noDescription"])
         .append("</span>")
     }
 
-    sb.append(DocumentationMarkup.CONTENT_END)
+    sb.append("</div>")
 
     if (value.isNotEmpty()) {
       if (hasCustomDocumentation) {
         // Emulate a styled <hr>, which is still unsupported in JEditorPane
         val colorHex = ColorUtil.toHex(getSeparatorColor())
-        sb.append("<div style='margin: 4px 0 2px; font-size: 0; border-top: thin solid #$colorHex'></div>")
+        sb.append("<div style='margin: $px4 0 $px2; font-size: 0; border-top: thin solid #$colorHex;'></div>")
       }
 
-      sb.append(DocumentationMarkup.SECTIONS_START)
-        .append(DocumentationMarkup.SECTION_HEADER_START)
-        .append("<span style='color: #$grayedColorHex'>")
+      sb.append("<table class='sections' style='margin-top: $px4;'>")
+        .append("<tr>")
+        .append("<td class='section'>")
+        .append("<span style='color: #$grayedColorHex;'>")
         .append(CCBundle["cc.completion.documentation.section.value"])
         .append("</span>")
-        .append(DocumentationMarkup.SECTION_SEPARATOR)
+        .append("</td>")
+        .append("<td>")
         .append(value.replace(lineSeparatorRegex, "<br/>"))
-        .append(DocumentationMarkup.SECTION_END)
-        .append(DocumentationMarkup.SECTIONS_END)
+        .append("</td>")
+        .append("</tr>")
+        .append("</table>")
     }
 
     return "$sb"
