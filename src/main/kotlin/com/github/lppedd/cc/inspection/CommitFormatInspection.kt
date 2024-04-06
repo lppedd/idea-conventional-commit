@@ -9,6 +9,7 @@ import com.github.lppedd.cc.language.psi.ConventionalCommitPsiElementVisitor
 import com.github.lppedd.cc.language.psi.ConventionalCommitScopePsiElement
 import com.github.lppedd.cc.language.psi.ConventionalCommitSubjectPsiElement
 import com.github.lppedd.cc.language.psi.ConventionalCommitTypePsiElement
+import com.intellij.codeInspection.InspectionManager
 import com.intellij.codeInspection.ProblemDescriptor
 import com.intellij.codeInspection.ProblemHighlightType.GENERIC_ERROR_OR_WARNING
 import com.intellij.codeInspection.ProblemHighlightType.WARNING
@@ -52,25 +53,29 @@ internal class CommitFormatInspection : CommitBaseInspection() {
     collectProblems(project, document).isNotEmpty()
 
   override fun reformat(project: Project, document: Document) {
+    val documentManager = project.service<PsiDocumentManager>()
+
     for (problem in collectProblems(project, document)) {
       val quickFixes = problem.fixes ?: return
 
       for (fix in quickFixes) {
         if (fix is CommitBaseQuickFix) {
           fix.applyFix(project, document, problem)
+          documentManager.commitDocument(document)
         }
       }
     }
   }
 
-  private fun collectProblems(project: Project, document: Document): Collection<ProblemDescriptor> {
+  private fun collectProblems(project: Project, document: Document): List<ProblemDescriptor> {
     if (isInspectionEnabled(document)) {
-      val psiDocumentManager = project.service<PsiDocumentManager>()
-      val psiFile = psiDocumentManager.getPsiFile(document) ?: return emptyList()
-      val holder = ProblemsHolder(project.service(), psiFile, true)
-      val visitor = MyRecursiveVisitor(holder)
+      val documentManager = project.service<PsiDocumentManager>()
+      val inspectionManager = project.service<InspectionManager>()
+      val psiFile = documentManager.getPsiFile(document) ?: return emptyList()
+      val problemsHolder = ProblemsHolder(inspectionManager, psiFile, true)
+      val visitor = MyRecursiveVisitor(problemsHolder)
       visitor.visitFile(psiFile)
-      return holder.results
+      return problemsHolder.results
     }
 
     return emptyList()
