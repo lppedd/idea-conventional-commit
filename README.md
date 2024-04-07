@@ -5,6 +5,7 @@
 ### Available @ [JetBrains Plugins Repository][1]
 
 Looking for the latest **plugin binaries**? Get them [here][2] as `.zip`  
+<small>Supported IDE versions **from 0.23.0**: `223.4884` to `243.*` (both inclusive)</small>  
 <small>Supported IDE versions **from 0.19.0**: `202.6397` to `233.*` (both inclusive)</small>  
 <small>Supported IDE versions **upto 0.18.0**: `193.****` to `212.*` (both inclusive)</small> 
 
@@ -155,6 +156,7 @@ are going to be automatically filtered by the core engine.
  - Edoardo Luppi (<lp.edoardo@gmail.com>)
  - [ymind][4]
  - [bric3][11]
+ - [LinWanCen][12]
 
 [1]: https://plugins.jetbrains.com/plugin/13389-conventional-commit
 [2]: https://github.com/lppedd/idea-conventional-commit/releases
@@ -167,3 +169,4 @@ are going to be automatically filtered by the core engine.
 [9]: https://plugins.jetbrains.com/plugin/14046-commitlint-conventional-commit
 [10]: https://join.slack.com/t/ideaconventio-1ts8697/shared_invite/zt-iuztsuth-pr_5wjvZGqITHCz3OOUxgQ
 [11]: https://github.com/bric3
+[12]: https://github.com/LinWanCen
