@@ -8,7 +8,6 @@ import com.intellij.openapi.vcs.ProjectLevelVcsManager
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.util.EmptyConsumer
 import com.intellij.vcs.log.*
-import com.intellij.vcs.log.data.VcsLogMultiRepoJoiner
 import com.intellij.vcs.log.impl.VcsLogManager
 import com.intellij.vcs.log.impl.VcsProjectLog
 import com.intellij.vcs.log.visible.filters.VcsLogFilterObject
