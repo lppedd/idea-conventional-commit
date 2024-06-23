@@ -7,6 +7,8 @@ import com.github.lppedd.cc.api.*
 import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.configuration.CCDefaultTokensService
 import com.intellij.openapi.components.service
+import com.intellij.openapi.diagnostic.logger
+import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.openapi.project.Project
 import org.everit.json.schema.ValidationException
 import javax.swing.Icon
@@ -21,6 +23,7 @@ internal class InternalCommitTokenProvider(private val project: Project) :
     CommitFooterValueProvider {
   companion object {
     const val ID: String = "e9d4e8de-79a0-48b8-b1ba-b4161e2572c0"
+    private val logger = logger<InternalCommitTokenProvider>()
   }
 
   private val configService = project.service<CCConfigService>()
@@ -28,7 +31,10 @@ internal class InternalCommitTokenProvider(private val project: Project) :
   private val defaults
     get() = try {
       defaultsService.getDefaultsFromCustomFile(configService.customFilePath)
+    } catch (e: ProcessCanceledException) {
+      throw e
     } catch (e: Exception) {
+      logger.error("Error while reading custom tokens file", e)
       notifyErrorToUser(e)
       defaultsService.getBuiltInDefaults()
     }
