@@ -14,19 +14,23 @@ import com.intellij.vcs.commit.message.CommitMessageInspectionProfile
  * @author Edoardo Luppi
  */
 internal class CommitInspectionsRegistrarStartupActivity : StartupActivity, DumbAware {
+  private companion object {
+    // Used to synchronize the inspections registration process
+    private val lock = Any()
+  }
+
   override fun runActivity(project: Project) {
     val inspectionProviderService = application.service<CommitInspectionProviderService>()
-    val inspections = inspectionProviderService.getInspectionProviders()
-      .asSequence()
-      .flatMap(CommitInspectionProvider::getInspections)
-      .map(::LocalInspectionToolWrapper)
-      .toList()
+    val inspectionProviders = inspectionProviderService.getInspectionProviders()
+    val inspections = inspectionProviders.flatMap(CommitInspectionProvider::getInspections)
 
     if (inspections.isNotEmpty()) {
-      val inspectionProfile = CommitMessageInspectionProfile.getInstance(project)
+      synchronized(lock) {
+        val inspectionProfile = CommitMessageInspectionProfile.getInstance(project)
 
-      for (inspection in inspections) {
-        inspectionProfile.addTool(project, inspection, emptyMap())
+        for (inspection in inspections) {
+          inspectionProfile.addTool(project, LocalInspectionToolWrapper(inspection), emptyMap())
+        }
       }
     }
   }
