@@ -1,6 +1,6 @@
 [versions]
 kotlin = "1.9.25"
-intellij = "2.2.1"
+intellij-platform = "2.2.1"
 grammarkit = "2022.3.2.2"
 json = "20240303"
 json-schema = "1.14.4"
@@ -13,5 +13,5 @@ commons-validator = { group = "commons-validator", name = "commons-validator", v
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-jetbrains-intellij-platform = { id = "org.jetbrains.intellij.platform", version.ref = "intellij" }
+jetbrains-intellij-platform = { id = "org.jetbrains.intellij.platform", version.ref = "intellij-platform" }
 jetbrains-grammarkit = { id = "org.jetbrains.grammarkit", version.ref = "grammarkit" }

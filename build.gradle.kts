@@ -1,4 +1,4 @@
-@file:Suppress("VulnerableLibrariesLocal")
+@file:Suppress("VulnerableLibrariesLocal", "ConvertLambdaToReference")
 
 import org.jetbrains.grammarkit.tasks.GenerateLexerTask
 import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
@@ -27,7 +27,6 @@ repositories {
 
   intellijPlatform {
     defaultRepositories()
-    jetbrainsRuntime()
   }
 }
 
@@ -55,10 +54,10 @@ intellijPlatform {
     val versionStr = stringProperty("version")
     version = versionStr
 
-    val descriptionFile = projectDir.resolve("plugin-description.html")
+    val descriptionFile = file("plugin-description.html")
     description = descriptionFile.readText()
 
-    val changeNotesFile = projectDir.resolve("change-notes/${versionStr.replace('.', '_')}.html")
+    val changeNotesFile = file("change-notes/${versionStr.replace('.', '_')}.html")
     changeNotes = changeNotesFile.readText()
 
     ideaVersion {
