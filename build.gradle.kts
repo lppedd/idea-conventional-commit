@@ -1,6 +1,9 @@
 @file:Suppress("VulnerableLibrariesLocal")
 
 import org.jetbrains.grammarkit.tasks.GenerateLexerTask
+import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
+import org.jetbrains.intellij.platform.gradle.TestFrameworkType
+import org.jetbrains.intellij.platform.gradle.extensions.intellijPlatform
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
@@ -9,9 +12,9 @@ fun stringProperty(key: String, default: String? = null): String =
 
 plugins {
   java
-  alias(libs.plugins.jetbrains.intellij)
-  alias(libs.plugins.jetbrains.grammarkit)
   alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.jetbrains.intellij.platform)
+  alias(libs.plugins.jetbrains.grammarkit)
 }
 
 group = "com.github.lppedd"
@@ -21,11 +24,21 @@ repositories {
 
   // For org.everit.json.schema
   maven("https://jitpack.io")
-  maven("https://packages.jetbrains.team/maven/p/ij/intellij-dependencies")
+
+  intellijPlatform {
+    defaultRepositories()
+    jetbrainsRuntime()
+  }
 }
 
 dependencies {
-  implementation(kotlin("stdlib"))
+  intellijPlatform {
+    create(type = stringProperty("platformType"), version = stringProperty("platformVersion"))
+    bundledPlugin("com.intellij.java")
+    testFramework(TestFrameworkType.Plugin.Java)
+    pluginVerifier()
+  }
+
   implementation(libs.commons.validator) {
     exclude("commons-beanutils", "commons-beanutils")
   }
@@ -37,12 +50,31 @@ dependencies {
   testImplementation("junit:junit:4.13.2")
 }
 
-intellij {
-  type = stringProperty("platformType")
-  version = stringProperty("platformVersion")
-  downloadSources = true
-  pluginName = "idea-conventional-commit"
-  plugins = listOf("java")
+intellijPlatform {
+  pluginConfiguration {
+    val versionStr = stringProperty("version")
+    version = versionStr
+
+    val descriptionFile = projectDir.resolve("plugin-description.html")
+    description = descriptionFile.readText()
+
+    val changeNotesFile = projectDir.resolve("change-notes/${versionStr.replace('.', '_')}.html")
+    changeNotes = changeNotesFile.readText()
+
+    ideaVersion {
+      sinceBuild = stringProperty("pluginSinceBuild")
+      untilBuild = stringProperty("pluginUntilBuild")
+    }
+  }
+
+  pluginVerification {
+    ides {
+      ide(IntelliJPlatformType.IntellijIdeaCommunity, "2024.1")
+      // 2024.2 fails on usages of com.intellij.dvcs, but it is not an issue
+      // ide(IntelliJPlatformType.IntellijIdeaCommunity, "2024.2")
+      ide(IntelliJPlatformType.IntellijIdeaCommunity, "2024.3")
+    }
+  }
 }
 
 grammarKit {
@@ -82,10 +114,6 @@ kotlin {
 }
 
 tasks {
-  wrapper {
-    distributionType = Wrapper.DistributionType.ALL
-  }
-
   val generateLexer = task<GenerateLexerTask>("generateConventionalCommitLexer") {
     source = "src/main/kotlin/com/github/lppedd/cc/language/lexer/conventionalCommit.flex"
     targetDir = "src/main/gen/com/github/lppedd/cc/language/lexer"
@@ -99,21 +127,6 @@ tasks {
 
   compileTestKotlin {
     dependsOn(generateLexer)
-  }
-
-  val versionStr = "$version"
-  val projectPath = layout.projectDirectory
-
-  patchPluginXml {
-    version = versionStr
-    sinceBuild = stringProperty("pluginSinceBuild")
-    untilBuild = stringProperty("pluginUntilBuild")
-
-    val pluginDescriptionFile = File("$projectPath/plugin-description.html")
-    pluginDescription = pluginDescriptionFile.readText()
-
-    val changeNotesFile = File("$projectPath/change-notes/${versionStr.replace('.', '_')}.html")
-    changeNotes = changeNotesFile.readText()
   }
 
   val buildApiSourceJar = task<Jar>("buildConventionalCommitApiSourceJar") {
@@ -133,20 +146,11 @@ tasks {
     }
   }
 
-  runPluginVerifier {
-    ideVersions = listOf(
-        "IC-2022.3",
-        "IC-2023.1",
-        "IC-2023.3",
-        "IC-2024.1",
-    )
-  }
-
   runIde {
     val dcevm = stringProperty("dcevmExecutable", default = "")
 
     if (dcevm.isNotBlank()) {
-      executable = dcevm
+      setExecutable(dcevm)
     }
   }
 }

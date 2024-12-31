@@ -46,6 +46,7 @@ local.properties
 ######################
 # Intellij
 ######################
+.intellijPlatform/
 .idea/*
 !.idea/codeStyles
 !.idea/dictionaries
