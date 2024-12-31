@@ -20,7 +20,7 @@ internal class CoAuthorsTableHolder(service: CCDefaultTokensService) {
   val table = CoAuthorsTable(tableModel)
 
   private val panel = table.run {
-    TableSpeedSearch(this) { value, cell -> if (cell.column == 1) value as String else null }
+    TableSpeedSearch.installOn(this) { value, cell -> if (cell.column == 1) value as String else null }
 
     val toolbarBorder = JBUI.Borders.customLine(CCUI.BorderColor, 0, 1, 0, 0)
     val panelBorder = JBUI.Borders.customLine(CCUI.BorderColor)

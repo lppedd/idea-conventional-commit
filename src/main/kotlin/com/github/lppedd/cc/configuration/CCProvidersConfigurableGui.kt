@@ -12,7 +12,6 @@ import com.intellij.ui.TableSpeedSearch
 import com.intellij.ui.ToolbarDecorator
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.table.JBTable
-import com.intellij.util.containers.Convertor
 import com.intellij.util.ui.JBDimension
 import com.intellij.util.ui.JBUI
 import java.awt.BorderLayout
@@ -103,7 +102,7 @@ internal class CCProvidersConfigurableGui {
   }
 
   private fun buildTablePanel(table: JBTable, title: String): JPanel {
-    TableSpeedSearch(table, Convertor { (it as CommitTokenProvider).getPresentation().getName() })
+    TableSpeedSearch.installOn(table) { value -> (value as CommitTokenProvider).getPresentation().getName() }
 
     val toolbarBorder = JBUI.Borders.customLine(CCUI.BorderColor, 0, 1, 0, 0)
     val panelBorder = JBUI.Borders.customLine(CCUI.BorderColor)

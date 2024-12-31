@@ -6,7 +6,6 @@ import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vcs.ProjectLevelVcsManager
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.util.EmptyConsumer
 import com.intellij.vcs.log.*
 import com.intellij.vcs.log.impl.VcsLogManager
 import com.intellij.vcs.log.impl.VcsProjectLog
@@ -143,7 +142,7 @@ internal class InternalVcsService(private val project: Project) : VcsService {
       vcsLogData.miniDetailsGetter.loadCommitsData(
           matchingCommitsIndexes,
           { commitsMetadata = it },
-          EmptyConsumer.getInstance(),
+          {},
           progressIndicator,
       )
     }

@@ -7,6 +7,7 @@ import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.DialogWrapper.IdeModalityType
 import com.intellij.openapi.ui.impl.DialogWrapperPeerImpl
 import com.intellij.ui.scale.ScaleContext
+import com.intellij.ui.scale.ScaleContextCache
 import com.intellij.util.IconUtil
 import com.intellij.util.ui.JBImageIcon
 import java.awt.Component
@@ -69,13 +70,12 @@ internal class CCDialogWrapperPeer(
   }
 
   private fun setIcon(customHeader: Any) {
-    val field = customHeaderClass.declaredFields.find { field ->
-      field.name == "myIconProvider" || // IDEA 192.4205.41+
-      field.name == "iconProvider"      // IDEA 231.4840.387+
-    } ?: throw NoSuchFieldException("${customHeaderClass.name} does not have an icon provider field")
-
-    field.isAccessible = true
-    field.set(customHeader, ScaleContext.Cache(::scaleAndGetIcon))
+    // iconProvider is used since IDEA 231.4840.387
+    // ScaleContextCache is used since IDEA 232.6095.10
+    customHeaderClass.getDeclaredField("iconProvider").let {
+      it.isAccessible = true
+      it.set(customHeader, ScaleContextCache(::scaleAndGetIcon))
+    }
   }
 
   private fun scaleAndGetIcon(ctx: ScaleContext): Icon {

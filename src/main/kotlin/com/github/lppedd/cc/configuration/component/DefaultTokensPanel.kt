@@ -48,7 +48,7 @@ internal class DefaultTokensPanel : JPanel(ScaledGridLayout(1, 1, 24, 1)) {
   }
 
   private fun createTokenListPanel(list: JList<String>, title: String): JPanel {
-    ListSpeedSearch(list)
+    ListSpeedSearch.installOn(list)
 
     val scrollPane = JBScrollPane(list).also {
       it.preferredSize = list.minimumSize
