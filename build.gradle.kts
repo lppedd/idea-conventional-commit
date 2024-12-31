@@ -80,7 +80,7 @@ intellijPlatform {
 grammarKit {
   // See https://github.com/JetBrains/intellij-deps-jflex/
   jflexRelease = "1.9.2"
-  grammarKitRelease = "2021.1.2"
+  grammarKitRelease = "2022.3.2"
 }
 
 sourceSets {
@@ -115,9 +115,8 @@ kotlin {
 
 tasks {
   val generateLexer = task<GenerateLexerTask>("generateConventionalCommitLexer") {
-    source = "src/main/kotlin/com/github/lppedd/cc/language/lexer/conventionalCommit.flex"
-    targetDir = "src/main/gen/com/github/lppedd/cc/language/lexer"
-    targetClass = "ConventionalCommitFlexLexer"
+    sourceFile = file("src/main/kotlin/com/github/lppedd/cc/language/lexer/conventionalCommit.flex")
+    targetOutputDir = file("src/main/gen/com/github/lppedd/cc/language/lexer")
     purgeOldFiles = true
   }
 

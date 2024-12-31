@@ -1,7 +1,7 @@
 [versions]
 kotlin = "1.9.25"
 intellij = "2.2.1"
-grammarkit = "2021.2.2"
+grammarkit = "2022.3.2.2"
 json = "20240303"
 json-schema = "1.14.4"
 commons-validator = "1.8.0"
