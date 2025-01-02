@@ -9,7 +9,6 @@ import java.util.*
 /**
  * @author Edoardo Luppi
  */
-@Suppress("UnstableApiUsage")
 public object CCBundle {
   private const val BUNDLE = "messages.ConventionalCommitBundle"
 
