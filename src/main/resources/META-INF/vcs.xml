@@ -50,6 +50,11 @@
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
+    <applicationService
+        serviceInterface="com.intellij.ui.EditorTextFieldProvider"
+        serviceImplementation="com.github.lppedd.cc.editor.ConventionalCommitEditorTextFieldProvider"
+        overrides="true"
+    />
     <projectService
         serviceInterface="com.github.lppedd.cc.vcs.VcsService"
         serviceImplementation="com.github.lppedd.cc.vcs.InternalVcsService"
