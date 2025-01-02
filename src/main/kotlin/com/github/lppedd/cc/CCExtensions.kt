@@ -17,8 +17,8 @@ import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.util.IconLoader
+import com.intellij.openapi.util.Key
 import com.intellij.openapi.util.TextRange
-import com.intellij.openapi.vcs.ui.CommitMessage
 import com.intellij.openapi.vfs.VFileProperty
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDocumentManager
@@ -162,8 +162,20 @@ internal fun Document.getLine(line: Int): CharSequence {
   return immutableCharSequence.subSequence(start, end)
 }
 
-internal fun Document.isCommitMessage(): Boolean =
-  getUserData(CommitMessage.DATA_KEY) != null
+private val commitMessageDataKey: Key<*>? by lazy {
+  try {
+    val commitMessageClass = Class.forName("com.intellij.openapi.vcs.ui.CommitMessage")
+    val dataKeyField = commitMessageClass.getField("DATA_KEY")
+    dataKeyField.get(null) as Key<*>?
+  } catch (ignored: ClassNotFoundException) {
+    null
+  }
+}
+
+internal fun Document.isCommitMessage(): Boolean {
+  val dataKey = commitMessageDataKey
+  return dataKey != null && getUserData(dataKey) != null
+}
 
 // endregion
 // region Editor
