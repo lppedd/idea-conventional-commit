@@ -292,6 +292,16 @@
           <option value="LightServiceMigrationCode" />
           <option value="ConvertLambdaToReference" />
           <option value="ConvertArgumentToSet" />
+          <option value="CompanionObjectInExtension" />
+          <option value="UseJBColor" />
+          <option value="ConvertTwoComparisonsToRangeCheck" />
+          <option value="ConstPropertyName" />
+          <option value="SameParameterValue" />
+          <option value="LoopToCallChain" />
+          <option value="IncorrectParentDisposable" />
+          <option value="unchecked_cast" />
+          <option value="DuplicatedCode" />
+          <option value="inapplicable_jvm_name" />
         </list>
       </option>
     </inspection_tool>
