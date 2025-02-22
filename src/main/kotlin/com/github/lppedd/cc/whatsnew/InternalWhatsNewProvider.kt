@@ -22,6 +22,7 @@ internal class InternalWhatsNewProvider : WhatsNewProvider {
   }
 
   private val whatsNewPages = listOf(
+      DefaultWhatsNewPage("0.24.1", "0_24_1.html"),
       DefaultWhatsNewPage("0.21.0", "0_21_0.html"),
       DefaultWhatsNewPage("0.20.1", "0_20_1.html"),
       DefaultWhatsNewPage("0.20.0", "0_20_0.html"),
