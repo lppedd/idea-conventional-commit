@@ -2,9 +2,11 @@ package com.github.lppedd.cc.vcs
 
 import com.github.lppedd.cc.invokeLaterOnEdtAndWait
 import com.intellij.dvcs.repo.VcsRepositoryManager
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vcs.ProjectLevelVcsManager
+import com.intellij.openapi.vcs.VcsException
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.vcs.log.*
 import com.intellij.vcs.log.impl.VcsLogManager
@@ -18,6 +20,10 @@ import kotlin.io.path.notExists
  * @author Edoardo Luppi
  */
 internal class InternalVcsService(private val project: Project) : VcsService {
+  private companion object {
+    private val logger = logger<InternalVcsService>()
+  }
+
   private val refreshListeners = mutableSetOf<VcsListener>()
   private val vcsLogRefresher = MyVcsLogRefresher()
   private val projectVcsManager = ProjectLevelVcsManager.getInstance(project)
@@ -105,7 +111,17 @@ internal class InternalVcsService(private val project: Project) : VcsService {
     val currentBranch = logProvider.getCurrentBranch(root) ?: return emptyList()
     val branchFilter = VcsLogFilterObject.fromBranch(currentBranch)
     val filterCollection = VcsLogFilterObject.collection(branchFilter)
-    val matchingCommits = logProvider.getCommitsMatchingFilter(root, filterCollection, 100)
+
+    // Apparently IDEA's VCS log might contain refs to commits that don't exist anymore.
+    // It might be simply a matter of refreshing the log for the user, but here it's
+    // slightly more complex - to the point the most reasonable choice is to catch
+    // the exception and return an empty result.
+    val matchingCommits = try {
+      logProvider.getCommitsMatchingFilter(root, filterCollection, 100)
+    } catch (e: VcsException) {
+      logger.debug("Error retrieving commits via VcsLogProvider", e)
+      return emptyList()
+    }
 
     if (matchingCommits.isEmpty()) {
       return emptyList()
