@@ -16,9 +16,7 @@
   <h1>The future of committing in IntelliJ IDEA</h1>
   <p>
     I've avoided What's New content for a long time, both because I didn't have the time to write
-    and because there was nothing really worthy of announcing.
-    <br>
-    However, today is a special occasion.
+    and because there was nothing really worthy of announcing. However, today is a special occasion.
   </p>
   <p>
     Some of you might have already noticed it, most not yet probably, but the <strong>modal commit workflow</strong>
@@ -28,31 +26,33 @@
   <p>
     I've invested quite some time on improving my commit experience, and I've always loved the focused approach
     of IDEA's commit dialog. Its UI widgets are positioned in the perfect way to carefully examine the commit's changeset,
-    while also visualizing the commit's message.
+    while also visualizing the commit's message and options.
     <br>
     That doesn't apply to the non-modal alternative: by default a small portion of a toolwindow is dedicated to the
-    commit message, totally separated from the rest of the context. Is committing a secondary activity now, and not
-    what we most frequently do during the day? Don't we deserve a tailored experience based on preference?
+    commit message, totally separated from the rest of the context. You can also read more about non-modal pitfalls
+    in the linked issue.
+    <br>
+    Is committing a secondary activity now, and not what we most frequently do during the day?
   </p>
   <p>
     To be clear, I've investigated every possible option that is available for the non-modal workflow,
-    and the result has always been subpar compared to the modal dialog. It's just not the proper way in my opinion.
+    and the result has always been subpar compared to the modal dialog. It's just not the proper way to commit in my opinion.
   </p>
   <h1>Why non-modal?</h1>
   <p>
     Good question.
     <br>
-    The reality is IDEA as a platform has always <a href="https://youtrack.jetbrains.com/issue/IJPL-43713">suffered</a>
-    from modality issues. Plus we now have remote development, which apparently doesn't work well with modal dialogs.
+    The reality is IDEA as a platform has always suffered from modality <a href="https://youtrack.jetbrains.com/issue/IJPL-43713">issues</a>.
+    Plus we now have remote development, which apparently doesn't work well with modal dialogs.
   </p>
   <p>
-    The stated reasons are:
+    The stated reasons for the removal are:
   </p>
   <ul>
     <li>
       <strong>Performance & overall experience</strong>
       <br>
-      Honestly no idea what that means. The dialog doesn't have any sort of performance impact.
+      Honestly no idea what that means, the dialog doesn't have any sort of performance impact.
       I've played around with every class related to that dialog so it's not that I'm writing random words.
     </li>
     <li>
@@ -66,10 +66,10 @@
   <h1>The cherry on top</h1>
   <p>
     I'm not done yet, because they've actually <a href="https://youtrack.jetbrains.com/issue/IJPL-177749">removed</a>
-    a second feature!
+    a second feature.
     <br>
     The <a href="https://github.com/lppedd/idea-conventional-commit/blob/master/images/cc_filters.png">dropdown menu</a>
-    that you could open from the completion popup to adjust how completion works has now been removed.
+    that you could open from the completion popup to adjust how completion works is more there.
     No idea why, was it yet another maintenance effort that isn't affordable anymore?
   </p>
   <h1>Closing remarks</h1>
@@ -83,7 +83,7 @@
     But we know very well what that means.
   </p>
   <p>
-    So, now that you're aware of what's happening feel free to leave a comment on the referenced issues,
+    Now that you're aware of what's happening feel free to leave a comment on the referenced issues,
     or to simply ignore this message if you don't see any problem with those changes.
   </p>
   <h2>YouTrack links</h2>
