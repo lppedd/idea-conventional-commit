@@ -102,34 +102,33 @@ An example is shown below:
 ```json
 {
   "types": {
-    "customType": {
-      "description": "My custom type description"
-    },
-    "anotherCustomType": {},
-    "yetAnotherCustomType": {
-      "description": "This is my description",
+    "custom-type": {
+      "description": "The custom type's description",
       "scopes": {
         "first": {
-          "description": "My first description"
+          "description": "The first scope's description"
         },
-        "second": {
-          "description": "My second description"
-        }
+        "second": {}
       }
     }
   },
   "commonScopes": {
     "one": {
-      "description": "My first common scope"
+      "description": "The common scope's description"
     },
     "two": {}
   },
-  "footerTypes": [
-    {
-      "name": "My-custom-footer",
-      "description": "My footer description"
+  "footerTypes": {
+    "custom-footer": {
+      "description": "The custom footer's description",
+      "values": {
+        "value-one": {
+          "description": "The footer value's description"
+        },
+        "value-two": {}
+      }
     }
-  ]
+  }
 }
 ```
 

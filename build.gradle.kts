@@ -42,8 +42,8 @@ dependencies {
     exclude("commons-beanutils", "commons-beanutils")
   }
 
-  implementation(libs.org.json)
-  implementation(libs.org.json.schema)
+  implementation(libs.json.jettison)
+  implementation(libs.json.skema)
 
   // TODO: move to catalog if it is really needed
   testImplementation("junit:junit:4.13.2")

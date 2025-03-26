@@ -2,13 +2,13 @@
 kotlin = "2.1.10"
 intellij-platform = "2.2.1"
 grammarkit = "2022.3.2.2"
-json = "20240303"
-json-schema = "1.14.4"
+json-jettison = "1.5.4"
+json-skema = "0.21.0"
 commons-validator = "1.8.0"
 
 [libraries]
-org-json = { group = "org.json", name = "json", version.ref = "json" }
-org-json-schema = { group = "com.github.everit-org.json-schema", name = "org.everit.json.schema", version.ref = "json-schema" }
+json-jettison = { group = "org.codehaus.jettison", name = "jettison", version.ref = "json-jettison" }
+json-skema = { group = "com.github.erosb", name = "json-sKema", version.ref = "json-skema" }
 commons-validator = { group = "commons-validator", name = "commons-validator", version.ref = "commons-validator" }
 
 [plugins]

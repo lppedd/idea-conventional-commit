@@ -6,11 +6,11 @@ import com.github.lppedd.cc.CCNotificationService
 import com.github.lppedd.cc.api.*
 import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.configuration.CCDefaultTokensService
+import com.github.lppedd.cc.configuration.SchemaValidationException
 import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.openapi.project.Project
-import org.everit.json.schema.ValidationException
 import javax.swing.Icon
 
 /**
@@ -34,7 +34,7 @@ internal class InternalCommitTokenProvider(private val project: Project) :
     } catch (e: ProcessCanceledException) {
       throw e
     } catch (e: Exception) {
-      logger.error("Error while reading custom tokens file", e)
+      logger.debug("Error while reading custom tokens file", e)
       notifyErrorToUser(e)
       defaultsService.getBuiltInDefaults()
     }
@@ -48,38 +48,40 @@ internal class InternalCommitTokenProvider(private val project: Project) :
   override fun getCommitTypes(prefix: String): Collection<CommitType> =
     defaults.types.map { DefaultCommitToken(it.key, it.value.description) }
 
-  override fun getCommitScopes(type: String): Collection<CommitScope> =
-    defaults.types[type]
-      ?.scopes
-      ?.map { DefaultCommitToken(it.name, it.description) }
-    ?: emptyList()
+  override fun getCommitScopes(type: String): Collection<CommitScope> {
+    val defaultType = defaults.types[type] ?: return emptyList()
+    return defaultType.scopes.map { DefaultCommitToken(it.name, it.description) }
+  }
 
   override fun getCommitFooterTypes(): Collection<CommitFooterType> =
-    defaults.footerTypes.map { DefaultCommitToken(it.name, it.description) }
+    defaults.footerTypes.map { DefaultCommitToken(it.key, it.value.description) }
 
   override fun getCommitFooterValues(
       footerType: String,
       type: String?,
       scope: String?,
       subject: String?,
-  ): Collection<CommitFooterValue> =
+  ): Collection<CommitFooterValue> {
     if ("co-authored-by".equals(footerType, true)) {
-      defaultsService.getCoAuthors()
+      return defaultsService.getCoAuthors()
         .asSequence()
         .take(3)
         .map { DefaultCommitToken(it, "", true) }
         .toList()
-    } else {
-      emptyList()
     }
 
-  private fun notifyErrorToUser(e: Exception) {
-    val message =
-      CCBundle["cc.notifications.schema"] +
-      ((e as? ValidationException)
-         ?.allMessages
-         ?.joinToString("<br/>", "<br/>") ?: "")
+    val defaultFooterType = defaults.footerTypes[footerType] ?: return emptyList()
+    return defaultFooterType.values.map { DefaultCommitToken(it.name, it.description) }
+  }
 
+  private fun notifyErrorToUser(e: Exception) {
+    val details = if (e is SchemaValidationException) {
+      CCBundle["cc.notifications.schema.validation"]
+    } else {
+      CCBundle["cc.notifications.schema.seeLogs"]
+    }
+
+    val message = CCBundle["cc.notifications.schema", details]
     CCNotificationService.createErrorNotification(message).notify(project)
   }
 
