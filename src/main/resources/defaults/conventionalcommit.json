@@ -40,46 +40,36 @@
       "description": "Changes which revert a previous commit"
     }
   },
-  "footerTypes": [
-    {
-      "name": "BREAKING-CHANGE",
-      "description": "The commit introduces breaking API changes"
+  "footerTypes": {
+    "BREAKING-CHANGE": {
+      "description": "The commit introduces breaking changes"
     },
-    {
-      "name": "Closes",
+    "Closes": {
       "description": "The commit closes issues or pull requests"
     },
-    {
-      "name": "Implements",
-      "description": "The commit implements features"
+    "Implements": {
+      "description": "The commit implements new features"
     },
-    {
-      "name": "Author",
+    "Author": {
       "description": "The commit's author"
     },
-    {
-      "name": "Co-authored-by",
+    "Co-authored-by": {
       "description": "The specified person co-authored the commit's changes"
     },
-    {
-      "name": "Signed-off-by",
-      "description": "A signoff may certify that the committer has the rights to submit the work under the project's license or agrees to some contributor representation, such as a Developer Certificate of Origin"
+    "Signed-off-by": {
+      "description": "Certifies the committer has the rights to submit the work under the project's license or agrees to some contributor representation, such as a Developer Certificate of Origin"
     },
-    {
-      "name": "Acked-by",
-      "description": "The specified person liked the commit's changes"
-    },
-    {
-      "name": "Reviewed-by",
+    "Reviewed-by": {
       "description": "The specified person reviewed and is completely satisfied with the commit's changes"
     },
-    {
-      "name": "Tested-by",
+    "Tested-by": {
       "description": "The specified person applied the commit's changes and found them to have the desired effect"
     },
-    {
-      "name": "Refs",
+    "Acked-by": {
+      "description": "The specified person liked the commit's changes"
+    },
+    "Refs": {
       "description": "The commit references another commit by its hash ID.<br>For multiple hash IDs, use a comma as separator"
     }
-  ]
+  }
 }
