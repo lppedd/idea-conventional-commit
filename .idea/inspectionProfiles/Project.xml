@@ -302,6 +302,7 @@
           <option value="unchecked_cast" />
           <option value="DuplicatedCode" />
           <option value="inapplicable_jvm_name" />
+          <option value="UNCHECKED_CAST" />
         </list>
       </option>
     </inspection_tool>
