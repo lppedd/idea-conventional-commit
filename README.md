@@ -5,10 +5,10 @@
 ### Available @ [JetBrains Plugins Repository][1]
 
 Looking for the latest **plugin binaries**? Get them [here][2] as `.zip`  
-<small>Supported IDE versions **from 0.24.0**: `233.11799` to `251.*` (both inclusive)</small>  
-<small>Supported IDE versions **from 0.23.0**: `223.4884` to `243.*` (both inclusive)</small>  
-<small>Supported IDE versions **from 0.19.0**: `202.6397` to `233.*` (both inclusive)</small>  
-<small>Supported IDE versions **upto 0.18.0**: `193.****` to `212.*` (both inclusive)</small> 
+<small>Supported IDE versions **from 0.25.0**: `233.11799` to `*` (all future releases)</small>  
+<small>Supported IDE versions **from 0.24.0**: `233.11799` to `251.*`</small>  
+<small>Supported IDE versions **from 0.23.0**: `223.4884` to `243.*`</small>  
+<small>Supported IDE versions **from 0.19.0**: `202.6397` to `233.*`</small>  
 
 <strong>Additional Providers</strong> are available by installing other lightweight plugins.  
 
