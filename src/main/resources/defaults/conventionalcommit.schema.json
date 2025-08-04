@@ -108,7 +108,7 @@
           "type": "object",
           "description": "The values associated to this specific commit footer type",
           "patternProperties": {
-            "^[^\\p{Ps}\\p{Pe}\\p{Pi}\\p{Pf}\\p{Cc}\\p{Co}\\p{Cn}\\p{Z}]+$": {
+            "^\\S.*$": {
               "$ref": "#/definitions/commitFooterValue"
             }
           },
