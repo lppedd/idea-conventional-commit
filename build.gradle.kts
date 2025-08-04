@@ -68,10 +68,11 @@ intellijPlatform {
 
   pluginVerification {
     ides {
-      ide(IntelliJPlatformType.IntellijIdeaCommunity, "2024.1")
+      create(IntelliJPlatformType.IntellijIdeaCommunity, "2024.1")
       // 2024.2 fails on usages of com.intellij.dvcs, but it is not an issue
       // ide(IntelliJPlatformType.IntellijIdeaCommunity, "2024.2")
-      ide(IntelliJPlatformType.IntellijIdeaCommunity, "2024.3")
+      create(IntelliJPlatformType.IntellijIdeaCommunity, "2024.3")
+      create(IntelliJPlatformType.IntellijIdeaCommunity, "2025.2")
     }
   }
 }
