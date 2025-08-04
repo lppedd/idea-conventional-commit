@@ -168,6 +168,7 @@ internal class CCDefaultTokensService(private val project: Project) {
     val footerTypes = when (val it = rootJsonObject.opt("footerTypes")) {
       is JSONObject -> buildFooterTypes(it)
       is JSONArray -> buildFooterTypesArray(it)
+      null -> emptyMap()
       else -> error("Should never get here")
     }
 
