@@ -304,8 +304,6 @@ internal class ConventionalCommitTextCompletionContributor : CompletionContribut
 
   private class LookupCreationListener : LookupManagerListener {
     override fun activeLookupChanged(oldLookup: Lookup?, newLookup: Lookup?) {
-      // isCompletion == true means the Lookup had already been created before and has been reused.
-      // For our use case it means we've already installed the Lookup enhancer on that instance
       if (newLookup is LookupImpl && !isLookupEnhancerInstalled(newLookup)) {
         installLookupEnhancer(newLookup)
       }
