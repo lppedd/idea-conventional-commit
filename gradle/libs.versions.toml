@@ -1,5 +1,5 @@
 [versions]
-kotlin = "2.1.10"
+kotlin = "2.2.21"
 intellij-platform = "2.10.5"
 grammarkit = "2022.3.2.2"
 json-jettison = "1.5.4"
