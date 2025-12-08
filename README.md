@@ -5,7 +5,8 @@
 ### Available @ [JetBrains Plugins Repository][1]
 
 Looking for the latest **plugin binaries**? Get them [here][2] as `.zip`  
-<small>Supported IDE versions **from 0.25.0**: `233.11799` to `*` (all future releases)</small>  
+<small>Supported IDE versions **from 0.26.0**: `253.17525` to `*` (all future releases)</small>  
+<small>Supported IDE versions **from 0.25.0**: `233.11799` to `253.2`</small>  
 <small>Supported IDE versions **from 0.24.0**: `233.11799` to `251.*`</small>  
 <small>Supported IDE versions **from 0.23.0**: `223.4884` to `243.*`</small>  
 <small>Supported IDE versions **from 0.19.0**: `202.6397` to `233.*`</small>  
@@ -74,7 +75,7 @@ You may enable/disable inspections via _Settings > Version Control > Commit_
 
 ### Documentation
 
-Each commit token is able to hold documentation. This is important in case you forgot their meaning,
+Each commit token is able to hold documentation. This is important in case you forgot their meaning
 or if you want to share additional pieces of information with users.
 
 <img src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_docs.gif" alt="Documentation">
@@ -133,7 +134,7 @@ An example is shown below:
 ```
 
 **If the file is located in the project's root directory, the plugin will pick it up automatically**,
-making it easy to version it, and avoiding to explicitly set a _Custom default tokens_ path. 
+making it easy to version it and avoiding explicitly setting a _Custom default tokens_ path. 
 
 ### Providers
 
