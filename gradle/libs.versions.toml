@@ -4,7 +4,7 @@ intellij-platform = "2.10.5"
 grammarkit = "2022.3.2.2"
 json-jettison = "1.5.4"
 json-skema = "0.28.0"
-commons-validator = "1.8.0"
+commons-validator = "1.10.1"
 
 [libraries]
 json-jettison = { group = "org.codehaus.jettison", name = "jettison", version.ref = "json-jettison" }
