@@ -19,7 +19,9 @@ import com.github.lppedd.cc.parser.FooterContext.FooterValueContext
 import com.intellij.codeInsight.completion.*
 import com.intellij.codeInsight.completion.CompletionType.BASIC
 import com.intellij.codeInsight.completion.impl.PreferStartMatching
-import com.intellij.codeInsight.lookup.*
+import com.intellij.codeInsight.lookup.Lookup
+import com.intellij.codeInsight.lookup.LookupElement
+import com.intellij.codeInsight.lookup.LookupManagerListener
 import com.intellij.codeInsight.lookup.impl.LookupImpl
 import com.intellij.lang.LanguageMatcher
 import com.intellij.openapi.components.service
@@ -146,7 +148,7 @@ internal class ConventionalCommitTextCompletionContributor : CompletionContribut
     var caretOffsetInLine = caretLogicalPosition.column
     val templateState = editor.getTemplateState()
     val lineUntilCaret = if (templateState?.currentVariableNumber == INDEX_TYPE) {
-      // If we are completing a type with template, we need to consider only
+      // If we are completing a type with a template, we need to consider only
       // the part of the line after the range marker's start
       val typeStartOffset = templateState.getSegmentRange(INDEX_TYPE).startOffset
       val start = typeStartOffset - document.getLineRangeByOffset(typeStartOffset).startOffset
@@ -304,10 +306,13 @@ internal class ConventionalCommitTextCompletionContributor : CompletionContribut
     override fun activeLookupChanged(oldLookup: Lookup?, newLookup: Lookup?) {
       // isCompletion == true means the Lookup had already been created before and has been reused.
       // For our use case it means we've already installed the Lookup enhancer on that instance
-      if (newLookup is LookupImpl && !newLookup.isCompletion) {
+      if (newLookup is LookupImpl && !isLookupEnhancerInstalled(newLookup)) {
         installLookupEnhancer(newLookup)
       }
     }
+
+    fun isLookupEnhancerInstalled(lookup: LookupImpl): Boolean =
+      lookupEnhancers.containsKey(lookup)
 
     fun installLookupEnhancer(lookup: LookupImpl) {
       check(lookupEnhancers.isEmpty()) { "Lookup enhancers map should be empty" }
