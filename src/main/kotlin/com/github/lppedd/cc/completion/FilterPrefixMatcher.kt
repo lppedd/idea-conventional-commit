@@ -18,10 +18,10 @@ internal class FilterPrefixMatcher(
   override fun prefixMatches(name: String): Boolean =
     false
 
-  override fun isStartMatch(element: LookupElement?): Boolean =
+  override fun isStartMatch(element: LookupElement): Boolean =
     false
 
-  override fun isStartMatch(name: String?): Boolean =
+  override fun isStartMatch(name: String): Boolean =
     false
 
   override fun cloneWithPrefix(prefix: String): PrefixMatcher =

@@ -1,6 +1,6 @@
 [versions]
 kotlin = "2.1.10"
-intellij-platform = "2.7.0"
+intellij-platform = "2.10.5"
 grammarkit = "2022.3.2.2"
 json-jettison = "1.5.4"
 json-skema = "0.21.0"

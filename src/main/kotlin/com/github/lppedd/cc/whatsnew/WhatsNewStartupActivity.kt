@@ -6,7 +6,7 @@ import com.github.lppedd.cc.application
 import com.github.lppedd.cc.service
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.startup.StartupActivity
+import com.intellij.openapi.startup.ProjectActivity
 import com.intellij.util.concurrency.EdtScheduledExecutorService
 import java.util.concurrent.TimeUnit
 
@@ -16,8 +16,8 @@ import java.util.concurrent.TimeUnit
  * @author Edoardo Luppi
  * @see [WhatsNewDialog]
  */
-internal class WhatsNewStartupActivity : StartupActivity, DumbAware {
-  override fun runActivity(project: Project) {
+internal class WhatsNewStartupActivity : ProjectActivity, DumbAware {
+  override suspend fun execute(project: Project) {
     if (System.getProperty("com.github.lppedd.cc.whatsnew.disable") != null) {
       return
     }

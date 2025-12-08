@@ -33,7 +33,15 @@ repositories {
 dependencies {
   intellijPlatform {
     create(type = stringProperty("platformType"), version = stringProperty("platformVersion"))
+
+    bundledModule("intellij.platform.vcs.dvcs")
+    bundledModule("intellij.platform.vcs.dvcs.impl")
+    bundledModule("intellij.platform.vcs.log")
+    bundledModule("intellij.platform.vcs.log.impl")
+
     bundledPlugin("com.intellij.java")
+    bundledPlugin("com.intellij.modules.json")
+
     testFramework(TestFrameworkType.Plugin.Java)
     pluginVerifier()
   }
@@ -68,11 +76,7 @@ intellijPlatform {
 
   pluginVerification {
     ides {
-      create(IntelliJPlatformType.IntellijIdeaCommunity, "2024.1")
-      // 2024.2 fails on usages of com.intellij.dvcs, but it is not an issue
-      // ide(IntelliJPlatformType.IntellijIdeaCommunity, "2024.2")
-      create(IntelliJPlatformType.IntellijIdeaCommunity, "2024.3")
-      create(IntelliJPlatformType.IntellijIdeaCommunity, "2025.2")
+      create(IntelliJPlatformType.IntellijIdeaCommunity, "2025.3")
     }
   }
 }
@@ -92,15 +96,15 @@ sourceSets {
 }
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_17
-  targetCompatibility = JavaVersion.VERSION_17
+  sourceCompatibility = JavaVersion.VERSION_21
+  targetCompatibility = JavaVersion.VERSION_21
 }
 
 kotlin {
   explicitApiWarning()
   compilerOptions {
-    jvmTarget = JvmTarget.JVM_17
-    languageVersion = KotlinVersion.KOTLIN_1_9
+    jvmTarget = JvmTarget.JVM_21
+    languageVersion = KotlinVersion.KOTLIN_2_2
     freeCompilerArgs.addAll(
         "-Xno-call-assertions",
         "-Xno-receiver-assertions",
@@ -114,7 +118,7 @@ kotlin {
 }
 
 tasks {
-  val generateLexer = task<GenerateLexerTask>("generateConventionalCommitLexer") {
+  val generateLexer = register<GenerateLexerTask>("generateConventionalCommitLexer") {
     sourceFile = file("src/main/kotlin/com/github/lppedd/cc/language/lexer/conventionalCommit.flex")
     targetOutputDir = file("src/main/gen/com/github/lppedd/cc/language/lexer")
     purgeOldFiles = true
@@ -128,7 +132,7 @@ tasks {
     dependsOn(generateLexer)
   }
 
-  val buildApiSourceJar = task<Jar>("buildConventionalCommitApiSourceJar") {
+  val buildApiSourceJar = register<Jar>("buildConventionalCommitApiSourceJar") {
     dependsOn(generateLexer)
     from(kotlin.sourceSets.main.get().kotlin) {
       include("com/github/lppedd/cc/api/*.kt")
@@ -149,6 +153,7 @@ tasks {
     val dcevm = stringProperty("dcevmExecutable", default = "")
 
     if (dcevm.isNotBlank()) {
+      @Suppress("UsePropertyAccessSyntax")
       setExecutable(dcevm)
     }
   }

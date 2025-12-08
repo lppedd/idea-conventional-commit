@@ -35,7 +35,7 @@ internal abstract class CommitBaseCompleteMacro : Macro() {
       if (project.isDisposed ||
           editor.isDisposed ||
           !psiFile.isValid ||
-          CompletionServiceImpl.getCompletionService().currentCompletion != null) {
+          CompletionServiceImpl.completionService.currentCompletion != null) {
         return@invokeLaterOnEdt
       }
 

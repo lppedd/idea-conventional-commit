@@ -44,6 +44,8 @@
     <liveTemplateMacro implementation="com.github.lppedd.cc.liveTemplate.CommitFooterValueMacro" />
     <defaultLiveTemplates file="liveTemplates/ConventionalCommit.xml" hidden="true" />
 
+    <!-- TODO: replace with DocumentationTarget -->
+    <!--suppress PluginXmlValidity -->
     <documentationProvider implementation="com.github.lppedd.cc.documentation.CommitTokenDocumentationProvider" />
 
     <projectConfigurable
@@ -76,6 +78,8 @@
         serviceImplementation="com.github.lppedd.cc.api.impl.InternalCommitTokenProviderService"
     />
 
+    <!-- TipOfTheDayActivity exists under the intellij.platform.tips module -->
+    <!--suppress PluginXmlValidity -->
     <postStartupActivity
         order="before TipOfTheDayActivity"
         implementation="com.github.lppedd.cc.whatsnew.WhatsNewStartupActivity"

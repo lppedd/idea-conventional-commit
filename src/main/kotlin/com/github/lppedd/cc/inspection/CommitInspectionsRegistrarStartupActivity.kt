@@ -7,25 +7,25 @@ import com.github.lppedd.cc.service
 import com.intellij.codeInspection.ex.LocalInspectionToolWrapper
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.startup.StartupActivity
+import com.intellij.openapi.startup.ProjectActivity
 import com.intellij.vcs.commit.message.CommitMessageInspectionProfile
 
 /**
  * @author Edoardo Luppi
  */
-internal class CommitInspectionsRegistrarStartupActivity : StartupActivity, DumbAware {
-  private companion object {
+internal class CommitInspectionsRegistrarStartupActivity : ProjectActivity, DumbAware {
+  private object Lock {
     // Used to synchronize the inspections registration process
-    private val lock = Any()
+    val lock = Any()
   }
 
-  override fun runActivity(project: Project) {
+  override suspend fun execute(project: Project) {
     val inspectionProviderService = application.service<CommitInspectionProviderService>()
     val inspectionProviders = inspectionProviderService.getInspectionProviders()
     val inspections = inspectionProviders.flatMap(CommitInspectionProvider::getInspections)
 
     if (inspections.isNotEmpty()) {
-      synchronized(lock) {
+      synchronized(Lock.lock) {
         val inspectionProfile = CommitMessageInspectionProfile.getInstance(project)
 
         for (inspection in inspections) {
