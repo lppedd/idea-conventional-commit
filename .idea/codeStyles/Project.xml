@@ -1,5 +1,6 @@
 <component name="ProjectCodeStyleConfiguration">
   <code_scheme name="Project" version="173">
+    <option name="AUTODETECT_INDENTS" value="false" />
     <option name="OTHER_INDENT_OPTIONS">
       <value>
         <option name="INDENT_SIZE" value="3" />
@@ -181,6 +182,8 @@
       </option>
       <option name="LINE_BREAK_AFTER_MULTILINE_WHEN_ENTRY" value="false" />
       <option name="IMPORT_NESTED_CLASSES" value="true" />
+      <option name="CONTINUATION_INDENT_IN_PARAMETER_LISTS" value="true" />
+      <option name="CONTINUATION_INDENT_IN_ARGUMENT_LISTS" value="true" />
       <option name="ALLOW_TRAILING_COMMA" value="true" />
     </JetCodeStyleSettings>
     <MSSQLCodeStyleSettings version="7">

@@ -5,7 +5,6 @@
     <inspection_tool class="AddVarianceModifier" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="AnnotationClass" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ArrayCanBeReplacedWithEnumValues" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="ArrayInDataClass" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="AssignmentToForLoopParameter" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="m_checkForeachParameters" value="true" />
     </inspection_tool>
@@ -54,7 +53,6 @@
     <inspection_tool class="ConvertCallChainIntoSequence" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ConvertLambdaToReference" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ConvertPairConstructorToToFunction" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="ConvertSecondaryConstructorToPrimary" enabled="true" level="INFORMATION" enabled_by_default="true" />
     <inspection_tool class="ConvertToStringTemplate" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ConvertTryFinallyToUseCall" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ConvertTwoComparisonsToRangeCheck" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -88,7 +86,6 @@
     <inspection_tool class="FoldInitializerAndIfToElvis" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ForEachParameterNotUsed" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="FromClosedRangeMigration" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="FunctionWithLambdaExpressionBody" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="HasPlatformType" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="reportPlatformArguments" value="true" />
     </inspection_tool>
@@ -176,7 +173,6 @@
     <inspection_tool class="OptionalExpectation" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="OptionalOfNullableMisuseMerged" />
     <inspection_tool class="PackageDirectoryMismatch" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="PluginXmlI18n" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="PointlessIndexOfComparison" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ProhibitJvmOverloadsOnConstructorsOfAnnotationClassesMigration" enabled="true" level="ERROR" enabled_by_default="true" />
     <inspection_tool class="ProhibitRepeatedUseSiteTargetAnnotationsMigration" enabled="true" level="ERROR" enabled_by_default="true" />
@@ -199,10 +195,7 @@
       <option name="ignoreSerializable" value="true" />
       <option name="ignoreCloneable" value="true" />
     </inspection_tool>
-    <inspection_tool class="RedundantInnerClassModifier" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="RedundantLabelMigration" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="RedundantLambdaArrow" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="RedundantLambdaOrAnonymousFunction" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="RedundantNotNullExtensionReceiverOfInline" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="RedundantObjectTypeCheck" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="RedundantRequireNotNullCall" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -303,6 +296,12 @@
           <option value="DuplicatedCode" />
           <option value="inapplicable_jvm_name" />
           <option value="UNCHECKED_CAST" />
+          <option value="UsePropertyAccessSyntax" />
+          <option value="AddVarianceModifier" />
+          <option value="NonExtendableApiUsage" />
+          <option value="JavaIoSerializableObjectMustHaveReadResolve" />
+          <option value="JComponentDataProvider" />
+          <option value="Destructure" />
         </list>
       </option>
     </inspection_tool>
