@@ -17,7 +17,7 @@ import com.intellij.util.ui.UIUtil
 import java.util.*
 
 /**
- * The group of actions which makes it possible to change plugin's settings
+ * The group of actions which makes it possible to change the plugin's settings
  * from the pop-up's menu.
  *
  * @author Edoardo Luppi

@@ -5,4 +5,4 @@ import com.github.erosb.jsonsKema.ValidationFailure
 /**
  * @author Edoardo Luppi
  */
-internal class SchemaValidationException(val failure: ValidationFailure) : RuntimeException("$failure")
+internal class SchemaValidationException(failure: ValidationFailure) : RuntimeException("$failure")

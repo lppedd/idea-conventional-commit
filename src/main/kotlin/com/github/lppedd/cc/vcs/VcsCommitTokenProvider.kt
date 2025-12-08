@@ -47,10 +47,10 @@ internal class VcsCommitTokenProvider(project: Project)
   override fun getPresentation(): ProviderPresentation =
     VcsProviderPresentation
 
+  @Suppress("Destructure")
   override fun getCommitTypes(prefix: String): Collection<CommitType> =
     getOrderedVcsCommitMessages()
-      .map { it.lines().firstOrNull(String::isNotBlank) }
-      .filterNotNull()
+      .mapNotNull { it.lines().firstOrNull(String::isNotBlank) }
       .distinctBy(String::lowercase)
       .map(CCParser::parseHeader)
       .filter { it.type is ValidToken && it.separator.isPresent }
@@ -65,8 +65,7 @@ internal class VcsCommitTokenProvider(project: Project)
 
   override fun getCommitScopes(type: String): Collection<CommitScope> =
     getOrderedVcsCommitMessages()
-      .map { it.lines().firstOrNull(String::isNotBlank) }
-      .filterNotNull()
+      .mapNotNull { it.lines().firstOrNull(String::isNotBlank) }
       .distinctBy(String::lowercase)
       .map(CCParser::parseHeader)
       .map(CommitTokens::scope)
@@ -81,8 +80,7 @@ internal class VcsCommitTokenProvider(project: Project)
 
   override fun getCommitSubjects(type: String, scope: String): Collection<CommitSubject> =
     getOrderedVcsCommitMessages()
-      .map { it.lines().firstOrNull(String::isNotBlank) }
-      .filterNotNull()
+      .mapNotNull { it.lines().firstOrNull(String::isNotBlank) }
       .distinctBy(String::lowercase)
       .map(CCParser::parseHeader)
       .map(CommitTokens::subject)
@@ -111,6 +109,7 @@ internal class VcsCommitTokenProvider(project: Project)
       .toList()
   }
 
+  @Suppress("Destructure")
   private fun getFooterValues(message: String, footerType: String?): Sequence<String> =
     message.replace(regexBeginEndWs, "")
       .split(regexBlankLines)

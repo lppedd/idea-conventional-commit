@@ -16,9 +16,9 @@ import com.intellij.psi.PsiDocumentManager
 /**
  * Allows jumping over certain message elements with the Tab key.
  * Currently, the following elements are supported:
- *   - opening scope parenthesis
- *   - closing scope parenthesis
- *   - subject and footer separator
+ *   - Opening scope parenthesis
+ *   - Closing scope parenthesis
+ *   - Subject and footer separator
  *
  * @author Edoardo Luppi
  */

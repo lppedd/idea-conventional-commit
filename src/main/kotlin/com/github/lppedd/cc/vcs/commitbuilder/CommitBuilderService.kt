@@ -42,7 +42,7 @@ internal class CommitBuilderService : PersistentStateComponent<CommitBuilderServ
   }
 
   fun getFooters(): Set<CommitFooter> =
-    footers.map { CommitFooter(it.key, it.value) }.toSet()
+    footers.map { (key, value) -> CommitFooter(key, value) }.toSet()
 
   @Suppress("SameParameterValue")
   fun getFooter(footerType: String): CommitFooter? {

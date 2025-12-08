@@ -10,13 +10,15 @@ import com.intellij.openapi.extensions.PluginId
 /**
  * @author Edoardo Luppi
  */
+@Suppress("UnstableApiUsage")
 internal class CommitTabActionConfigurationCustomizer : ActionConfigurationCustomizer {
   private val actionId = "EditorTab"
   private val groupId = "EditorActions"
 
+  @Deprecated("Implement one of [CustomizeStrategy]")
   override fun customize(actionManager: ActionManager) {
     // Rider register its own EditorTab action, see com.jetbrains.rider.editorActions.FrontendTabAction.
-    // Unfortunately that action is coded in Kotlin and marked as final,
+    // Unfortunately, that action is coded in Kotlin and marked as final,
     // so the only way to avoid breaking Rider is simply to not offer
     // enhanced tabbing in the commit dialog
     if (!PluginManager.isPluginInstalled(PluginId.getId("com.intellij.modules.rider"))) {

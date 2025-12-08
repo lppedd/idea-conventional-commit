@@ -34,7 +34,7 @@ internal class InternalCommitTokenProvider(private val project: Project) :
     } catch (e: ProcessCanceledException) {
       throw e
     } catch (e: Exception) {
-      logger.debug("Error while reading custom tokens file", e)
+      logger.debug("Error while reading the custom tokens file", e)
       notifyErrorToUser(e)
       defaultsService.getBuiltInDefaults()
     }
@@ -46,7 +46,7 @@ internal class InternalCommitTokenProvider(private val project: Project) :
     DefaultProviderPresentation
 
   override fun getCommitTypes(prefix: String): Collection<CommitType> =
-    defaults.types.map { DefaultCommitToken(it.key, it.value.description) }
+    defaults.types.map { (key, value) -> DefaultCommitToken(key, value.description) }
 
   override fun getCommitScopes(type: String): Collection<CommitScope> {
     val defaultType = defaults.types[type] ?: return emptyList()
@@ -54,7 +54,7 @@ internal class InternalCommitTokenProvider(private val project: Project) :
   }
 
   override fun getCommitFooterTypes(): Collection<CommitFooterType> =
-    defaults.footerTypes.map { DefaultCommitToken(it.key, it.value.description) }
+    defaults.footerTypes.map { (key, value) -> DefaultCommitToken(key, value.description) }
 
   override fun getCommitFooterValues(
       footerType: String,

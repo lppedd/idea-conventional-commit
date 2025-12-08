@@ -34,7 +34,7 @@ internal class CCMainConfigurable(private val project: Project) : SearchableConf
 
     val tokens = try {
       defaultsService.getDefaultsFromCustomFile(configService.customFilePath)
-    } catch (e: Exception) {
+    } catch (_: Exception) {
       defaultsService.getBuiltInDefaults()
     }
 
@@ -62,7 +62,7 @@ internal class CCMainConfigurable(private val project: Project) : SearchableConf
     try {
       val tokens = defaultsService.getDefaultsFromCustomFile(configService.customFilePath)
       gui.setTokens(tokens.types)
-    } catch (e: Exception) {
+    } catch (_: Exception) {
       gui.revalidate()
     }
 

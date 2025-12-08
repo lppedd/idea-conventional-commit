@@ -47,10 +47,9 @@ internal class CommitTokenTextField(
       }
 
       override fun focusLost(event: FocusEvent) {
-        // If the field lost focus in favor of a completion Lookup
-        // it means when that Lookup will be closed we don't have to select
-        // all the text.
-        // So setting this field to 'false' prevents it in 'focusGained'
+        // If the field lost focus in favor of a completion Lookup, it means when
+        // that Lookup will be closed, we don't have to select all the text.
+        // So setting this field to 'false' prevents it in 'focusGained'.
         doSelectAll = LookupManager.getActiveLookup(editor) == null
 
         if (doSelectAll) {

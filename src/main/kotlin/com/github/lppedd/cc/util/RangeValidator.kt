@@ -43,7 +43,7 @@ internal class RangeValidator(private val start: Int, private val end: Int) {
 
   private fun checkRange(range: TextRange) {
     require(range.startOffset <= range.endOffset) {
-      "Range start value must be lower or equal to the end value"
+      "Range start value must be smaller or equal to the end value"
     }
 
     require(range.startOffset >= start && range.endOffset <= end) {

@@ -88,8 +88,7 @@ internal class CommitBuilderDialog(private val project: Project)
     isModal = true
     setDoNotAskOption(this)
 
-    // Since we cannot workaround IDEA-262736, just keep the text field enabled
-    // to avoid trapping focus
+    // Since we cannot work around IDEA-262736, just keep the text field enabled to avoid trapping focus
     breakingChangeTextField.isEnabled = ScreenReader.isActive()
     breakingChangeTextField.setPlaceholder(CCBundle["cc.commitbuilder.dialog.breakingChange.description"])
 
@@ -142,7 +141,7 @@ internal class CommitBuilderDialog(private val project: Project)
     val processedFooters = footers.toMutableList()
 
     // Extract (and remove) the breaking change footer from all the footers
-    val bcIndex = processedFooters.indexOfFirst { it.type.matches(breakingChangeRegex) }
+    val bcIndex = processedFooters.indexOfFirst { (t) -> t.matches(breakingChangeRegex) }
     val breakingChange = if (bcIndex > -1) processedFooters.removeAt(bcIndex) else null
 
     if (isBreakingChange && breakingChange == null) {
@@ -171,10 +170,10 @@ internal class CommitBuilderDialog(private val project: Project)
     }
 
     // All others footers
-    processedFooters.forEach {
+    processedFooters.forEach { (t, v) ->
       sb.append("\n")
-        .append("${it.type}: ")
-        .append(formatFooterValue(it.value))
+        .append("${t}: ")
+        .append(formatFooterValue(v))
     }
 
     return "$sb"
@@ -256,7 +255,7 @@ internal class CommitBuilderDialog(private val project: Project)
       KeymapUtil.getFirstKeyboardShortcutText(IdeActions.ACTION_CODE_COMPLETION)
         .ifEmpty { KeymapUtil.getFirstKeyboardShortcutText(IdeActions.ACTION_SMART_TYPE_COMPLETION) }
 
-    // If there is no shortcut to invoke completion the banner should be shown
+    // If there is no shortcut to invoke completion, the banner should be shown
     // with an error message, regardless of a previous dismissal
     return if (doShow || completionShortcutText.isEmpty()) {
       // If there was no shortcut configured for completion and now there is one,
@@ -422,7 +421,7 @@ internal class CommitBuilderDialog(private val project: Project)
     super.createButtonsPanel(buttons).also {
       // Since it seems the left actions' panel border is overridden by platform code,
       // we need to set it on the right actions panel.
-      // However here we have no way to know to which panel we're setting the border,
+      // However, here we have no way to know to which panel we're setting the border,
       // thus we have to check if a button represents the 'OK' action, which is
       // on the right actions panel
       if (buttons.any { b -> b.action === myOKAction }) {
@@ -573,7 +572,7 @@ internal class CommitBuilderDialog(private val project: Project)
    * We save what the user inputted on each field in case he needs
    * to close the dialog for whatever reason and reopen it later.
    *
-   * Values are cleared as soon as the commit succeed.
+   * Values are cleared as soon as the commit succeeds.
    */
   private fun saveFieldsValues() {
     if (!myCheckBoxDoNotShowDialog.isSelected) {
@@ -615,8 +614,8 @@ internal class CommitBuilderDialog(private val project: Project)
     breakingChangeCheckBox.isSelected = commitMessageService.isBreakingChange
 
     // Restore the breaking change footer value
-    commitMessageService.getFooter("BREAKING CHANGE")?.let {
-      breakingChangeTextField.text = it.value
+    commitMessageService.getFooter("BREAKING CHANGE")?.let { (_, v) ->
+      breakingChangeTextField.text = v
     }
 
     // Restore the "other footer"

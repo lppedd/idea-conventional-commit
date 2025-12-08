@@ -34,7 +34,7 @@ internal class CommitNamingConventionInspectionOptions : ConfigurableUi<Project>
     try {
       Pattern.compile(f.text)
       true
-    } catch (e: PatternSyntaxException) {
+    } catch (_: PatternSyntaxException) {
       false
     }
   }

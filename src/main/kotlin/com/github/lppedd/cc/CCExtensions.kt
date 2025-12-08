@@ -35,7 +35,7 @@ import javax.swing.BorderFactory
 import javax.swing.Icon
 import javax.swing.ListSelectionModel
 import javax.swing.border.Border
-import kotlin.contracts.InvocationKind.EXACTLY_ONCE
+import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 import kotlin.internal.InlineOnly
 import kotlin.math.max
@@ -167,7 +167,7 @@ private val commitMessageDataKey: Key<*>? by lazy {
     val commitMessageClass = Class.forName("com.intellij.openapi.vcs.ui.CommitMessage")
     val dataKeyField = commitMessageClass.getField("DATA_KEY")
     dataKeyField.get(null) as Key<*>?
-  } catch (ignored: ClassNotFoundException) {
+  } catch (_: ClassNotFoundException) {
     null
   }
 }
@@ -451,7 +451,7 @@ internal fun Throwable.readableMessage(): String =
 @Suppress("SameParameterValue")
 internal inline fun <T> Logger.runAndLogError(defaultValue: T, block: () -> T): T {
   contract {
-    callsInPlace(block, EXACTLY_ONCE)
+    callsInPlace(block, InvocationKind.AT_MOST_ONCE)
   }
 
   return try {

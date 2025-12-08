@@ -10,7 +10,7 @@ import com.intellij.codeInsight.completion.InsertionContext
 import com.intellij.codeInsight.lookup.LookupElementPresentation
 
 /**
- * Represents an item in the completion's popup inside the footer type context.
+ * Represents an item in the completion popup inside the footer type context.
  *
  * @author Edoardo Luppi
  */
@@ -43,7 +43,7 @@ internal class CommitFooterTypeLookupElement(
     val (footerType, separator, footerValue) = CCParser.parseFooter(lineText)
 
     if (footerType is ValidToken) {
-      // Replace the old footer type with new one
+      // Replace the old footer type with the new one
       editor.replaceString(
           lineStartOffset + footerType.range.startOffset,
           lineStartOffset + footerType.range.endOffset,
@@ -62,8 +62,8 @@ internal class CommitFooterTypeLookupElement(
     // Move the caret after the separator
     editor.moveCaretRelatively(1)
 
-    // If the footer value is present and starts with a whitespace,
-    // shift the caret of one position, otherwise insert a whitespace
+    // If the footer value is present and starts with whitespace,
+    // shift the caret of one position, otherwise insert whitespace
     if (footerValue is ValidToken) {
       if (footerValue.value.firstIsWhitespace()) {
         editor.moveCaretRelatively(1)

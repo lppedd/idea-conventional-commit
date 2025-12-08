@@ -8,7 +8,7 @@ import com.intellij.ide.plugins.PluginStateListener
 import com.intellij.ide.util.PropertiesComponent
 
 /**
- * Listens to plugin uninstallation to clean-up stuff.
+ * Listens to plugin uninstallation to clean up stuff.
  *
  * @author Edoardo Luppi
  */

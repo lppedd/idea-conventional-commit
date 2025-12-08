@@ -47,7 +47,7 @@ internal class ConventionalCommitParserDefinition : ParserDefinition {
       ConventionalCommitElementType.COMMIT_MESSAGE -> ConventionalCommitMessagePsiElementImpl(astNode)
       ConventionalCommitElementType.SCOPE -> ConventionalCommitScopePsiElementImpl(astNode)
       ConventionalCommitElementType.FOOTER -> ConventionalCommitFooterPsiElementImpl(astNode)
-      else -> throw IllegalStateException("Node not supported: $astNode")
+      else -> throw IllegalStateException("Unsupported ASTNode: $astNode")
     }
 
   override fun createFile(viewProvider: FileViewProvider): PsiFile =

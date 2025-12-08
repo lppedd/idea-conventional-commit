@@ -12,7 +12,7 @@ import java.beans.PropertyChangeListener
 import javax.swing.JPanel
 
 /**
- * A tabbed pane which attempt to display the tabs' row only, hiding the tab's component.
+ * A tabbed pane that attempts to display the tabs' row only, hiding the tab's component.
  *
  * @author Edoardo Luppi
  */
@@ -30,7 +30,7 @@ internal class NoContentTabbedPaneWrapper(disposable: Disposable) : TabbedPaneWr
     MyTabbedPaneHolder(this)
 
   override fun dispose() {
-    // We are interested only in disposing the created MyTabbedPaneHolder
+    // We are interested only in disposing of the created MyTabbedPaneHolder
   }
 
   private class MyTabbedPaneHolder(wrapper: NoContentTabbedPaneWrapper)

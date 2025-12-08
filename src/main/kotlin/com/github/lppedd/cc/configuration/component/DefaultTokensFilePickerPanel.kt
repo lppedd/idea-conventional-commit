@@ -151,7 +151,7 @@ internal class DefaultTokensFilePickerPanel(
 
     try {
       FileSystems.getDefault().getPath(pathStr)
-    } catch (e: InvalidPathException) {
+    } catch (_: InvalidPathException) {
       return ValidationInfo(CCBundle["cc.config.filePicker.error.invalidPath"], customFile)
     }
 
@@ -167,7 +167,7 @@ internal class DefaultTokensFilePickerPanel(
         is SchemaValidationException -> CCBundle["cc.config.filePicker.error.schema"]
         is NoSuchFileException -> CCBundle["cc.config.filePicker.error.existence"]
         else -> {
-          logger.error("Error while validating custom tokens file", e)
+          logger.error("Error while validating the custom tokens file", e)
           CCBundle["cc.config.filePicker.error.schema"]
         }
       }
@@ -182,7 +182,7 @@ internal class DefaultTokensFilePickerPanel(
     }
 
     if (text != null) {
-      component.emptyText.setText(text)
+      component.emptyText.text = text
     } else {
       component.emptyText.clear()
     }

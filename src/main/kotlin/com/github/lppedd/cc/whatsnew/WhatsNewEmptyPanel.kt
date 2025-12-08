@@ -7,7 +7,6 @@ import com.intellij.ui.components.labels.LinkLabel
 import com.intellij.ui.components.labels.LinkListener
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
-import java.awt.Component
 import java.net.URI
 import javax.swing.Box
 import javax.swing.BoxLayout
@@ -19,7 +18,7 @@ import javax.swing.JPanel
 internal class WhatsNewEmptyPanel : JPanel() {
   init {
     val label = JBLabel(CCBundle["cc.whatsnew.dialog.empty"]).also {
-      it.alignmentX = Component.CENTER_ALIGNMENT
+      it.alignmentX = CENTER_ALIGNMENT
       it.foreground = UIUtil.getInactiveTextColor()
     }
 

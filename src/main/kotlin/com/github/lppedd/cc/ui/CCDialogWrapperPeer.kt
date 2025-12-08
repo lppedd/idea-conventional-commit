@@ -37,7 +37,7 @@ internal class CCDialogWrapperPeer(
   }
 
   private fun hackDialogIcon() {
-    val cp = contentPane as Any? ?: return
+    val cp = contentPane as? Any? ?: return
 
     when {
       customFrameDialogContentClass.isInstance(cp) -> {
@@ -70,7 +70,7 @@ internal class CCDialogWrapperPeer(
   }
 
   private fun setIcon(customHeader: Any) {
-    // iconProvider is used since IDEA 231.4840.387
+    // iconProvider have been used since IDEA 231.4840.387
     // ScaleContextCache is used since IDEA 232.6095.10
     customHeaderClass.getDeclaredField("iconProvider").let {
       it.isAccessible = true

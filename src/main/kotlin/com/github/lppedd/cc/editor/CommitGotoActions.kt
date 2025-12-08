@@ -33,6 +33,7 @@ internal class CommitGotoNextErrorAction : GotoNextErrorAction() {
  *
  * @author Edoardo Luppi
  */
+@Suppress("UnstableApiUsage")
 internal class CommitGotoPreviousErrorAction : GotoPreviousErrorAction() {
   init {
     isEnabledInModalContext = true
@@ -49,12 +50,12 @@ private fun updateActionState(event: AnActionEvent) {
     isInCommitMessagePanel(event) -> {
       // We know we are inside the modal commit dialog.
       // The action should be enabled only for the commit editor
-      // and not for other editor fields (e.g. Author)
+      // and not for other editor fields (e.g., Author)
       event.presentation.isEnabled = isInCommitMessageEditor(event)
     }
 
-    // We might be inside any context, for example the non-modal commit workflow.
-    // The action behavior should respect the original one: disabled in modal context
+    // We might be inside any context. For example, the non-modal commit workflow.
+    // The action behavior should respect the original one: disabled in a modal context.
     event.getData(PlatformDataKeys.IS_MODAL_CONTEXT) == true -> {
       event.presentation.isEnabled = false
     }

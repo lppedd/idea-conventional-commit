@@ -33,10 +33,10 @@ internal class TypeCompletionProvider(
     val types = LinkedHashSet<ProviderCommitToken<CommitType>>(64)
 
     // Despite all the sorting logic being in CommitLookupElementWeigher, we need sorted
-    // providers here too as per user configuration to produce de-duplicated tokens correctly.
+    // providers here too as per user configuration to produce deduplicated tokens correctly.
     // For example, if providers A and B produce the same token C, and
     // if B is ordered before A, then only B's token will be shown in completion.
-    // Browsing the Platform code it seems the Lookup implementation already does that,
+    // Browsing the Platform code, it seems the Lookup implementation already does that,
     // but it is better to do it ourselves beforehand
     getProviders().forEach { provider ->
       safeRunWithCheckCanceled {

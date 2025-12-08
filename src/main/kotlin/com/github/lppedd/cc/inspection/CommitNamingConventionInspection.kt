@@ -20,7 +20,7 @@ import com.intellij.psi.PsiElementVisitor
 
 /**
  * Checks if symbols outside the legal ones, specified in the inspection options
- * as regex pattern, are used in the commit type or scope.
+ * as a regex pattern, are used in the commit type or scope.
  *
  * @author Edoardo Luppi
  * @see CommitNamingConventionInspectionOptions
@@ -32,6 +32,8 @@ internal class CommitNamingConventionInspection : CommitBaseInspection() {
   override fun isEnabledByDefault(): Boolean =
     true
 
+  @Suppress("UnstableApiUsage")
+  @Deprecated("Implement {@link #createOptions} instead")
   override fun createOptionsConfigurable(): ConfigurableUi<Project> =
     CommitNamingConventionInspectionOptions()
 

@@ -64,7 +64,7 @@ internal class InternalWhatsNewProvider : WhatsNewProvider {
     whatsNewPages
 
   private fun getPlugin(): IdeaPluginDescriptor? =
-    PluginManagerCore.getPlugin(PluginId.findId(CC.PluginId))
+    PluginManagerCore.getPlugin(PluginId.getId(CC.PluginId))
 
   private class PluginVersion(version: String) : Comparable<PluginVersion> {
     private val parts = version.split(".").map(String::toInt)

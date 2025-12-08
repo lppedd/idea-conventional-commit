@@ -137,7 +137,7 @@ internal class CoAuthorsFilePickerPanel(
     }
 
     if (text != null) {
-      component.emptyText.setText(text)
+      component.emptyText.text = text
     } else {
       component.emptyText.clear()
     }
@@ -154,7 +154,7 @@ internal class CoAuthorsFilePickerPanel(
       .createPanel()
 
   private object MyFileChooserDescriptor : CCFileChooserDescriptor() {
-    override val okActionName = "Select file"
+    override val okActionName = "Select a file"
     override val validFileIcon = CCIcons.FileTypes.CoAuthors
     override val validFileTest: (VirtualFile) -> Boolean = {
       it.isValid && !it.isDirectory && it.isWritable && "coauthors".equals(it.extension, true)

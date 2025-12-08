@@ -70,8 +70,8 @@ internal class CommitScopeLookupElement(
     // Move the caret after the separator
     editor.moveCaretRelatively(1)
 
-    // If the subject is present and starts with a whitespace,
-    // shift the caret of one position, otherwise insert a whitespace
+    // If the subject is present and starts with whitespace,
+    // shift the caret of one position, otherwise insert whitespace
     if (subject is ValidToken) {
       if (subject.value.firstIsWhitespace()) {
         editor.moveCaretRelatively(1)

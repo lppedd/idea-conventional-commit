@@ -25,12 +25,7 @@ internal class CCTextBrowseFolderListener(
   }
 
   private fun getPathChooserDialog(): PathChooserDialog {
-    val parentComponent = if (myTextComponent != null) {
-      myTextComponent
-    } else {
-      WindowManager.getInstance().suggestParentWindow(project)
-    }
-
+    val parentComponent = myTextComponent ?: WindowManager.getInstance().suggestParentWindow(project)
     val nativePathChooser = FileChooserFactoryImpl.createNativePathChooserIfEnabled(
         myFileChooserDescriptor,
         project,

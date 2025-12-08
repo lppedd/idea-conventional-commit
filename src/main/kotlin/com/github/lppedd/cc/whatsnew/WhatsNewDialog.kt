@@ -17,7 +17,7 @@ import javax.swing.Action
 import javax.swing.JComponent
 
 /**
- * A dialog which display changelogs using [WhatsNewProvider]s,
+ * A dialog that displays changelogs using [WhatsNewProvider]s,
  * each rendered as a separate tab.
  *
  * @author Edoardo Luppi

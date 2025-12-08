@@ -9,6 +9,7 @@ import com.intellij.openapi.vcs.ProjectLevelVcsManager
 import com.intellij.openapi.vcs.VcsException
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.vcs.log.*
+import com.intellij.vcs.log.graph.PermanentGraph
 import com.intellij.vcs.log.impl.VcsLogManager
 import com.intellij.vcs.log.impl.VcsProjectLog
 import com.intellij.vcs.log.visible.filters.VcsLogFilterObject
@@ -77,8 +78,7 @@ internal class InternalVcsService(private val project: Project) : VcsService {
 
   private fun fetchCurrentUsers(): Set<VcsUser> =
     getVcsLogProviders().asSequence()
-      .map { (root, vcsLogProvider) -> vcsLogProvider.getCurrentUser(root) }
-      .filterNotNull()
+      .mapNotNull { (root, vcsLogProvider) -> vcsLogProvider.getCurrentUser(root) }
       .toSet()
 
   private fun <T : Comparable<T>> fetchCommits(sortBy: (VcsCommitMetadata) -> T): List<VcsCommitMetadata> =
@@ -95,14 +95,14 @@ internal class InternalVcsService(private val project: Project) : VcsService {
     val localPath = root.fileSystem.getNioPath(root)
 
     // If the repository root is represented by a locally stored file,
-    // we check if that file still exist
+    // we check if that file still exists
     if (localPath != null && localPath.notExists()) {
       return emptyList()
     }
 
     val repository = vcsRepositoryManager.getRepositoryForRoot(root)
 
-    // If the repository is fresh it means it doesn't have commits yet, and so no branches.
+    // If the repository is fresh, it means it doesn't have commits yet, and so no branches.
     // See https://youtrack.jetbrains.com/issue/IDEA-255522
     if (repository == null || repository.isFresh) {
       return emptyList()
@@ -112,12 +112,12 @@ internal class InternalVcsService(private val project: Project) : VcsService {
     val branchFilter = VcsLogFilterObject.fromBranch(currentBranch)
     val filterCollection = VcsLogFilterObject.collection(branchFilter)
 
-    // Apparently IDEA's VCS log might contain refs to commits that don't exist anymore.
+    // Apparently, IDEA's VCS log might contain refs to commits that don't exist anymore.
     // It might be simply a matter of refreshing the log for the user, but here it's
     // slightly more complex - to the point the most reasonable choice is to catch
     // the exception and return an empty result.
     val matchingCommits = try {
-      logProvider.getCommitsMatchingFilter(root, filterCollection, 100)
+      logProvider.getCommitsMatchingFilter(root, filterCollection, PermanentGraph.Options.Default, 100)
     } catch (e: VcsException) {
       logger.debug("Error retrieving commits via VcsLogProvider", e)
       return emptyList()
@@ -134,7 +134,7 @@ internal class InternalVcsService(private val project: Project) : VcsService {
   }
 
   private fun getVcsLogProviders(): Map<VirtualFile, VcsLogProvider> {
-    val activeVcsRoots = projectVcsManager.allVcsRoots.toList()
+    val activeVcsRoots = projectVcsManager.getAllVcsRoots().toList()
     return VcsLogManager.findLogProviders(activeVcsRoots, project)
   }
 

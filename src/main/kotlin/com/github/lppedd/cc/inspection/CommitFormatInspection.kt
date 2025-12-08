@@ -34,6 +34,8 @@ internal class CommitFormatInspection : CommitBaseInspection() {
   override fun isEnabledByDefault(): Boolean =
     true
 
+  @Suppress("UnstableApiUsage")
+  @Deprecated("Implement {@link #createOptions} instead")
   override fun createOptionsConfigurable(): ConfigurableUi<Project> =
     CommitFormatInspectionOptions()
 

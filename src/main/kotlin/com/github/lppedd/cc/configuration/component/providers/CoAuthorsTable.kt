@@ -14,7 +14,6 @@ import java.awt.event.KeyEvent
 import java.util.*
 import javax.swing.JTable
 import javax.swing.KeyStroke
-import javax.swing.SwingConstants
 import javax.swing.event.ChangeEvent
 import javax.swing.table.TableCellRenderer
 import kotlin.math.max
@@ -40,7 +39,7 @@ internal class CoAuthorsTable(tableModel: CoAuthorsTableModel) : CCTable(tableMo
     setTableHeader(null)
     setShowGrid(false)
     setRowHeight(26.scaled)
-    setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN)
+    setAutoResizeMode(AUTO_RESIZE_LAST_COLUMN)
 
     getColumnModel().getColumn(COLUMN_CHECKBOX).also {
       it.cellRenderer = CheckboxCellRenderer()
@@ -126,7 +125,7 @@ internal class CoAuthorsTable(tableModel: CoAuthorsTableModel) : CCTable(tableMo
   }
 
   private fun resizeColumnsWidthToFitContent() {
-    // When the table is empty this minimumWidth value is used
+    // When the table is empty, this minimumWidth value is used
     // as the minimum width for the checkbox column.
     // Earlier it was set to 15px, which became a mess with scaling,
     // while now we try to calculate the minimum width using a JCheckBox instance,
@@ -187,7 +186,7 @@ internal class CoAuthorsTable(tableModel: CoAuthorsTableModel) : CCTable(tableMo
 
       isSelected = value as? Boolean == true
       border = JBUI.Borders.emptyRight(1)
-      horizontalAlignment = SwingConstants.CENTER
+      horizontalAlignment = CENTER
 
       if (isRowSelected) {
         foreground = table.selectionForeground

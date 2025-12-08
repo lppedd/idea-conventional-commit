@@ -158,7 +158,7 @@ internal class CCDefaultTokensService(private val project: Project) {
    * @throws SchemaValidationException When the JSON object does not respect the schema
    */
   private fun parseJsonStr(jsonStr: String): JsonDefaults {
-    // If the inputted JSON isn't valid an exception is thrown.
+    // If the inputted JSON isn't valid, an exception is thrown.
     // The exception contains the validation errors which can be used to notify the user
     defaultsSchema.validateJson(jsonStr)
 

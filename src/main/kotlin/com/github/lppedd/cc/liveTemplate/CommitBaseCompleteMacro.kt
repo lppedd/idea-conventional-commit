@@ -40,6 +40,7 @@ internal abstract class CommitBaseCompleteMacro : Macro() {
       }
 
       val command = Runnable {
+        @Suppress("UnstableApiUsage")
         CompletionServiceImpl.setCompletionPhase(CompletionPhase.NoCompletion)
         invokeCompletionHandler(project, editor)
       }

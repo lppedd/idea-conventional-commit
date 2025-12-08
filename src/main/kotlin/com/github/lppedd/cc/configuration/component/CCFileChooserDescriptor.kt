@@ -53,6 +53,8 @@ internal open class CCFileChooserDescriptor(
     }
   }
 
+  @Suppress("NonExtendableApiUsage")
+  @Deprecated("Deprecated")
   override fun isFileVisible(file: VirtualFile, showHiddenFiles: Boolean): Boolean =
     !(file.isSymlink && file.canonicalPath == null ||
       !file.isDirectory && FileElement.isArchive(file) ||

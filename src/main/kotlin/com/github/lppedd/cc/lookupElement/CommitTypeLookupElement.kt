@@ -10,7 +10,7 @@ import com.intellij.codeInsight.completion.InsertionContext
 import com.intellij.codeInsight.lookup.LookupElementPresentation
 
 /**
- * Represents a commit type item in the completion's popup.
+ * Represents a commit type item in the completion popup.
  *
  * @author Edoardo Luppi
  */

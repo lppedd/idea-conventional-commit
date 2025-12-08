@@ -6,7 +6,10 @@ import com.intellij.ui.components.labels.LinkListener
 /**
  * @author Edoardo Luppi
  */
-internal class ActionLinkLabel<T>(label: String, listener: LinkListener<T>) : LinkLabel<T>(label, null) {
+internal class ActionLinkLabel<@Suppress("AddVarianceModifier") T>(
+    label: String,
+    listener: LinkListener<T>,
+) : LinkLabel<T>(label, null) {
   init {
     setListener(listener, null)
   }

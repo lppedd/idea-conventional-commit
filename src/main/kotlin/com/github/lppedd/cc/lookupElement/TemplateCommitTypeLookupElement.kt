@@ -31,8 +31,8 @@ internal class TemplateCommitTypeLookupElement(
   private val templateSettings = TemplateSettings.getInstance()
 
   /**
-   * When the user select the commit type a new template has to be initiated.
-   * The template should start with the commit type already inserted, and with the
+   * When the user selects the commit type, a new template has to be initiated.
+   * The template should start with the commit type already inserted and with the
    * caret positioned in the commit scope context, with an active completion popup.
    */
   override fun handleInsert(context: InsertionContext) {

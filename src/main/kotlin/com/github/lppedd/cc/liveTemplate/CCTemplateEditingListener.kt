@@ -72,8 +72,8 @@ internal class CCTemplateEditingListener : TemplateEditingAdapter() {
       templateState: TemplateState,
       bodyOrFooterTypeRange: TextRange,
   ) {
-    // If the body is empty it means the user didn't need to insert it,
-    // thus we can reposition the cursor at the end of the subject
+    // If the body is empty, it means the user didn't need to insert it.
+    // Thus, we can reposition the cursor at the end of the subject
     val newOffset = templateState.getSegmentRange(INDEX_SUBJECT).endOffset
 
     if (newOffset <= bodyOrFooterTypeRange.endOffset) {
@@ -83,15 +83,14 @@ internal class CCTemplateEditingListener : TemplateEditingAdapter() {
         editor.moveCaretToOffset(newOffset)
       }
 
-      WriteCommandAction.runWriteCommandAction(editor.project, "Reposition cursor after subject", "", action)
+      WriteCommandAction.runWriteCommandAction(editor.project, "Reposition cursor after the subject", "", action)
     }
   }
 
   private fun deleteScopeParenthesesIfEmpty(templateState: TemplateState) {
     val (scopeStart, scopeEnd, isScopeEmpty) = templateState.getSegmentRange(INDEX_SCOPE)
 
-    // If the scope is empty it means the user didn't need to insert it,
-    // thus we can remove it
+    // If the scope is empty, it means the user didn't need to insert it, thus we can remove it
     if (isScopeEmpty) {
       val editor = templateState.editor
       val document = editor.document
@@ -124,7 +123,7 @@ internal class CCTemplateEditingListener : TemplateEditingAdapter() {
         On newer IDEA versions the templateCancelled method is called before
         the last currentVariableChanged (with newIndex < 0), so we have the opportunity
         to store a boolean for that.
-        On older versions it's the opposite and this is the only possible way.
+        On older versions it's the opposite, and this is the only possible way.
         """,
   )
   private fun TemplateState.documentChangesTerminateTemplate(): Boolean =

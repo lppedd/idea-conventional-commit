@@ -117,7 +117,7 @@ internal class InternalRecentCommitsService(private val project: Project) : Rece
       .map { it.replace(regexBeginEndWs, "") }
       .filterNotBlank()
       .map(CCParser::parseFooter)
-      .filter { it.type is ValidToken }
+      .filter { (t) -> t is ValidToken }
       .map(FooterTokens::footer)
       .filterIsInstance<ValidToken>()
       .map(ValidToken::value)
