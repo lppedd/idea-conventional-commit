@@ -2,16 +2,16 @@
   "$schema": "https://github.com/lppedd/idea-conventional-commit/raw/master/src/main/resources/defaults/conventionalcommit.schema.json",
   "types": {
     "refactor": {
-      "description": "Changes which neither fix a bug nor add a feature"
+      "description": "Changes that restructure or improve code without changing behavior."
     },
     "fix": {
-      "description": "Changes which patch a bug"
+      "description": "Changes that patch a bug."
     },
     "feat": {
-      "description": "Changes which introduce a new feature"
+      "description": "Changes that introduce a new feature."
     },
     "build": {
-      "description": "Changes which affect the build system or external dependencies.<br>Example scopes: gulp, broccoli, npm",
+      "description": "Changes that affect the build system or external dependencies.<br>Example scopes: gulp, broccoli, npm.",
       "scopes": {
         "npm": {},
         "gulp": {},
@@ -19,57 +19,57 @@
       }
     },
     "chore": {
-      "description": "Changes which are not user-facing"
+      "description": "Changes that do not affect production code or user-facing behavior."
     },
     "style": {
-      "description": "Changes which do not affect code logic, such as whitespaces, formatting, missing semicolons"
+      "description": "Changes that do not affect code logic, such as whitespace, formatting, or missing semicolons."
     },
     "test": {
-      "description": "Changes which add missing tests or fix existing ones"
+      "description": "Changes that add missing tests or fix existing ones."
     },
     "docs": {
-      "description": "Changes which affect documentation"
+      "description": "Changes that affect documentation."
     },
     "perf": {
-      "description": "Changes which improve performance"
+      "description": "Changes that improve performance."
     },
     "ci": {
-      "description": "Changes which affect CI configuration files and scripts.<br>Example scopes: travis, circle, browser-stack, sauce-labs"
+      "description": "Changes that affect CI configuration files and scripts.<br>Example scopes: travis, circle, browser-stack, sauce-labs."
     },
     "revert": {
-      "description": "Changes which revert a previous commit"
+      "description": "Changes that revert a previous commit, typically referencing the reverted commit hash."
     }
   },
   "footerTypes": {
     "BREAKING-CHANGE": {
-      "description": "The commit introduces breaking changes"
+      "description": "The commit introduces backward-incompatible changes."
     },
     "Closes": {
-      "description": "The commit closes issues or pull requests"
+      "description": "The commit closes issues or pull requests."
     },
     "Implements": {
-      "description": "The commit implements new features"
+      "description": "The commit implements new features."
     },
     "Author": {
-      "description": "The commit's author"
+      "description": "The commit's author."
     },
     "Co-authored-by": {
-      "description": "The specified person co-authored the commit's changes"
+      "description": "The specified person co-authored the commit's changes."
     },
     "Signed-off-by": {
-      "description": "Certifies the committer has the rights to submit the work under the project's license or agrees to some contributor representation, such as a Developer Certificate of Origin"
+      "description": "Certifies the committer has the rights to submit the work under the project's license or agrees to a contributor representation such as a Developer Certificate of Origin."
     },
     "Reviewed-by": {
-      "description": "The specified person reviewed and is completely satisfied with the commit's changes"
+      "description": "The specified person reviewed and is satisfied with the commit's changes."
     },
     "Tested-by": {
-      "description": "The specified person applied the commit's changes and found them to have the desired effect"
+      "description": "The specified person tested the commit's changes and confirmed the desired behavior."
     },
     "Acked-by": {
-      "description": "The specified person liked the commit's changes"
+      "description": "The specified person acknowledged or approved the commit's changes."
     },
     "Refs": {
-      "description": "The commit references another commit by its hash ID.<br>For multiple hash IDs, use a comma as separator"
+      "description": "The commit references another commit by its hash ID.<br>For multiple hash IDs, use a comma as a separator."
     }
   }
 }
