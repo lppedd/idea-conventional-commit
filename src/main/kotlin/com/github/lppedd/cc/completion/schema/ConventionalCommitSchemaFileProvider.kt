@@ -23,5 +23,5 @@ internal class ConventionalCommitSchemaFileProvider : JsonSchemaFileProvider, Du
     SchemaType.embeddedSchema
 
   override fun isAvailable(file: VirtualFile): Boolean =
-    file.isValid && file.fileType is JsonFileType && file.name == CC.Tokens.File
+    file.isValid && file.fileType is JsonFileType && CC.Tokens.File.equals(file.name, ignoreCase = true)
 }
