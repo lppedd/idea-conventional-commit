@@ -1,5 +1,4 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "Default commit types, scopes, and footer types",
   "type": "object",
   "required": [

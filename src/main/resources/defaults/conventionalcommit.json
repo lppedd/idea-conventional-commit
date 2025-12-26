@@ -1,5 +1,4 @@
 {
-  "$schema": "https://github.com/lppedd/idea-conventional-commit/raw/master/src/main/resources/defaults/conventionalcommit.schema.json",
   "types": {
     "refactor": {
       "description": "Changes that restructure or improve code without changing behavior."
