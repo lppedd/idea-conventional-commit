@@ -1,173 +1,155 @@
-<img align="left" width="85" height="85" src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_logo.png" alt="Plugin logo">
+<!--suppress HtmlDeprecatedAttribute, CheckImageSize -->
+<h1 align="center">
+  <img align="center" width="80" src="./images/cc_logo.png" alt="Plugin logo">
+  <span>Conventional Commit</span>
+</h1>
+<div align="center">
+<p>
+  <span>Available at <a href="https://plugins.jetbrains.com/plugin/13389-conventional-commit">JetBrains Marketplace</a></span>
+  <span>/</span>
+  <a href="https://github.com/lppedd/idea-conventional-commit/releases">GitHub Releases</a>
+</p>
 
-# Conventional Commit
+[![build](https://img.shields.io/github/actions/workflow/status/lppedd/idea-conventional-commit/build.yml.svg?branch=master)](https://github.com/lppedd/idea-conventional-commit/actions/workflows/build.yml)
+[![idea](https://img.shields.io/badge/platform-2025.3-ff7700.svg?logo=intellij-idea)](https://www.jetbrains.com/idea/)
+[![kotlin](https://img.shields.io/badge/kotlin-2.2.21-blue.svg?logo=kotlin)](https://kotlinlang.org)
 
-### Available @ [JetBrains Plugins Repository][1]
+</div>
 
-Looking for the latest **plugin binaries**? Get them [here][2] as `.zip`  
-<small>Supported IDE versions **from 0.26.0**: `253.17525` to `*` (all future releases)</small>  
-<small>Supported IDE versions **from 0.25.0**: `233.11799` to `253.2`</small>  
-<small>Supported IDE versions **from 0.24.0**: `233.11799` to `251.*`</small>  
-<small>Supported IDE versions **from 0.23.0**: `223.4884` to `243.*`</small>  
-<small>Supported IDE versions **from 0.19.0**: `202.6397` to `233.*`</small>  
+## Overview
 
-<strong>Additional Providers</strong> are available by installing other lightweight plugins.  
+The **Conventional Commit** plugin provides completion support for [Conventional Commits][conventional-commits]
+(also known as semantic commits) in the IDE's VCS modal commit dialog and non-modal commit tool window.
 
-| Context & GitHub  |              Plugins Repository              |        Type        |       Scope        | Subject | Body | Footer type | Footer value |
-|-------------------|:--------------------------------------------:|:------------------:|:------------------:|:-------:|:----:|:-----------:|:------------:|
-| [Angular (2+)][6] | :heavy_check_mark: [Install][7] (Deprecated) |                    | :heavy_check_mark: |         |      |             |              |
-| [Commitlint][8]   | :heavy_check_mark: [Install][9] (Deprecated) | :heavy_check_mark: | :heavy_check_mark: |         |      |             |              |
-| GitHub            |                Coming soon...                |                    |                    |         |      |             |              |
-| VCS (extended)    |                Coming soon...                |                    |                    |         |      |             |              |
+The plugin offers:
 
------
+- **Standard completion** – context-aware suggestions.
+- **Template completion** – triggered on user demand.
+- **Extension API** – allowing additional providers for each part of a commit message:
+  type, scope, subject, body, and footer.
 
-The aim of this plugin is to provide completion for [conventional commits][3],
-also named _semantic_ commits, inside the VCS Commit dialog. The plugin must provide:
+Writing high-quality commit messages is essential for maintaining a clear and searchable project history.
 
- - **standard completion** — based on context
- - **template completion** — initiated intentionally
- - **extensibility** — which means allowing attaching providers for the various parts of the commit:  
-   _type_, _scope_, _subject_, _body_ and _footer_
+The Conventional Commits specification is an excellent choice for this, as it also helps streamline
+the process of writing commits across teams. However, selecting the correct commit **type** or **scope**
+is not always straightforward. It is easy to forget when a particular **type** should be used,
+which **scopes** are available, or how to phrase a meaningful **subject**.
 
------
+This plugin addresses these challenges while respecting the Conventional Commits
+[specification][conventional-commits-spec], allowing users to customize the experience
+to fit their own workflow and preferences.
 
-Writing quality commit messages is important to keep an understandable and searchable history
-of your project. Conventional commits are a perfect example of that.  
-However, as an example, it can happen choosing the correct _type_ or _scope_ isn't that immediate.
-We might have forgotten about when a specific _type_ should be used or what are the
-available _scopes_, or we simply need a way to quickly complete the _subject_.
+### IDE compatibility table
 
-The plugin helps with the above, while also respecting the aforementioned requirements, so that
-each user is able to customize the experience based on its preferences.
+| From Plugin version | From Platform version | To Platform version |
+|---------------------|-----------------------|---------------------|
+| 0.26.0              | 253.17525             | *                   |
+| 0.25.0              | 233.11799             | 253.2*              |
+| 0.24.0              | 233.11799             | 251.*               |
+| 0.23.0              | 223.4884              | 243.*               |
+| 0.19.0              | 202.6397              | 233.*               |
 
-### Completion modes
+## Completion modes
 
 The plugin offers two completion modes.
-  
-  - #### Context based
-    The commit message can be written like you have done until now, but by invoking
-    completion you'll be offered the correct items based on the scope.
-    Certain commodities, such as auto-completing the scope parenthesis or the `:` separator,
-    are there too.
-    
-    <img src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_standard.gif" alt="Standard completion">
-    
-  - #### Template based
-    By firstly invoking the _type_ completion and confirming an item, a template will be
-    generated in place, and you'll be guided through each token (_scope_ and _subject_).
-    You can also go back (with `shift + tab`) and change your pick.
-    
-    Arbitrary characters' insertion is also allowed inside each template's range marker.
 
-    <img src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_template.gif" alt="Template completion">
+### Context-based
 
-### Inspections
+The commit message can be written as usual. When you invoke code completion,
+you are offered the most appropriate suggestions based on the current context.
 
-Inspections are bundled too, and they're **extensible**, which means a _Provider_ may contribute with
-additional ones.  
-The standard inspection warns you if you're not following the Conventional Commit standard.
-In case, just press `ctrl + alt + l` (on Windows) and the commit message will be formatted for you.
+Several convenience features are included as well, such as automatically inserting
+the **scope** parentheses or the `:<space>` separator.
 
-<img src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_inspections.gif" alt="Inspections">  
+<img src="./images/cc_standard.gif" alt="Standard completion">
 
-You may enable/disable inspections via _Settings > Version Control > Commit_
+### Template-based
 
-### Documentation
+By first invoking completion for the commit **type** and selecting one of the suggested items,
+a commit message template is generated in place. You are then guided through each commit message
+token (**scope**, **subject**, **body**, **footer**).
 
-Each commit token is able to hold documentation. This is important in case you forgot their meaning
-or if you want to share additional pieces of information with users.
+You can move back to previous tokens using `SHIFT + TAB` (on Windows) to change selection.
+Instead of accepting a completion suggestion, an arbitrary value may also be typed directly
+inside each template range marker.
 
-<img src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_docs.gif" alt="Documentation">
+<img src="./images/cc_template.gif" alt="Template completion">
 
-Documentation for tokens which might hold long text, spawning multiple lines, is rendered a bit differently.
+## Inspections
 
-<img width="840" height="281" src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_long_doc.png" alt="Long documentation">
+The plugin includes inspections that warn you whenever a commit message does not follow the
+Conventional Commits [specification][conventional-commits-spec]. If an issue is reported,
+simply use `CTRL + ALT + L` (on Windows) to automatically fix the commit message.
 
-### Custom default types and scopes
+<img src="./images/cc_inspections.gif" alt="Inspections">
 
-Default commit types and scopes can be totally customized and shared with your team by creating and populating
-a JSON file named 
-```
-conventionalcommit.json
-```
+You can also provide your own inspections by registering implementations of `CommitInspectionProvider`
+from a dependant plugin.
 
-The plugin uses an internal version of that file, which you can export via _Export built-in defaults to path_.  
-You may then customize it per your needs.
+### Toggling inspections
 
-<img width="840" height="572" src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_custom_defaults.png" alt="Custom defaults">
+Commit message inspections can be enabled or disabled from **Settings > Version Control > Commit**.
 
-You're allowed to provide custom commit's _types_, _scopes_ and _footer types_, given the JSON file respects a [Schema][5].   
-An example is shown below:
+## Token documentation
 
-```json
-{
-  "types": {
-    "custom-type": {
-      "description": "The custom type's description",
-      "scopes": {
-        "first": {
-          "description": "The first scope's description"
-        },
-        "second": {}
-      }
-    }
-  },
-  "commonScopes": {
-    "one": {
-      "description": "The common scope's description"
-    },
-    "two": {}
-  },
-  "footerTypes": {
-    "custom-footer": {
-      "description": "The custom footer's description",
-      "values": {
-        "value-one": {
-          "description": "The footer value's description"
-        },
-        "value-two": {}
-      }
-    }
-  }
-}
-```
+Each commit message token can include documentation, available through the usual Quick Documentation popup.
+This is useful whenever you are unsure about the meaning of a suggested item or whenever you are
+unsure whether that suggestion may be used in that particular context.
 
-**If the file is located in the project's root directory, the plugin will pick it up automatically**,
-making it easy to version it and avoiding explicitly setting a _Custom default tokens_ path. 
+<img src="./images/cc_docs.gif" alt="Documentation">
 
-### Providers
+Documentation for tokens that may span multiple lines is rendered slightly differently.
 
-In a fresh installation you'll only be offered the most common tokens (e.g. `fix`, `feat`, `build`, `BREAKING CHANGE`, etc.),
-but the plugin exposes an API to enhance completion items, per each token.
-_Type_, _scope_ and _subject_ each have a specific entry point, and the implementation is called
-**Provider**. Each Provider is listed in a table, based on its context.
+<img width="840" src="./images/cc_long_doc.png" alt="Long documentation">
 
-<img width="845" height="552" src="https://raw.githubusercontent.com/lppedd/idea-conventional-commit/master/images/cc_providers.png" alt="Providers">
+## Custom tokens
 
-You're allowed to re-order Providers per your necessities, knowing that possible duplicates
-are going to be automatically filtered by the core engine.
+Commit **types**, **scopes**, and **footers** can be customized and shared across your team
+by creating a file named `conventionalcommit.json` in the project's root directory, or by setting
+a file path via **Settings > Conventional Commit, Default tokens**.
 
-<b>More on this later on...</b>
+The plugin bundles a predefined set of commonly used tokens, which you can export
+via the **Export built-in defaults to path...** action-link as a starting point.  
 
------
+<img width="840" src="./images/cc_custom_defaults.png" alt="Custom defaults">
 
-## Author and contributors
+The exported file can then be customized to suit your needs, as long as it conforms
+to the associated JSON [schema][schema].
 
- - Edoardo Luppi (<lp.edoardo@gmail.com>)
- - [ymind][4]
- - [bric3][11]
- - [LinWanCen][12]
+If the file is located in the project's root directory, the plugin will pick it up automatically,
+making versioning easy and avoiding explicit file paths.
 
-[1]: https://plugins.jetbrains.com/plugin/13389-conventional-commit
-[2]: https://github.com/lppedd/idea-conventional-commit/releases
-[3]: https://conventionalcommits.org/
-[4]: https://github.com/ymind
-[5]: https://github.com/lppedd/idea-conventional-commit/blob/master/src/main/resources/defaults/conventionalcommit.schema.json
-[6]: https://github.com/lppedd/idea-conventional-commit-angular2
-[7]: https://plugins.jetbrains.com/plugin/13405-angular-conventional-commit
-[8]: https://github.com/lppedd/idea-conventional-commit-commitlint
-[9]: https://plugins.jetbrains.com/plugin/14046-commitlint-conventional-commit
-[10]: https://join.slack.com/t/ideaconventio-1ts8697/shared_invite/zt-iuztsuth-pr_5wjvZGqITHCz3OOUxgQ
-[11]: https://github.com/bric3
-[12]: https://github.com/LinWanCen
+## Token providers
+
+By default, a fresh installation offers only the most common tokens (e.g., `fix`, `feat`, `build`,
+`BREAKING CHANGE`, etc.).
+
+However, the plugin exposes APIs to enhance completion suggestions for each commit message token,
+by registering implementations of:
+
+- `CommitTypeProvider`
+- `CommitScopeProvider`
+- `CommitSubjectProvider`
+- `CommitBodyProvider`
+- `CommitFooterTypeProvider`
+- `CommitFooterValueProvider`
+
+from dependant plugins.
+
+Providers can also be reordered as needed via **Settings > Conventional Commit > Providers**,
+with duplicate suggestions automatically filtered out by the core engine.
+
+<img width="845" src="./images/cc_providers.png" alt="Providers">
+
+**More on this coming soon**.
+
+## Author and Contributors
+
+- [Edoardo Luppi](https://github.com/lppedd)
+- [ymind](https://github.com/ymind)
+- [bric3](https://github.com/bric3)
+- [LinWanCen](https://github.com/LinWanCen)
+
+[conventional-commits]: https://conventionalcommits.org/
+[conventional-commits-spec]: https://www.conventionalcommits.org/en/v1.0.0/#specification
+[schema]: https://github.com/lppedd/idea-conventional-commit/blob/master/src/main/resources/defaults/conventionalcommit.schema.json
