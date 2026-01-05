@@ -19,10 +19,7 @@ import com.intellij.uiDesigner.core.GridConstraints
 import com.intellij.uiDesigner.core.GridLayoutManager
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
-import java.io.BufferedReader
-import java.io.InputStreamReader
 import java.io.Reader
-import java.nio.charset.StandardCharsets.UTF_8
 import javax.swing.JPanel
 
 /**
@@ -74,10 +71,7 @@ internal class DefaultTokensFileExportPanel
     }
 
     // When exporting to a file, we also need to add the JSON schema reference
-    val inputStream = getResourceAsStream("/defaults/${CC.Tokens.File}")
-    val reader = BufferedReader(InputStreamReader(inputStream, UTF_8))
-    val jsonStr = reader.use(Reader::readText)
-
+    val jsonStr = getResourceAsStream("/defaults/${CC.Tokens.File}").bufferedReader().use(Reader::readText)
     val pluginVersion = getPluginVersion()
     val schemaPath = "src/main/resources/defaults/conventionalcommit.schema.json"
     val schemaUrl = "https://github.com/lppedd/idea-conventional-commit/raw/${pluginVersion}/$schemaPath\""

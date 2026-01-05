@@ -10,14 +10,13 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
 import org.codehaus.jettison.json.JSONArray
 import org.codehaus.jettison.json.JSONObject
-import java.io.BufferedReader
 import java.io.IOException
-import java.io.InputStreamReader
 import java.io.Reader
 import java.nio.charset.StandardCharsets.UTF_8
 import java.nio.file.FileSystems
 import java.nio.file.Files
 import java.nio.file.NoSuchFileException
+import kotlin.io.path.bufferedReader
 
 /**
  * Manages default commit types and scopes.
@@ -36,9 +35,11 @@ internal class CCDefaultTokensService(private val project: Project) {
    * JSON Schema used to validate the default commit types and scopes JSON file.
    */
   private val defaultsSchema: Schema by lazy {
-    val schemaInputStream = getResourceAsStream("/defaults/${CC.Tokens.SchemaFile}")
-    val schemaReader = BufferedReader(InputStreamReader(schemaInputStream, UTF_8))
-    val schemaJson = JsonParser(schemaReader).parse()
+    val bufferedReader = getResourceAsStream("/defaults/${CC.Tokens.SchemaFile}").bufferedReader()
+    val schemaJson = bufferedReader.use {
+      JsonParser(bufferedReader).parse()
+    }
+
     SchemaLoader(schemaJson).load()
   }
 
@@ -48,9 +49,7 @@ internal class CCDefaultTokensService(private val project: Project) {
    * @throws SchemaValidationException When the JSON object does not respect the schema
    */
   private val builtInDefaultTokens: JsonDefaults by lazy {
-    val inputStream = getResourceAsStream("/defaults/${CC.Tokens.File}")
-    val reader = BufferedReader(InputStreamReader(inputStream, UTF_8))
-    val jsonStr = reader.use(Reader::readText)
+    val jsonStr = getResourceAsStream("/defaults/${CC.Tokens.File}").bufferedReader().use(Reader::readText)
     parseJsonStr(jsonStr)
   }
 
@@ -77,7 +76,7 @@ internal class CCDefaultTokensService(private val project: Project) {
       throw NoSuchFileException(filePath)
     }
 
-    val jsonStr = Files.newBufferedReader(path, UTF_8).use(Reader::readText)
+    val jsonStr = path.bufferedReader().use(Reader::readText)
     defaultsSchema.validateJson(jsonStr)
   }
 
@@ -150,7 +149,7 @@ internal class CCDefaultTokensService(private val project: Project) {
    */
   private fun readDefaultsFromFile(filePath: String): JsonDefaults {
     val path = FileSystems.getDefault().getPath(filePath)
-    val jsonStr = Files.newBufferedReader(path, UTF_8).use(Reader::readText)
+    val jsonStr = path.bufferedReader().use(Reader::readText)
     return parseJsonStr(jsonStr)
   }
 
