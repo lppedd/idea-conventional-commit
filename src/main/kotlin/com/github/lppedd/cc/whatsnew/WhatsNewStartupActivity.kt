@@ -7,8 +7,7 @@ import com.github.lppedd.cc.service
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.ProjectActivity
-import com.intellij.util.concurrency.EdtScheduledExecutorService
-import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.delay
 
 /**
  * Verifies the need to display the What's New dialog at startup.
@@ -29,11 +28,11 @@ internal class WhatsNewStartupActivity : ProjectActivity, DumbAware {
       .any { it.getPages().isNotEmpty() }
 
     if (shouldDisplay) {
-      EdtScheduledExecutorService.getInstance().schedule({
-        if (!project.isDisposed) {
-          WhatsNewDialog.showForProject(project)
-        }
-      }, 1100L, TimeUnit.MILLISECONDS)
+      delay(1100L)
+
+      if (!project.isDisposed) {
+        WhatsNewDialog.showForProject(project)
+      }
     }
   }
 }
