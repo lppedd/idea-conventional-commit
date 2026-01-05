@@ -49,7 +49,6 @@ local.properties
 .intellijPlatform/
 .idea/*
 !.idea/codeStyles
-!.idea/dictionaries
 !.idea/inspectionProfiles
 
 *.iml
