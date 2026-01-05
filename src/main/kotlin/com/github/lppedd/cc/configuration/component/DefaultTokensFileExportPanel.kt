@@ -4,7 +4,9 @@ import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.getResourceAsStream
 import com.github.lppedd.cc.scaled
+import com.intellij.ide.plugins.PluginManagerCore
 import com.intellij.openapi.application.runWriteAction
+import com.intellij.openapi.extensions.PluginId
 import com.intellij.openapi.fileChooser.FileChooserFactory
 import com.intellij.openapi.fileChooser.FileSaverDescriptor
 import com.intellij.openapi.vfs.VirtualFile
@@ -17,6 +19,10 @@ import com.intellij.uiDesigner.core.GridConstraints
 import com.intellij.uiDesigner.core.GridLayoutManager
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.io.Reader
+import java.nio.charset.StandardCharsets.UTF_8
 import javax.swing.JPanel
 
 /**
@@ -67,13 +73,27 @@ internal class DefaultTokensFileExportPanel
       return
     }
 
-    getResourceAsStream("/defaults/${CC.Tokens.File}").use {
-      runWriteAction {
-        virtualFile.setBinaryContent(it.readBytes())
-      }
+    // When exporting to a file, we also need to add the JSON schema reference
+    val inputStream = getResourceAsStream("/defaults/${CC.Tokens.File}")
+    val reader = BufferedReader(InputStreamReader(inputStream, UTF_8))
+    val jsonStr = reader.use(Reader::readText)
 
-      exportInfo.foreground = UIUtil.getLabelDisabledForeground()
-      exportInfo.text = CCBundle["cc.config.defaults.exportToPath.completed"]
+    val pluginVersion = getPluginVersion()
+    val schemaPath = "src/main/resources/defaults/conventionalcommit.schema.json"
+    val schemaUrl = "https://github.com/lppedd/idea-conventional-commit/raw/${pluginVersion}/$schemaPath\""
+    val sb = StringBuilder(jsonStr)
+    sb.insert(4, $$"\"$schema\": \"$$schemaUrl\"\n")
+
+    runWriteAction {
+      virtualFile.setBinaryContent("$sb".toByteArray())
     }
+
+    exportInfo.foreground = UIUtil.getLabelDisabledForeground()
+    exportInfo.text = CCBundle["cc.config.defaults.exportToPath.completed"]
+  }
+
+  private fun getPluginVersion(): String {
+    val plugin = PluginManagerCore.getPlugin(PluginId.getId(CC.PluginId)) ?: error("plugin not found")
+    return plugin.version
   }
 }
