@@ -3,7 +3,6 @@ package com.github.lppedd.cc.whatsnew
 import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.api.WhatsNewPage
 import com.github.lppedd.cc.api.WhatsNewProvider
-import com.intellij.ide.plugins.IdeaPluginDescriptor
 import com.intellij.ide.plugins.PluginManagerCore
 import com.intellij.ide.util.PropertiesComponent
 import com.intellij.openapi.extensions.PluginDescriptor
@@ -45,7 +44,7 @@ internal class InternalWhatsNewProvider : WhatsNewProvider {
 
   override fun shouldDisplayAtStartup(): Boolean {
     val properties = PropertiesComponent.getInstance()
-    val installedVersion = getPlugin()?.version ?: return false
+    val installedVersion = getPluginVersion() ?: return false
     val registeredVersion = properties.getValue(PROPERTY_VERSION, "0.0.0")
 
     if (PluginVersion(installedVersion) > PluginVersion(registeredVersion)) {
@@ -63,8 +62,10 @@ internal class InternalWhatsNewProvider : WhatsNewProvider {
   override fun getPages(): List<WhatsNewPage> =
     whatsNewPages
 
-  private fun getPlugin(): IdeaPluginDescriptor? =
-    PluginManagerCore.getPlugin(PluginId.getId(CC.PluginId))
+  private fun getPluginVersion(): String? {
+    val plugin = PluginManagerCore.getPlugin(PluginId.getId(CC.PluginId))
+    return plugin?.version
+  }
 
   private class PluginVersion(version: String) : Comparable<PluginVersion> {
     private val parts = version.split(".").map(String::toInt)

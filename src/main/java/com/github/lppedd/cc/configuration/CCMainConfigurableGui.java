@@ -158,7 +158,7 @@ public class CCMainConfigurableGui {
     defaultTokensFilePickerPanel.revalidateComponent();
   }
 
-  @SuppressWarnings("ConstantExpression")
+  @SuppressWarnings({"ConstantExpression", "InstanceVariableUsedBeforeInitialized"})
   private void finishUpComponents(
       @NotNull final Project project,
       @NotNull final Disposable disposable) {
@@ -230,6 +230,7 @@ public class CCMainConfigurableGui {
     defaultsPanel.add(JBUI.Borders.emptyTop(7).wrap(defaultTokensPanel), gc);
   }
 
+  @SuppressWarnings("ConstantExpression")
   @Nullable
   private HyperlinkLabel buildTranslatorLabel() {
     final var name = CCBundle.getWithDefault("cc.translation.translator.name", "");
@@ -249,8 +250,6 @@ public class CCMainConfigurableGui {
     } else {
       if (new UrlValidator(new String[] {"http", "https"}, NO_FRAGMENTS).isValid(url)) {
         final var hyperlink = "<hyperlink>" + name + "</hyperlink>";
-
-        // noinspection UnstableApiUsage
         label.setTextWithHyperlink(CCBundle.get("cc.translation.text") + " " + hyperlink);
         label.setHyperlinkTarget(url);
       } else {

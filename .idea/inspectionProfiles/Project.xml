@@ -302,6 +302,7 @@
           <option value="JavaIoSerializableObjectMustHaveReadResolve" />
           <option value="JComponentDataProvider" />
           <option value="Destructure" />
+          <option value="InstanceVariableUsedBeforeInitialized" />
         </list>
       </option>
     </inspection_tool>
