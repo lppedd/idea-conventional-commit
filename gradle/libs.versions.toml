@@ -1,17 +1,17 @@
 [versions]
 kotlin = "2.3.0"
-intellij-platform = "2.10.5"
+intellijPlatform = "2.10.5"
 grammarkit = "2022.3.2.2"
-json-jettison = "1.5.4"
-json-skema = "0.28.0"
-commons-validator = "1.10.1"
+jettison = "1.5.4"
+jsonSkema = "0.28.0"
+commonsValidator = "1.10.1"
 
 [libraries]
-json-jettison = { group = "org.codehaus.jettison", name = "jettison", version.ref = "json-jettison" }
-json-skema = { group = "com.github.erosb", name = "json-sKema", version.ref = "json-skema" }
-commons-validator = { group = "commons-validator", name = "commons-validator", version.ref = "commons-validator" }
+jettison = { group = "org.codehaus.jettison", name = "jettison", version.ref = "jettison" }
+jsonSkema = { group = "com.github.erosb", name = "json-sKema", version.ref = "jsonSkema" }
+commonsValidator = { group = "commons-validator", name = "commons-validator", version.ref = "commonsValidator" }
 
 [plugins]
-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-jetbrains-intellij-platform = { id = "org.jetbrains.intellij.platform", version.ref = "intellij-platform" }
-jetbrains-grammarkit = { id = "org.jetbrains.grammarkit", version.ref = "grammarkit" }
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+intellijPlatform = { id = "org.jetbrains.intellij.platform", version.ref = "intellijPlatform" }
+grammarkit = { id = "org.jetbrains.grammarkit", version.ref = "grammarkit" }

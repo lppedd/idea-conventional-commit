@@ -12,9 +12,9 @@ fun stringProperty(key: String, default: String? = null): String =
 
 plugins {
   java
-  alias(libs.plugins.kotlin.jvm)
-  alias(libs.plugins.jetbrains.intellij.platform)
-  alias(libs.plugins.jetbrains.grammarkit)
+  alias(libs.plugins.kotlin)
+  alias(libs.plugins.intellijPlatform)
+  alias(libs.plugins.grammarkit)
 }
 
 group = "com.github.lppedd"
@@ -46,12 +46,12 @@ dependencies {
     pluginVerifier()
   }
 
-  implementation(libs.commons.validator) {
+  implementation(libs.commonsValidator) {
     exclude("commons-beanutils", "commons-beanutils")
   }
 
-  implementation(libs.json.jettison)
-  implementation(libs.json.skema)
+  implementation(libs.jettison)
+  implementation(libs.jsonSkema)
 
   // TODO: move to catalog if it is really needed
   testImplementation("junit:junit:4.13.2")
