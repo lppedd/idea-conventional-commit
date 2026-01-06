@@ -5,6 +5,7 @@ import org.jetbrains.intellij.platform.gradle.extensions.intellijPlatform
 import org.jetbrains.kotlin.gradle.dsl.JvmDefaultMode
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 fun stringProperty(key: String, default: String? = null): String =
   findProperty(key)?.toString() ?: default ?: error("Expected a valid property $key")
@@ -119,11 +120,7 @@ tasks {
     purgeOldFiles = true
   }
 
-  compileKotlin {
-    dependsOn(generateLexer)
-  }
-
-  compileTestKotlin {
+  withType<KotlinCompile>().configureEach {
     dependsOn(generateLexer)
   }
 
