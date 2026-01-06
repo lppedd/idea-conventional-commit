@@ -104,7 +104,7 @@ kotlin {
   explicitApiWarning()
   compilerOptions {
     jvmTarget = JvmTarget.JVM_21
-    languageVersion = KotlinVersion.KOTLIN_2_2
+    languageVersion = KotlinVersion.KOTLIN_2_3
     freeCompilerArgs.addAll(
         "-Xno-call-assertions",
         "-Xno-receiver-assertions",
