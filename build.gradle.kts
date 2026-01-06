@@ -21,10 +21,6 @@ group = "com.github.lppedd"
 
 repositories {
   mavenCentral()
-
-  // For org.everit.json.schema
-  maven("https://jitpack.io")
-
   intellijPlatform {
     defaultRepositories()
   }
