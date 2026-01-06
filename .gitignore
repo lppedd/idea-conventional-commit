@@ -139,3 +139,8 @@ Desktop.ini
 # Maven Wrapper
 ######################
 !.mvn/wrapper/maven-wrapper.jar
+
+######################
+# Plugin Development
+######################
+!hotswap-agent-2.0.1.jar

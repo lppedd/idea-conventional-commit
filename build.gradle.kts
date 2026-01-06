@@ -2,6 +2,7 @@ import org.jetbrains.grammarkit.tasks.GenerateLexerTask
 import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 import org.jetbrains.intellij.platform.gradle.extensions.intellijPlatform
+import org.jetbrains.intellij.platform.gradle.utils.asPath
 import org.jetbrains.kotlin.gradle.dsl.JvmDefaultMode
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
@@ -91,12 +92,13 @@ sourceSets {
   }
 }
 
-java {
-  sourceCompatibility = JavaVersion.VERSION_21
-  targetCompatibility = JavaVersion.VERSION_21
-}
-
 kotlin {
+  @Suppress("UnstableApiUsage")
+  jvmToolchain {
+    languageVersion = JavaLanguageVersion.of(21)
+    vendor = JvmVendorSpec.JETBRAINS
+  }
+
   explicitApiWarning()
   compilerOptions {
     languageVersion = KotlinVersion.KOTLIN_2_3
@@ -142,11 +144,7 @@ tasks {
   }
 
   runIde {
-    val dcevm = stringProperty("dcevmExecutable", default = "")
-
-    if (dcevm.isNotBlank()) {
-      @Suppress("UsePropertyAccessSyntax")
-      setExecutable(dcevm)
-    }
+    val agentPath = layout.projectDirectory.file("hotswap-agent-2.0.1.jar").asPath
+    jvmArgs("-XX:+AllowEnhancedClassRedefinition", "-XX:HotswapAgent=external", "-javaagent:$agentPath")
   }
 }
