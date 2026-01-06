@@ -1,6 +1,6 @@
 package com.github.lppedd.cc.vcs
 
-import com.github.lppedd.cc.CC
+import com.github.lppedd.cc.CCRegistry
 import com.github.lppedd.cc.filterNotBlank
 import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.FooterTokens
@@ -8,7 +8,6 @@ import com.github.lppedd.cc.parser.ValidToken
 import com.github.lppedd.cc.trim
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.registry.Registry
 import com.intellij.openapi.vcs.VcsConfiguration
 import com.intellij.vcs.log.VcsCommitMetadata
 import kotlin.math.max
@@ -74,7 +73,7 @@ internal class InternalRecentCommitsService(private val project: Project) : Rece
   }
 
   private fun getOrderedVcsCommitMessages(): Collection<String> {
-    if (!Registry.`is`(CC.Registry.VcsEnabled, false)) {
+    if (!CCRegistry.isVcsSupportEnabled()) {
       return emptyList()
     }
 

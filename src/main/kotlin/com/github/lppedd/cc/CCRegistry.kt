@@ -18,4 +18,10 @@ internal object CCRegistry {
       else -> Locale.getDefault()
     }
   }
+
+  /**
+   * Returns whether support for inspecting the VCS log is enabled.
+   */
+  fun isVcsSupportEnabled(): Boolean =
+    Registry.`is`(CC.Registry.VcsEnabled, false)
 }
