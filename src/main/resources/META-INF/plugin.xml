@@ -49,6 +49,7 @@
     <documentationProvider implementation="com.github.lppedd.cc.documentation.CommitTokenDocumentationProvider" />
 
     <projectConfigurable
+        groupId="tools"
         id="preferences.ConventionalCommit"
         key="cc.plugin.name"
         bundle="messages.ConventionalCommitBundle"
