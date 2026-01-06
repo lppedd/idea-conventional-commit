@@ -7,7 +7,7 @@ import com.intellij.notification.NotificationType
 /**
  * @author Edoardo Luppi
  */
-internal object CCNotificationService {
+internal object CCNotification {
   private const val CC_GROUP = "com.github.lppedd.cc.notifications"
   private val notificationGroup = NotificationGroupManager.getInstance().getNotificationGroup(CC_GROUP)
 

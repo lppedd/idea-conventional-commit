@@ -2,7 +2,7 @@ package com.github.lppedd.cc.api.impl
 
 import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.CCBundle
-import com.github.lppedd.cc.CCNotificationService
+import com.github.lppedd.cc.CCNotification
 import com.github.lppedd.cc.api.*
 import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.configuration.CCDefaultTokensService
@@ -82,7 +82,7 @@ internal class InternalCommitTokenProvider(private val project: Project) :
     }
 
     val message = CCBundle["cc.notifications.schema", details]
-    CCNotificationService.createErrorNotification(message).notify(project)
+    CCNotification.createErrorNotification(message).notify(project)
   }
 
   private object DefaultProviderPresentation : ProviderPresentation {
