@@ -7,8 +7,6 @@ import com.github.lppedd.cc.language.ConventionalCommitFileType
 import com.github.lppedd.cc.language.ConventionalCommitLanguage
 import com.intellij.lang.Language
 import com.intellij.openapi.components.service
-import com.intellij.openapi.editor.event.DocumentEvent
-import com.intellij.openapi.editor.event.DocumentListener
 import com.intellij.openapi.editor.ex.EditorEx
 import com.intellij.openapi.editor.ex.util.LexerEditorHighlighter
 import com.intellij.openapi.fileTypes.PlainTextLanguage
@@ -100,12 +98,6 @@ internal class ConventionalCommitEditorTextFieldProvider : EditorTextFieldProvid
     val commitMessage = oldDocument.getUserData(CommitMessage.DATA_KEY)
     document.putUserData(CommitMessage.DATA_KEY, commitMessage)
     document.putUserData(CommitMessage.CHANGES_SUPPLIER_KEY, oldDocument.getUserData(CommitMessage.CHANGES_SUPPLIER_KEY))
-    document.addDocumentListener(object : DocumentListener {
-      override fun documentChanged(event: DocumentEvent) {
-        val editor = editorField.editor ?: return
-        editor.contentComponent.repaint()
-      }
-    })
 
     editorField.setLanguage(ConventionalCommitLanguage)
     editorField.setNewDocumentAndFileType(ConventionalCommitFileType, document)
