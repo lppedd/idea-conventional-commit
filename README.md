@@ -11,8 +11,9 @@
 </p>
 
 [![build](https://img.shields.io/github/actions/workflow/status/lppedd/idea-conventional-commit/build.yml.svg?branch=master)](https://github.com/lppedd/idea-conventional-commit/actions/workflows/build.yml)
+[![downloads](https://img.shields.io/jetbrains/plugin/d/com.github.lppedd.idea-conventional-commit)](https://plugins.jetbrains.com/plugin/13389-conventional-commit/)
+<br/>
 [![idea](https://img.shields.io/badge/platform-2025.3-ff7700.svg?logo=intellij-idea)](https://www.jetbrains.com/idea/)
-[![kotlin](https://img.shields.io/badge/kotlin-2.3.0-blue.svg?logo=kotlin)](https://kotlinlang.org)
 [![conventional commits](https://img.shields.io/badge/conventional%20commits-1.0.0-%23FE5196?logo=conventionalcommits)](https://conventionalcommits.org)
 
 </div>
