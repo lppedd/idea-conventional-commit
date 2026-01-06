@@ -1,9 +1,9 @@
 package com.github.lppedd.cc.completion.providers
 
-import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.api.CommitFooterValue
 import com.github.lppedd.cc.api.CommitFooterValueProvider
 import com.github.lppedd.cc.api.CommitTokenProviderService
+import com.github.lppedd.cc.completion.LookupElementKey
 import com.github.lppedd.cc.completion.resultset.ResultSet
 import com.github.lppedd.cc.lookupElement.CommitFooterValueLookupElement
 import com.github.lppedd.cc.lookupElement.ShowMoreCoAuthorsLookupElement
@@ -51,7 +51,7 @@ internal class FooterValueCompletionProvider(
         )
 
         commitFooterValues.asSequence()
-          .take(CC.Provider.MaxItems)
+          .take(CompletionProvider.MaxItems)
           .forEach { footerValues.add(ProviderCommitToken(provider, it)) }
       }
     }
@@ -59,15 +59,15 @@ internal class FooterValueCompletionProvider(
     footerValues.forEachIndexed { index, (provider, commitFooterValue) ->
       val psiElement = CommitFooterValuePsiElement(project, commitFooterValue.getText())
       val element = CommitFooterValueLookupElement(psiElement, commitFooterValue)
-      element.putUserData(ELEMENT_INDEX, index)
-      element.putUserData(ELEMENT_PROVIDER, provider)
-      element.putUserData(ELEMENT_IS_RECENT, recentFooterValues.contains(commitFooterValue.getValue()))
+      element.putUserData(LookupElementKey.Index, index)
+      element.putUserData(LookupElementKey.Provider, provider)
+      element.putUserData(LookupElementKey.IsRecent, recentFooterValues.contains(commitFooterValue.getValue()))
       prefixedResultSet.addElement(element)
     }
 
     if ("co-authored-by".equals(context.type, true)) {
       val element = ShowMoreCoAuthorsLookupElement(project, prefix)
-      element.putUserData(ELEMENT_INDEX, Int.MAX_VALUE)
+      element.putUserData(LookupElementKey.Index, Int.MAX_VALUE)
 
       @Suppress("UnstableApiUsage")
       if (process is CompletionProgressIndicator) {

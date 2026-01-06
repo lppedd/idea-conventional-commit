@@ -1,9 +1,9 @@
 package com.github.lppedd.cc.completion.providers
 
-import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.api.CommitTokenProviderService
 import com.github.lppedd.cc.api.CommitType
 import com.github.lppedd.cc.api.CommitTypeProvider
+import com.github.lppedd.cc.completion.LookupElementKey
 import com.github.lppedd.cc.completion.resultset.ResultSet
 import com.github.lppedd.cc.lookupElement.CommitTypeLookupElement
 import com.github.lppedd.cc.parser.CommitContext.TypeCommitContext
@@ -42,7 +42,7 @@ internal class TypeCompletionProvider(
       safeRunWithCheckCanceled {
         provider.getCommitTypes(context.type)
           .asSequence()
-          .take(CC.Provider.MaxItems)
+          .take(CompletionProvider.MaxItems)
           .forEach { types.add(ProviderCommitToken(provider, it)) }
       }
     }
@@ -50,9 +50,9 @@ internal class TypeCompletionProvider(
     types.forEachIndexed { index, (provider, commitType) ->
       val psiElement = CommitTypePsiElement(project, commitType.getText())
       val element = CommitTypeLookupElement(psiElement, commitType)
-      element.putUserData(ELEMENT_INDEX, index)
-      element.putUserData(ELEMENT_PROVIDER, provider)
-      element.putUserData(ELEMENT_IS_RECENT, recentTypes.contains(commitType.getValue()))
+      element.putUserData(LookupElementKey.Index, index)
+      element.putUserData(LookupElementKey.Provider, provider)
+      element.putUserData(LookupElementKey.IsRecent, recentTypes.contains(commitType.getValue()))
       prefixedResultSet.addElement(element)
     }
   }

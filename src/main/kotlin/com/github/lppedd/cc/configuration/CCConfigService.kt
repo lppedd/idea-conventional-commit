@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap
  */
 @State(
     name = "general",
-    storages = [Storage(CC.Settings.File)],
+    storages = [Storage(CC.File.Settings)],
     presentableName = PresentableNameGetter::class,
 )
 @Suppress("LightServiceMigrationCode")

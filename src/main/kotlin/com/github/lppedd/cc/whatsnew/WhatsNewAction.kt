@@ -1,6 +1,6 @@
 package com.github.lppedd.cc.whatsnew
 
-import com.github.lppedd.cc.CCIcons
+import com.github.lppedd.cc.CC
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.DumbAwareAction
@@ -13,7 +13,7 @@ import com.intellij.openapi.project.DumbAwareAction
  */
 internal class WhatsNewAction : DumbAwareAction() {
   init {
-    templatePresentation.icon = CCIcons.Logo
+    templatePresentation.icon = CC.Icon.Logo
   }
 
   override fun getActionUpdateThread(): ActionUpdateThread =

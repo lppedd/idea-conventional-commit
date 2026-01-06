@@ -1,6 +1,6 @@
 package com.github.lppedd.cc.language
 
-import com.github.lppedd.cc.CCIcons
+import com.github.lppedd.cc.CC
 import com.intellij.openapi.fileTypes.LanguageFileType
 import javax.swing.Icon
 
@@ -18,5 +18,5 @@ public object ConventionalCommitFileType : LanguageFileType(ConventionalCommitLa
     "conventionalcommit"
 
   override fun getIcon(): Icon =
-    CCIcons.Logo
+    CC.Icon.Logo
 }

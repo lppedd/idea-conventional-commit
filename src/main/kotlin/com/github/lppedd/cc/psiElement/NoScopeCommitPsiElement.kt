@@ -1,7 +1,7 @@
 package com.github.lppedd.cc.psiElement
 
+import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.CCBundle
-import com.github.lppedd.cc.CCIcons
 import com.intellij.openapi.project.Project
 import javax.swing.Icon
 
@@ -16,5 +16,5 @@ internal class NoScopeCommitPsiElement(private val project: Project) : CommitTok
     CCBundle["cc.completion.noScope"]
 
   override fun getIcon(unused: Boolean): Icon =
-    CCIcons.Tokens.Scope
+    CC.Icon.Token.Scope
 }

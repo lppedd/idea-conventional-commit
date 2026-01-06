@@ -1,7 +1,7 @@
 package com.github.lppedd.cc.configuration.component.providers
 
+import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.CCBundle
-import com.github.lppedd.cc.CCIcons
 import com.github.lppedd.cc.api.CommitTokenProvider
 import com.github.lppedd.cc.scaled
 import com.github.lppedd.cc.ui.CCTable
@@ -96,7 +96,7 @@ internal class CommitProviderTable<T : CommitTokenProvider> : CCTable() {
       } else {
         // The icon doesn't match the size prerequisite.
         // Thus, we display a generic one
-        CCIcons.Provider.Unknown
+        CC.Icon.Provider.Unknown
       }
     }
   }

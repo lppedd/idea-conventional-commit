@@ -1,7 +1,7 @@
 package com.github.lppedd.cc.configuration.holders
 
+import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.CCBundle
-import com.github.lppedd.cc.CCUI
 import com.github.lppedd.cc.configuration.CCDefaultTokensService
 import com.github.lppedd.cc.configuration.component.providers.CoAuthorsTable
 import com.github.lppedd.cc.configuration.component.providers.CoAuthorsTableModel
@@ -22,8 +22,8 @@ internal class CoAuthorsTableHolder(service: CCDefaultTokensService) {
   private val panel = table.run {
     TableSpeedSearch.installOn(this) { value, cell -> if (cell.column == 1) value as String else null }
 
-    val toolbarBorder = JBUI.Borders.customLine(CCUI.BorderColor, 0, 1, 0, 0)
-    val panelBorder = JBUI.Borders.customLine(CCUI.BorderColor)
+    val toolbarBorder = JBUI.Borders.customLine(CC.UI.BorderColor, 0, 1, 0, 0)
+    val panelBorder = JBUI.Borders.customLine(CC.UI.BorderColor)
 
     ToolbarDecorator.createDecorator(this)
       .setToolbarPosition(ActionToolbarPosition.RIGHT)

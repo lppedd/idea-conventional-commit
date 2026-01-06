@@ -1,9 +1,9 @@
 package com.github.lppedd.cc.completion.providers
 
-import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.api.CommitFooterType
 import com.github.lppedd.cc.api.CommitFooterTypeProvider
 import com.github.lppedd.cc.api.CommitTokenProviderService
+import com.github.lppedd.cc.completion.LookupElementKey
 import com.github.lppedd.cc.completion.resultset.ResultSet
 import com.github.lppedd.cc.lookupElement.CommitFooterTypeLookupElement
 import com.github.lppedd.cc.parser.FooterContext.FooterTypeContext
@@ -34,7 +34,7 @@ internal class FooterTypeCompletionProvider(
       safeRunWithCheckCanceled {
         provider.getCommitFooterTypes()
           .asSequence()
-          .take(CC.Provider.MaxItems)
+          .take(CompletionProvider.MaxItems)
           .forEach { footerTypes.add(ProviderCommitToken(provider, it)) }
       }
     }
@@ -42,8 +42,8 @@ internal class FooterTypeCompletionProvider(
     footerTypes.forEachIndexed { index, (provider, commitFooterType) ->
       val psiElement = CommitFooterTypePsiElement(project, commitFooterType.getText())
       val element = CommitFooterTypeLookupElement(psiElement, commitFooterType)
-      element.putUserData(ELEMENT_INDEX, index)
-      element.putUserData(ELEMENT_PROVIDER, provider)
+      element.putUserData(LookupElementKey.Index, index)
+      element.putUserData(LookupElementKey.Provider, provider)
       prefixedResultSet.addElement(element)
     }
   }

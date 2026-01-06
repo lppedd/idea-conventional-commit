@@ -1,6 +1,7 @@
 package com.github.lppedd.cc.completion.providers
 
 import com.github.lppedd.cc.api.CommitScopeProvider
+import com.github.lppedd.cc.completion.LookupElementKey
 import com.github.lppedd.cc.completion.resultset.ResultSet
 import com.github.lppedd.cc.lookupElement.CommitNoScopeLookupElement
 import com.github.lppedd.cc.psiElement.NoScopeCommitPsiElement
@@ -21,7 +22,7 @@ internal class NoScopeCompletionProvider(
 
   override fun complete(resultSet: ResultSet) {
     val element = CommitNoScopeLookupElement(NoScopeCommitPsiElement(project))
-    element.putUserData(ELEMENT_INDEX, Int.MAX_VALUE)
+    element.putUserData(LookupElementKey.Index, Int.MAX_VALUE)
     resultSet.withPrefixMatcher(PrefixMatcher.ALWAYS_TRUE).addElement(element)
   }
 }

@@ -1,8 +1,9 @@
 package com.github.lppedd.cc.vcs.commitbuilder
 
-import com.github.lppedd.cc.*
+import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.api.CommitToken
 import com.github.lppedd.cc.api.CommitTokenProviderService
+import com.github.lppedd.cc.completion.LookupElementKey
 import com.github.lppedd.cc.completion.providers.*
 import com.github.lppedd.cc.completion.resultset.TextFieldResultSet
 import com.github.lppedd.cc.configuration.CCConfigService
@@ -14,6 +15,9 @@ import com.github.lppedd.cc.parser.FooterContext.FooterTypeContext
 import com.github.lppedd.cc.parser.ValidToken
 import com.github.lppedd.cc.psiElement.CommitFooterTypePsiElement
 import com.github.lppedd.cc.psiElement.CommitFooterValuePsiElement
+import com.github.lppedd.cc.safeRunWithCheckCanceled
+import com.github.lppedd.cc.scaled
+import com.github.lppedd.cc.setName
 import com.github.lppedd.cc.ui.CCDialogWrapper
 import com.github.lppedd.cc.ui.CCDialogWrapper.ValidationNavigable
 import com.github.lppedd.cc.ui.MnemonicAwareCheckBox
@@ -689,15 +693,15 @@ internal class CommitBuilderDialog(private val project: Project)
             // We don't have to display a "BREAKING CHANGE" footer type
             // as it is already covered with its own text field
             .filterNot { it.getValue().matches(breakingChangeRegex) }
-            .take(CC.Provider.MaxItems)
+            .take(CompletionProvider.MaxItems)
             .distinctBy(CommitToken::getValue)
             .forEachIndexed { index, commitFooterType ->
               val value = commitFooterType.getValue()
               val psiElement = CommitFooterTypePsiElement(project, value)
               val element = CommitFooterTypeLookupElement(psiElement, commitFooterType)
-              element.putUserData(ELEMENT_INDEX, index)
-              element.putUserData(ELEMENT_PROVIDER, provider)
-              element.putUserData(ELEMENT_IS_RECENT, recentTypes.contains(value))
+              element.putUserData(LookupElementKey.Index, index)
+              element.putUserData(LookupElementKey.Provider, provider)
+              element.putUserData(LookupElementKey.IsRecent, recentTypes.contains(value))
               prefixedResultSet.addElement(element)
             }
         }
@@ -727,15 +731,15 @@ internal class CommitBuilderDialog(private val project: Project)
           )
 
           commitFooterValues.asSequence()
-            .take(CC.Provider.MaxItems)
+            .take(CompletionProvider.MaxItems)
             .distinctBy(CommitToken::getValue)
             .forEachIndexed { index, commitFooterValue ->
               val value = commitFooterValue.getValue()
               val psiElement = CommitFooterValuePsiElement(project, value)
               val element = CommitFooterValueLookupElement(psiElement, commitFooterValue)
-              element.putUserData(ELEMENT_INDEX, index)
-              element.putUserData(ELEMENT_PROVIDER, provider)
-              element.putUserData(ELEMENT_IS_RECENT, recentTypes.contains(value))
+              element.putUserData(LookupElementKey.Index, index)
+              element.putUserData(LookupElementKey.Provider, provider)
+              element.putUserData(LookupElementKey.IsRecent, recentTypes.contains(value))
               prefixedResultSet.addElement(element)
             }
         }

@@ -2,7 +2,7 @@ package com.github.lppedd.cc.lookupElement
 
 import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.api.CommitToken
-import com.github.lppedd.cc.completion.providers.ELEMENT_IS_RECENT
+import com.github.lppedd.cc.completion.LookupElementKey
 import com.github.lppedd.cc.psiElement.CommitTokenPsiElement
 import com.intellij.codeInsight.lookup.AutoCompletionPolicy
 import com.intellij.codeInsight.lookup.LookupElement
@@ -53,7 +53,7 @@ internal sealed class CommitTokenLookupElement : LookupElement() {
       presentation.itemTextForeground = foreground
     }
 
-    val isRecentlyUsed = getUserData(ELEMENT_IS_RECENT) ?: false
+    val isRecentlyUsed = getUserData(LookupElementKey.IsRecent) ?: false
     val type = tokenPresentation.getType()
     val text = if (isRecentlyUsed) {
       if (type.isNullOrBlank()) {

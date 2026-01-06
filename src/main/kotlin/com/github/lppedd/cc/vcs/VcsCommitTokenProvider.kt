@@ -1,11 +1,14 @@
 package com.github.lppedd.cc.vcs
 
-import com.github.lppedd.cc.*
+import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.api.*
+import com.github.lppedd.cc.filterNotBlank
+import com.github.lppedd.cc.filterNotEmpty
 import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.CommitTokens
 import com.github.lppedd.cc.parser.FooterTokens
 import com.github.lppedd.cc.parser.ValidToken
+import com.github.lppedd.cc.trim
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.registry.Registry
@@ -140,7 +143,7 @@ internal class VcsCommitTokenProvider(project: Project)
       "VCS"
 
     override fun getIcon(): Icon =
-      CCIcons.Provider.Vcs
+      CC.Icon.Provider.Vcs
   }
 
   private object VcsTokenPresentation : TokenPresentation {

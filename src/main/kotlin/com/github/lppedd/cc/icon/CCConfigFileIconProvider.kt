@@ -1,7 +1,6 @@
 package com.github.lppedd.cc.icon
 
 import com.github.lppedd.cc.CC
-import com.github.lppedd.cc.CCIcons
 import com.github.lppedd.cc.configuration.CCConfigService
 import com.intellij.ide.IconProvider
 import com.intellij.json.psi.JsonFile
@@ -28,11 +27,8 @@ internal class CCConfigFileIconProvider : IconProvider(), DumbAware {
 
     val customFilePath = psiElement.project.service<CCConfigService>().customFilePath
 
-    return if (
-        isCustomFile(customFilePath, psiElement) ||
-        isDefaultFile(customFilePath, psiElement)
-    ) {
-      CCIcons.Logo
+    return if (isCustomFile(customFilePath, psiElement) || isDefaultFile(customFilePath, psiElement)) {
+      CC.Icon.Logo
     } else {
       null
     }
@@ -53,6 +49,6 @@ internal class CCConfigFileIconProvider : IconProvider(), DumbAware {
     }
 
     val virtualFile = psiFile.virtualFile
-    return virtualFile.name == CC.Tokens.File && virtualFile.parent.path == psiFile.project.basePath
+    return virtualFile.name == CC.File.Defaults && virtualFile.parent.path == psiFile.project.basePath
   }
 }

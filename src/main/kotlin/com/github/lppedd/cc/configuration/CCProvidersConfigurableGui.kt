@@ -1,7 +1,7 @@
 package com.github.lppedd.cc.configuration
 
+import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.CCBundle
-import com.github.lppedd.cc.CCUI
 import com.github.lppedd.cc.api.*
 import com.github.lppedd.cc.configuration.component.providers.CommitProviderTable
 import com.github.lppedd.cc.scaled
@@ -104,8 +104,8 @@ internal class CCProvidersConfigurableGui {
   private fun buildTablePanel(table: JBTable, title: String): JPanel {
     TableSpeedSearch.installOn(table) { value -> (value as CommitTokenProvider).getPresentation().getName() }
 
-    val toolbarBorder = JBUI.Borders.customLine(CCUI.BorderColor, 0, 1, 0, 0)
-    val panelBorder = JBUI.Borders.customLine(CCUI.BorderColor)
+    val toolbarBorder = JBUI.Borders.customLine(CC.UI.BorderColor, 0, 1, 0, 0)
+    val panelBorder = JBUI.Borders.customLine(CC.UI.BorderColor)
     val tablePanel = ToolbarDecorator.createDecorator(table)
       .setToolbarPosition(RIGHT)
       .setToolbarBorder(toolbarBorder)

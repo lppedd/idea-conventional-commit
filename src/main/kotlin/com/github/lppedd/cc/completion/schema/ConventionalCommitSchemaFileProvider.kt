@@ -17,11 +17,11 @@ internal class ConventionalCommitSchemaFileProvider : JsonSchemaFileProvider, Du
     CCBundle["cc.language.name"]
 
   override fun getSchemaFile(): VirtualFile? =
-    JsonSchemaProviderFactory.getResourceFile(this::class.java, "/defaults/${CC.Tokens.SchemaFile}")
+    JsonSchemaProviderFactory.getResourceFile(this::class.java, "/defaults/${CC.File.Schema}")
 
   override fun getSchemaType(): SchemaType =
     SchemaType.embeddedSchema
 
   override fun isAvailable(file: VirtualFile): Boolean =
-    file.isValid && file.fileType is JsonFileType && CC.Tokens.File.equals(file.name, ignoreCase = true)
+    file.isValid && file.fileType is JsonFileType && CC.File.Defaults.equals(file.name, ignoreCase = true)
 }

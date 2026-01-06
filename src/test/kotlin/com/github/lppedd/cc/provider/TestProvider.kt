@@ -1,6 +1,6 @@
 package com.github.lppedd.cc.provider
 
-import com.github.lppedd.cc.CCIcons
+import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.api.*
 import javax.swing.Icon
 
@@ -51,7 +51,7 @@ internal object TestProvider :
       "com.github.lppedd.cc.provider.TestBodyProvider"
 
     override fun getIcon(): Icon =
-      CCIcons.Logo
+      CC.Icon.Logo
   }
 
   private class TestCommitToken(private val text: String) :

@@ -29,7 +29,7 @@ internal class CommitBodyLookupElement(
     commitBody.getText()
 
   override fun renderElement(presentation: LookupElementPresentation) {
-    presentation.icon = CCIcons.Tokens.Body
+    presentation.icon = CC.Icon.Token.Body
     super.renderElement(presentation)
     presentation.itemText = commitBody.getText().flattenWhitespaces().abbreviate(100)
   }

@@ -35,7 +35,7 @@ internal class CCDefaultTokensService(private val project: Project) {
    * JSON Schema used to validate the default commit types and scopes JSON file.
    */
   private val defaultsSchema: Schema by lazy {
-    val bufferedReader = getResourceAsStream("/defaults/${CC.Tokens.SchemaFile}").bufferedReader()
+    val bufferedReader = getResourceAsStream("/defaults/${CC.File.Schema}").bufferedReader()
     val schemaJson = bufferedReader.use {
       JsonParser(bufferedReader).parse()
     }
@@ -49,7 +49,7 @@ internal class CCDefaultTokensService(private val project: Project) {
    * @throws SchemaValidationException When the JSON object does not respect the schema
    */
   private val builtInDefaultTokens: JsonDefaults by lazy {
-    val jsonStr = getResourceAsStream("/defaults/${CC.Tokens.File}").bufferedReader().use(Reader::readText)
+    val jsonStr = getResourceAsStream("/defaults/${CC.File.Defaults}").bufferedReader().use(Reader::readText)
     parseJsonStr(jsonStr)
   }
 
@@ -88,7 +88,7 @@ internal class CCDefaultTokensService(private val project: Project) {
     val fileSystem = FileSystems.getDefault()
     val filePath = if (customCoAuthorsFilePath == null) {
       val projectBasePath = project.basePath ?: return emptySet()
-      fileSystem.getPath(projectBasePath, CC.CoAuthors.File)
+      fileSystem.getPath(projectBasePath, CC.File.CoAuthors)
     } else {
       fileSystem.getPath(customCoAuthorsFilePath)
     }
@@ -117,7 +117,7 @@ internal class CCDefaultTokensService(private val project: Project) {
     val fileSystem = FileSystems.getDefault()
     val filePath = if (customCoAuthorsFilePath == null) {
       val projectBasePath = project.basePath ?: return
-      fileSystem.getPath(projectBasePath, CC.CoAuthors.File)
+      fileSystem.getPath(projectBasePath, CC.File.CoAuthors)
     } else {
       fileSystem.getPath(customCoAuthorsFilePath)
     }
@@ -138,7 +138,7 @@ internal class CCDefaultTokensService(private val project: Project) {
   private fun findDefaultFilePathFromProjectRoot(): String? {
     val projectBasePath = project.basePath ?: return null
     return LocalFileSystem.getInstance().refreshAndFindFileByPath(projectBasePath)
-      ?.findChild(CC.Tokens.File)
+      ?.findChild(CC.File.Defaults)
       ?.path
   }
 

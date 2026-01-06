@@ -1,9 +1,9 @@
 package com.github.lppedd.cc.completion.providers
 
-import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.api.CommitBody
 import com.github.lppedd.cc.api.CommitBodyProvider
 import com.github.lppedd.cc.api.CommitTokenProviderService
+import com.github.lppedd.cc.completion.LookupElementKey
 import com.github.lppedd.cc.completion.resultset.ResultSet
 import com.github.lppedd.cc.lookupElement.CommitBodyLookupElement
 import com.github.lppedd.cc.parser.CommitTokens
@@ -41,7 +41,7 @@ internal class BodyCompletionProvider(
         )
 
         commitBodies.asSequence()
-          .take(CC.Provider.MaxItems)
+          .take(CompletionProvider.MaxItems)
           .forEach { bodies.add(ProviderCommitToken(provider, it)) }
       }
     }
@@ -49,8 +49,8 @@ internal class BodyCompletionProvider(
     bodies.forEachIndexed { index, (provider, commitBody) ->
       val psiElement = CommitBodyPsiElement(project, commitBody.getText())
       val element = CommitBodyLookupElement(psiElement, commitBody)
-      element.putUserData(ELEMENT_INDEX, index)
-      element.putUserData(ELEMENT_PROVIDER, provider)
+      element.putUserData(LookupElementKey.Index, index)
+      element.putUserData(LookupElementKey.Provider, provider)
       prefixedResultSet.addElement(element)
     }
   }

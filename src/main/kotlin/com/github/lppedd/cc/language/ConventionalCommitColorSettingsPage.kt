@@ -1,7 +1,7 @@
 package com.github.lppedd.cc.language
 
+import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.CCBundle
-import com.github.lppedd.cc.CCIcons
 import com.github.lppedd.cc.language.ConventionalCommitSyntaxHighlighter.Companion.BODY
 import com.github.lppedd.cc.language.ConventionalCommitSyntaxHighlighter.Companion.BREAKING_CHANGE
 import com.github.lppedd.cc.language.ConventionalCommitSyntaxHighlighter.Companion.FOOTER_TYPE
@@ -34,7 +34,7 @@ internal class ConventionalCommitColorSettingsPage : ColorSettingsPage {
   }
 
   override fun getIcon(): Icon =
-    CCIcons.Logo
+    CC.Icon.Logo
 
   override fun getHighlighter(): SyntaxHighlighter =
     ConventionalCommitSyntaxHighlighter(null)

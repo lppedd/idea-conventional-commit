@@ -1,7 +1,7 @@
 package com.github.lppedd.cc.configuration.component
 
+import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.CCBundle
-import com.github.lppedd.cc.CCIcons
 import com.github.lppedd.cc.scaled
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.project.Project
@@ -154,8 +154,8 @@ internal class CoAuthorsFilePickerPanel(
       .createPanel()
 
   private object MyFileChooserDescriptor : CCFileChooserDescriptor() {
-    override val okActionName = "Select a file"
-    override val validFileIcon = CCIcons.FileTypes.CoAuthors
+    override val okActionName = "Select File"
+    override val validFileIcon = CC.Icon.FileType.CoAuthors
     override val validFileTest: (VirtualFile) -> Boolean = {
       it.isValid && !it.isDirectory && it.isWritable && "coauthors".equals(it.extension, true)
     }

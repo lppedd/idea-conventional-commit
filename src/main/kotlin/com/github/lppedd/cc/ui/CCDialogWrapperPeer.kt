@@ -1,6 +1,6 @@
 package com.github.lppedd.cc.ui
 
-import com.github.lppedd.cc.CCIcons
+import com.github.lppedd.cc.CC
 import com.intellij.ide.ui.UISettings
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
@@ -79,8 +79,8 @@ internal class CCDialogWrapperPeer(
   }
 
   private fun scaleAndGetIcon(ctx: ScaleContext): Icon {
-    val scale = 16 * UISettings.defFontScale / CCIcons.Logo.iconWidth
-    val scaledIcon = IconUtil.scale(CCIcons.Logo, null, scale)
+    val scale = 16 * UISettings.defFontScale / CC.Icon.Logo.iconWidth
+    val scaledIcon = IconUtil.scale(CC.Icon.Logo, null, scale)
     return JBImageIcon(IconUtil.toImage(scaledIcon, ctx))
   }
 }

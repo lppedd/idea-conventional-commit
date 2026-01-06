@@ -31,7 +31,7 @@ internal class CommitScopeLookupElement(
     commitScope.getText()
 
   override fun renderElement(presentation: LookupElementPresentation) {
-    presentation.icon = CCIcons.Tokens.Scope
+    presentation.icon = CC.Icon.Token.Scope
     super.renderElement(presentation)
   }
 

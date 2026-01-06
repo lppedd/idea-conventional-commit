@@ -1,9 +1,9 @@
 package com.github.lppedd.cc.completion.providers
 
-import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.api.CommitSubject
 import com.github.lppedd.cc.api.CommitSubjectProvider
 import com.github.lppedd.cc.api.CommitTokenProviderService
+import com.github.lppedd.cc.completion.LookupElementKey
 import com.github.lppedd.cc.completion.resultset.ResultSet
 import com.github.lppedd.cc.lookupElement.CommitSubjectLookupElement
 import com.github.lppedd.cc.parser.CommitContext.SubjectCommitContext
@@ -36,7 +36,7 @@ internal class SubjectCompletionProvider(
       safeRunWithCheckCanceled {
         provider.getCommitSubjects(context.type, context.scope)
           .asSequence()
-          .take(CC.Provider.MaxItems)
+          .take(CompletionProvider.MaxItems)
           .forEach { subjects.add(ProviderCommitToken(provider, it)) }
       }
     }
@@ -44,9 +44,9 @@ internal class SubjectCompletionProvider(
     subjects.forEachIndexed { index, (provider, commitSubject) ->
       val psiElement = CommitSubjectPsiElement(project, commitSubject.getText())
       val element = CommitSubjectLookupElement(psiElement, commitSubject)
-      element.putUserData(ELEMENT_INDEX, index)
-      element.putUserData(ELEMENT_PROVIDER, provider)
-      element.putUserData(ELEMENT_IS_RECENT, recentSubjects.contains(commitSubject.getValue()))
+      element.putUserData(LookupElementKey.Index, index)
+      element.putUserData(LookupElementKey.Provider, provider)
+      element.putUserData(LookupElementKey.IsRecent, recentSubjects.contains(commitSubject.getValue()))
       prefixedResultSet.addElement(element)
     }
   }

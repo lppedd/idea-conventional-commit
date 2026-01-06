@@ -31,7 +31,7 @@ internal open class CommitTypeLookupElement(
     commitType.getText()
 
   override fun renderElement(presentation: LookupElementPresentation) {
-    presentation.icon = CCIcons.Tokens.Type
+    presentation.icon = CC.Icon.Token.Type
     super.renderElement(presentation)
   }
 

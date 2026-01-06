@@ -1,9 +1,6 @@
 package com.github.lppedd.cc.completion
 
 import com.github.lppedd.cc.api.*
-import com.github.lppedd.cc.completion.providers.ELEMENT_INDEX
-import com.github.lppedd.cc.completion.providers.ELEMENT_IS_RECENT
-import com.github.lppedd.cc.completion.providers.ELEMENT_PROVIDER
 import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.lookupElement.*
 import com.intellij.codeInsight.lookup.LookupElement
@@ -37,23 +34,23 @@ internal class ConventionalCommitLookupElementWeigher(
     }
 
   private fun getTokenWeight(element: CommitTokenLookupElement): CommitTokenWeight {
-    // The token type's priority.
-    // This is used to prioritize a certain token's type when multiple types
-    // might be shown in the same completion invocation
-    // (e.g. a footer type token should be shown before a body token)
+    // The token type priority.
+    // This is used to prioritize a certain token type when multiple types
+    // might be shown in the same completion invocation (e.g., a footer type
+    // token should be shown before a body token).
     val tokenPriority = getTokenPriority(element)
 
-    // The token's provider priority.
-    // Providers can be ordered via settings by the user, so each
-    val provider = element.getUserData(ELEMENT_PROVIDER)
+    // The token provider priority.
+    // Providers can be ordered via settings by the user.
+    val provider = element.getUserData(LookupElementKey.Provider)
     val providerPriority = getProviderPriority(provider)
 
-    // The token's index, in ascending order, in the context of extraction from its provider
-    val index = element.getUserData(ELEMENT_INDEX)!!
+    // The token index, in ascending order, in the context of extraction from its provider
+    val index = element.getUserData(LookupElementKey.Index) ?: error("missing element index")
 
-    // Indicate if the token has been used recently by the user.
-    // This flag is set by each CompletionProvider
-    val isRecentToken = element.getUserData(ELEMENT_IS_RECENT) ?: false
+    // Indicate if the user has used the token recently.
+    // This flag is set by each CompletionProvider.
+    val isRecentToken = element.getUserData(LookupElementKey.IsRecent) ?: false
     val isRecentlyUsed = configService.prioritizeRecentlyUsed && isRecentToken
 
     return CommitTokenWeight(tokenPriority, isRecentlyUsed, providerPriority, index)

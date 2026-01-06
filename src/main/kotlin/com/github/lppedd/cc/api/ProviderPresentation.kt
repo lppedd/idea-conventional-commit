@@ -1,6 +1,6 @@
 package com.github.lppedd.cc.api
 
-import com.github.lppedd.cc.CCIcons
+import com.github.lppedd.cc.CC
 import javax.swing.Icon
 
 /**
@@ -30,5 +30,5 @@ public interface ProviderPresentation {
    * @see getIcon
    */
   public fun getDisabledIcon(): Icon =
-    CCIcons.Provider.Disabled
+    CC.Icon.Provider.Disabled
 }

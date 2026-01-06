@@ -1,11 +1,14 @@
 package com.github.lppedd.cc.configuration.component
 
-import com.github.lppedd.cc.*
+import com.github.lppedd.cc.CC
+import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.configuration.CCDefaultTokensService.JsonCommitScope
 import com.github.lppedd.cc.configuration.CCDefaultTokensService.JsonCommitType
 import com.github.lppedd.cc.configuration.component.tokens.CommitTokenList
+import com.github.lppedd.cc.scaled
 import com.github.lppedd.cc.ui.ScaledGridLayout
 import com.github.lppedd.cc.ui.TitledPanel
+import com.github.lppedd.cc.wrap
 import com.intellij.ui.ListSpeedSearch
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.util.ui.JBDimension
@@ -19,8 +22,8 @@ import javax.swing.JPanel
  */
 internal class DefaultTokensPanel : JPanel(ScaledGridLayout(1, 1, 24, 1)) {
   private var latestTokens: Map<String, JsonCommitType> = emptyMap()
-  private val scopeList = CommitTokenList(CCIcons.Tokens.Scope)
-  private val typeList = CommitTokenList(CCIcons.Tokens.Type).also {
+  private val scopeList = CommitTokenList(CC.Icon.Token.Scope)
+  private val typeList = CommitTokenList(CC.Icon.Token.Type).also {
     it.addListSelectionListener {
       onCommitTypeChanged()
     }
@@ -52,7 +55,7 @@ internal class DefaultTokensPanel : JPanel(ScaledGridLayout(1, 1, 24, 1)) {
 
     val scrollPane = JBScrollPane(list).also {
       it.preferredSize = list.minimumSize
-      it.border = JBUI.Borders.customLine(CCUI.BorderColor).wrap(JBUI.Borders.empty(0, 1, 1, 1))
+      it.border = JBUI.Borders.customLine(CC.UI.BorderColor).wrap(JBUI.Borders.empty(0, 1, 1, 1))
     }
 
     return TitledPanel(title, scrollPane).also {
@@ -63,7 +66,7 @@ internal class DefaultTokensPanel : JPanel(ScaledGridLayout(1, 1, 24, 1)) {
   override fun paint(g: Graphics) {
     super.paint(g)
 
-    val icon = CCIcons.General.ArrowRight
+    val icon = CC.Icon.General.ArrowRight
     val x = (width - icon.iconWidth) / 2
     // 32 is a magic constant found by trial and error
     val y = (height - icon.iconHeight + 32.scaled) / 2

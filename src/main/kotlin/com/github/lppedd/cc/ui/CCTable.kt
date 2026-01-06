@@ -1,6 +1,6 @@
 package com.github.lppedd.cc.ui
 
-import com.github.lppedd.cc.CCUI
+import com.github.lppedd.cc.CC
 import com.intellij.ui.table.JBTable
 import com.intellij.util.ui.UIUtil
 import java.awt.Dimension
@@ -16,7 +16,7 @@ internal open class CCTable : JBTable {
   constructor(model: TableModel) : super(model)
 
   init {
-    background = CCUI.ListBackgroundColor
+    background = CC.UI.ListBackgroundColor
     intercellSpacing = Dimension(0, 0)
 
     // See https://jetbrains.design/intellij/controls/table/#interaction

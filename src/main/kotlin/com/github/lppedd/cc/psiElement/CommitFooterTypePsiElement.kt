@@ -1,6 +1,6 @@
 package com.github.lppedd.cc.psiElement
 
-import com.github.lppedd.cc.CCIcons
+import com.github.lppedd.cc.CC
 import com.intellij.openapi.project.Project
 import javax.swing.Icon
 
@@ -18,5 +18,5 @@ internal class CommitFooterTypePsiElement(
     presentableText
 
   override fun getIcon(unused: Boolean): Icon =
-    CCIcons.Tokens.Footer
+    CC.Icon.Token.Footer
 }

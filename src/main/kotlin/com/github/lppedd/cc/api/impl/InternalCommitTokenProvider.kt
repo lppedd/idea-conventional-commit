@@ -1,7 +1,7 @@
 package com.github.lppedd.cc.api.impl
 
+import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.CCBundle
-import com.github.lppedd.cc.CCIcons
 import com.github.lppedd.cc.CCNotificationService
 import com.github.lppedd.cc.api.*
 import com.github.lppedd.cc.configuration.CCConfigService
@@ -90,7 +90,7 @@ internal class InternalCommitTokenProvider(private val project: Project) :
       CCBundle["cc.config.providers.default"]
 
     override fun getIcon(): Icon =
-      CCIcons.Logo
+      CC.Icon.Logo
   }
 
   private object DefaultTokenPresentation : TokenPresentation

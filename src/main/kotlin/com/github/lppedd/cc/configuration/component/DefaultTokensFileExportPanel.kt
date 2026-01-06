@@ -45,7 +45,7 @@ internal class DefaultTokensFileExportPanel
   override fun linkSelected(aSource: LinkLabel<Any?>, aLinkData: Any?) {
     val virtualFileWrapper = FileChooserFactory.getInstance()
       .createSaveFileDialog(FileSaverDescriptor(CCBundle["cc.config.exportDialog.title"], ""), null)
-      .save(null as VirtualFile?, CC.Tokens.File)
+      .save(null as VirtualFile?, CC.File.Defaults)
 
     try {
       writeFile(virtualFileWrapper)
@@ -71,7 +71,7 @@ internal class DefaultTokensFileExportPanel
     }
 
     // When exporting to a file, we also need to add the JSON schema reference
-    val jsonStr = getResourceAsStream("/defaults/${CC.Tokens.File}").bufferedReader().use(Reader::readText)
+    val jsonStr = getResourceAsStream("/defaults/${CC.File.Defaults}").bufferedReader().use(Reader::readText)
     val pluginVersion = getPluginVersion()
     val schemaPath = "src/main/resources/defaults/conventionalcommit.schema.json"
     val schemaUrl = "https://github.com/lppedd/idea-conventional-commit/raw/${pluginVersion}/$schemaPath\""

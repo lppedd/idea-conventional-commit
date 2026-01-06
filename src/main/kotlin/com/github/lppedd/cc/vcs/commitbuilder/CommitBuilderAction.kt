@@ -1,7 +1,7 @@
 package com.github.lppedd.cc.vcs.commitbuilder
 
+import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.CCBundle
-import com.github.lppedd.cc.CCIcons
 import com.github.lppedd.cc.moveCaretToOffset
 import com.github.lppedd.cc.removeSelection
 import com.intellij.openapi.actionSystem.ActionUpdateThread
@@ -22,7 +22,7 @@ import com.intellij.util.ObjectUtils
 internal class CommitBuilderAction : DumbAwareAction() {
   init {
     isEnabledInModalContext = true
-    templatePresentation.icon = CCIcons.Logo
+    templatePresentation.icon = CC.Icon.Logo
   }
 
   override fun getActionUpdateThread(): ActionUpdateThread =

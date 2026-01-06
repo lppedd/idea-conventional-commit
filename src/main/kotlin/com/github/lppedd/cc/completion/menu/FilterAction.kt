@@ -2,8 +2,8 @@ package com.github.lppedd.cc.completion.menu
 
 import com.github.lppedd.cc.api.CommitTokenProvider
 import com.github.lppedd.cc.completion.FilterPrefixMatcher
+import com.github.lppedd.cc.completion.LookupElementKey
 import com.github.lppedd.cc.completion.LookupEnhancer
-import com.github.lppedd.cc.completion.providers.ELEMENT_PROVIDER
 import com.github.lppedd.cc.lookupElement.CommitTokenLookupElement
 import com.github.lppedd.cc.updateIcons
 import com.intellij.codeInsight.completion.PlainPrefixMatcher
@@ -43,7 +43,7 @@ internal class FilterAction(
       .asSequence()
       .filterIsInstance<CommitTokenLookupElement>()
       .filter {
-        val elementProvider = it.getUserData(ELEMENT_PROVIDER)!!
+        val elementProvider = it.getUserData(LookupElementKey.Provider) ?: error("missing element provider")
         provider.getId() == elementProvider.getId()
       }.onEach {
         val delegatePrefixMatcher = arranger.itemMatcher(it)

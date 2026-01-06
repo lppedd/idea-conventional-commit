@@ -1,6 +1,6 @@
 package com.github.lppedd.cc.vcs
 
-import com.github.lppedd.cc.CCIcons
+import com.github.lppedd.cc.CC
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.components.service
@@ -14,7 +14,7 @@ import com.intellij.openapi.vcs.VcsDataKeys
 internal class ClearLocalMessageHistoryAction : DumbAwareAction() {
   init {
     isEnabledInModalContext = true
-    templatePresentation.icon = CCIcons.General.ClearMessageHistory
+    templatePresentation.icon = CC.Icon.General.ClearMessageHistory
   }
 
   override fun getActionUpdateThread(): ActionUpdateThread =
