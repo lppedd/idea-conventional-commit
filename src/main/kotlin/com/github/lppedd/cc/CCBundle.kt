@@ -5,6 +5,7 @@ import com.intellij.reference.SoftReference
 import org.jetbrains.annotations.PropertyKey
 import java.lang.ref.Reference
 import java.util.*
+import java.lang.ref.SoftReference as JavaSoftReference
 
 /**
  * @author Edoardo Luppi
@@ -13,25 +14,25 @@ public object CCBundle {
   private const val BUNDLE = "messages.ConventionalCommitBundle"
 
   private var bundleReference: Reference<ResourceBundle>? = null
-  private val bundle: ResourceBundle by lazy {
-    SoftReference.dereference(bundleReference)
-    ?: ResourceBundle.getBundle(BUNDLE).also {
-      bundleReference = java.lang.ref.SoftReference(it)
-    }
-  }
+  private val bundle: ResourceBundle
+    get() = derefBundle()
 
   @JvmStatic
   public operator fun get(@PropertyKey(resourceBundle = BUNDLE) key: String, vararg params: Any): String =
-    /* We cannot use anything else but BundleBase to be compatible
-     * with all IDE versions and to avoid deprecated methods */
     BundleBase.message(bundle, key, *params)
 
   @JvmStatic
-  @Suppress("SameParameterValue")
-  public fun getWithDefault(
-      @PropertyKey(resourceBundle = BUNDLE) key: String,
-      defaultValue: String? = null,
-      vararg params: Any,
-  ): String =
+  public fun getOrDefault(@PropertyKey(resourceBundle = BUNDLE) key: String, defaultValue: String, vararg params: Any): String =
     BundleBase.messageOrDefault(bundle, key, defaultValue, *params)
+
+  private fun derefBundle(): ResourceBundle {
+    var ref = SoftReference.dereference(bundleReference)
+
+    if (ref == null) {
+      ref = ResourceBundle.getBundle(BUNDLE)
+      bundleReference = JavaSoftReference(ref)
+    }
+
+    return ref
+  }
 }

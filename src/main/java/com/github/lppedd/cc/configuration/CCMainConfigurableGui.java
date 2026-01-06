@@ -233,7 +233,7 @@ public class CCMainConfigurableGui {
   @SuppressWarnings("ConstantExpression")
   @Nullable
   private HyperlinkLabel buildTranslatorLabel() {
-    final var name = CCBundle.getWithDefault("cc.translation.translator.name", "");
+    final var name = CCBundle.getOrDefault("cc.translation.translator.name", "");
 
     if (name.isEmpty()) {
       return null;
@@ -243,7 +243,7 @@ public class CCMainConfigurableGui {
     label.setForeground(UIUtil.getContextHelpForeground());
     label.setFontSize(FontSize.SMALL);
 
-    final var url = CCBundle.getWithDefault("cc.translation.translator.url", "");
+    final var url = CCBundle.getOrDefault("cc.translation.translator.url", "");
 
     if (url.isEmpty()) {
       label.setText(CCBundle.get("cc.translation.text") + " " + name);
