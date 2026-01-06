@@ -14,6 +14,7 @@ public object CCBundle {
   private const val BUNDLE = "messages.ConventionalCommitBundle"
 
   private var bundleReference: Reference<ResourceBundle>? = null
+  private var bundleLocale: Locale? = null
   private val bundle: ResourceBundle
     get() = derefBundle()
 
@@ -25,11 +26,17 @@ public object CCBundle {
   public fun getOrDefault(@PropertyKey(resourceBundle = BUNDLE) key: String, defaultValue: String, vararg params: Any): String =
     BundleBase.messageOrDefault(bundle, key, defaultValue, *params)
 
+  @JvmStatic
+  public fun setLocale(locale: Locale) {
+    bundleReference = null
+    bundleLocale = locale
+  }
+
   private fun derefBundle(): ResourceBundle {
     var ref = SoftReference.dereference(bundleReference)
 
     if (ref == null) {
-      ref = ResourceBundle.getBundle(BUNDLE)
+      ref = ResourceBundle.getBundle(BUNDLE, bundleLocale ?: CCRegistry.getLocale())
       bundleReference = JavaSoftReference(ref)
     }
 

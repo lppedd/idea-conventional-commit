@@ -23,6 +23,7 @@ public object CC {
   }
 
   public object Registry {
+    public const val Locale: String = "com.github.lppedd.cc.locale"
     public const val VcsEnabled: String = "com.github.lppedd.cc.providers.vcs"
   }
 
