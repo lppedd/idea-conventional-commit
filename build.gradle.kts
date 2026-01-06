@@ -2,6 +2,7 @@ import org.jetbrains.grammarkit.tasks.GenerateLexerTask
 import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 import org.jetbrains.intellij.platform.gradle.extensions.intellijPlatform
+import org.jetbrains.kotlin.gradle.dsl.JvmDefaultMode
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
@@ -97,13 +98,13 @@ java {
 kotlin {
   explicitApiWarning()
   compilerOptions {
-    jvmTarget = JvmTarget.JVM_21
     languageVersion = KotlinVersion.KOTLIN_2_3
+    jvmTarget = JvmTarget.JVM_21
+    jvmDefault = JvmDefaultMode.NO_COMPATIBILITY
     freeCompilerArgs.addAll(
         "-Xno-call-assertions",
         "-Xno-receiver-assertions",
         "-Xno-param-assertions",
-        "-Xjvm-default=all",
         "-Xallow-kotlin-package",
     )
 
