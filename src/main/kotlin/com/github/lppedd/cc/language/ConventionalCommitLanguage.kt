@@ -1,6 +1,5 @@
 package com.github.lppedd.cc.language
 
-import com.github.lppedd.cc.CCBundle
 import com.intellij.lang.Language
 import com.intellij.openapi.fileTypes.PlainTextLanguage
 
@@ -10,7 +9,7 @@ import com.intellij.openapi.fileTypes.PlainTextLanguage
 @Suppress("JavaIoSerializableObjectMustHaveReadResolve")
 public object ConventionalCommitLanguage : Language(PlainTextLanguage.INSTANCE, "ConventionalCommit") {
   override fun getDisplayName(): String =
-    CCBundle["cc.language.name"]
+    "Conventional Commit"
 
   override fun isCaseSensitive(): Boolean =
     false
