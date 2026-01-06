@@ -1,5 +1,3 @@
-@file:Suppress("VulnerableLibrariesLocal", "ConvertLambdaToReference")
-
 import org.jetbrains.grammarkit.tasks.GenerateLexerTask
 import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType

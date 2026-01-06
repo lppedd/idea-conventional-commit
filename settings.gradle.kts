@@ -1,5 +1,3 @@
-@file:Suppress("ConvertLambdaToReference")
-
 pluginManagement {
   repositories {
     gradlePluginPortal()
