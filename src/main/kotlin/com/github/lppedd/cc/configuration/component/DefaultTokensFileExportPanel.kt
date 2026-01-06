@@ -74,9 +74,9 @@ internal class DefaultTokensFileExportPanel
     val jsonStr = getResourceAsStream("/defaults/${CC.File.Defaults}").bufferedReader().use(Reader::readText)
     val pluginVersion = getPluginVersion()
     val schemaPath = "src/main/resources/defaults/conventionalcommit.schema.json"
-    val schemaUrl = "https://github.com/lppedd/idea-conventional-commit/raw/${pluginVersion}/$schemaPath\""
+    val schemaUrl = "https://github.com/lppedd/idea-conventional-commit/raw/$pluginVersion/$schemaPath"
     val sb = StringBuilder(jsonStr)
-    sb.insert(4, $$"\"$schema\": \"$$schemaUrl\"\n")
+    sb.insert(4, $$"\"$schema\": \"$$schemaUrl\",\n")
 
     runWriteAction {
       virtualFile.setBinaryContent("$sb".toByteArray())
