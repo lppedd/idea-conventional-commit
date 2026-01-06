@@ -103,7 +103,7 @@
     <registryKey
         key="com.github.lppedd.cc.locale"
         description="Set the UI locale"
-        defaultValue="[Default*|English (en_US)|Chinese (zh_CN)]"
+        defaultValue="[Default*|English|Chinese (Simplified)]"
     />
     <registryKey
         key="com.github.lppedd.cc.providers.vcs"

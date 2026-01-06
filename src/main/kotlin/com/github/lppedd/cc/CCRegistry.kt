@@ -1,5 +1,6 @@
 package com.github.lppedd.cc
 
+import com.intellij.l10n.LocalizationUtil
 import com.intellij.openapi.util.registry.Registry
 import java.util.*
 
@@ -13,9 +14,9 @@ internal object CCRegistry {
   fun getLocale(): Locale {
     val value = Registry.get(CC.Registry.Locale)
     return when (value.selectedOption) {
-      "English (en_US)" -> Locale.ENGLISH
-      "Chinese (zh_CN)" -> Locale.SIMPLIFIED_CHINESE
-      else -> Locale.getDefault()
+      "English" -> Locale.ROOT
+      "Chinese (Simplified)" -> Locale.SIMPLIFIED_CHINESE
+      else -> LocalizationUtil.getLocale()
     }
   }
 
