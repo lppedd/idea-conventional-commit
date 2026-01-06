@@ -5,7 +5,6 @@ import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl
 import com.intellij.codeInsight.template.impl.TemplateState
 import com.intellij.openapi.actionSystem.Presentation
-import com.intellij.openapi.application.Application
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ex.ApplicationUtil
 import com.intellij.openapi.diagnostic.Logger
@@ -41,15 +40,6 @@ import kotlin.internal.InlineOnly
 import kotlin.math.max
 import kotlin.math.min
 
-// region Application
-
-internal inline val application: Application
-  get() = ApplicationManager.getApplication()
-
-internal inline fun <reified T> Application.service(): T =
-  getService(T::class.java)
-
-// endregion
 // region PsiElement
 
 @InlineOnly

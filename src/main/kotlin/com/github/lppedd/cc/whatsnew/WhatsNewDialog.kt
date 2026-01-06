@@ -1,10 +1,13 @@
 package com.github.lppedd.cc.whatsnew
 
-import com.github.lppedd.cc.*
+import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.api.WhatsNewProvider
 import com.github.lppedd.cc.api.WhatsNewProviderService
+import com.github.lppedd.cc.setFocused
+import com.github.lppedd.cc.setName
 import com.github.lppedd.cc.ui.CCDialogWrapper
 import com.github.lppedd.cc.ui.NoContentTabbedPaneWrapper
+import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper.DialogStyle.COMPACT
 import com.intellij.ui.SimpleColoredText
@@ -28,7 +31,7 @@ internal class WhatsNewDialog(project: Project) : CCDialogWrapper(project) {
   private val newerAction = NewerAction()
   private val tabSelectedHandlers = mutableMapOf<Int, () -> Unit>()
 
-  private val providers = application.service<WhatsNewProviderService>()
+  private val providers = service<WhatsNewProviderService>()
     .getWhatsNewProviders()
     .asSequence()
     .sortedWith(WhatsNewProviderComparator)

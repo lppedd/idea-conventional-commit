@@ -2,8 +2,7 @@ package com.github.lppedd.cc.whatsnew
 
 import com.github.lppedd.cc.api.WhatsNewProvider
 import com.github.lppedd.cc.api.WhatsNewProviderService
-import com.github.lppedd.cc.application
-import com.github.lppedd.cc.service
+import com.intellij.openapi.components.service
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.ProjectActivity
@@ -21,7 +20,7 @@ internal class WhatsNewStartupActivity : ProjectActivity, DumbAware {
       return
     }
 
-    val shouldDisplay = application.service<WhatsNewProviderService>()
+    val shouldDisplay = service<WhatsNewProviderService>()
       .getWhatsNewProviders()
       .asSequence()
       .filter(WhatsNewProvider::shouldDisplayAtStartup)
