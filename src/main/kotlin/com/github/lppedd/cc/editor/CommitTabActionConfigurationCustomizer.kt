@@ -1,8 +1,6 @@
 package com.github.lppedd.cc.editor
 
 import com.intellij.ide.plugins.PluginManager
-import com.intellij.openapi.actionSystem.Constraints
-import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.actionSystem.ex.ActionRuntimeRegistrar
 import com.intellij.openapi.actionSystem.impl.ActionConfigurationCustomizer
 import com.intellij.openapi.actionSystem.impl.ActionConfigurationCustomizer.LightCustomizeStrategy
@@ -13,9 +11,6 @@ import com.intellij.openapi.extensions.PluginId
  */
 @Suppress("UnstableApiUsage")
 internal class CommitTabActionConfigurationCustomizer : ActionConfigurationCustomizer, LightCustomizeStrategy {
-  private val actionId = "EditorTab"
-  private val groupId = "EditorActions"
-
   override suspend fun customize(actionRegistrar: ActionRuntimeRegistrar) {
     // Rider register its own EditorTab action, see com.jetbrains.rider.editorActions.FrontendTabAction.
     // Unfortunately, that action is coded in Kotlin and marked as final,
@@ -25,14 +20,12 @@ internal class CommitTabActionConfigurationCustomizer : ActionConfigurationCusto
       return
     }
 
-    val oldAction = actionRegistrar.getActionOrStub(actionId)
+    val oldAction = actionRegistrar.getActionOrStub("EditorTab")
 
     if (oldAction != null) {
-      val actionGroup = actionRegistrar.getActionOrStub(groupId) as DefaultActionGroup
       val newAction = CommitTabAction()
-      actionRegistrar.unregisterAction(actionId)
-      actionRegistrar.registerAction(actionId, newAction)
-      actionRegistrar.addToGroup(actionGroup, newAction, Constraints.LAST)
+      newAction.copyFrom(oldAction) // ActionUtil.copyFrom does not work
+      actionRegistrar.replaceAction("EditorTab", newAction)
     }
   }
 }
