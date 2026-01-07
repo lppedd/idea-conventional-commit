@@ -14,15 +14,16 @@ import com.intellij.codeInspection.ProblemDescriptor
 import com.intellij.codeInspection.ProblemHighlightType.GENERIC_ERROR_OR_WARNING
 import com.intellij.codeInspection.ProblemHighlightType.WARNING
 import com.intellij.codeInspection.ProblemsHolder
+import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.service
 import com.intellij.openapi.editor.Document
-import com.intellij.openapi.options.ConfigurableUi
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.vcs.ui.CommitMessage
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementVisitor
+import com.intellij.ui.dsl.builder.Panel
 
 /**
  * @author Edoardo Luppi
@@ -34,10 +35,18 @@ internal class CommitFormatInspection : CommitBaseInspection() {
   override fun isEnabledByDefault(): Boolean =
     true
 
-  @Suppress("UnstableApiUsage")
-  @Deprecated("Implement {@link #createOptions} instead")
-  override fun createOptionsConfigurable(): ConfigurableUi<Project> =
-    CommitFormatInspectionOptions()
+  override fun Panel.createOptions(project: Project, disposable: Disposable): Boolean {
+    val ui = CommitFormatInspectionOptions()
+
+    row {
+      cell(ui.component)
+        .onApply { ui.apply(project) }
+        .onReset { ui.reset(project) }
+        .onIsModified { ui.isModified(project) }
+    }
+
+    return false
+  }
 
   override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
     val document = holder.file.document

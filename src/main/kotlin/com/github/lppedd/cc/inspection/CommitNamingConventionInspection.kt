@@ -10,13 +10,14 @@ import com.github.lppedd.cc.language.psi.ConventionalCommitTypePsiElement
 import com.github.lppedd.cc.util.RangeValidator
 import com.intellij.codeInspection.ProblemHighlightType.GENERIC_ERROR_OR_WARNING
 import com.intellij.codeInspection.ProblemsHolder
+import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.service
 import com.intellij.openapi.editor.Document
-import com.intellij.openapi.options.ConfigurableUi
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.vcs.ui.CommitMessage
 import com.intellij.psi.PsiElementVisitor
+import com.intellij.ui.dsl.builder.Panel
 
 /**
  * Checks if symbols outside the legal ones, specified in the inspection options
@@ -32,10 +33,18 @@ internal class CommitNamingConventionInspection : CommitBaseInspection() {
   override fun isEnabledByDefault(): Boolean =
     true
 
-  @Suppress("UnstableApiUsage")
-  @Deprecated("Implement {@link #createOptions} instead")
-  override fun createOptionsConfigurable(): ConfigurableUi<Project> =
-    CommitNamingConventionInspectionOptions()
+  override fun Panel.createOptions(project: Project, disposable: Disposable): Boolean {
+    val ui = CommitNamingConventionInspectionOptions()
+
+    row {
+      cell(ui.component)
+        .onApply { ui.apply(project) }
+        .onReset { ui.reset(project) }
+        .onIsModified { ui.isModified(project) }
+    }
+
+    return false
+  }
 
   override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
     val document = holder.file.document
