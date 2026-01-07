@@ -31,13 +31,13 @@ internal class CommitTokenLookupElementDocumentationTargetProvider : LookupEleme
     }
 
     if (lookupElement is CommitTokenLookupElement) {
-      return ConventionalCommitDocumentationTarget(lookupElement)
+      return CommitTokenDocumentationTarget(lookupElement)
     }
 
     return null
   }
 
-  private class ConventionalCommitDocumentationTarget(val element: CommitTokenLookupElement) : DocumentationTarget {
+  private class CommitTokenDocumentationTarget(val element: CommitTokenLookupElement) : DocumentationTarget {
     override fun createPointer(): Pointer<out DocumentationTarget> =
       Pointer.hardPointer(this)
 
