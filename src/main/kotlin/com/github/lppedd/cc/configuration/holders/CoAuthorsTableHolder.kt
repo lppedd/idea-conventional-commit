@@ -2,7 +2,7 @@ package com.github.lppedd.cc.configuration.holders
 
 import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.CCBundle
-import com.github.lppedd.cc.configuration.CCDefaultTokensService
+import com.github.lppedd.cc.configuration.CCTokensService
 import com.github.lppedd.cc.configuration.component.providers.CoAuthorsTable
 import com.github.lppedd.cc.configuration.component.providers.CoAuthorsTableModel
 import com.intellij.openapi.actionSystem.ActionToolbarPosition
@@ -15,7 +15,7 @@ import javax.swing.JPanel
 /**
  * @author Edoardo Luppi
  */
-internal class CoAuthorsTableHolder(service: CCDefaultTokensService) {
+internal class CoAuthorsTableHolder(service: CCTokensService) {
   val tableModel = CoAuthorsTableModel(service.getCoAuthors())
   val table = CoAuthorsTable(tableModel)
 

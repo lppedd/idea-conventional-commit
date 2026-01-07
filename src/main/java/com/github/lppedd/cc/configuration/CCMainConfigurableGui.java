@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 import com.github.lppedd.cc.CCBundle;
 import com.github.lppedd.cc.configuration.CCConfigService.CompletionType;
-import com.github.lppedd.cc.configuration.CCDefaultTokensService.JsonCommitType;
+import com.github.lppedd.cc.configuration.CCTokensService.CommitTypeModel;
 import com.github.lppedd.cc.configuration.component.CoAuthorsFilePickerPanel;
 import com.github.lppedd.cc.configuration.component.DefaultTokensFileExportPanel;
 import com.github.lppedd.cc.configuration.component.DefaultTokensFilePickerPanel;
@@ -144,7 +144,7 @@ public class CCMainConfigurableGui {
     defaultTokensFilePickerPanel.setCustomFilePath(path);
   }
 
-  public void setTokens(@NotNull final Map<String, JsonCommitType> tokens) {
+  public void setTokens(@NotNull final Map<String, CommitTypeModel> tokens) {
     defaultTokensPanel.setTokens(tokens);
   }
 
@@ -158,7 +158,7 @@ public class CCMainConfigurableGui {
     defaultTokensFilePickerPanel.revalidateComponent();
   }
 
-  @SuppressWarnings({"ConstantExpression", "InstanceVariableUsedBeforeInitialized"})
+  @SuppressWarnings("ConstantExpression")
   private void finishUpComponents(
       @NotNull final Project project,
       @NotNull final Disposable disposable) {

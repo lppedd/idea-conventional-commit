@@ -4,8 +4,7 @@ import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.CCNotification
 import com.github.lppedd.cc.api.*
-import com.github.lppedd.cc.configuration.CCConfigService
-import com.github.lppedd.cc.configuration.CCDefaultTokensService
+import com.github.lppedd.cc.configuration.CCTokensService
 import com.github.lppedd.cc.configuration.SchemaValidationException
 import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.logger
@@ -26,17 +25,16 @@ internal class InternalCommitTokenProvider(private val project: Project) :
     private val logger = logger<InternalCommitTokenProvider>()
   }
 
-  private val configService = project.service<CCConfigService>()
-  private val defaultsService = project.service<CCDefaultTokensService>()
+  private val tokensService = project.service<CCTokensService>()
   private val defaults
     get() = try {
-      defaultsService.getDefaultsFromCustomFile(configService.customFilePath)
+      tokensService.getTokens()
     } catch (e: ProcessCanceledException) {
       throw e
     } catch (e: Exception) {
       logger.debug("Error while reading the custom tokens file", e)
       notifyErrorToUser(e)
-      defaultsService.getBuiltInDefaults()
+      tokensService.getBundledTokens()
     }
 
   override fun getId(): String =
@@ -63,7 +61,7 @@ internal class InternalCommitTokenProvider(private val project: Project) :
       subject: String?,
   ): Collection<CommitFooterValue> {
     if ("co-authored-by".equals(footerType, true)) {
-      return defaultsService.getCoAuthors()
+      return tokensService.getCoAuthors()
         .asSequence()
         .take(3)
         .map { DefaultCommitToken(it, "", true) }

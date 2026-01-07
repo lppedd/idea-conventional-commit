@@ -19,14 +19,14 @@ import java.nio.file.NoSuchFileException
 import kotlin.io.path.bufferedReader
 
 /**
- * Manages default commit types and scopes.
+ * Manages bundled and custom commit message tokens.
  *
  * @author Edoardo Luppi
  */
 @Suppress("LightServiceMigrationCode")
-internal class CCDefaultTokensService(private val project: Project) {
+internal class CCTokensService(private val project: Project) {
   private companion object {
-    private val logger = logger<CCDefaultTokensService>()
+    private val logger = logger<CCTokensService>()
   }
 
   private val configService = project.service<CCConfigService>()
@@ -34,7 +34,7 @@ internal class CCDefaultTokensService(private val project: Project) {
   /**
    * JSON Schema used to validate the default commit types and scopes JSON file.
    */
-  private val defaultsSchema: Schema by lazy {
+  private val tokensSchema: Schema by lazy {
     val bufferedReader = getResourceAsStream("/defaults/${CC.File.Schema}").bufferedReader()
     val schemaJson = bufferedReader.use {
       JsonParser(bufferedReader).parse()
@@ -44,32 +44,36 @@ internal class CCDefaultTokensService(private val project: Project) {
   }
 
   /**
-   * Built-in default commit types and scopes.
-   *
-   * @throws SchemaValidationException When the JSON object does not respect the schema
+   * Bundled commit message tokens.
    */
-  private val builtInDefaultTokens: JsonDefaults by lazy {
+  private val bundledTokensModel: TokensModel by lazy {
     val jsonStr = getResourceAsStream("/defaults/${CC.File.Defaults}").bufferedReader().use(Reader::readText)
     parseJsonStr(jsonStr)
   }
 
-  fun getDefaultsFromCustomFile(filePath: String? = null): JsonDefaults {
-    val path = filePath ?: findDefaultFilePathFromProjectRoot()
-    return path?.let(::readDefaultsFromFile) ?: builtInDefaultTokens
+  /**
+   * Returns commit message tokens defined in a custom `conventionalcommit.json` file,
+   * or falls back to the bundled defaults if no custom file is specified.
+   *
+   * @see getBundledTokens
+   */
+  fun getTokens(): TokensModel {
+    val path = configService.customFilePath ?: findTokensFileInProjectRoot()
+    return path?.let(::readTokensFromFile) ?: getBundledTokens()
   }
 
   /**
-   * Returns the built-in commit types and scopes.
+   * Returns commit message tokens defined in the bundled `conventionalcommit.json` file.
    */
-  fun getBuiltInDefaults(): JsonDefaults =
-    builtInDefaultTokens
+  fun getBundledTokens(): TokensModel =
+    bundledTokensModel
 
   /**
    * Validates a file via the inputted absolute path.
    *
    * @throws SchemaValidationException When the JSON object does not respect the schema
    */
-  fun validateDefaultsFile(filePath: String) {
+  fun validateTokensFile(filePath: String) {
     val path = FileSystems.getDefault().getPath(filePath)
 
     if (Files.notExists(path)) {
@@ -77,7 +81,7 @@ internal class CCDefaultTokensService(private val project: Project) {
     }
 
     val jsonStr = path.bufferedReader().use(Reader::readText)
-    defaultsSchema.validateJson(jsonStr)
+    tokensSchema.validateJson(jsonStr)
   }
 
   /**
@@ -85,12 +89,11 @@ internal class CCDefaultTokensService(private val project: Project) {
    */
   fun getCoAuthors(): Collection<String> {
     val customCoAuthorsFilePath = configService.customCoAuthorsFilePath
-    val fileSystem = FileSystems.getDefault()
     val filePath = if (customCoAuthorsFilePath == null) {
       val projectBasePath = project.basePath ?: return emptySet()
-      fileSystem.getPath(projectBasePath, CC.File.CoAuthors)
+      FileSystems.getDefault().getPath(projectBasePath, CC.File.CoAuthors)
     } else {
-      fileSystem.getPath(customCoAuthorsFilePath)
+      FileSystems.getDefault().getPath(customCoAuthorsFilePath)
     }
 
     try {
@@ -132,10 +135,9 @@ internal class CCDefaultTokensService(private val project: Project) {
   }
 
   /**
-   * Returns the full path of the default tokens file located
-   * in the project root directory, or `null`.
+   * Returns the path of the tokens file in the project root directory, or `null` if there is not.
    */
-  private fun findDefaultFilePathFromProjectRoot(): String? {
+  private fun findTokensFileInProjectRoot(): String? {
     val projectBasePath = project.basePath ?: return null
     return LocalFileSystem.getInstance().refreshAndFindFileByPath(projectBasePath)
       ?.findChild(CC.File.Defaults)
@@ -147,7 +149,7 @@ internal class CCDefaultTokensService(private val project: Project) {
    *
    * @throws SchemaValidationException When the JSON object does not respect the schema
    */
-  private fun readDefaultsFromFile(filePath: String): JsonDefaults {
+  private fun readTokensFromFile(filePath: String): TokensModel {
     val path = FileSystems.getDefault().getPath(filePath)
     val jsonStr = path.bufferedReader().use(Reader::readText)
     return parseJsonStr(jsonStr)
@@ -156,10 +158,10 @@ internal class CCDefaultTokensService(private val project: Project) {
   /**
    * @throws SchemaValidationException When the JSON object does not respect the schema
    */
-  private fun parseJsonStr(jsonStr: String): JsonDefaults {
+  private fun parseJsonStr(jsonStr: String): TokensModel {
     // If the inputted JSON isn't valid, an exception is thrown.
     // The exception contains the validation errors which can be used to notify the user
-    defaultsSchema.validateJson(jsonStr)
+    tokensSchema.validateJson(jsonStr)
 
     val rootJsonObject = JSONObject(jsonStr)
     val commonScopes = buildScopes(rootJsonObject.optJSONObject("commonScopes") ?: JSONObject())
@@ -171,48 +173,48 @@ internal class CCDefaultTokensService(private val project: Project) {
       else -> error("Should never get here")
     }
 
-    return JsonDefaults(types = types, footerTypes = footerTypes)
+    return TokensModel(types = types, footerTypes = footerTypes)
   }
 
-  private fun buildTypes(jsonObject: JSONObject, commonScopes: List<JsonCommitScope>): Map<String, JsonCommitType> =
+  private fun buildTypes(jsonObject: JSONObject, commonScopes: List<CommitScopeModel>): Map<String, CommitTypeModel> =
     jsonObject.keySet().associateWith {
       val descriptor = jsonObject.getJSONObject(it)
       val description = descriptor.optString("description", "")
       val scopes = buildScopes(descriptor.optJSONObject("scopes") ?: JSONObject())
-      JsonCommitType(
+      CommitTypeModel(
         name = it,
         description = description,
         scopes = scopes + commonScopes,
       )
     }
 
-  private fun buildScopes(jsonObject: JSONObject): List<JsonCommitScope> =
+  private fun buildScopes(jsonObject: JSONObject): List<CommitScopeModel> =
     jsonObject.keySet().map {
       val descriptor = jsonObject.getJSONObject(it)
       val description = descriptor.optString("description", "")
-      JsonCommitScope(
+      CommitScopeModel(
         name = it,
         description = description,
       )
     }
 
-  private fun buildFooterTypes(jsonObject: JSONObject): Map<String, JsonCommitFooterType> =
+  private fun buildFooterTypes(jsonObject: JSONObject): Map<String, CommitFooterTypeModel> =
     jsonObject.keySet().associateWith {
       val descriptor = jsonObject.getJSONObject(it)
       val description = descriptor.optString("description", "")
       val values = buildFooterValues(descriptor.optJSONObject("values") ?: JSONObject())
-      JsonCommitFooterType(
+      CommitFooterTypeModel(
         name = it,
         description = description,
         values = values,
       )
     }
 
-  private fun buildFooterValues(jsonObject: JSONObject): List<JsonCommitFooterValue> =
+  private fun buildFooterValues(jsonObject: JSONObject): List<CommitFooterValueModel> =
     jsonObject.keySet().map {
       val descriptor = jsonObject.getJSONObject(it)
       val description = descriptor.optString("description", "")
-      JsonCommitFooterValue(
+      CommitFooterValueModel(
         name = it,
         description = description,
       )
@@ -220,14 +222,14 @@ internal class CCDefaultTokensService(private val project: Project) {
 
   // TODO(Edoardo): will have to remove it as point, as keeping footer values
   //  as an array does not make sense anymore
-  private fun buildFooterTypesArray(jsonArray: JSONArray): Map<String, JsonCommitFooterType> {
-    val map = LinkedHashMap<String, JsonCommitFooterType>()
+  private fun buildFooterTypesArray(jsonArray: JSONArray): Map<String, CommitFooterTypeModel> {
+    val map = LinkedHashMap<String, CommitFooterTypeModel>()
 
     for (i in 0..<jsonArray.length()) {
       val descriptor = jsonArray.getJSONObject(i)
       val name = descriptor.optString("name")
       val description = descriptor.optString("description", "")
-      map[name] = JsonCommitFooterType(
+      map[name] = CommitFooterTypeModel(
         name = name,
         description = description,
         values = emptyList(),
@@ -237,29 +239,29 @@ internal class CCDefaultTokensService(private val project: Project) {
     return map
   }
 
-  class JsonDefaults(
-    val types: Map<String, JsonCommitType>,
-    val footerTypes: Map<String, JsonCommitFooterType>,
+  class TokensModel(
+    val types: Map<String, CommitTypeModel>,
+    val footerTypes: Map<String, CommitFooterTypeModel>,
   )
 
-  class JsonCommitType(
+  class CommitTypeModel(
     val name: String,
     val description: String,
-    val scopes: List<JsonCommitScope>,
+    val scopes: List<CommitScopeModel>,
   )
 
-  class JsonCommitScope(
+  class CommitScopeModel(
     val name: String,
     val description: String,
   )
 
-  class JsonCommitFooterType(
+  class CommitFooterTypeModel(
     val name: String,
     val description: String,
-    val values: List<JsonCommitFooterValue>,
+    val values: List<CommitFooterValueModel>,
   )
 
-  class JsonCommitFooterValue(
+  class CommitFooterValueModel(
     val name: String,
     val description: String,
   )

@@ -12,7 +12,7 @@ import javax.swing.JComponent
  * @author Edoardo Luppi
  */
 internal class CCMainConfigurable(private val project: Project) : SearchableConfigurable {
-  private val defaultsService = project.service<CCDefaultTokensService>()
+  private val tokensService = project.service<CCTokensService>()
   private val configService = project.service<CCConfigService>()
   private val disposable = Disposer.newDisposable("CCMainConfigurable")
   private lateinit var gui: CCMainConfigurableGui
@@ -33,9 +33,9 @@ internal class CCMainConfigurable(private val project: Project) : SearchableConf
     gui.customCoAuthorsFilePath = configService.customCoAuthorsFilePath
 
     val tokens = try {
-      defaultsService.getDefaultsFromCustomFile(configService.customFilePath)
+      tokensService.getTokens()
     } catch (_: Exception) {
-      defaultsService.getBuiltInDefaults()
+      tokensService.getBundledTokens()
     }
 
     gui.setTokens(tokens.types)
@@ -60,7 +60,7 @@ internal class CCMainConfigurable(private val project: Project) : SearchableConf
     configService.customFilePath = gui.customTokensFilePath
 
     try {
-      val tokens = defaultsService.getDefaultsFromCustomFile(configService.customFilePath)
+      val tokens = tokensService.getTokens()
       gui.setTokens(tokens.types)
     } catch (_: Exception) {
       gui.revalidate()

@@ -2,7 +2,7 @@ package com.github.lppedd.cc.configuration.component
 
 import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.CCBundle
-import com.github.lppedd.cc.configuration.CCDefaultTokensService
+import com.github.lppedd.cc.configuration.CCTokensService
 import com.github.lppedd.cc.configuration.SchemaValidationException
 import com.github.lppedd.cc.scaled
 import com.intellij.openapi.Disposable
@@ -41,7 +41,7 @@ internal class DefaultTokensFilePickerPanel(
     private val logger = logger<DefaultTokensFilePickerPanel>()
   }
 
-  private val defaultsService = project.service<CCDefaultTokensService>()
+  private val tokensService = project.service<CCTokensService>()
   private val isCustomFile = JBCheckBox(CCBundle["cc.config.customFile"]).also {
     it.addItemListener { event ->
       when (event.stateChange) {
@@ -156,7 +156,7 @@ internal class DefaultTokensFilePickerPanel(
     }
 
     return try {
-      defaultsService.validateDefaultsFile(pathStr)
+      tokensService.validateTokensFile(pathStr)
       isComponentValid = true
       null
     } catch (e: Exception) {
