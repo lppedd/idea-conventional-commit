@@ -11,11 +11,11 @@ import javax.swing.JList
  */
 internal class CommitTokenCellRenderer(private val cellIcon: Icon) : ColoredListCellRenderer<String>() {
   override fun customizeCellRenderer(
-      list: JList<out String>,
-      value: String,
-      index: Int,
-      isSelected: Boolean,
-      cellHasFocus: Boolean,
+    list: JList<out String>,
+    value: String,
+    index: Int,
+    isSelected: Boolean,
+    cellHasFocus: Boolean,
   ) {
     ipad = JBUI.insetsLeft(5)
     icon = cellIcon

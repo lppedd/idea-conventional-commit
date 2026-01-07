@@ -30,9 +30,9 @@ internal class CommitTokenDocumentationProvider : AbstractDocumentationProvider(
     }
 
   override fun getDocumentationElementForLookupItem(
-      psiManager: PsiManager?,
-      obj: Any?,
-      element: PsiElement,
+    psiManager: PsiManager?,
+    obj: Any?,
+    element: PsiElement,
   ): PsiElement? =
     if (obj is CommitTokenLookupElement) {
       CommitTokenDocumentationElement(obj.getToken(), obj.psiElement, element)
@@ -124,9 +124,9 @@ internal class CommitTokenDocumentationProvider : AbstractDocumentationProvider(
   }
 
   private class CommitTokenDocumentationElement(
-      val token: CommitToken,
-      val tokenPsiElement: CommitTokenPsiElement,
-      private val parent: PsiElement,
+    val token: CommitToken,
+    val tokenPsiElement: CommitTokenPsiElement,
+    private val parent: PsiElement,
   ) : FakePsiElement() {
     override fun getParent(): PsiElement =
       parent

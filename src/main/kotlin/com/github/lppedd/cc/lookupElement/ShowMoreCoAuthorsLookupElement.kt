@@ -69,10 +69,10 @@ internal class ShowMoreCoAuthorsLookupElement : CommitTokenLookupElement, Prefix
   }
 
   private fun handleCoAuthors(
-      context: InsertionContext,
-      startOffset: Int,
-      commandGroupId: String?,
-      commandName: String?,
+    context: InsertionContext,
+    startOffset: Int,
+    commandGroupId: String?,
+    commandName: String?,
   ) {
     val dialog = CoAuthorsDialog(context.project)
 
@@ -102,11 +102,11 @@ internal class ShowMoreCoAuthorsLookupElement : CommitTokenLookupElement, Prefix
     }
 
     WriteCommandAction.runWriteCommandAction(
-        context.project,
-        commandName,
-        commandGroupId,
-        action,
-        PsiDocumentManager.getInstance(context.project).getPsiFile(document),
+      context.project,
+      commandName,
+      commandGroupId,
+      action,
+      PsiDocumentManager.getInstance(context.project).getPsiFile(document),
     )
   }
 

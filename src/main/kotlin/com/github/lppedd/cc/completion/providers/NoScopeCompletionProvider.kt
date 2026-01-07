@@ -12,7 +12,7 @@ import com.intellij.openapi.project.Project
  * @author Edoardo Luppi
  */
 internal class NoScopeCompletionProvider(
-    private val project: Project,
+  private val project: Project,
 ) : CompletionProvider<CommitScopeProvider> {
   override fun getProviders(): Collection<CommitScopeProvider> =
     emptyList()

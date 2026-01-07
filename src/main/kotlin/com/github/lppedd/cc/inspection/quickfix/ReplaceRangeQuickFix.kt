@@ -12,8 +12,8 @@ import com.intellij.openapi.project.Project
  * @author Edoardo Luppi
  */
 internal class ReplaceRangeQuickFix(
-    private val replaceChar: String,
-    override val canReformat: Boolean = true,
+  private val replaceChar: String,
+  override val canReformat: Boolean = true,
 ) : CommitBaseQuickFix() {
   override fun getFamilyName(): String =
     CCBundle["cc.inspection.nonStdMessage.replaceWs", replaceChar]

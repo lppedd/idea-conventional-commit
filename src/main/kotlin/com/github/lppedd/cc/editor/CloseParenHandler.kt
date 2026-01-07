@@ -23,8 +23,9 @@ internal class CloseParenHandler : BaseTypedHandler(')') {
     val text = editor.document.immutableCharSequence
 
     return if (
-        lineOffset == commitTokens.scope.range.endOffset &&
-        textOffset < text.length && text[textOffset] == myChar) {
+      lineOffset == commitTokens.scope.range.endOffset &&
+      textOffset < text.length && text[textOffset] == myChar
+    ) {
       // type(...|)
       editor.moveCaretRelatively(1)
       STOP

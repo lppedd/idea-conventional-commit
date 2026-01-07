@@ -15,8 +15,8 @@ import com.intellij.codeInsight.lookup.LookupElementPresentation
  * @author Edoardo Luppi
  */
 internal class CommitFooterTypeLookupElement(
-    private val psiElement: CommitFooterTypePsiElement,
-    private val commitFooterType: CommitFooterType,
+  private val psiElement: CommitFooterTypePsiElement,
+  private val commitFooterType: CommitFooterType,
 ) : CommitTokenLookupElement() {
   override fun getToken(): CommitToken =
     commitFooterType
@@ -45,9 +45,9 @@ internal class CommitFooterTypeLookupElement(
     if (footerType is ValidToken) {
       // Replace the old footer type with the new one
       editor.replaceString(
-          lineStartOffset + footerType.range.startOffset,
-          lineStartOffset + footerType.range.endOffset,
-          commitFooterType.getValue(),
+        lineStartOffset + footerType.range.startOffset,
+        lineStartOffset + footerType.range.endOffset,
+        commitFooterType.getValue(),
       )
     } else {
       // No footer type had been inserted before, thus we simply insert the value

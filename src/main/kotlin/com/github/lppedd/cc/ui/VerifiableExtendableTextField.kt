@@ -10,9 +10,9 @@ import javax.swing.event.DocumentEvent
  * @author Edoardo Luppi
  */
 internal class VerifiableExtendableTextField(
-    columns: Int,
-    private val verifier: (VerifiableExtendableTextField) -> Boolean,
-    private val errorTooltipText: String,
+  columns: Int,
+  private val verifier: (VerifiableExtendableTextField) -> Boolean,
+  private val errorTooltipText: String,
 ) : ExtendableTextField(columns) {
   private val errorIconExtension = Extension {
     General.BalloonError

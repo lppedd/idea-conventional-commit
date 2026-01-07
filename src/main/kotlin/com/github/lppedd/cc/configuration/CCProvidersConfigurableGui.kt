@@ -55,12 +55,12 @@ internal class CCProvidersConfigurableGui {
     get() = footerValues.providers
 
   fun setProviders(
-      types: List<CommitTypeProvider>,
-      scopes: List<CommitScopeProvider>,
-      subjects: List<CommitSubjectProvider>,
-      bodies: List<CommitBodyProvider>,
-      footerTypes: List<CommitFooterTypeProvider>,
-      footerValues: List<CommitFooterValueProvider>,
+    types: List<CommitTypeProvider>,
+    scopes: List<CommitScopeProvider>,
+    subjects: List<CommitSubjectProvider>,
+    bodies: List<CommitBodyProvider>,
+    footerTypes: List<CommitFooterTypeProvider>,
+    footerValues: List<CommitFooterValueProvider>,
   ) {
     this.types.providers = types
     this.scopes.providers = scopes

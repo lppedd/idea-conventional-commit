@@ -15,8 +15,8 @@ import com.intellij.codeInsight.lookup.LookupElementPresentation
  * @author Edoardo Luppi
  */
 internal open class CommitTypeLookupElement(
-    private val psiElement: CommitTypePsiElement,
-    private val commitType: CommitType,
+  private val psiElement: CommitTypePsiElement,
+  private val commitType: CommitType,
 ) : CommitTokenLookupElement() {
   override fun getToken(): CommitToken =
     commitType
@@ -45,9 +45,9 @@ internal open class CommitTypeLookupElement(
     if (type is ValidToken) {
       // Replace the old type with the new one
       editor.replaceString(
-          lineStartOffset + type.range.startOffset,
-          lineStartOffset + type.range.endOffset,
-          commitType.getValue(),
+        lineStartOffset + type.range.startOffset,
+        lineStartOffset + type.range.endOffset,
+        commitType.getValue(),
       )
     } else {
       editor.insertStringAtCaret(commitType.getValue())

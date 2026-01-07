@@ -12,7 +12,9 @@ import com.intellij.psi.PsiElementVisitor
 /**
  * @author Edoardo Luppi
  */
-internal class ConventionalCommitFooterPsiElementImpl(node: ASTNode) : ASTWrapperPsiElement(node), ConventionalCommitFooterPsiElement {
+internal class ConventionalCommitFooterPsiElementImpl(node: ASTNode) :
+    ASTWrapperPsiElement(node),
+    ConventionalCommitFooterPsiElement {
   override fun getType(): ConventionalCommitFooterTypePsiElement =
     findNotNullChildByType(ConventionalCommitTokenType.FOOTER_TYPE)
 

@@ -32,10 +32,12 @@ internal abstract class CommitBaseCompleteMacro : Macro() {
     val psiFile = PsiUtilBase.getPsiFileInEditor(editor, project) ?: return
 
     invokeLaterOnEdt {
-      if (project.isDisposed ||
-          editor.isDisposed ||
-          !psiFile.isValid ||
-          CompletionServiceImpl.completionService.currentCompletion != null) {
+      if (
+        project.isDisposed ||
+        editor.isDisposed ||
+        !psiFile.isValid ||
+        CompletionServiceImpl.completionService.currentCompletion != null
+      ) {
         return@invokeLaterOnEdt
       }
 

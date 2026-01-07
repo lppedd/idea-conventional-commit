@@ -9,8 +9,8 @@ import com.intellij.codeInsight.lookup.LookupElement
  * @author Edoardo Luppi
  */
 internal class FilterPrefixMatcher(
-    private val delegate: PrefixMatcher,
-    prefix: String? = null,
+  private val delegate: PrefixMatcher,
+  prefix: String? = null,
 ) : PrefixMatcher(prefix ?: delegate.prefix) {
   override fun prefixMatches(element: LookupElement): Boolean =
     false

@@ -55,10 +55,10 @@ internal class InternalCommitTokenProvider(private val project: Project) :
     defaults.footerTypes.map { (key, value) -> DefaultCommitToken(key, value.description) }
 
   override fun getCommitFooterValues(
-      footerType: String,
-      type: String?,
-      scope: String?,
-      subject: String?,
+    footerType: String,
+    type: String?,
+    scope: String?,
+    subject: String?,
   ): Collection<CommitFooterValue> {
     if ("co-authored-by".equals(footerType, true)) {
       return tokensService.getCoAuthors()
@@ -98,9 +98,9 @@ internal class InternalCommitTokenProvider(private val project: Project) :
   }
 
   private class DefaultCommitToken(
-      private val text: String,
-      private val description: String,
-      private val isCoAuthor: Boolean = false,
+    private val text: String,
+    private val description: String,
+    private val isCoAuthor: Boolean = false,
   ) : CommitType,
       CommitScope,
       CommitFooterType,

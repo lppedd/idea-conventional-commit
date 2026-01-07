@@ -15,9 +15,9 @@ import com.intellij.openapi.ui.ValidationInfo
  */
 internal abstract class CCDialogWrapper(project: Project) : DialogWrapper(project), DataProvider {
   override fun createPeer(
-      project: Project?,
-      canBeParent: Boolean,
-      ideModalityType: IdeModalityType,
+    project: Project?,
+    canBeParent: Boolean,
+    ideModalityType: IdeModalityType,
   ): DialogWrapperPeer =
     CCDialogWrapperPeer(this, project, canBeParent, ideModalityType)
 

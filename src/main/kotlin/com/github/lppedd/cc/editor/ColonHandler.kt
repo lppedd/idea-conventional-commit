@@ -23,8 +23,10 @@ internal class ColonHandler : BaseTypedHandler(':') {
     val scope = commitTokens.scope
     val lineOffset = editor.caretModel.logicalPosition.column
 
-    if (scope !is ValidToken && type.range.endOffset == lineOffset ||
-        scope is ValidToken && scope.range.endOffset == lineOffset - 1) {
+    if (
+      scope !is ValidToken && type.range.endOffset == lineOffset ||
+      scope is ValidToken && scope.range.endOffset == lineOffset - 1
+    ) {
       doInsertColon(commitTokens.separator, commitTokens.subject, project, editor)
       return STOP
     }
@@ -35,8 +37,8 @@ internal class ColonHandler : BaseTypedHandler(':') {
   override fun checkAutoPopup(commitTokens: CommitTokens, project: Project, editor: Editor): Result {
     val lineOffset = editor.caretModel.logicalPosition.column
     return if (
-        (commitTokens.type as ValidToken).range.endOffset == lineOffset ||
-        commitTokens.scope is ValidToken && commitTokens.scope.range.endOffset == lineOffset - 1
+      (commitTokens.type as ValidToken).range.endOffset == lineOffset ||
+      commitTokens.scope is ValidToken && commitTokens.scope.range.endOffset == lineOffset - 1
     ) {
       editor.scheduleAutoPopup()
       STOP
@@ -52,10 +54,10 @@ internal class ColonHandler : BaseTypedHandler(':') {
   // type(scope)|:
   // type(scope)|: my desc
   private fun doInsertColon(
-      separator: Separator,
-      subject: Subject,
-      project: Project,
-      editor: Editor,
+    separator: Separator,
+    subject: Subject,
+    project: Project,
+    editor: Editor,
   ) {
     if (separator.isPresent) {
       editor.moveCaretRelatively(1)

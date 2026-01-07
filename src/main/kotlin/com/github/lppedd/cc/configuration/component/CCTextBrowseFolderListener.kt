@@ -14,8 +14,8 @@ import com.intellij.openapi.wm.WindowManager
  */
 @Suppress("UnstableApiUsage")
 internal class CCTextBrowseFolderListener(
-    private val fileChooserDescriptor: CCFileChooserDescriptor,
-    project: Project? = null,
+  private val fileChooserDescriptor: CCFileChooserDescriptor,
+  project: Project? = null,
 ) : TextBrowseFolderListener(fileChooserDescriptor, project) {
   override fun run() {
     val dialog = getPathChooserDialog()
@@ -27,9 +27,9 @@ internal class CCTextBrowseFolderListener(
   private fun getPathChooserDialog(): PathChooserDialog {
     val parentComponent = myTextComponent ?: WindowManager.getInstance().suggestParentWindow(project)
     val nativePathChooser = FileChooserFactoryImpl.createNativePathChooserIfEnabled(
-        myFileChooserDescriptor,
-        project,
-        parentComponent,
+      myFileChooserDescriptor,
+      project,
+      parentComponent,
     )
 
     if (nativePathChooser != null) {

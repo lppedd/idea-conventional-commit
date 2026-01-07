@@ -7,16 +7,16 @@ import com.github.lppedd.cc.parser.FooterContext.FooterValueContext
  * @author Edoardo Luppi
  */
 internal data class FooterTokens(
-    val type: FooterType = InvalidToken,
-    val separator: Separator = Separator(false),
-    val footer: Footer = InvalidToken,
+  val type: FooterType = InvalidToken,
+  val separator: Separator = Separator(false),
+  val footer: Footer = InvalidToken,
 ) {
   fun getContext(offset: Int): FooterContext? =
     when {
       offset == 0 -> FooterTypeContext("")
       separator.isPresent -> FooterValueContext(
-          (type as ValidToken).value,
-          (footer as? ValidToken)?.value ?: "",
+        (type as ValidToken).value,
+        (footer as? ValidToken)?.value ?: "",
       )
       type.isInContext(offset) -> FooterTypeContext(type.value)
       else -> null

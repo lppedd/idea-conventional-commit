@@ -23,13 +23,13 @@ internal class ConventionalCommitColorSettingsPage : ColorSettingsPage {
   @Suppress("CompanionObjectInExtension")
   private companion object {
     private val descriptors = arrayOf(
-        AttributesDescriptor(CCBundle["cc.language.token.type"], TYPE),
-        AttributesDescriptor(CCBundle["cc.language.token.scope"], SCOPE),
-        AttributesDescriptor(CCBundle["cc.language.token.breakingChange"], BREAKING_CHANGE),
-        AttributesDescriptor(CCBundle["cc.language.token.subject"], SUBJECT),
-        AttributesDescriptor(CCBundle["cc.language.token.body"], BODY),
-        AttributesDescriptor(CCBundle["cc.language.token.footerType"], FOOTER_TYPE),
-        AttributesDescriptor(CCBundle["cc.language.token.footerValue"], FOOTER_VALUE),
+      AttributesDescriptor(CCBundle["cc.language.token.type"], TYPE),
+      AttributesDescriptor(CCBundle["cc.language.token.scope"], SCOPE),
+      AttributesDescriptor(CCBundle["cc.language.token.breakingChange"], BREAKING_CHANGE),
+      AttributesDescriptor(CCBundle["cc.language.token.subject"], SUBJECT),
+      AttributesDescriptor(CCBundle["cc.language.token.body"], BODY),
+      AttributesDescriptor(CCBundle["cc.language.token.footerType"], FOOTER_TYPE),
+      AttributesDescriptor(CCBundle["cc.language.token.footerValue"], FOOTER_VALUE),
     )
   }
 

@@ -111,11 +111,11 @@ internal class CommitFormatInspection : CommitBaseInspection() {
         }
 
         holder.registerProblem(
-            element,
-            CCBundle["cc.inspection.nonStdMessage.text"],
-            WARNING,
-            range,
-            *fixes,
+          element,
+          CCBundle["cc.inspection.nonStdMessage.text"],
+          WARNING,
+          range,
+          *fixes,
         )
       }
     }
@@ -126,12 +126,12 @@ internal class CommitFormatInspection : CommitBaseInspection() {
       if (scopeValue.isBlank()) {
         if (element.hasClosingParenthesis()) {
           holder.registerProblem(
-              element,
-              CCBundle["cc.inspection.nonStdMessage.emptyScope"],
-              GENERIC_ERROR_OR_WARNING,
-              TextRange(0, element.textLength),
-              RemoveRangeQuickFix(message = CCBundle["cc.inspection.nonStdMessage.removeScope"]),
-              ConventionalCommitReformatQuickFix,
+            element,
+            CCBundle["cc.inspection.nonStdMessage.emptyScope"],
+            GENERIC_ERROR_OR_WARNING,
+            TextRange(0, element.textLength),
+            RemoveRangeQuickFix(message = CCBundle["cc.inspection.nonStdMessage.removeScope"]),
+            ConventionalCommitReformatQuickFix,
           )
         }
 
@@ -148,21 +148,19 @@ internal class CommitFormatInspection : CommitBaseInspection() {
 
       for (range in ranges) {
         val fix =
-          if (char.isEmpty() ||
-              valueStart == range.startOffset ||
-              valueEnd == range.endOffset) {
+          if (char.isEmpty() || valueStart == range.startOffset || valueEnd == range.endOffset) {
             RemoveRangeQuickFix()
           } else {
             ReplaceRangeQuickFix(char)
           }
 
         holder.registerProblem(
-            element,
-            CCBundle["cc.inspection.nonStdMessage.text"],
-            GENERIC_ERROR_OR_WARNING,
-            range,
-            fix,
-            ConventionalCommitReformatQuickFix,
+          element,
+          CCBundle["cc.inspection.nonStdMessage.text"],
+          GENERIC_ERROR_OR_WARNING,
+          range,
+          fix,
+          ConventionalCommitReformatQuickFix,
         )
       }
     }
@@ -174,21 +172,21 @@ internal class CommitFormatInspection : CommitBaseInspection() {
         val nonWsIndex = value.indexOfFirst { !it.isWhitespace() }
         val newEnd = if (nonWsIndex < 0) element.textLength else nonWsIndex
         holder.registerProblem(
-            element,
-            CCBundle["cc.inspection.nonStdMessage.text"],
-            GENERIC_ERROR_OR_WARNING,
-            TextRange(1, newEnd),
-            RemoveRangeQuickFix(),
-            ConventionalCommitReformatQuickFix,
+          element,
+          CCBundle["cc.inspection.nonStdMessage.text"],
+          GENERIC_ERROR_OR_WARNING,
+          TextRange(1, newEnd),
+          RemoveRangeQuickFix(),
+          ConventionalCommitReformatQuickFix,
         )
       } else if (value.isNotEmpty() && !value.firstIsWhitespace()) {
         holder.registerProblem(
-            element,
-            CCBundle["cc.inspection.nonStdMessage.text"],
-            GENERIC_ERROR_OR_WARNING,
-            TextRange(0, 1),
-            AddWhitespaceQuickFix(1),
-            ConventionalCommitReformatQuickFix,
+          element,
+          CCBundle["cc.inspection.nonStdMessage.text"],
+          GENERIC_ERROR_OR_WARNING,
+          TextRange(0, 1),
+          AddWhitespaceQuickFix(1),
+          ConventionalCommitReformatQuickFix,
         )
       }
     }

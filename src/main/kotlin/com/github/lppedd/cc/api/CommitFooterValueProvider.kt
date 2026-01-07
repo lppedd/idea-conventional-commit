@@ -16,9 +16,9 @@ public interface CommitFooterValueProvider : CommitTokenProvider {
    * @param subject A subject to optionally filter down footer values, or an empty string
    */
   public fun getCommitFooterValues(
-      footerType: String,
-      type: String?,
-      scope: String?,
-      subject: String?,
+    footerType: String,
+    type: String?,
+    scope: String?,
+    subject: String?,
   ): Collection<CommitFooterValue>
 }

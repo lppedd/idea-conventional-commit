@@ -31,9 +31,9 @@ internal class ConventionalCommitEditorTextFieldProvider : EditorTextFieldProvid
   private val keysMapField by lazy(::findMyKeysMapField)
 
   override fun getEditorField(
-      language: Language,
-      project: Project,
-      features: Iterable<EditorCustomization>,
+    language: Language,
+    project: Project,
+    features: Iterable<EditorCustomization>,
   ): EditorTextField {
     if (!projects.contains(project)) {
       connectProject(project)
@@ -86,12 +86,12 @@ internal class ConventionalCommitEditorTextFieldProvider : EditorTextFieldProvid
     val psiFileFactory = project.service<PsiFileFactory>()
     val oldDocument = editorField.document
     val psiFile = psiFileFactory.createFileFromText(
-        "Dummy." + ConventionalCommitFileType.defaultExtension,
-        ConventionalCommitFileType,
-        oldDocument.charsSequence,
-        LocalTimeCounter.currentTime(),
-        true,
-        false,
+      "Dummy." + ConventionalCommitFileType.defaultExtension,
+      ConventionalCommitFileType,
+      oldDocument.charsSequence,
+      LocalTimeCounter.currentTime(),
+      true,
+      false,
     )
 
     val document = psiFile.document ?: return

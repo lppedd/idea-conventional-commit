@@ -75,10 +75,10 @@ internal fun Presentation.updateIcons(withIcon: Icon) {
 @Suppress("unused", "UseJBColor")
 internal fun Color.darker(factor: Double): Color =
   Color(
-      max((red * factor).toInt(), 0),
-      max((green * factor).toInt(), 0),
-      max((blue * factor).toInt(), 0),
-      alpha,
+    max((red * factor).toInt(), 0),
+    max((green * factor).toInt(), 0),
+    max((blue * factor).toInt(), 0),
+    alpha,
   )
 
 @Suppress("ConvertTwoComparisonsToRangeCheck", "UseJBColor")
@@ -98,10 +98,10 @@ internal fun Color.brighter(factor: Double): Color {
   if (b > 0 && b < i) b = i
 
   return Color(
-      min((r / factor).toInt(), 255),
-      min((g / factor).toInt(), 255),
-      min((b / factor).toInt(), 255),
-      alpha,
+    min((r / factor).toInt(), 255),
+    min((g / factor).toInt(), 255),
+    min((b / factor).toInt(), 255),
+    alpha,
   )
 }
 
@@ -205,10 +205,10 @@ internal inline fun Editor.insertStringAtCaret(string: String, moveCaret: Boolea
 }
 
 internal fun Editor.replaceString(
-    startOffset: Int,
-    endOffset: Int,
-    newString: CharSequence,
-    moveCaret: Boolean = true,
+  startOffset: Int,
+  endOffset: Int,
+  newString: CharSequence,
+  moveCaret: Boolean = true,
 ) {
   document.replaceString(startOffset, endOffset, newString)
 
@@ -306,9 +306,9 @@ internal fun String.abbreviate(max: Int, suffix: CharSequence = "..."): String {
   }
 
   var end = minOf(
-      lastIndexOf(' ', max - 3),
-      lastIndexOf('\n', max - 3),
-      lastIndexOf('\r', max - 3),
+    lastIndexOf(' ', max - 3),
+    lastIndexOf('\n', max - 3),
+    lastIndexOf('\r', max - 3),
   )
 
   if (end == -1) {
@@ -320,9 +320,9 @@ internal fun String.abbreviate(max: Int, suffix: CharSequence = "..."): String {
   do {
     end = newEnd
     newEnd = minOf(
-        indexOf(' ', end + 1),
-        indexOf('\n', end + 1),
-        indexOf('\r', end + 1),
+      indexOf(' ', end + 1),
+      indexOf('\n', end + 1),
+      indexOf('\r', end + 1),
     )
 
     if (newEnd == -1) {

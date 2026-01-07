@@ -112,9 +112,9 @@ internal class ConventionalCommitTextCompletionContributor : CompletionContribut
       .caseInsensitive()
       .withPrefixMatcher(FlatPrefixMatcher(parameters.getCompletionPrefix()))
       .withRelevanceSorter(
-          CompletionSorter.emptySorter()
-            .weigh(PreferStartMatching())
-            .weigh(ConventionalCommitLookupElementWeigher(project.service()))
+        CompletionSorter.emptySorter()
+          .weigh(PreferStartMatching())
+          .weigh(ConventionalCommitLookupElementWeigher(project.service()))
       )
 
     val editor = parameters.editor
@@ -225,8 +225,8 @@ internal class ConventionalCommitTextCompletionContributor : CompletionContribut
   }
 
   private fun enhanceCompletionProcessIndicator(
-      process: CompletionProcess,
-      completionProviders: Collection<CompletionProvider<*>>,
+    process: CompletionProcess,
+    completionProviders: Collection<CompletionProvider<*>>,
   ) {
     if (process !is CompletionProgressIndicator) {
       return

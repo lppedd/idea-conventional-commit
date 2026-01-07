@@ -17,8 +17,8 @@ import com.intellij.openapi.project.Project
  * @author Edoardo Luppi
  */
 internal class SubjectCompletionProvider(
-    private val project: Project,
-    private val context: SubjectCommitContext,
+  private val project: Project,
+  private val context: SubjectCommitContext,
 ) : CompletionProvider<CommitSubjectProvider> {
   override fun getProviders(): Collection<CommitSubjectProvider> =
     project.service<CommitTokenProviderService>().getSubjectProviders()

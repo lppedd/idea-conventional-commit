@@ -17,11 +17,11 @@ import com.intellij.psi.PsiFile
  */
 internal abstract class BaseTypedHandler(protected val myChar: Char) : TypedHandlerDelegate() {
   final override fun beforeCharTyped(
-      ch: Char,
-      project: Project,
-      editor: Editor,
-      file: PsiFile,
-      fileType: FileType,
+    ch: Char,
+    project: Project,
+    editor: Editor,
+    file: PsiFile,
+    fileType: FileType,
   ): Result {
     return if (myChar == ch) {
       beforeCharTyped(getCommitTokensOrNull(editor) ?: return CONTINUE, project, editor)
@@ -31,10 +31,10 @@ internal abstract class BaseTypedHandler(protected val myChar: Char) : TypedHand
   }
 
   final override fun checkAutoPopup(
-      ch: Char,
-      project: Project,
-      editor: Editor,
-      file: PsiFile,
+    ch: Char,
+    project: Project,
+    editor: Editor,
+    file: PsiFile,
   ): Result {
     return if (myChar == ch) {
       checkAutoPopup(getCommitTokensOrNull(editor) ?: return CONTINUE, project, editor)

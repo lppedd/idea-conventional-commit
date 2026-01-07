@@ -65,8 +65,8 @@ internal class FixedEditorTextFieldBorder(private val delegatedBorder: Border) :
       val border = Float(Path2D.WIND_EVEN_ODD)
       border.append(outer, false)
       border.append(
-          Rectangle2D.Float(bw + lw, bw + lw, r.width - (bw + lw) * 2, r.height - (bw + lw) * 2),
-          false,
+        Rectangle2D.Float(bw + lw, bw + lw, r.width - (bw + lw) * 2, r.height - (bw + lw) * 2),
+        false,
       )
 
       g2.color = DarculaUIUtil.getOutlineColor(false, false)

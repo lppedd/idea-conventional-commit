@@ -59,10 +59,10 @@ internal class CommitNamingConventionInspection : CommitBaseInspection() {
 
       for (range in findInvalidRanges(element.text, regex)) {
         holder.registerProblem(
-            element,
-            CCBundle["cc.inspection.namingConvention.text"],
-            GENERIC_ERROR_OR_WARNING,
-            range,
+          element,
+          CCBundle["cc.inspection.namingConvention.text"],
+          GENERIC_ERROR_OR_WARNING,
+          range,
         )
       }
     }
@@ -73,10 +73,10 @@ internal class CommitNamingConventionInspection : CommitBaseInspection() {
 
       for (range in findInvalidRanges(element.text, regex)) {
         holder.registerProblem(
-            element,
-            CCBundle["cc.inspection.namingConvention.text"],
-            GENERIC_ERROR_OR_WARNING,
-            range,
+          element,
+          CCBundle["cc.inspection.namingConvention.text"],
+          GENERIC_ERROR_OR_WARNING,
+          range,
         )
       }
     }

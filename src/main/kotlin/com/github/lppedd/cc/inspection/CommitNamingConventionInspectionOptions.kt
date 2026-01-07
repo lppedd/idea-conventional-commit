@@ -40,15 +40,15 @@ internal class CommitNamingConventionInspectionOptions : ConfigurableUi<Project>
   }
 
   private val typePatternTextField = VerifiableExtendableTextField(
-      20,
-      check,
-      CCBundle["cc.inspection.namingConvention.pattern.error"],
+    20,
+    check,
+    CCBundle["cc.inspection.namingConvention.pattern.error"],
   )
 
   private val scopePatternTextField = VerifiableExtendableTextField(
-      20,
-      check,
-      CCBundle["cc.inspection.namingConvention.pattern.error"],
+    20,
+    check,
+    CCBundle["cc.inspection.namingConvention.pattern.error"],
   )
 
   override fun reset(project: Project) {

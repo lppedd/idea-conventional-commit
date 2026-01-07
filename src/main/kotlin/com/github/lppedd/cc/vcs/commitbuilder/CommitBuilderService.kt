@@ -13,8 +13,8 @@ import java.util.*
  * @author Edoardo Luppi
  */
 @State(
-    name = "com.github.lppedd.cc.CommitBuilderDialog",
-    storages = [Storage(StoragePathMacros.WORKSPACE_FILE)],
+  name = "com.github.lppedd.cc.CommitBuilderDialog",
+  storages = [Storage(StoragePathMacros.WORKSPACE_FILE)],
 )
 @Suppress("LightServiceMigrationCode")
 internal class CommitBuilderService : PersistentStateComponent<CommitBuilderService> {
@@ -26,9 +26,9 @@ internal class CommitBuilderService : PersistentStateComponent<CommitBuilderServ
   @JvmField @Tag var isBreakingChange: Boolean = false
 
   @XMap(
-      propertyElementName = "footers",
-      keyAttributeName = "type",
-      valueAttributeName = "value",
+    propertyElementName = "footers",
+    keyAttributeName = "type",
+    valueAttributeName = "value",
   )
   private val footers: MutableMap<String, String> = mutableMapOf()
 
@@ -77,13 +77,13 @@ internal class CommitBuilderService : PersistentStateComponent<CommitBuilderServ
 
   override fun hashCode(): Int =
     Objects.hash(
-        type,
-        scope,
-        subject,
-        body,
-        isBreakingChange,
-        footers,
-        shouldRemember,
+      type,
+      scope,
+      subject,
+      body,
+      isBreakingChange,
+      footers,
+      shouldRemember,
     )
 
   data class CommitFooter(val type: String, val value: String) {

@@ -27,8 +27,8 @@ import javax.swing.event.DocumentEvent
  * @author Edoardo Luppi
  */
 internal class CoAuthorsFilePickerPanel(
-    private val project: Project,
-    private val disposable: Disposable,
+  private val project: Project,
+  private val disposable: Disposable,
 ) : JPanel(GridLayoutManager(2, 1, JBUI.emptyInsets(), 0, 5.scaled)) {
   private val isCustomFile = JBCheckBox(CCBundle["cc.config.customFile"]).also {
     it.addItemListener { event ->

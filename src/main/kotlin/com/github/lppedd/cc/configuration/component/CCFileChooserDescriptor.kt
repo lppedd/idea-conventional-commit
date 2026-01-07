@@ -13,19 +13,19 @@ import javax.swing.Icon
  * @author Edoardo Luppi
  */
 internal open class CCFileChooserDescriptor(
-    chooseFiles: Boolean = true,
-    chooseFolders: Boolean = false,
-    chooseJars: Boolean = false,
-    chooseJarsAsFiles: Boolean = false,
-    chooseJarContents: Boolean = false,
-    chooseMultiple: Boolean = false,
+  chooseFiles: Boolean = true,
+  chooseFolders: Boolean = false,
+  chooseJars: Boolean = false,
+  chooseJarsAsFiles: Boolean = false,
+  chooseJarContents: Boolean = false,
+  chooseMultiple: Boolean = false,
 ) : FileChooserDescriptor(
-    chooseFiles,
-    chooseFolders,
-    chooseJars,
-    chooseJarsAsFiles,
-    chooseJarContents,
-    chooseMultiple,
+  chooseFiles,
+  chooseFolders,
+  chooseJars,
+  chooseJarsAsFiles,
+  chooseJarContents,
+  chooseMultiple,
 ) {
   open val okActionName: String? = null
   open val cancelActionName: String? = null

@@ -12,7 +12,9 @@ import com.intellij.psi.PsiElementVisitor
 /**
  * @author Edoardo Luppi
  */
-internal class ConventionalCommitScopePsiElementImpl(node: ASTNode) : ASTWrapperPsiElement(node), ConventionalCommitScopePsiElement {
+internal class ConventionalCommitScopePsiElementImpl(node: ASTNode) :
+    ASTWrapperPsiElement(node),
+    ConventionalCommitScopePsiElement {
   override fun getValue(): ConventionalCommitScopeValuePsiElement? =
     findChildByType(ConventionalCommitTokenType.SCOPE)
 

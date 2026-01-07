@@ -33,8 +33,8 @@ internal class NoContentTabbedPaneWrapper(disposable: Disposable) : TabbedPaneWr
     // We are interested only in disposing of the created MyTabbedPaneHolder
   }
 
-  private class MyTabbedPaneHolder(wrapper: NoContentTabbedPaneWrapper)
-    : TabbedPaneHolder(wrapper),
+  private class MyTabbedPaneHolder(wrapper: NoContentTabbedPaneWrapper) :
+      TabbedPaneHolder(wrapper),
       PropertyChangeListener,
       Disposable {
     init {

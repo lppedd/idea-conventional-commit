@@ -33,9 +33,9 @@ import javax.swing.JPanel
 internal class HowToBanner(completionShortcutText: String) : JPanel(BorderLayout(5.scaled, 0)) {
   init {
     border = JBUI.Borders.merge(
-        JBUI.Borders.empty(10),
-        SideBorder(JBColor.border(), SideBorder.BOTTOM, 1.scaled),
-        true,
+      JBUI.Borders.empty(10),
+      SideBorder(JBColor.border(), SideBorder.BOTTOM, 1.scaled),
+      true,
     )
 
     val infoIcon: Icon

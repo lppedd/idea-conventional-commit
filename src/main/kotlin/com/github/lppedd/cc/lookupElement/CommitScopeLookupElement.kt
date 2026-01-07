@@ -15,8 +15,8 @@ import com.intellij.codeInsight.lookup.LookupElementPresentation
  * @author Edoardo Luppi
  */
 internal class CommitScopeLookupElement(
-    private val psiElement: CommitScopePsiElement,
-    private val commitScope: CommitScope,
+  private val psiElement: CommitScopePsiElement,
+  private val commitScope: CommitScope,
 ) : CommitTokenLookupElement() {
   override fun getToken(): CommitToken =
     commitScope
@@ -48,9 +48,9 @@ internal class CommitScopeLookupElement(
 
     // Replace the old scope with the new one
     editor.replaceString(
-        lineStartOffset + scope.range.startOffset,
-        lineStartOffset + scope.range.endOffset,
-        commitScope.getValue(),
+      lineStartOffset + scope.range.startOffset,
+      lineStartOffset + scope.range.endOffset,
+      commitScope.getValue(),
     )
 
     // If a closing scope's paren isn't already present, add it

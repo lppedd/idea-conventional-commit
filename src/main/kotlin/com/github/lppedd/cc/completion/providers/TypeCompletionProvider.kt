@@ -17,8 +17,8 @@ import com.intellij.openapi.project.Project
  * @author Edoardo Luppi
  */
 internal class TypeCompletionProvider(
-    private val project: Project,
-    private val context: TypeCommitContext,
+  private val project: Project,
+  private val context: TypeCommitContext,
 ) : CompletionProvider<CommitTypeProvider> {
   override fun getProviders(): Collection<CommitTypeProvider> =
     project.service<CommitTokenProviderService>().getTypeProviders()

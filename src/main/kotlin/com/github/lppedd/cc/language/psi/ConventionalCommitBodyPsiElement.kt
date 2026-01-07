@@ -8,8 +8,8 @@ import com.intellij.psi.tree.IElementType
  * @author Edoardo Luppi
  */
 public class ConventionalCommitBodyPsiElement(
-    type: IElementType,
-    text: CharSequence,
+  type: IElementType,
+  text: CharSequence,
 ) : LeafPsiElement(type, text), PsiPlainText {
   override fun toString(): String =
     "ConventionalCommitBodyPsiElement"

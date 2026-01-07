@@ -43,20 +43,20 @@ internal object CCParser {
   fun parseHeader(segment: CharSequence): CommitTokens {
     val groups = headerRegExp.matchEntire(segment)?.groups ?: return CommitTokens()
     return CommitTokens(
-        type = groups[TYPE]?.run { ValidToken(value, range.forCaretModel()) } ?: InvalidToken,
-        scope = buildCommitScope(groups[SCOPE]),
-        breakingChange = BreakingChange(groups[BRK_CHANGE] != null),
-        separator = Separator(groups[SEPARATOR] != null),
-        subject = groups[SUBJECT]?.run { ValidToken(value, range.forCaretModel()) } ?: InvalidToken
+      type = groups[TYPE]?.run { ValidToken(value, range.forCaretModel()) } ?: InvalidToken,
+      scope = buildCommitScope(groups[SCOPE]),
+      breakingChange = BreakingChange(groups[BRK_CHANGE] != null),
+      separator = Separator(groups[SEPARATOR] != null),
+      subject = groups[SUBJECT]?.run { ValidToken(value, range.forCaretModel()) } ?: InvalidToken
     )
   }
 
   fun parseFooter(text: CharSequence): FooterTokens {
     val groups = footerRegExp.find(text)?.groups ?: return FooterTokens()
     return FooterTokens(
-        type = groups[FOOTER_TYPE]?.run { ValidToken(value, range.forCaretModel()) } ?: InvalidToken,
-        separator = Separator(groups[SEPARATOR] != null),
-        footer = groups[FOOTER]?.run { ValidToken(value, range.forCaretModel()) } ?: InvalidToken
+      type = groups[FOOTER_TYPE]?.run { ValidToken(value, range.forCaretModel()) } ?: InvalidToken,
+      separator = Separator(groups[SEPARATOR] != null),
+      footer = groups[FOOTER]?.run { ValidToken(value, range.forCaretModel()) } ?: InvalidToken
     )
   }
 

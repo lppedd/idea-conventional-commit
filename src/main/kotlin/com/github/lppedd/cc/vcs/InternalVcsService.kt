@@ -89,8 +89,8 @@ internal class InternalVcsService(private val project: Project) : VcsService {
       .sortedByDescending(sortBy)
 
   private fun fetchCommitsFromLogProvider(
-      root: VirtualFile,
-      logProvider: VcsLogProvider,
+    root: VirtualFile,
+    logProvider: VcsLogProvider,
   ): List<VcsCommitMetadata> {
     val localPath = root.fileSystem.getNioPath(root)
 
@@ -145,8 +145,8 @@ internal class InternalVcsService(private val project: Project) : VcsService {
 
   @Suppress("unused")
   private fun getPossiblyCachedCommitsData(
-      root: VirtualFile,
-      commits: List<TimedVcsCommit>,
+    root: VirtualFile,
+    commits: List<TimedVcsCommit>,
   ): Collection<VcsCommitMetadata> {
     val vcsLogData = VcsProjectLog.getInstance(project).dataManager!!
     val vcsLogStorage = vcsLogData.storage
@@ -156,10 +156,10 @@ internal class InternalVcsService(private val project: Project) : VcsService {
 
     invokeLaterOnEdtAndWait {
       vcsLogData.miniDetailsGetter.loadCommitsData(
-          matchingCommitsIndexes,
-          { commitsMetadata = it },
-          {},
-          progressIndicator,
+        matchingCommitsIndexes,
+        { commitsMetadata = it },
+        {},
+        progressIndicator,
       )
     }
 

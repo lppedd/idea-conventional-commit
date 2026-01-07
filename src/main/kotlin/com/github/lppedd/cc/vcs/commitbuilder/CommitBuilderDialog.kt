@@ -58,8 +58,8 @@ import kotlin.text.RegexOption.IGNORE_CASE
 /**
  * @author Edoardo Luppi
  */
-internal class CommitBuilderDialog(private val project: Project)
-  : CCDialogWrapper(project),
+internal class CommitBuilderDialog(private val project: Project) :
+    CCDialogWrapper(project),
     DoNotAskOption,
     ValidationNavigable {
   companion object {
@@ -75,14 +75,14 @@ internal class CommitBuilderDialog(private val project: Project)
   private val bodyTextField = CommitTokenTextField(project, CommitBodyCompletionProvider(), lines = 3)
   private val breakingChangeCheckBox = MnemonicAwareCheckBox(CCBundle["cc.commitbuilder.dialog.breakingChange"])
   private val breakingChangeTextField = CommitTokenTextField(
-      project,
-      CommitFooterValueCompletionProvider { "BREAKING CHANGE" },
-      lines = 3,
+    project,
+    CommitFooterValueCompletionProvider { "BREAKING CHANGE" },
+    lines = 3,
   )
   private val footerTypeTextField = CommitTokenTextField(project, CommitFooterTypeCompletionProvider())
   private val footerValueTextField = CommitTokenTextField(
-      project,
-      CommitFooterValueCompletionProvider { footerTypeTextField.text },
+    project,
+    CommitFooterValueCompletionProvider { footerTypeTextField.text },
   )
 
   private val breakingChangeRegex = Regex("BREAKING[- ]CHANGE", IGNORE_CASE)
@@ -202,12 +202,12 @@ internal class CommitBuilderDialog(private val project: Project)
     }
 
     return CommitBuilderTokens(
-        type = typeTextField.text.trim(),
-        scope = scopeTextField.text.trim(),
-        subject = subjectTextField.text.trim(),
-        body = bodyTextField.text.trim(),
-        isBreakingChange = breakingChangeCheckBox.isSelected,
-        footers = buildFooters(),
+      type = typeTextField.text.trim(),
+      scope = scopeTextField.text.trim(),
+      subject = subjectTextField.text.trim(),
+      body = bodyTextField.text.trim(),
+      isBreakingChange = breakingChangeCheckBox.isSelected,
+      footers = buildFooters(),
     )
   }
 
@@ -319,21 +319,21 @@ internal class CommitBuilderDialog(private val project: Project)
     val bodyLabel = JBLabel(CCBundle["cc.commitbuilder.dialog.body"])
     bodyLabel.labelFor = bodyTextField
     tokensPanel.add(
-        bodyLabel,
-        gc.nextLine()
-          .next()
-          .anchor(GridBagConstraints.PAGE_START)
-          .insets(5, 2, 0, 0),
+      bodyLabel,
+      gc.nextLine()
+        .next()
+        .anchor(GridBagConstraints.PAGE_START)
+        .insets(5, 2, 0, 0),
     )
     tokensPanel.add(bodyTextFieldWithComment, gc.next().insets(JBUI.emptyInsets()))
 
     // Breaking change checkbox
     tokensPanel.add(
-        breakingChangeCheckBox,
-        gc.nextLine()
-          .next()
-          .coverLine()
-          .insets(0, 0, 5, 0),
+      breakingChangeCheckBox,
+      gc.nextLine()
+        .next()
+        .coverLine()
+        .insets(0, 0, 5, 0),
     )
 
     // Breaking change text area
@@ -347,29 +347,29 @@ internal class CommitBuilderDialog(private val project: Project)
     breakingChangePanel.add(breakingChangeTextFieldWithComment, BorderLayout.CENTER)
 
     tokensPanel.add(
-        breakingChangePanel,
-        gc.nextLine()
-          .next()
-          .coverLine()
-          .insets(JBUI.emptyInsets()),
+      breakingChangePanel,
+      gc.nextLine()
+        .next()
+        .coverLine()
+        .insets(JBUI.emptyInsets()),
     )
 
     // Other footer
     tokensPanel.add(
-        buildOtherFooterPanel(),
-        gc.nextLine()
-          .next()
-          .coverLine()
-          .insets(JBUI.emptyInsets()),
+      buildOtherFooterPanel(),
+      gc.nextLine()
+        .next()
+        .coverLine()
+        .insets(JBUI.emptyInsets()),
     )
 
     // Filler
     tokensPanel.add(
-        Box.createVerticalGlue(),
-        gc.nextLine()
-          .coverLine()
-          .weighty(1.0)
-          .insets(JBUI.emptyInsets()),
+      Box.createVerticalGlue(),
+      gc.nextLine()
+        .coverLine()
+        .weighty(1.0)
+        .insets(JBUI.emptyInsets()),
     )
 
     val insets = JBUI.insets(UIUtil.PANEL_REGULAR_INSETS)
@@ -402,11 +402,11 @@ internal class CommitBuilderDialog(private val project: Project)
       .setDefaultWeightX(1.0)
 
     otherFooterPanel.add(
-        SeparatorFactory.createSeparator(
-            CCBundle["cc.commitbuilder.dialog.otherFooter"],
-            footerTypeTextField,
-        ),
-        ogc.nextLine().insetLeft(2),
+      SeparatorFactory.createSeparator(
+        CCBundle["cc.commitbuilder.dialog.otherFooter"],
+        footerTypeTextField,
+      ),
+      ogc.nextLine().insetLeft(2),
     )
 
     otherFooterPanel.add(fieldsPanel, ogc.nextLine())
@@ -416,8 +416,8 @@ internal class CommitBuilderDialog(private val project: Project)
   override fun createSouthPanel(): JComponent =
     super.createSouthPanel().also {
       it.border = CompoundBorder(
-          CustomLineBorder(JBColor.border(), 1, 0, 0, 0),
-          JBEmptyBorder(UIUtil.PANEL_REGULAR_INSETS),
+        CustomLineBorder(JBColor.border(), 1, 0, 0, 0),
+        JBEmptyBorder(UIUtil.PANEL_REGULAR_INSETS),
       )
     }
 
@@ -599,10 +599,10 @@ internal class CommitBuilderDialog(private val project: Project)
     }
 
     commitMessageService.addFooter(
-        CommitFooter(
-            footerTypeTextField.text.trim(),
-            footerValueTextField.text.trim()
-        )
+      CommitFooter(
+        footerTypeTextField.text.trim(),
+        footerValueTextField.text.trim()
+      )
     )
   }
 
@@ -633,12 +633,12 @@ internal class CommitBuilderDialog(private val project: Project)
   }
 
   data class CommitBuilderTokens(
-      val type: String,
-      val scope: String,
-      val subject: String,
-      val body: String,
-      val isBreakingChange: Boolean,
-      val footers: List<CommitFooter>,
+    val type: String,
+    val scope: String,
+    val subject: String,
+    val body: String,
+    val isBreakingChange: Boolean,
+    val footers: List<CommitFooter>,
   )
 
   private inner class CommitTypeCompletionProvider : CommitTokenTextCompletionProvider(project) {
@@ -668,10 +668,11 @@ internal class CommitBuilderDialog(private val project: Project)
   private inner class CommitBodyCompletionProvider : CommitTokenTextCompletionProvider(project) {
     override fun fillVariants(prefix: String, resultSet: CompletionResultSet) {
       val commitTokens = CommitTokens(
-          type = ValidToken(typeTextField.text, TextRange.EMPTY_RANGE),
-          scope = ValidToken(scopeTextField.text, TextRange.EMPTY_RANGE),
-          subject = ValidToken(subjectTextField.text, TextRange.EMPTY_RANGE),
+        type = ValidToken(typeTextField.text, TextRange.EMPTY_RANGE),
+        scope = ValidToken(scopeTextField.text, TextRange.EMPTY_RANGE),
+        subject = ValidToken(subjectTextField.text, TextRange.EMPTY_RANGE),
       )
+
       val provider = BodyCompletionProvider(project, FooterTypeContext(prefix), commitTokens)
       provider.complete(TextFieldResultSet(resultSet))
     }
@@ -712,7 +713,7 @@ internal class CommitBuilderDialog(private val project: Project)
   }
 
   private inner class CommitFooterValueCompletionProvider(
-      val footerTypeProducer: () -> String,
+    val footerTypeProducer: () -> String,
   ) : CommitTokenTextCompletionProvider(project) {
     override fun fillVariants(prefix: String, resultSet: CompletionResultSet) {
       val prefixedResultSet = TextFieldResultSet(resultSet).withPrefixMatcher(prefix)
@@ -724,10 +725,10 @@ internal class CommitBuilderDialog(private val project: Project)
       for (provider in providers.sortedBy(configService::getProviderOrder)) {
         safeRunWithCheckCanceled {
           val commitFooterValues = provider.getCommitFooterValues(
-              footerTypeProducer().trim(),
-              typeTextField.text.trim(),
-              scopeTextField.text.trim(),
-              subjectTextField.text.trim(),
+            footerTypeProducer().trim(),
+            typeTextField.text.trim(),
+            scopeTextField.text.trim(),
+            subjectTextField.text.trim(),
           )
 
           commitFooterValues.asSequence()

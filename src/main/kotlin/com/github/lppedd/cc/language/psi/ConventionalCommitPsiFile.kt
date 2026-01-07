@@ -10,7 +10,7 @@ import com.intellij.psi.FileViewProvider
  * @author Edoardo Luppi
  */
 public class ConventionalCommitPsiFile(
-    viewProvider: FileViewProvider,
+  viewProvider: FileViewProvider,
 ) : PsiFileBase(viewProvider, ConventionalCommitLanguage) {
   override fun getFileType(): FileType =
     ConventionalCommitFileType

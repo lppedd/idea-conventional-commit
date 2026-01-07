@@ -22,10 +22,10 @@ import com.intellij.openapi.project.Project
  * @author Edoardo Luppi
  */
 internal class FooterValueCompletionProvider(
-    private val project: Project,
-    private val context: FooterValueContext,
-    private val commitTokens: CommitTokens,
-    private val process: CompletionProcess,
+  private val project: Project,
+  private val context: FooterValueContext,
+  private val commitTokens: CommitTokens,
+  private val process: CompletionProcess,
 ) : CompletionProvider<CommitFooterValueProvider> {
   override fun getProviders(): Collection<CommitFooterValueProvider> =
     project.service<CommitTokenProviderService>().getFooterValueProviders()
@@ -44,10 +44,10 @@ internal class FooterValueCompletionProvider(
     getProviders().forEach { provider ->
       safeRunWithCheckCanceled {
         val commitFooterValues = provider.getCommitFooterValues(
-            context.type,
-            (commitTokens.type as? ValidToken)?.value,
-            (commitTokens.scope as? ValidToken)?.value,
-            (commitTokens.subject as? ValidToken)?.value,
+          context.type,
+          (commitTokens.type as? ValidToken)?.value,
+          (commitTokens.scope as? ValidToken)?.value,
+          (commitTokens.subject as? ValidToken)?.value,
         )
 
         commitFooterValues.asSequence()

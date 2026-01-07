@@ -82,10 +82,10 @@ internal class CoAuthorsTable(tableModel: CoAuthorsTableModel) : CCTable(tableMo
   override fun processKeyBinding(ks: KeyStroke?, e: KeyEvent?, condition: Int, pressed: Boolean): Boolean {
     val result = super.processKeyBinding(ks, e, condition, pressed)
     return if (
-        !isEditing &&
-        ks?.isOnKeyRelease == true &&
-        ks.keyCode == KeyEvent.VK_SPACE &&
-        ks.modifiers == 0
+      !isEditing &&
+      ks?.isOnKeyRelease == true &&
+      ks.keyCode == KeyEvent.VK_SPACE &&
+      ks.modifiers == 0
     ) {
       toggleSelectedRows()
       true
@@ -158,12 +158,12 @@ internal class CoAuthorsTable(tableModel: CoAuthorsTableModel) : CCTable(tableMo
 
   private class CoAuthorCellRenderer : ColoredTableCellRenderer() {
     override fun customizeCellRenderer(
-        table: JTable,
-        value: Any?,
-        isSelected: Boolean,
-        hasFocus: Boolean,
-        rowIndex: Int,
-        columnIndex: Int,
+      table: JTable,
+      value: Any?,
+      isSelected: Boolean,
+      hasFocus: Boolean,
+      rowIndex: Int,
+      columnIndex: Int,
     ) {
       ipad = JBUI.insets(0, 3, 2, 3)
       border = JBUI.Borders.empty()
@@ -175,12 +175,12 @@ internal class CoAuthorsTable(tableModel: CoAuthorsTableModel) : CCTable(tableMo
 
   private class CheckboxCellRenderer : JBCheckBox(), TableCellRenderer {
     override fun getTableCellRendererComponent(
-        table: JTable?,
-        value: Any?,
-        isRowSelected: Boolean,
-        hasFocus: Boolean,
-        row: Int,
-        column: Int,
+      table: JTable?,
+      value: Any?,
+      isRowSelected: Boolean,
+      hasFocus: Boolean,
+      row: Int,
+      column: Int,
     ): Component {
       requireNotNull(table) { "The table object should be valid here" }
 

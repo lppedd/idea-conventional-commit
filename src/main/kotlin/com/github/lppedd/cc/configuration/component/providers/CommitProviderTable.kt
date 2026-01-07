@@ -65,12 +65,12 @@ internal class CommitProviderTable<T : CommitTokenProvider> : CCTable() {
       true
 
     override fun customizeCellRenderer(
-        table: JTable,
-        value: Any?,
-        isSelected: Boolean,
-        hasFocus: Boolean,
-        row: Int,
-        column: Int,
+      table: JTable,
+      value: Any?,
+      isSelected: Boolean,
+      hasFocus: Boolean,
+      row: Int,
+      column: Int,
     ) {
       border = JBUI.Borders.empty()
       ipad = JBUI.insets(4, 6)

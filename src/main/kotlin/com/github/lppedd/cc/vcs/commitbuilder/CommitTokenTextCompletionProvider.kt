@@ -34,18 +34,18 @@ internal abstract class CommitTokenTextCompletionProvider(private val project: P
       .caseInsensitive()
       .withPrefixMatcher(FlatPrefixMatcher(prefix))
       .withRelevanceSorter(
-          CompletionSorter.emptySorter()
-            .weigh(PreferStartMatching())
-            .weigh(ConventionalCommitLookupElementWeigher(project.service()))
+        CompletionSorter.emptySorter()
+          .weigh(PreferStartMatching())
+          .weigh(ConventionalCommitLookupElementWeigher(project.service()))
       )
 
   override fun acceptChar(ch: Char): Result? =
     null
 
   override fun fillCompletionVariants(
-      parameters: CompletionParameters,
-      prefix: String,
-      resultSet: CompletionResultSet,
+    parameters: CompletionParameters,
+    prefix: String,
+    resultSet: CompletionResultSet,
   ) {
     fillVariants(prefix, resultSet)
     resultSet.stopHere()

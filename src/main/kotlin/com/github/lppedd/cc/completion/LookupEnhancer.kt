@@ -36,17 +36,15 @@ import java.awt.event.KeyEvent
 
 /**
  * Known issues:
- * - the menu retains focus after opening, see [IDEA-254427](https://youtrack.jetbrains.com/issue/IDEA-254427)
+ * - The menu retains focus after opening, see [IDEA-254427](https://youtrack.jetbrains.com/issue/IDEA-254427)
  *
  * @author Edoardo Luppi
  */
-internal class LookupEnhancer(
-    private val lookup: LookupImpl,
-) : LookupListener, PrefixChangeListener, AnActionListener {
+internal class LookupEnhancer(private val lookup: LookupImpl) : LookupListener, PrefixChangeListener, AnActionListener {
   private companion object {
     private const val SHOW_GROUP_IN_POPUP = "actionSystem.toolbar.show.group.in.popup"
 
-    private val menuActionClass = Class.forName("com.intellij.codeInsight.lookup.impl.LookupUi\$MenuAction")
+    private val menuActionClass = Class.forName($$"com.intellij.codeInsight.lookup.impl.LookupUi$MenuAction")
     private val logger = logger<LookupEnhancer>()
     private val robot = Robot()
   }
@@ -110,7 +108,7 @@ internal class LookupEnhancer(
     try {
       // After many thoughts and trial-and-errors, keeping the Action list
       // in memory and replacing each Action in the ActionGroup (the popup's menu)
-      // each time the UI is refreshed, is the only way to have a decent and consistent behavior.
+      // each time the UI is refreshed is the only way to have a decent and consistent behavior.
       // A positive side of this logic is that code is much simpler, and filters' state
       // (filtered or not filtered) is maintained for all the Lookup lifecycle without any effort
       val ui = getField<Any>(lookup.javaClass, lookup, null, "myUi") ?: return

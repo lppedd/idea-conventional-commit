@@ -13,8 +13,8 @@ import kotlin.math.max
  * @author Edoardo Luppi
  */
 internal class CommitBodyLookupElement(
-    private val psiElement: CommitBodyPsiElement,
-    private val commitBody: CommitBody,
+  private val psiElement: CommitBodyPsiElement,
+  private val commitBody: CommitBody,
 ) : CommitTokenLookupElement() {
   override fun getToken(): CommitToken =
     commitBody

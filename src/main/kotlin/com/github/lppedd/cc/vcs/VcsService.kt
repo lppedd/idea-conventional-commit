@@ -1,6 +1,6 @@
 package com.github.lppedd.cc.vcs
 
-import com.intellij.openapi.vcs.ProjectLevelVcsManager
+import com.intellij.openapi.vcs.ProjectLevelVcsManager.Companion.VCS_CONFIGURATION_CHANGED
 import com.intellij.vcs.log.VcsCommitMetadata
 import com.intellij.vcs.log.VcsUser
 
@@ -9,7 +9,7 @@ import com.intellij.vcs.log.VcsUser
  */
 internal interface VcsService {
   /**
-   * Called on every [ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED].
+   * Called on every [VCS_CONFIGURATION_CHANGED].
    */
   fun refresh()
 

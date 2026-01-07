@@ -16,8 +16,8 @@ import kotlin.text.RegexOption.MULTILINE
  *
  * @author Edoardo Luppi
  */
-internal class VcsCommitTokenProvider(project: Project)
-  : CommitTypeProvider,
+internal class VcsCommitTokenProvider(project: Project) :
+    CommitTypeProvider,
     CommitScopeProvider,
     CommitSubjectProvider,
     CommitFooterValueProvider {
@@ -29,12 +29,12 @@ internal class VcsCommitTokenProvider(project: Project)
     private val regexBeginEndWs = Regex("""^\s+|\s+$""")
     private val regexBlankLines = Regex("""^\s*$""", MULTILINE)
     private val specialFooterTypes = setOf(
-        "author",
-        "co-authored-by",
-        "signed-off-by",
-        "acked-by",
-        "reviewed-by",
-        "tested-by",
+      "author",
+      "co-authored-by",
+      "signed-off-by",
+      "acked-by",
+      "reviewed-by",
+      "tested-by",
     )
   }
 
@@ -93,10 +93,10 @@ internal class VcsCommitTokenProvider(project: Project)
       .toList()
 
   override fun getCommitFooterValues(
-      footerType: String,
-      type: String?,
-      scope: String?,
-      subject: String?,
+    footerType: String,
+    type: String?,
+    scope: String?,
+    subject: String?,
   ): Collection<CommitFooterValue> {
     val matchFooterType = specialFooterTypes.contains(footerType.lowercase())
     val maxElements = if (matchFooterType) 5 else MAX_ELEMENTS

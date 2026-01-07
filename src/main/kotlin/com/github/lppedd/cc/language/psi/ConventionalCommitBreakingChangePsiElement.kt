@@ -7,8 +7,8 @@ import com.intellij.psi.tree.IElementType
  * @author Edoardo Luppi
  */
 internal class ConventionalCommitBreakingChangePsiElement(
-    type: IElementType,
-    text: CharSequence,
+  type: IElementType,
+  text: CharSequence,
 ) : LeafPsiElement(type, text) {
   override fun toString(): String =
     "ConventionalCommitBreakingChangePsiElement"

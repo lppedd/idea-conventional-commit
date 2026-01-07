@@ -57,10 +57,10 @@ internal class CommitBuilderAction : DumbAwareAction() {
     }
 
     CommandProcessor.getInstance().executeCommand(
-        project,
-        command,
-        CCBundle["cc.commitbuilder.title"],
-        ObjectUtils.sentinel("CommitBuilder"),
+      project,
+      command,
+      CCBundle["cc.commitbuilder.title"],
+      ObjectUtils.sentinel("CommitBuilder"),
     )
   }
 

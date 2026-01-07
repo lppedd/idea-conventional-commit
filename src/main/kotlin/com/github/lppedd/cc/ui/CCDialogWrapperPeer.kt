@@ -21,10 +21,10 @@ import javax.swing.JComponent
  * @author Edoardo Luppi
  */
 internal class CCDialogWrapperPeer(
-    wrapper: DialogWrapper,
-    project: Project?,
-    canBeParent: Boolean,
-    ideModalityType: IdeModalityType,
+  wrapper: DialogWrapper,
+  project: Project?,
+  canBeParent: Boolean,
+  ideModalityType: IdeModalityType,
 ) : DialogWrapperPeerImpl(wrapper, project, canBeParent, ideModalityType) {
   // @formatter:off
   private val customFrameDialogContentClass = Class.forName("com.intellij.openapi.wm.impl.customFrameDecorations.header.CustomFrameDialogContent")

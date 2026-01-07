@@ -50,9 +50,11 @@ internal class CommitTabAction : TabAction() {
         val psiFile = project.service<PsiDocumentManager>().getPsiFile(editor.document)
         val elementAtCaret = psiFile?.findElementAt(editor.getCaretOffset())
 
-        if (elementAtCaret is ConventionalCommitScopeOpenParenPsiElement ||
-            elementAtCaret is ConventionalCommitScopeCloseParenPsiElement ||
-            elementAtCaret is ConventionalCommitBreakingChangePsiElement) {
+        if (
+          elementAtCaret is ConventionalCommitScopeOpenParenPsiElement ||
+          elementAtCaret is ConventionalCommitScopeCloseParenPsiElement ||
+          elementAtCaret is ConventionalCommitBreakingChangePsiElement
+        ) {
           editor.putUserData(moveCaretKey, 1)
           return true
         } else if (elementAtCaret is ConventionalCommitSeparatorPsiElement) {
@@ -60,8 +62,10 @@ internal class CommitTabAction : TabAction() {
           // or just place the cursor at the right place if it doesn't exist yet
           val nextSibling = elementAtCaret.nextSibling
 
-          if (nextSibling is ConventionalCommitSubjectPsiElement ||
-              nextSibling is ConventionalCommitFooterValuePsiElement) {
+          if (
+            nextSibling is ConventionalCommitSubjectPsiElement ||
+            nextSibling is ConventionalCommitFooterValuePsiElement
+          ) {
             val text = nextSibling.text
             editor.putUserData(moveCaretKey, if (text[0].isWhitespace()) 2 else 1)
           } else {

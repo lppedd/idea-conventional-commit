@@ -17,9 +17,9 @@ import java.util.*
  * @author Edoardo Luppi
  */
 internal class FilterAction(
-    private val enhancer: LookupEnhancer,
-    private val lookup: LookupImpl,
-    private val provider: CommitTokenProvider,
+  private val enhancer: LookupEnhancer,
+  private val lookup: LookupImpl,
+  private val provider: CommitTokenProvider,
 ) : AnAction(provider.getPresentation().getName()) {
   private var isFiltered = false
   private var backupItems = emptyList<CommitTokenLookupElement>()

@@ -16,8 +16,8 @@ import com.intellij.openapi.project.Project
  * @author Edoardo Luppi
  */
 internal class FooterTypeCompletionProvider(
-    private val project: Project,
-    private val context: FooterTypeContext,
+  private val project: Project,
+  private val context: FooterTypeContext,
 ) : CompletionProvider<CommitFooterTypeProvider> {
   override fun getProviders(): Collection<CommitFooterTypeProvider> =
     project.service<CommitTokenProviderService>().getFooterTypeProviders()

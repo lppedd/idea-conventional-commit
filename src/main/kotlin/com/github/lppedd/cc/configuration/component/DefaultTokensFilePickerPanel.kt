@@ -34,8 +34,8 @@ import javax.swing.event.DocumentEvent
  * @author Edoardo Luppi
  */
 internal class DefaultTokensFilePickerPanel(
-    project: Project,
-    private val disposable: Disposable,
+  project: Project,
+  private val disposable: Disposable,
 ) : JPanel(GridLayoutManager(2, 1, JBUI.emptyInsets(), 0, 5.scaled)) {
   companion object {
     private val logger = logger<DefaultTokensFilePickerPanel>()

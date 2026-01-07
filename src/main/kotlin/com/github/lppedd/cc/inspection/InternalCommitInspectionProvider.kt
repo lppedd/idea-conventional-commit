@@ -8,7 +8,7 @@ import com.github.lppedd.cc.api.CommitInspectionProvider
 internal class InternalCommitInspectionProvider : CommitInspectionProvider {
   override fun getInspections(): Collection<CommitBaseInspection> =
     listOf(
-        CommitFormatInspection(),
-        CommitNamingConventionInspection(),
+      CommitFormatInspection(),
+      CommitNamingConventionInspection(),
     )
 }

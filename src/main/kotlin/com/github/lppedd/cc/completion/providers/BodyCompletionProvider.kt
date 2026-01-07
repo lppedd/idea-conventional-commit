@@ -18,9 +18,9 @@ import com.intellij.openapi.project.Project
  * @author Edoardo Luppi
  */
 internal class BodyCompletionProvider(
-    private val project: Project,
-    private val context: FooterTypeContext,
-    private val commitTokens: CommitTokens,
+  private val project: Project,
+  private val context: FooterTypeContext,
+  private val commitTokens: CommitTokens,
 ) : CompletionProvider<CommitBodyProvider> {
   override fun getProviders(): Collection<CommitBodyProvider> =
     project.service<CommitTokenProviderService>().getBodyProviders()
@@ -35,9 +35,9 @@ internal class BodyCompletionProvider(
     getProviders().forEach { provider ->
       safeRunWithCheckCanceled {
         val commitBodies = provider.getCommitBodies(
-            (commitTokens.type as? ValidToken)?.value ?: "",
-            (commitTokens.scope as? ValidToken)?.value ?: "",
-            (commitTokens.subject as? ValidToken)?.value ?: "",
+          (commitTokens.type as? ValidToken)?.value ?: "",
+          (commitTokens.scope as? ValidToken)?.value ?: "",
+          (commitTokens.subject as? ValidToken)?.value ?: "",
         )
 
         commitBodies.asSequence()

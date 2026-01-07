@@ -9,8 +9,8 @@ import com.intellij.psi.tree.IElementType
  * @author Edoardo Luppi
  */
 public class ConventionalCommitFooterValuePsiElement(
-    type: IElementType,
-    text: CharSequence,
+  type: IElementType,
+  text: CharSequence,
 ) : LeafPsiElement(type, text), PsiPlainText {
   override fun accept(visitor: PsiElementVisitor) {
     if (visitor is ConventionalCommitPsiElementVisitor) {

@@ -8,8 +8,8 @@ import javax.swing.Icon
  * @author Edoardo Luppi
  */
 internal class CommitFooterValuePsiElement(
-    private val project: Project,
-    private val presentableText: String,
+  private val project: Project,
+  private val presentableText: String,
 ) : CommitTokenPsiElement() {
   override fun getProject(): Project =
     project

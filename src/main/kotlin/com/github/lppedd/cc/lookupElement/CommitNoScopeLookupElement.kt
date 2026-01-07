@@ -12,7 +12,7 @@ import com.intellij.codeInsight.lookup.LookupElementPresentation
  * @author Edoardo Luppi
  */
 internal class CommitNoScopeLookupElement(
-    private val psiElement: NoScopeCommitPsiElement,
+  private val psiElement: NoScopeCommitPsiElement,
 ) : CommitTokenLookupElement() {
   override fun getToken(): CommitToken =
     NoScopeCommitScope

@@ -12,8 +12,8 @@ import com.intellij.openapi.project.Project
  * @author Edoardo Luppi
  */
 internal class RemoveRangeQuickFix(
-    override val canReformat: Boolean = true,
-    private val message: String = CCBundle["cc.inspection.nonStdMessage.removeWs"],
+  override val canReformat: Boolean = true,
+  private val message: String = CCBundle["cc.inspection.nonStdMessage.removeWs"],
 ) : CommitBaseQuickFix() {
   override fun getFamilyName(): String =
     message

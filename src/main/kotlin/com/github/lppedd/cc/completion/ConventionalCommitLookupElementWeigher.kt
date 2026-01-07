@@ -10,7 +10,7 @@ import com.intellij.codeInsight.lookup.LookupElementWeigher
  * @author Edoardo Luppi
  */
 internal class ConventionalCommitLookupElementWeigher(
-    private val configService: CCConfigService,
+  private val configService: CCConfigService,
 ) : LookupElementWeigher("commitLookupElementWeigher") {
   private companion object {
     private const val PRIORITY_SCOPE = 1
@@ -83,10 +83,10 @@ internal class ConventionalCommitLookupElementWeigher(
     }
 
   private class CommitTokenWeight(
-      private val tokenPriority: Int,
-      private val isRecentlyUsed: Boolean,
-      private val providerPriority: Int,
-      private val index: Int,
+    private val tokenPriority: Int,
+    private val isRecentlyUsed: Boolean,
+    private val providerPriority: Int,
+    private val index: Int,
   ) : Comparable<CommitTokenWeight> {
     companion object {
       private val comparator =

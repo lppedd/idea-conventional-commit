@@ -13,8 +13,8 @@ import com.intellij.codeInsight.lookup.LookupElementPresentation
  * @author Edoardo Luppi
  */
 internal class CommitFooterValueLookupElement(
-    private val psiElement: CommitFooterValuePsiElement,
-    private val commitFooterValue: CommitFooterValue,
+  private val psiElement: CommitFooterValuePsiElement,
+  private val commitFooterValue: CommitFooterValue,
 ) : CommitTokenLookupElement() {
   override fun getToken(): CommitToken =
     commitFooterValue
@@ -44,9 +44,9 @@ internal class CommitFooterValueLookupElement(
     if (footer is ValidToken) {
       // Replace an existing footer value
       editor.replaceString(
-          lineStartOffset + footer.range.startOffset,
-          lineStartOffset + footer.range.endOffset,
-          newFooterValueString,
+        lineStartOffset + footer.range.startOffset,
+        lineStartOffset + footer.range.endOffset,
+        newFooterValueString,
       )
     } else {
       // No footer value was present, just insert the string
