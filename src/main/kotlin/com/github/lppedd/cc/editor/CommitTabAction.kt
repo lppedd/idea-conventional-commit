@@ -42,7 +42,7 @@ internal class CommitTabAction : TabAction() {
       }
     }
 
-    @Suppress("override_deprecation")
+    @Deprecated("Deprecated")
     override fun isEnabled(editor: Editor, dataContext: DataContext): Boolean {
       val project = editor.project
 
@@ -76,7 +76,6 @@ internal class CommitTabAction : TabAction() {
         }
       }
 
-      @Suppress("DEPRECATION")
       return super.isEnabled(editor, dataContext)
     }
 
