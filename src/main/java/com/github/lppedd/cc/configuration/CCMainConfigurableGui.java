@@ -209,7 +209,7 @@ public class CCMainConfigurableGui {
     defaultsPanel.setLayout(new GridLayoutManager(3, 1, JBUI.insetsLeft(INDENT), 0, 0));
     defaultsPanel.setBorder(
         IdeBorderFactory.createTitledBorder(
-            CCBundle.get("cc.config.defaults"),
+            CCBundle.get("cc.config.tokens"),
             false,
             JBUI.insetsTop(3)
         )
