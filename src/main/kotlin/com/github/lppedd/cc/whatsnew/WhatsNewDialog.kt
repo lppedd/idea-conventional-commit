@@ -31,8 +31,7 @@ internal class WhatsNewDialog(project: Project) : CCDialogWrapper(project) {
   private val newerAction = NewerAction()
   private val tabSelectedHandlers = mutableMapOf<Int, () -> Unit>()
 
-  private val providers = service<WhatsNewProviderService>()
-    .getWhatsNewProviders()
+  private val providers = service<WhatsNewProviderService>().getWhatsNewProviders()
     .asSequence()
     .sortedWith(WhatsNewProviderComparator)
     .filter { it.getPages().isNotEmpty() }

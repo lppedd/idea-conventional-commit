@@ -62,10 +62,8 @@ internal class InternalCommitTokenProvider(private val project: Project) :
   ): Collection<CommitFooterValue> {
     if ("co-authored-by".equals(footerType, true)) {
       return tokensService.getCoAuthors()
-        .asSequence()
         .take(3)
         .map { DefaultCommitToken(it, "", true) }
-        .toList()
     }
 
     val defaultFooterType = defaults.footerTypes[footerType] ?: return emptyList()

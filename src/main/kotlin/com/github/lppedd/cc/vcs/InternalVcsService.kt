@@ -80,7 +80,7 @@ internal class InternalVcsService(private val project: Project) : VcsService {
   }
 
   private fun fetchCurrentUsers(): Set<VcsUser> =
-    getVcsLogProviders().asSequence()
+    getVcsLogProviders()
       .mapNotNull { (root, vcsLogProvider) ->
         safeLogAccess("getCurrentUser") {
           vcsLogProvider.getCurrentUser(root)
@@ -88,7 +88,7 @@ internal class InternalVcsService(private val project: Project) : VcsService {
       }.toSet()
 
   private fun <T : Comparable<T>> fetchCommits(sortBy: (VcsCommitMetadata) -> T): List<VcsCommitMetadata> =
-    getVcsLogProviders().asSequence()
+    getVcsLogProviders()
       .map { (root, vcsLogProvider) -> fetchCommitsFromLogProvider(root, vcsLogProvider) }
       .toList()
       .let(vcsLogMultiRepoJoiner::join)

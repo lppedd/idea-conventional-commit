@@ -20,9 +20,7 @@ internal class WhatsNewStartupActivity : ProjectActivity, DumbAware {
       return
     }
 
-    val shouldDisplay = service<WhatsNewProviderService>()
-      .getWhatsNewProviders()
-      .asSequence()
+    val shouldDisplay = service<WhatsNewProviderService>().getWhatsNewProviders()
       .filter(WhatsNewProvider::shouldDisplayAtStartup)
       .any { it.getPages().isNotEmpty() }
 
