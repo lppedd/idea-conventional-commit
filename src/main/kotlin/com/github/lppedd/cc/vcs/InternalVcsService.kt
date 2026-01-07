@@ -15,6 +15,7 @@ import com.intellij.vcs.log.impl.VcsProjectLog
 import com.intellij.vcs.log.visible.filters.VcsLogFilterObject
 import java.util.*
 import java.util.Collections.newSetFromMap
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.io.path.notExists
 
 /**
@@ -63,9 +64,11 @@ internal class InternalVcsService(private val project: Project) : VcsService {
     }
   }
 
-  override fun getCurrentUsers(): Collection<VcsUser> = cachedCurrentUser
+  override fun getCurrentUsers(): Collection<VcsUser> =
+    cachedCurrentUser
 
-  override fun getOrderedTopCommits(): Collection<VcsCommitMetadata> = cachedCommits
+  override fun getOrderedTopCommits(): Collection<VcsCommitMetadata> =
+    cachedCommits
 
   override fun addListener(listener: VcsListener) {
     refreshListeners.add(listener)
@@ -78,8 +81,11 @@ internal class InternalVcsService(private val project: Project) : VcsService {
 
   private fun fetchCurrentUsers(): Set<VcsUser> =
     getVcsLogProviders().asSequence()
-      .mapNotNull { (root, vcsLogProvider) -> vcsLogProvider.getCurrentUser(root) }
-      .toSet()
+      .mapNotNull { (root, vcsLogProvider) ->
+        safeLogAccess("getCurrentUser") {
+          vcsLogProvider.getCurrentUser(root)
+        }
+      }.toSet()
 
   private fun <T : Comparable<T>> fetchCommits(sortBy: (VcsCommitMetadata) -> T): List<VcsCommitMetadata> =
     getVcsLogProviders().asSequence()
@@ -88,10 +94,7 @@ internal class InternalVcsService(private val project: Project) : VcsService {
       .let(vcsLogMultiRepoJoiner::join)
       .sortedByDescending(sortBy)
 
-  private fun fetchCommitsFromLogProvider(
-    root: VirtualFile,
-    logProvider: VcsLogProvider,
-  ): List<VcsCommitMetadata> {
+  private fun fetchCommitsFromLogProvider(root: VirtualFile, vscLogProvider: VcsLogProvider): List<VcsCommitMetadata> {
     val localPath = root.fileSystem.getNioPath(root)
 
     // If the repository root is represented by a locally stored file,
@@ -108,7 +111,14 @@ internal class InternalVcsService(private val project: Project) : VcsService {
       return emptyList()
     }
 
-    val currentBranch = logProvider.getCurrentBranch(root) ?: return emptyList()
+    val currentBranch = safeLogAccess("getCurrentBranch") {
+      vscLogProvider.getCurrentBranch(root)
+    }
+
+    if (currentBranch == null) {
+      return emptyList()
+    }
+
     val branchFilter = VcsLogFilterObject.fromBranch(currentBranch)
     val filterCollection = VcsLogFilterObject.collection(branchFilter)
 
@@ -116,20 +126,20 @@ internal class InternalVcsService(private val project: Project) : VcsService {
     // It might be simply a matter of refreshing the log for the user, but here it's
     // slightly more complex - to the point the most reasonable choice is to catch
     // the exception and return an empty result.
-    val matchingCommits = try {
-      logProvider.getCommitsMatchingFilter(root, filterCollection, PermanentGraph.Options.Default, 100)
-    } catch (e: VcsException) {
-      logger.debug("Error retrieving commits via VcsLogProvider", e)
-      return emptyList()
+    val matchingCommits = safeLogAccess("getCommitsMatchingFilter") {
+      vscLogProvider.getCommitsMatchingFilter(root, filterCollection, PermanentGraph.Options.Default, 100)
     }
 
-    if (matchingCommits.isEmpty()) {
+    if (matchingCommits.isNullOrEmpty()) {
       return emptyList()
     }
 
     val commitsMetadata = ArrayList<VcsCommitMetadata>(100)
     val hashes = matchingCommits.map { it.id.asString() }
-    logProvider.readMetadata(root, hashes, commitsMetadata::add)
+    safeLogAccess("readMetadata") {
+      vscLogProvider.readMetadata(root, hashes, commitsMetadata::add)
+    }
+
     return commitsMetadata
   }
 
@@ -144,10 +154,7 @@ internal class InternalVcsService(private val project: Project) : VcsService {
    */
 
   @Suppress("unused")
-  private fun getPossiblyCachedCommitsData(
-    root: VirtualFile,
-    commits: List<TimedVcsCommit>,
-  ): Collection<VcsCommitMetadata> {
+  private fun getPossiblyCachedCommitsData(root: VirtualFile, commits: List<TimedVcsCommit>): Collection<VcsCommitMetadata> {
     val vcsLogData = VcsProjectLog.getInstance(project).dataManager!!
     val vcsLogStorage = vcsLogData.storage
     val matchingCommitsIndexes = commits.map { vcsLogStorage.getCommitIndex(it.id, root) }
@@ -164,6 +171,22 @@ internal class InternalVcsService(private val project: Project) : VcsService {
     }
 
     return commitsMetadata
+  }
+
+  private fun <T> safeLogAccess(function: String, block: () -> T): T? {
+    try {
+      return block()
+    } catch (e: VcsException) {
+      logger.debug("Error calling VcsLogProvider.$function", e)
+    } catch (e: IllegalStateException) {
+      if (e is CancellationException) {
+        throw e
+      }
+
+      logger.debug("Error calling VcsLogProvider.$function - see IJPL-148354", e)
+    }
+
+    return null
   }
 
   private inner class MyVcsLogRefresher : VcsLogRefresher {
