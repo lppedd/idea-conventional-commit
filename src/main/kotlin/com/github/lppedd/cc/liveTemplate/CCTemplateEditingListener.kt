@@ -2,10 +2,7 @@ package com.github.lppedd.cc.liveTemplate
 
 import com.github.lppedd.cc.*
 import com.github.lppedd.cc.annotation.Compatibility
-import com.github.lppedd.cc.lookupElement.INDEX_BODY_OR_FOOTER_TYPE
-import com.github.lppedd.cc.lookupElement.INDEX_FOOTER_VALUE
-import com.github.lppedd.cc.lookupElement.INDEX_SCOPE
-import com.github.lppedd.cc.lookupElement.INDEX_SUBJECT
+import com.github.lppedd.cc.lookupElement.TemplateSegment
 import com.intellij.codeInsight.template.Template
 import com.intellij.codeInsight.template.TemplateEditingAdapter
 import com.intellij.codeInsight.template.impl.TemplateState
@@ -44,8 +41,8 @@ internal class CCTemplateEditingListener : TemplateEditingAdapter() {
       return
     }
 
-    if (oldIndex == INDEX_BODY_OR_FOOTER_TYPE && newIndex > oldIndex) {
-      if (templateState.getSegmentRange(INDEX_BODY_OR_FOOTER_TYPE).isEmpty) {
+    if (oldIndex == TemplateSegment.BodyOrFooterType && newIndex > oldIndex) {
+      if (templateState.getSegmentRange(TemplateSegment.BodyOrFooterType).isEmpty) {
         deleteFooterValue(templateState)
         templateState.gotoEnd()
         return
@@ -59,7 +56,7 @@ internal class CCTemplateEditingListener : TemplateEditingAdapter() {
   }
 
   override fun beforeTemplateFinished(templateState: TemplateState, template: Template) {
-    val bodyOrFooterTypeRange = templateState.getSegmentRange(INDEX_BODY_OR_FOOTER_TYPE)
+    val bodyOrFooterTypeRange = templateState.getSegmentRange(TemplateSegment.BodyOrFooterType)
 
     if (bodyOrFooterTypeRange.isEmpty) {
       repositionCursorAfterSubjectAndCleanUp(templateState, bodyOrFooterTypeRange)
@@ -74,7 +71,7 @@ internal class CCTemplateEditingListener : TemplateEditingAdapter() {
   ) {
     // If the body is empty, it means the user didn't need to insert it.
     // Thus, we can reposition the cursor at the end of the subject
-    val newOffset = templateState.getSegmentRange(INDEX_SUBJECT).endOffset
+    val newOffset = templateState.getSegmentRange(TemplateSegment.Subject).endOffset
 
     if (newOffset <= bodyOrFooterTypeRange.endOffset) {
       val editor = templateState.editor
@@ -88,7 +85,7 @@ internal class CCTemplateEditingListener : TemplateEditingAdapter() {
   }
 
   private fun deleteScopeParenthesesIfEmpty(templateState: TemplateState) {
-    val (scopeStart, scopeEnd, isScopeEmpty) = templateState.getSegmentRange(INDEX_SCOPE)
+    val (scopeStart, scopeEnd, isScopeEmpty) = templateState.getSegmentRange(TemplateSegment.Scope)
 
     // If the scope is empty, it means the user didn't need to insert it, thus we can remove it
     if (isScopeEmpty) {
@@ -105,7 +102,7 @@ internal class CCTemplateEditingListener : TemplateEditingAdapter() {
   }
 
   private fun deleteFooterValue(templateState: TemplateState) {
-    val (start, end, isEmpty) = templateState.getSegmentRange(INDEX_FOOTER_VALUE)
+    val (start, end, isEmpty) = templateState.getSegmentRange(TemplateSegment.FooterValue)
 
     if (!isEmpty) {
       runWriteAction {

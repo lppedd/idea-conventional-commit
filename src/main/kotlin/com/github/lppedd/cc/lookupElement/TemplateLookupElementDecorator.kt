@@ -114,13 +114,13 @@ internal class TemplateLookupElementDecorator(private val delegate: CommitTokenL
     delegate.hashCode()
 
   private fun deleteScopeAndNext(editor: Editor, templateState: TemplateState) {
-    val (start, end) = templateState.getSegmentRange(INDEX_SCOPE)
+    val (start, end) = templateState.getSegmentRange(TemplateSegment.Scope)
     editor.document.deleteString(start, end)
     templateState.nextTab()
   }
 
   private fun appendSeparatorOnFooterType(editor: Editor, templateState: TemplateState) {
-    val offset = templateState.getSegmentRange(INDEX_BODY_OR_FOOTER_TYPE).endOffset
+    val offset = templateState.getSegmentRange(TemplateSegment.BodyOrFooterType).endOffset
     editor.document.insertString(offset, ": ")
 
     invokeLaterOnEdt {

@@ -11,7 +11,7 @@ import com.github.lppedd.cc.completion.resultset.ContextResultSet
 import com.github.lppedd.cc.completion.resultset.TemplateResultSet
 import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.configuration.CCConfigService.CompletionType.TEMPLATE
-import com.github.lppedd.cc.lookupElement.INDEX_TYPE
+import com.github.lppedd.cc.lookupElement.TemplateSegment
 import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.CommitContext.*
 import com.github.lppedd.cc.parser.FooterContext.FooterTypeContext
@@ -147,10 +147,10 @@ internal class ConventionalCommitTextCompletionContributor : CompletionContribut
     val caretLineNumber = caretLogicalPosition.line
     var caretOffsetInLine = caretLogicalPosition.column
     val templateState = editor.getTemplateState()
-    val lineUntilCaret = if (templateState?.currentVariableNumber == INDEX_TYPE) {
+    val lineUntilCaret = if (templateState?.currentVariableNumber == TemplateSegment.Type) {
       // If we are completing a type with a template, we need to consider only
       // the part of the line after the range marker's start
-      val typeStartOffset = templateState.getSegmentRange(INDEX_TYPE).startOffset
+      val typeStartOffset = templateState.getSegmentRange(TemplateSegment.Type).startOffset
       val start = typeStartOffset - document.getLineRangeByOffset(typeStartOffset).startOffset
 
       caretOffsetInLine -= typeStartOffset
