@@ -45,9 +45,8 @@
     <liveTemplateMacro implementation="com.github.lppedd.cc.liveTemplate.CommitFooterValueMacro" />
     <defaultLiveTemplates file="liveTemplates/ConventionalCommit.xml" hidden="true" />
 
-    <!-- TODO: replace with DocumentationTarget -->
     <!--suppress PluginXmlValidity -->
-    <documentationProvider implementation="com.github.lppedd.cc.documentation.CommitTokenDocumentationProvider" />
+    <platform.backend.documentation.lookupElementTargetProvider implementation="com.github.lppedd.cc.lookupElement.CommitTokenLookupElementDocumentationTargetProvider" />
 
     <projectConfigurable
         groupId="tools"
