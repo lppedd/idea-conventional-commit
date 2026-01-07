@@ -192,7 +192,7 @@ internal class DefaultTokensFilePickerPanel(
     override val okActionName = CCBundle["cc.config.fileDialog.selectFile"]
     override val validFileIcon = CC.Icon.FileType.Json
     override val validFileTest: (VirtualFile) -> Boolean = {
-      it.isValid && "json".equals(it.extension, true)
+      it.isValid && "json".equals(it.extension, ignoreCase = true)
     }
 
     init {

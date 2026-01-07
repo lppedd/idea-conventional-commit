@@ -60,7 +60,7 @@ internal class InternalCommitTokenProvider(private val project: Project) :
     scope: String?,
     subject: String?,
   ): Collection<CommitFooterValue> {
-    if ("co-authored-by".equals(footerType, true)) {
+    if ("co-authored-by".equals(footerType, ignoreCase = true)) {
       return tokensService.getCoAuthors()
         .take(3)
         .map { DefaultCommitToken(it, "", true) }

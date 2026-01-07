@@ -65,7 +65,7 @@ internal class FooterValueCompletionProvider(
       prefixedResultSet.addElement(element)
     }
 
-    if ("co-authored-by".equals(context.type, true)) {
+    if ("co-authored-by".equals(context.type, ignoreCase = true)) {
       val element = ShowMoreCoAuthorsLookupElement(project, prefix)
       element.putUserData(LookupElementKey.Index, Int.MAX_VALUE)
 

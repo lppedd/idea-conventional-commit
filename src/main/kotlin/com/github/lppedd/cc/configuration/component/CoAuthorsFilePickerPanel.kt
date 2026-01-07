@@ -157,7 +157,7 @@ internal class CoAuthorsFilePickerPanel(
     override val okActionName = CCBundle["cc.config.fileDialog.selectFile"]
     override val validFileIcon = CC.Icon.FileType.CoAuthors
     override val validFileTest: (VirtualFile) -> Boolean = {
-      it.isValid && !it.isDirectory && it.isWritable && "coauthors".equals(it.extension, true)
+      it.isValid && !it.isDirectory && it.isWritable && "coauthors".equals(it.extension, ignoreCase = true)
     }
 
     init {

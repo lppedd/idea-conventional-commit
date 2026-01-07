@@ -117,7 +117,7 @@ internal class VcsCommitTokenProvider(project: Project) :
       .map { it.replace(regexBeginEndWs, "") }
       .filterNotBlank()
       .map(CCParser::parseFooter)
-      .filter { it.type is ValidToken && (footerType == null || it.type.value.equals(footerType, true)) }
+      .filter { it.type is ValidToken && (footerType == null || it.type.value.equals(footerType, ignoreCase = true)) }
       .map(FooterTokens::footer)
       .filterIsInstance<ValidToken>()
       .map(ValidToken::value)
