@@ -4,6 +4,7 @@ import com.github.erosb.jsonsKema.*
 import com.github.erosb.jsonsKema.FormatValidationPolicy.ALWAYS
 import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.getResourceAsStream
+import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
@@ -23,7 +24,7 @@ import kotlin.io.path.bufferedReader
  *
  * @author Edoardo Luppi
  */
-@Suppress("LightServiceMigrationCode")
+@Service(Service.Level.PROJECT)
 internal class CCTokensService(private val project: Project) {
   private companion object {
     private val logger = logger<CCTokensService>()

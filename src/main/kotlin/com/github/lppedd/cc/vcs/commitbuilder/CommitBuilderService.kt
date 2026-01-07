@@ -1,9 +1,6 @@
 package com.github.lppedd.cc.vcs.commitbuilder
 
-import com.intellij.openapi.components.PersistentStateComponent
-import com.intellij.openapi.components.State
-import com.intellij.openapi.components.Storage
-import com.intellij.openapi.components.StoragePathMacros
+import com.intellij.openapi.components.*
 import com.intellij.util.xmlb.XmlSerializerUtil
 import com.intellij.util.xmlb.annotations.Tag
 import com.intellij.util.xmlb.annotations.XMap
@@ -16,7 +13,7 @@ import java.util.*
   name = "com.github.lppedd.cc.CommitBuilderDialog",
   storages = [Storage(StoragePathMacros.WORKSPACE_FILE)],
 )
-@Suppress("LightServiceMigrationCode")
+@Service(Service.Level.PROJECT)
 internal class CommitBuilderService : PersistentStateComponent<CommitBuilderService> {
   @JvmField @Tag var shouldRemember: Boolean = true
   @JvmField @Tag var type: String = ""

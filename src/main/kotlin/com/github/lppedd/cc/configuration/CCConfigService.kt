@@ -6,6 +6,7 @@ import com.github.lppedd.cc.api.impl.InternalCommitTokenProvider
 import com.github.lppedd.cc.configuration.CCConfigService.PresentableNameGetter
 import com.github.lppedd.cc.vcs.VcsCommitTokenProvider
 import com.intellij.openapi.components.PersistentStateComponent
+import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 import com.intellij.util.xmlb.XmlSerializerUtil
@@ -23,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap
   storages = [Storage(CC.File.Settings)],
   presentableName = PresentableNameGetter::class,
 )
-@Suppress("LightServiceMigrationCode")
+@Service(Service.Level.PROJECT)
 internal class CCConfigService : PersistentStateComponent<CCConfigService> {
   @Transient
   private companion object {

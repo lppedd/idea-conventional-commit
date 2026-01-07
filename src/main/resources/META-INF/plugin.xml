@@ -71,10 +71,6 @@
         serviceInterface="com.github.lppedd.cc.api.CommitInspectionProviderService"
         serviceImplementation="com.github.lppedd.cc.api.impl.InternalCommitInspectionProviderService"
     />
-
-    <projectService serviceImplementation="com.github.lppedd.cc.configuration.CCConfigService" />
-    <projectService serviceImplementation="com.github.lppedd.cc.configuration.CCTokensService" />
-    <projectService serviceImplementation="com.github.lppedd.cc.vcs.commitbuilder.CommitBuilderService" />
     <projectService
         serviceInterface="com.github.lppedd.cc.api.CommitTokenProviderService"
         serviceImplementation="com.github.lppedd.cc.api.impl.InternalCommitTokenProviderService"
