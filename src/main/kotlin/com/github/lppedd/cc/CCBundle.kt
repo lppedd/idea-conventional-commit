@@ -28,6 +28,7 @@ public object CCBundle {
 
   @JvmStatic
   public fun setLocale(locale: Locale) {
+    bundleReference?.clear()
     bundleReference = null
     bundleLocale = locale
   }
