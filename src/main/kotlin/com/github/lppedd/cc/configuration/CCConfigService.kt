@@ -32,7 +32,7 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
   }
 
   @Attribute
-  private var version: Int = 2
+  private var version: Int = 0
 
   var completionType: CompletionType = CompletionType.POPUP
   var enableLanguageSupport: Boolean = true
@@ -50,42 +50,42 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
     keyAttributeName = "providerId",
     valueAttributeName = "order"
   )
-  private var typeProvidersMap: MutableMap<String, Int> = ConcurrentHashMap<String, Int>()
+  private var typeProvidersMap = ConcurrentHashMap<String, Int>()
 
   @XMap(
     propertyElementName = "commitScopes",
     keyAttributeName = "providerId",
     valueAttributeName = "order"
   )
-  private var scopeProvidersMap: MutableMap<String, Int> = ConcurrentHashMap<String, Int>()
+  private var scopeProvidersMap = ConcurrentHashMap<String, Int>()
 
   @XMap(
     propertyElementName = "commitSubjects",
     keyAttributeName = "providerId",
     valueAttributeName = "order"
   )
-  private var subjectProvidersMap: MutableMap<String, Int> = ConcurrentHashMap<String, Int>()
+  private var subjectProvidersMap = ConcurrentHashMap<String, Int>()
 
   @XMap(
     propertyElementName = "commitBodies",
     keyAttributeName = "providerId",
     valueAttributeName = "order"
   )
-  private var bodyProvidersMap: MutableMap<String, Int> = ConcurrentHashMap<String, Int>()
+  private var bodyProvidersMap = ConcurrentHashMap<String, Int>()
 
   @XMap(
     propertyElementName = "commitFooterTypes",
     keyAttributeName = "providerId",
     valueAttributeName = "order"
   )
-  private var footerTypeProvidersMap: MutableMap<String, Int> = ConcurrentHashMap<String, Int>()
+  private var footerTypeProvidersMap = ConcurrentHashMap<String, Int>()
 
   @XMap(
     propertyElementName = "commitFooterValues",
     keyAttributeName = "providerId",
     valueAttributeName = "order"
   )
-  private var footerValueProvidersMap: MutableMap<String, Int> = ConcurrentHashMap<String, Int>()
+  private var footerValueProvidersMap = ConcurrentHashMap<String, Int>()
 
   init {
     noStateLoaded()
@@ -152,22 +152,20 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
     footerValueProvidersMap.putIfAbsent(VcsCommitTokenProvider.ID, 2)
   }
 
+  // For reference, this method is called only when the service is requested the first time.
+  // There is no eager loading (well, in newer IDEA versions "preload" exists, but it is
+  // better not to rely on it), so the updates below are applied only if a user actually
+  // uses completion or opens the settings panel.
+  //
+  // NOTE: use ConverterProvider in case settings must be migrated to an entirely different format.
   override fun initializeComponent() {
-    // For reference this method is called only when the service
-    // is requested the first time. There is no eager loading (well,
-    // in newer IDEA versions "preload" exists but it's better to
-    // not rely on it) so the updates below are applied only if a user
-    // actually uses completion or opens the settings panel.
-    // TODO: think about a better strategy to update settings as soon
-    //  as the IDE starts but without nagging/scaring the user with
-    //  the ConverterProvider's popup. And maybe without having to deal
-    //  with XML itself
     if (version < 1) {
       // 0.17.0
       version++
     }
 
     if (version < 2) {
+      // 0.21.0
       version++
     }
 
@@ -217,7 +215,7 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
     HIDE_SELECTED
   }
 
-  class PresentableNameGetter : State.NameGetter() {
+  private class PresentableNameGetter : State.NameGetter() {
     override fun get() = "Conventional Commit Configuration"
   }
 }
