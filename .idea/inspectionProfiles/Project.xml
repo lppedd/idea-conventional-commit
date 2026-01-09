@@ -303,6 +303,7 @@
           <option value="JComponentDataProvider" />
           <option value="Destructure" />
           <option value="InstanceVariableUsedBeforeInitialized" />
+          <option value="LoggingSimilarMessage" />
         </list>
       </option>
     </inspection_tool>
