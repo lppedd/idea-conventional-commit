@@ -1,16 +1,13 @@
 package com.github.lppedd.cc.configuration.component
 
-import com.github.lppedd.cc.CC
-import com.github.lppedd.cc.CCBundle
-import com.github.lppedd.cc.getResourceAsStream
-import com.github.lppedd.cc.scaled
+import com.github.lppedd.cc.*
 import com.intellij.ide.plugins.PluginManagerCore
 import com.intellij.openapi.application.WriteAction
 import com.intellij.openapi.extensions.PluginId
 import com.intellij.openapi.fileChooser.FileChooserFactory
 import com.intellij.openapi.fileChooser.FileSaverDescriptor
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.text.StringUtil
-import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.VirtualFileWrapper
 import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBLabel
@@ -26,8 +23,8 @@ import javax.swing.JPanel
 /**
  * @author Edoardo Luppi
  */
-internal class DefaultTokensFileExportPanel
-  : JPanel(GridLayoutManager(1, 2, JBUI.emptyInsets(), 20.scaled, 0)),
+internal class DefaultTokensFileExportPanel(private val project: Project) :
+    JPanel(GridLayoutManager(1, 2, JBUI.emptyInsets(), 20.scaled, 0)),
     LinkListener<Any?> {
   private val exportAction = ActionLinkLabel(CCBundle["cc.config.defaults.exportToPath"], this)
   private val exportInfo = JBLabel()
@@ -44,26 +41,30 @@ internal class DefaultTokensFileExportPanel
   }
 
   override fun linkSelected(aSource: LinkLabel<Any?>, aLinkData: Any?) {
-    val virtualFileWrapper = FileChooserFactory.getInstance()
-      .createSaveFileDialog(FileSaverDescriptor(CCBundle["cc.config.exportDialog.title"], ""), null)
-      .save(null as VirtualFile?, CC.File.Defaults)
+    val descriptor = FileSaverDescriptor(CCBundle["cc.config.exportDialog.title"], "").also {
+      it.isForcedToUseIdeaFileChooser = true
+    }
+
+    val fileWrapper = FileChooserFactory.getInstance()
+      .createSaveFileDialog(descriptor, project)
+      .save(project.findRootDir(), CC.File.Defaults)
 
     try {
-      writeFile(virtualFileWrapper)
+      writeFile(fileWrapper)
     } catch (e: Exception) {
       exportInfo.foreground = JBColor.RED
       exportInfo.text = "${CCBundle["cc.config.defaults.exportToPath.error"]} - ${e.message}"
     }
   }
 
-  private fun writeFile(virtualFileWrapper: VirtualFileWrapper?) {
-    val file = virtualFileWrapper?.file ?: return
+  private fun writeFile(fileWrapper: VirtualFileWrapper?) {
+    val file = fileWrapper?.file ?: return
 
     if (!file.exists()) {
       file.createNewFile()
     }
 
-    val virtualFile = virtualFileWrapper.virtualFile
+    val virtualFile = fileWrapper.virtualFile
 
     if (virtualFile == null || !virtualFile.isWritable) {
       exportInfo.foreground = JBColor.RED

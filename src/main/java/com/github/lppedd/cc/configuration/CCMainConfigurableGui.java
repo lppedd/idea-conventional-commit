@@ -216,7 +216,7 @@ public class CCMainConfigurableGui {
     final var gc = new GridConstraints();
     gc.setFill(FILL_BOTH);
     gc.setHSizePolicy(SIZEPOLICY_CAN_SHRINK | SIZEPOLICY_CAN_GROW | SIZEPOLICY_WANT_GROW);
-    defaultsPanel.add(JBUI.Borders.empty(0, 1, 16, 0).wrap(new DefaultTokensFileExportPanel()), gc);
+    defaultsPanel.add(JBUI.Borders.empty(0, 1, 16, 0).wrap(new DefaultTokensFileExportPanel(project)), gc);
 
     gc.setRow(1);
     defaultTokensFilePickerPanel = new DefaultTokensFilePickerPanel(project, disposable);

@@ -164,6 +164,7 @@ internal class CoAuthorsFilePickerPanel(
       withFileFilter(validFileTest)
       withTitle(CCBundle["cc.config.coAuthors.customFile.dialog.title"])
       withDescription(CCBundle["cc.config.coAuthors.customFile.dialog.description"])
+      isForcedToUseIdeaFileChooser = true
     }
   }
 }

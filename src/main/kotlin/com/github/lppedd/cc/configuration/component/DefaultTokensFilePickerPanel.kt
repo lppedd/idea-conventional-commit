@@ -42,7 +42,7 @@ internal class DefaultTokensFilePickerPanel(
 
   private val customFile = TextFieldWithBrowseButton().also {
     it.isEnabled = false
-    it.addBrowseFolderListener(CCTextBrowseFolderListener(MyFileChooserDescriptor))
+    it.addBrowseFolderListener(CCTextBrowseFolderListener(MyFileChooserDescriptor, null))
   }
 
   var isComponentValid = true
@@ -174,6 +174,7 @@ internal class DefaultTokensFilePickerPanel(
       withFileFilter(validFileTest)
       withTitle(CCBundle["cc.config.fileDialog.title"])
       withDescription(CCBundle["cc.config.fileDialog.description"])
+      isForcedToUseIdeaFileChooser = true
     }
   }
 }
