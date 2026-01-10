@@ -191,7 +191,7 @@ internal class CCTokensService(private val project: Project) {
   }
 
   private fun findFileUnderProjectRoot(fileName: String, createIfNotExists: Boolean = false): VirtualFile? {
-    val rootDir = project.findRootDir() ?: error("Expected a project root directory")
+    val rootDir = project.findRootDir() ?: return null // Avoid throwing as otherwise buildSearchableOptions fails
     var file = rootDir.findChild(fileName)
 
     if (file?.isValid == true) {
