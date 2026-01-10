@@ -2,8 +2,8 @@ package com.github.lppedd.cc.configuration.component
 
 import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.configuration.CCTokensService
+import com.github.lppedd.cc.configuration.CoAuthorsResult
 import com.github.lppedd.cc.configuration.holders.CoAuthorsTableHolder
-import com.github.lppedd.cc.readableMessage
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
@@ -18,9 +18,8 @@ import javax.swing.JPanel
 /**
  * @author Edoardo Luppi
  */
-internal class CoAuthorsDialog(project: Project) : DialogWrapper(project) {
-  private val tokensService = project.service<CCTokensService>()
-  private val coAuthorsTableHolder = CoAuthorsTableHolder(tokensService)
+internal class CoAuthorsDialog(private val project: Project, coAuthors: Set<String>) : DialogWrapper(project) {
+  private val coAuthorsTableHolder = CoAuthorsTableHolder(coAuthors)
 
   init {
     init()
@@ -36,15 +35,19 @@ internal class CoAuthorsDialog(project: Project) : DialogWrapper(project) {
     })
   }
 
-  fun getSelectedAuthors(): Collection<String> =
+  fun getSelectedAuthors(): List<String> =
     coAuthorsTableHolder.tableModel.selectedCoAuthors
 
   override fun doOKAction() {
-    try {
-      tokensService.setCoAuthors(coAuthorsTableHolder.tableModel.coAuthors)
-      super.doOKAction()
-    } catch (e: Exception) {
-      setErrorText(CCBundle["cc.config.coAuthorsDialog.saveError", e.readableMessage()])
+    val tokensService = project.service<CCTokensService>()
+    val coAuthors = coAuthorsTableHolder.tableModel.coAuthors.toSet()
+
+    when (val result = tokensService.setCoAuthors(coAuthors)) {
+      is CoAuthorsResult.Success -> super.doOKAction()
+      is CoAuthorsResult.Failure -> {
+        val message = CCBundle["cc.config.coAuthorsDialog.saveError", result.message]
+        setErrorText(message)
+      }
     }
   }
 

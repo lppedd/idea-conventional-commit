@@ -3,16 +3,14 @@ package com.github.lppedd.cc.configuration.component
 import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.configuration.CCTokensService
-import com.github.lppedd.cc.configuration.SchemaValidationException
 import com.github.lppedd.cc.scaled
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.service
-import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.ComponentValidator
 import com.intellij.openapi.ui.TextFieldWithBrowseButton
 import com.intellij.openapi.ui.ValidationInfo
-import com.intellij.openapi.util.io.FileUtil
+import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.DocumentAdapter
 import com.intellij.ui.components.JBCheckBox
@@ -23,9 +21,6 @@ import com.intellij.util.ui.ComponentWithEmptyText
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UI
 import java.awt.event.ItemEvent
-import java.nio.file.FileSystems
-import java.nio.file.InvalidPathException
-import java.nio.file.NoSuchFileException
 import javax.swing.JComponent
 import javax.swing.JPanel
 import javax.swing.event.DocumentEvent
@@ -37,10 +32,6 @@ internal class DefaultTokensFilePickerPanel(
   project: Project,
   private val disposable: Disposable,
 ) : JPanel(GridLayoutManager(2, 1, JBUI.emptyInsets(), 0, 5.scaled)) {
-  companion object {
-    private val logger = logger<DefaultTokensFilePickerPanel>()
-  }
-
   private val tokensService = project.service<CCTokensService>()
   private val isCustomFile = JBCheckBox(CCBundle["cc.config.customFile"]).also {
     it.addItemListener { event ->
@@ -51,9 +42,10 @@ internal class DefaultTokensFilePickerPanel(
     }
   }
 
+  private val browseListener = CCTextBrowseFolderListener(MyFileChooserDescriptor)
   private val customFile = TextFieldWithBrowseButton().also {
     it.isEnabled = false
-    it.addBrowseFolderListener(CCTextBrowseFolderListener(MyFileChooserDescriptor))
+    it.addBrowseFolderListener(browseListener)
   }
 
   var isComponentValid = true
@@ -72,14 +64,14 @@ internal class DefaultTokensFilePickerPanel(
   }
 
   fun getCustomFilePath(): String? =
-    customFile.text.takeIf { isCustomFile.isSelected }
+    if (isCustomFile.isSelected) customFile.text.trim() else null
 
   @Suppress("DuplicatedCode")
   fun setCustomFilePath(path: String?) {
     if (path != null) {
       isCustomFile.isSelected = true
       customFile.isEnabled = true
-      customFile.text = FileUtil.toSystemDependentName(path)
+      customFile.text = path
       ComponentValidator.getInstance(customFile).ifPresent(ComponentValidator::revalidate)
     } else {
       isCustomFile.isSelected = false
@@ -132,59 +124,44 @@ internal class DefaultTokensFilePickerPanel(
       .createPanel()
 
   private fun customFileValidator(): ValidationInfo? {
+    isComponentValid = true // Reset the validity state
+
     if (!isCustomFile.isSelected) {
-      isComponentValid = true
       return null
     }
 
-    val pathStr = customFile.text.trim()
+    val path = customFile.text.trim()
 
-    if (pathStr.isEmpty()) {
+    if (path.isEmpty()) {
       isComponentValid = false
       return ValidationInfo(CCBundle["cc.config.filePicker.error.empty"], customFile)
     }
 
-    if (!pathStr.endsWith("json", true)) {
+    val file = LocalFileSystem.getInstance().refreshAndFindFileByPath(path)
+
+    if (file == null || !file.isValid || !"json".equals(file.extension, ignoreCase = true)) {
       isComponentValid = false
       return ValidationInfo(CCBundle["cc.config.filePicker.error.path"], customFile)
     }
 
-    try {
-      FileSystems.getDefault().getPath(pathStr)
-    } catch (_: InvalidPathException) {
-      return ValidationInfo(CCBundle["cc.config.filePicker.error.invalidPath"], customFile)
-    }
+    val result = tokensService.validateTokensFile(file)
 
-    return try {
-      tokensService.validateTokensFile(pathStr)
-      isComponentValid = true
-      null
-    } catch (e: Exception) {
+    if (result != null) {
       isComponentValid = false
       customFile.requestFocus()
-
-      val message = when (e) {
-        is SchemaValidationException -> CCBundle["cc.config.filePicker.error.schema"]
-        is NoSuchFileException -> CCBundle["cc.config.filePicker.error.existence"]
-        else -> {
-          logger.error("Error while validating the custom tokens file", e)
-          CCBundle["cc.config.filePicker.error.schema"]
-        }
-      }
-
-      ValidationInfo(message, customFile)
+      return ValidationInfo(CCBundle["cc.config.filePicker.error.schema"], customFile)
     }
+
+    return null
   }
 
   private fun setEmptyText(component: JComponent, text: String?) {
-    if (component !is ComponentWithEmptyText) {
-      return
-    }
+    if (component is ComponentWithEmptyText) {
+      val statusText = component.emptyText.clear()
 
-    if (text != null) {
-      component.emptyText.text = text
-    } else {
-      component.emptyText.clear()
+      if (text != null) {
+        statusText.appendText(text)
+      }
     }
   }
 

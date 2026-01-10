@@ -4,6 +4,8 @@ import com.github.lppedd.cc.*
 import com.github.lppedd.cc.api.CommitFooterValue
 import com.github.lppedd.cc.api.CommitToken
 import com.github.lppedd.cc.api.TokenPresentation
+import com.github.lppedd.cc.configuration.CCTokensService
+import com.github.lppedd.cc.configuration.CoAuthorsResult
 import com.github.lppedd.cc.configuration.component.CoAuthorsDialog
 import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.ValidToken
@@ -13,6 +15,8 @@ import com.intellij.codeInsight.lookup.LookupElementPresentation
 import com.intellij.codeInsight.lookup.impl.PrefixChangeListener
 import com.intellij.openapi.command.CommandProcessor
 import com.intellij.openapi.command.WriteCommandAction
+import com.intellij.openapi.components.service
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiDocumentManager
@@ -21,6 +25,10 @@ import com.intellij.psi.PsiDocumentManager
  * @author Edoardo Luppi
  */
 internal class ShowMoreCoAuthorsLookupElement : CommitTokenLookupElement, PrefixChangeListener {
+  private companion object {
+    private val logger = logger<ShowMoreCoAuthorsLookupElement>()
+  }
+
   private var userInsertedText: StringBuilder
   private val psiElement: CommitFooterValuePsiElement
 
@@ -74,7 +82,17 @@ internal class ShowMoreCoAuthorsLookupElement : CommitTokenLookupElement, Prefix
     commandGroupId: String?,
     commandName: String?,
   ) {
-    val dialog = CoAuthorsDialog(context.project)
+    val project = context.project
+    val tokensService = project.service<CCTokensService>()
+    val coAuthors = when (val result = tokensService.getCoAuthors()) {
+      is CoAuthorsResult.Success -> result.coAuthors
+      is CoAuthorsResult.Failure -> {
+        logger.error("Error while getting co-authors", result.message)
+        emptySet()
+      }
+    }
+
+    val dialog = CoAuthorsDialog(project, coAuthors)
 
     if (!dialog.showAndGet()) {
       return
@@ -97,16 +115,16 @@ internal class ShowMoreCoAuthorsLookupElement : CommitTokenLookupElement, Prefix
     }
 
     val action = Runnable {
-      context.editor.removeSelection()
+      editor.removeSelection()
       editor.replaceString(footerStart, footerEnd, text)
     }
 
     WriteCommandAction.runWriteCommandAction(
-      context.project,
+      project,
       commandName,
       commandGroupId,
       action,
-      PsiDocumentManager.getInstance(context.project).getPsiFile(document),
+      PsiDocumentManager.getInstance(project).getPsiFile(document),
     )
   }
 

@@ -5,7 +5,7 @@ import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.getResourceAsStream
 import com.github.lppedd.cc.scaled
 import com.intellij.ide.plugins.PluginManagerCore
-import com.intellij.openapi.application.runWriteAction
+import com.intellij.openapi.application.WriteAction
 import com.intellij.openapi.extensions.PluginId
 import com.intellij.openapi.fileChooser.FileChooserFactory
 import com.intellij.openapi.fileChooser.FileSaverDescriptor
@@ -78,7 +78,7 @@ internal class DefaultTokensFileExportPanel
     val sb = StringBuilder(jsonStr)
     sb.insert(4, $$"\"$schema\": \"$$schemaUrl\",\n")
 
-    runWriteAction {
+    WriteAction.runAndWait<Throwable> {
       virtualFile.setBinaryContent("$sb".toByteArray())
     }
 

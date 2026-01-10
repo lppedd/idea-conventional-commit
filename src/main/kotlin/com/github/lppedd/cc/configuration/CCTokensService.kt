@@ -2,22 +2,16 @@ package com.github.lppedd.cc.configuration
 
 import com.github.erosb.jsonsKema.*
 import com.github.erosb.jsonsKema.FormatValidationPolicy.ALWAYS
-import com.github.lppedd.cc.CC
-import com.github.lppedd.cc.getResourceAsStream
+import com.github.lppedd.cc.*
+import com.intellij.application.options.CodeStyle
+import com.intellij.openapi.application.WriteAction
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
-import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
+import com.intellij.openapi.vfs.VirtualFile
 import org.codehaus.jettison.json.JSONArray
 import org.codehaus.jettison.json.JSONObject
-import java.io.IOException
-import java.io.Reader
-import java.nio.charset.StandardCharsets.UTF_8
-import java.nio.file.FileSystems
-import java.nio.file.Files
-import java.nio.file.NoSuchFileException
-import kotlin.io.path.bufferedReader
 
 /**
  * Manages bundled and custom commit message tokens.
@@ -26,12 +20,6 @@ import kotlin.io.path.bufferedReader
  */
 @Service(Service.Level.PROJECT)
 internal class CCTokensService(private val project: Project) {
-  private companion object {
-    private val logger = logger<CCTokensService>()
-  }
-
-  private val configService = project.service<CCConfigService>()
-
   /**
    * JSON Schema used to validate the default commit types and scopes JSON file.
    */
@@ -41,26 +29,44 @@ internal class CCTokensService(private val project: Project) {
       JsonParser(bufferedReader).parse()
     }
 
-    SchemaLoader(schemaJson).load()
+    return@lazy SchemaLoader(schemaJson).load()
   }
 
   /**
    * Bundled commit message tokens.
    */
   private val bundledTokensModel: TokensModel by lazy {
-    val jsonStr = getResourceAsStream("/defaults/${CC.File.Defaults}").bufferedReader().use(Reader::readText)
-    parseJsonStr(jsonStr)
+    val reader = getResourceAsStream("/defaults/${CC.File.Defaults}").bufferedReader()
+    val result = reader.use {
+      parseTokens(it.readText())
+    }
+
+    when (result) {
+      is TokensResult.Success -> return@lazy result.tokens
+      is TokensResult.FileError -> error("Unexpected TokensResult.FileError. ${result.message}")
+      is TokensResult.SchemaError -> error("unexpected TokensResult.SchemaError. ${result.failure}")
+    }
   }
 
   /**
    * Returns commit message tokens defined in a custom `conventionalcommit.json` file,
    * or falls back to the bundled defaults if no custom file is specified.
-   *
-   * @see getBundledTokens
    */
-  fun getTokens(): TokensModel {
-    val path = configService.customFilePath ?: findTokensFileInProjectRoot()
-    return path?.let(::readTokensFromFile) ?: getBundledTokens()
+  fun getTokens(): TokensResult {
+    val configService = project.service<CCConfigService>()
+    val filePath = configService.customFilePath
+
+    val file = if (filePath != null) {
+      LocalFileSystem.getInstance().refreshAndFindFileByPath(filePath)
+    } else {
+      findFileUnderProjectRoot(CC.File.Defaults)
+    }
+
+    return if (file != null) {
+      readTokensFromFile(file)
+    } else {
+      TokensResult.Success(getBundledTokens())
+    }
   }
 
   /**
@@ -71,44 +77,44 @@ internal class CCTokensService(private val project: Project) {
 
   /**
    * Validates a file via the inputted absolute path.
-   *
-   * @throws SchemaValidationException When the JSON object does not respect the schema
    */
-  fun validateTokensFile(filePath: String) {
-    val path = FileSystems.getDefault().getPath(filePath)
-
-    if (Files.notExists(path)) {
-      throw NoSuchFileException(filePath)
+  fun validateTokensFile(file: VirtualFile): ValidationFailure? {
+    val reader = file.getReliableInputStream().bufferedReader(file.charset)
+    return reader.use {
+      val content = it.readText()
+      return@use tokensSchema.validateJson(content)
     }
-
-    val jsonStr = path.bufferedReader().use(Reader::readText)
-    tokensSchema.validateJson(jsonStr)
   }
 
   /**
    * Returns the user-defined co-authors.
    */
-  fun getCoAuthors(): Collection<String> {
-    val customCoAuthorsFilePath = configService.customCoAuthorsFilePath
-    val filePath = if (customCoAuthorsFilePath == null) {
-      val projectBasePath = project.basePath ?: return emptySet()
-      FileSystems.getDefault().getPath(projectBasePath, CC.File.CoAuthors)
+  fun getCoAuthors(): CoAuthorsResult {
+    val configService = project.service<CCConfigService>()
+    val filePath = configService.customCoAuthorsFilePath
+
+    val file = if (filePath != null) {
+      LocalFileSystem.getInstance().refreshAndFindFileByPath(filePath)
     } else {
-      FileSystems.getDefault().getPath(customCoAuthorsFilePath)
+      findFileUnderProjectRoot(CC.File.CoAuthors)
     }
 
-    try {
-      if (Files.exists(filePath)) {
-        return Files.readAllLines(filePath, UTF_8)
-          .map(String::trim)
-          .filter(String::isNotEmpty)
-          .toSet()
-      }
-    } catch (e: IOException) {
-      logger.error(e)
+    if (file == null) {
+      return CoAuthorsResult.Failure(CCBundle["cc.config.coAuthors.customFile.notFound"])
     }
 
-    return emptySet()
+    if (!file.isValid || file.isDirectory) {
+      return CoAuthorsResult.Failure(CCBundle["cc.config.coAuthors.customFile.notReadable"])
+    }
+
+    val reader = file.getReliableInputStream().bufferedReader(file.charset)
+    val coAuthors = reader.useLines {
+      it.map(String::trim)
+        .filterNotEmpty()
+        .toSet()
+    }
+
+    return CoAuthorsResult.Success(coAuthors)
   }
 
   /**
@@ -116,55 +122,57 @@ internal class CCTokensService(private val project: Project) {
    *
    * Note that the old list, if any, gets entirely replaced.
    */
-  fun setCoAuthors(coAuthors: Collection<String>) {
-    val customCoAuthorsFilePath = configService.customCoAuthorsFilePath
-    val fileSystem = FileSystems.getDefault()
-    val filePath = if (customCoAuthorsFilePath == null) {
-      val projectBasePath = project.basePath ?: return
-      fileSystem.getPath(projectBasePath, CC.File.CoAuthors)
+  fun setCoAuthors(coAuthors: Set<String>): CoAuthorsResult {
+    val configService = project.service<CCConfigService>()
+    val filePath = configService.customCoAuthorsFilePath
+
+    val file = if (filePath != null) {
+      LocalFileSystem.getInstance().refreshAndFindFileByPath(filePath)
     } else {
-      fileSystem.getPath(customCoAuthorsFilePath)
+      findFileUnderProjectRoot(CC.File.CoAuthors, createIfNotExists = true)
     }
 
-    try {
-      Files.write(filePath, coAuthors, Charsets.UTF_8)
-      LocalFileSystem.getInstance().refreshAndFindFileByIoFile(filePath.toFile())?.refresh(true, true)
-    } catch (e: IOException) {
-      logger.error(e)
-      throw e
+    if (file == null) {
+      return CoAuthorsResult.Failure(CCBundle["cc.config.coAuthors.customFile.notFound"])
     }
-  }
 
-  /**
-   * Returns the path of the tokens file in the project root directory, or `null` if there is not.
-   */
-  private fun findTokensFileInProjectRoot(): String? {
-    val projectBasePath = project.basePath ?: return null
-    return LocalFileSystem.getInstance().refreshAndFindFileByPath(projectBasePath)
-      ?.findChild(CC.File.Defaults)
-      ?.path
+    if (!file.isValid || !file.isWritable || file.isDirectory) {
+      return CoAuthorsResult.Failure(CCBundle["cc.config.coAuthors.customFile.notWritable"])
+    }
+
+    val lineSeparator = CodeStyle.getSettings(project).lineSeparator
+    val content = coAuthors.joinToString(lineSeparator, transform = String::trim)
+
+    WriteAction.runAndWait<Throwable> {
+      file.setBinaryContent(content.toByteArray(file.charset))
+    }
+
+    return CoAuthorsResult.Success(coAuthors)
   }
 
   /**
    * Reads default commit types and scopes from a file in FS via its absolute path.
-   *
-   * @throws SchemaValidationException When the JSON object does not respect the schema
    */
-  private fun readTokensFromFile(filePath: String): TokensModel {
-    val path = FileSystems.getDefault().getPath(filePath)
-    val jsonStr = path.bufferedReader().use(Reader::readText)
-    return parseJsonStr(jsonStr)
+  private fun readTokensFromFile(file: VirtualFile): TokensResult {
+    if (!file.isValid || file.isDirectory) {
+      return TokensResult.FileError(CCBundle["cc.config.defaults.customFile.notReadable"])
+    }
+
+    val reader = file.getReliableInputStream().bufferedReader(file.charset)
+    return reader.use {
+      val content = it.readText()
+      return@use parseTokens(content)
+    }
   }
 
-  /**
-   * @throws SchemaValidationException When the JSON object does not respect the schema
-   */
-  private fun parseJsonStr(jsonStr: String): TokensModel {
-    // If the inputted JSON isn't valid, an exception is thrown.
-    // The exception contains the validation errors which can be used to notify the user
-    tokensSchema.validateJson(jsonStr)
+  private fun parseTokens(content: String): TokensResult {
+    val failure = tokensSchema.validateJson(content)
 
-    val rootJsonObject = JSONObject(jsonStr)
+    if (failure != null) {
+      return TokensResult.SchemaError(failure)
+    }
+
+    val rootJsonObject = JSONObject(content)
     val commonScopes = buildScopes(rootJsonObject.optJSONObject("commonScopes") ?: JSONObject())
     val types = buildTypes(rootJsonObject.getJSONObject("types"), commonScopes)
     val footerTypes = when (val it = rootJsonObject.opt("footerTypes")) {
@@ -174,7 +182,31 @@ internal class CCTokensService(private val project: Project) {
       else -> error("Should never get here")
     }
 
-    return TokensModel(types = types, footerTypes = footerTypes)
+    return TokensResult.Success(TokensModel(types, footerTypes))
+  }
+
+  private fun findFileUnderProjectRoot(fileName: String, createIfNotExists: Boolean = false): VirtualFile? {
+    val rootDir = project.findRootDir() ?: error("Expected a project root directory")
+    var file = rootDir.findChild(fileName)
+
+    if (file?.isValid == true) {
+      return file
+    }
+
+    // The VFS might not have discovered the file yet, so we forcefully refresh it
+    file = rootDir.fileSystem.refreshAndFindFileByPath("${rootDir.path}/$fileName")
+
+    if (file != null) {
+      return file
+    }
+
+    if (createIfNotExists) {
+      return WriteAction.compute<VirtualFile, Throwable> {
+        rootDir.createChildData(this, fileName)
+      }
+    }
+
+    return null
   }
 
   private fun buildTypes(jsonObject: JSONObject, commonScopes: List<CommitScopeModel>): Map<String, CommitTypeModel> =
@@ -271,18 +303,9 @@ internal class CCTokensService(private val project: Project) {
   private fun JSONObject.keySet(): Set<String> =
     toMap().keys as Set<String>
 
-  /**
-   * Validates a JSON object against this JSON Schema.
-   *
-   * @throws SchemaValidationException When the JSON object does not respect the schema
-   */
-  private fun Schema.validateJson(jsonStr: String) {
-    val jsonValue = JsonParser(jsonStr).parse()
+  private fun Schema.validateJson(content: String): ValidationFailure? {
+    val jsonValue = JsonParser(content).parse()
     val validator = Validator.create(this, ValidatorConfig(ALWAYS))
-    val result = validator.validate(jsonValue)
-
-    if (result != null) {
-      throw SchemaValidationException(result)
-    }
+    return validator.validate(jsonValue)
   }
 }

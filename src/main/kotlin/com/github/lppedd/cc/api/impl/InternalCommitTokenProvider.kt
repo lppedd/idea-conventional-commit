@@ -2,13 +2,14 @@ package com.github.lppedd.cc.api.impl
 
 import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.CCBundle
-import com.github.lppedd.cc.CCNotification
+import com.github.lppedd.cc.CCNotificationService
 import com.github.lppedd.cc.api.*
 import com.github.lppedd.cc.configuration.CCTokensService
-import com.github.lppedd.cc.configuration.SchemaValidationException
+import com.github.lppedd.cc.configuration.CCTokensService.TokensModel
+import com.github.lppedd.cc.configuration.CoAuthorsResult
+import com.github.lppedd.cc.configuration.TokensResult
 import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.logger
-import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.openapi.project.Project
 import javax.swing.Icon
 
@@ -25,18 +26,6 @@ internal class InternalCommitTokenProvider(private val project: Project) :
     private val logger = logger<InternalCommitTokenProvider>()
   }
 
-  private val tokensService = project.service<CCTokensService>()
-  private val defaults
-    get() = try {
-      tokensService.getTokens()
-    } catch (e: ProcessCanceledException) {
-      throw e
-    } catch (e: Exception) {
-      logger.debug("Error while reading the custom tokens file", e)
-      notifyErrorToUser(e)
-      tokensService.getBundledTokens()
-    }
-
   override fun getId(): String =
     ID
 
@@ -44,15 +33,15 @@ internal class InternalCommitTokenProvider(private val project: Project) :
     DefaultProviderPresentation
 
   override fun getCommitTypes(prefix: String): Collection<CommitType> =
-    defaults.types.map { (key, value) -> DefaultCommitToken(key, value.description) }
+    getTokens().types.map { (key, value) -> DefaultCommitToken(key, value.description) }
 
   override fun getCommitScopes(type: String): Collection<CommitScope> {
-    val defaultType = defaults.types[type] ?: return emptyList()
+    val defaultType = getTokens().types[type] ?: return emptyList()
     return defaultType.scopes.map { DefaultCommitToken(it.name, it.description) }
   }
 
   override fun getCommitFooterTypes(): Collection<CommitFooterType> =
-    defaults.footerTypes.map { (key, value) -> DefaultCommitToken(key, value.description) }
+    getTokens().footerTypes.map { (key, value) -> DefaultCommitToken(key, value.description) }
 
   override fun getCommitFooterValues(
     footerType: String,
@@ -61,24 +50,40 @@ internal class InternalCommitTokenProvider(private val project: Project) :
     subject: String?,
   ): Collection<CommitFooterValue> {
     if ("co-authored-by".equals(footerType, ignoreCase = true)) {
-      return tokensService.getCoAuthors()
-        .take(3)
-        .map { DefaultCommitToken(it, "", true) }
+      val tokensService = project.service<CCTokensService>()
+
+      when (val result = tokensService.getCoAuthors()) {
+        is CoAuthorsResult.Success -> {
+          return result.coAuthors.take(3).map { DefaultCommitToken(it, "", true) }
+        }
+        is CoAuthorsResult.Failure -> {
+          logger.debug("Error while getting co-authors", result.message)
+        }
+      }
     }
 
-    val defaultFooterType = defaults.footerTypes[footerType] ?: return emptyList()
+    val defaultFooterType = getTokens().footerTypes[footerType] ?: return emptyList()
     return defaultFooterType.values.map { DefaultCommitToken(it.name, it.description) }
   }
 
-  private fun notifyErrorToUser(e: Exception) {
-    val details = if (e is SchemaValidationException) {
-      CCBundle["cc.notifications.schema.validation"]
-    } else {
-      CCBundle["cc.notifications.schema.seeLogs"]
-    }
+  private fun getTokens(): TokensModel {
+    val tokensService = project.service<CCTokensService>()
 
-    val message = CCBundle["cc.notifications.schema", details]
-    CCNotification.createErrorNotification(message).notify(project)
+    @Suppress("LoggingSimilarMessage")
+    return when (val result = tokensService.getTokens()) {
+      is TokensResult.Success -> result.tokens
+      is TokensResult.FileError -> {
+        logger.error("Error while getting tokens", result.message)
+        tokensService.getBundledTokens()
+      }
+      is TokensResult.SchemaError -> {
+        logger.debug("Error while getting tokens", result.failure)
+        val details = CCBundle["cc.notifications.schema.validation"]
+        val message = CCBundle["cc.notifications.schema", details]
+        project.service<CCNotificationService>().notifyError(message)
+        tokensService.getBundledTokens()
+      }
+    }
   }
 
   private object DefaultProviderPresentation : ProviderPresentation {

@@ -6,6 +6,7 @@ import com.intellij.codeInsight.template.impl.TemplateManagerImpl
 import com.intellij.codeInsight.template.impl.TemplateState
 import com.intellij.openapi.actionSystem.Presentation
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.application.ex.ApplicationUtil
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.editor.Document
@@ -14,12 +15,16 @@ import com.intellij.openapi.editor.EditorModificationUtil
 import com.intellij.openapi.editor.ex.util.EditorUtil
 import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.openapi.progress.ProgressManager
+import com.intellij.openapi.project.BaseProjectDirectories.Companion.getBaseDirectories
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.util.IconLoader
 import com.intellij.openapi.util.Key
 import com.intellij.openapi.util.TextRange
+import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VFileProperty
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.vfs.newvfs.FileSystemInterface
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
@@ -27,6 +32,7 @@ import com.intellij.ui.TextFieldWithAutoCompletionListProvider
 import com.intellij.ui.scale.JBUIScale
 import java.awt.Color
 import java.awt.Robot
+import java.io.ByteArrayInputStream
 import java.io.InputStream
 import java.util.concurrent.CancellationException
 import javax.swing.Action
@@ -40,6 +46,26 @@ import kotlin.internal.InlineOnly
 import kotlin.math.max
 import kotlin.math.min
 
+// region Project
+
+internal fun Project.findRootDir(): VirtualFile? {
+  val baseDir = getBaseDirectories()
+
+  if (baseDir.isNotEmpty()) {
+    return baseDir.first()
+  }
+
+  // The base path is not prefixed with a file:// schema
+  val basePath = this.basePath
+
+  if (basePath != null) {
+    return LocalFileSystem.getInstance().findFileByPath(basePath)
+  }
+
+  return null
+}
+
+// endregion
 // region PsiElement
 
 @InlineOnly
@@ -123,6 +149,21 @@ internal inline val VirtualFile.isHidden: Boolean
 @InlineOnly
 internal inline val VirtualFile.isSymlink: Boolean
   get() = `is`(VFileProperty.SYMLINK)
+
+internal fun VirtualFile.getReliableInputStream(): InputStream {
+  val fs = this.fileSystem
+
+  if (fs is FileSystemInterface) {
+    return fs.getInputStream(this)
+  }
+
+  // Avoid using VirtualFile.getInputStream as it strips the file BOM
+  val content = ReadAction.compute<ByteArray, Throwable> {
+    contentsToByteArray(/* cacheContent = */ false)
+  }
+
+  return ByteArrayInputStream(content)
+}
 
 // endregion
 // region PsiFile
@@ -430,13 +471,6 @@ internal inline fun ListSelectionModel.selectedIndices(): IntArray {
 
   return rv
 }
-
-internal fun Throwable.readableMessage(): String =
-  if (localizedMessage?.isNotBlank() == true) {
-    localizedMessage
-  } else {
-    this::class.simpleName ?: "Anonymous exception object"
-  }
 
 @Suppress("SameParameterValue")
 internal inline fun <T> Logger.runAndLogError(defaultValue: T, block: () -> T): T {

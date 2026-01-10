@@ -3,6 +3,7 @@ package com.github.lppedd.cc.configuration
 import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.CCBundle
 import com.intellij.openapi.components.service
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.options.SearchableConfigurable
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
@@ -12,6 +13,10 @@ import javax.swing.JComponent
  * @author Edoardo Luppi
  */
 internal class CCMainConfigurable(private val project: Project) : SearchableConfigurable {
+  private companion object {
+    private val logger = logger<CCMainConfigurable>()
+  }
+
   private val tokensService = project.service<CCTokensService>()
   private val configService = project.service<CCConfigService>()
   private val disposable = Disposer.newDisposable("CCMainConfigurable")
@@ -32,10 +37,17 @@ internal class CCMainConfigurable(private val project: Project) : SearchableConf
     gui.customTokensFilePath = configService.customFilePath
     gui.customCoAuthorsFilePath = configService.customCoAuthorsFilePath
 
-    val tokens = try {
-      tokensService.getTokens()
-    } catch (_: Exception) {
-      tokensService.getBundledTokens()
+    @Suppress("LoggingSimilarMessage")
+    val tokens = when (val result = tokensService.getTokens()) {
+      is TokensResult.Success -> result.tokens
+      is TokensResult.FileError -> {
+        logger.debug("Error while getting tokens", result.message)
+        tokensService.getBundledTokens()
+      }
+      is TokensResult.SchemaError -> {
+        logger.debug("Error while getting tokens", result.failure)
+        tokensService.getBundledTokens()
+      }
     }
 
     gui.setTokens(tokens.types)
@@ -59,11 +71,17 @@ internal class CCMainConfigurable(private val project: Project) : SearchableConf
     configService.customCoAuthorsFilePath = gui.customCoAuthorsFilePath
     configService.customFilePath = gui.customTokensFilePath
 
-    try {
-      val tokens = tokensService.getTokens()
-      gui.setTokens(tokens.types)
-    } catch (_: Exception) {
-      gui.revalidate()
+    @Suppress("LoggingSimilarMessage")
+    when (val result = tokensService.getTokens()) {
+      is TokensResult.Success -> gui.setTokens(result.tokens.types)
+      is TokensResult.FileError -> {
+        logger.debug("Error while getting tokens", result.message)
+        gui.revalidate()
+      }
+      is TokensResult.SchemaError -> {
+        logger.debug("Error while getting tokens", result.failure)
+        gui.revalidate()
+      }
     }
 
     // Notify that settings have been changed

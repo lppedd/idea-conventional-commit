@@ -8,10 +8,10 @@ import com.github.lppedd.cc.configuration.component.AbstractTableEditableModel
 internal class CoAuthorsTableModel(coAuthors: Collection<String>) : AbstractTableEditableModel() {
   private val coAuthorRows = coAuthors.map(::CoAuthorRow).toMutableList()
 
-  val coAuthors: Collection<String>
+  val coAuthors: List<String>
     get() = coAuthorRows.map(CoAuthorRow::text)
 
-  val selectedCoAuthors: Collection<String>
+  val selectedCoAuthors: List<String>
     get() = coAuthorRows.filter(CoAuthorRow::isSelected).map(CoAuthorRow::text)
 
   override fun getRowCount(): Int =
