@@ -33,7 +33,7 @@
       "description": "Changes that improve performance."
     },
     "ci": {
-      "description": "Changes that affect CI configuration files and scripts.<br>Example scopes: travis, circle, browser-stack, sauce-labs."
+      "description": "Changes that affect CI configuration files and scripts.<br>Example scopes: actions, jenkins, tekton, circleci."
     },
     "revert": {
       "description": "Changes that revert a previous commit, typically referencing the reverted commit hash."
