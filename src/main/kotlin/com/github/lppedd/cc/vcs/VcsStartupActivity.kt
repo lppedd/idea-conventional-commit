@@ -2,7 +2,6 @@ package com.github.lppedd.cc.vcs
 
 import com.github.lppedd.cc.CCRegistry
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.components.service
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.ProjectActivity
@@ -17,7 +16,7 @@ internal class VcsStartupActivity : ProjectActivity, DumbAware {
     val vcsConfigListener = VcsListener {
       if (CCRegistry.isVcsSupportEnabled()) {
         ApplicationManager.getApplication().executeOnPooledThread {
-          val vcsHandler = project.service<VcsService>()
+          val vcsHandler = VcsService.getInstance(project)
           vcsHandler.refresh()
         }
       }

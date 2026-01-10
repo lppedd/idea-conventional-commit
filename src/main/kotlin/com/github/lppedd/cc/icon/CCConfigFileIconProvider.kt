@@ -4,7 +4,6 @@ import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.configuration.CCConfigService
 import com.intellij.ide.IconProvider
 import com.intellij.json.psi.JsonFile
-import com.intellij.openapi.components.service
 import com.intellij.openapi.project.DumbAware
 import com.intellij.psi.PsiElement
 import com.intellij.util.PathUtil
@@ -25,7 +24,7 @@ internal class CCConfigFileIconProvider : IconProvider(), DumbAware {
       return null
     }
 
-    val customFilePath = psiElement.project.service<CCConfigService>().customFilePath
+    val customFilePath = CCConfigService.getInstance(psiElement.project).customFilePath
 
     return if (isCustomFile(customFilePath, psiElement) || isDefaultFile(customFilePath, psiElement)) {
       CC.Icon.Logo

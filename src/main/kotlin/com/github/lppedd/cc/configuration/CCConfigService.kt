@@ -5,10 +5,8 @@ import com.github.lppedd.cc.api.*
 import com.github.lppedd.cc.api.impl.InternalCommitTokenProvider
 import com.github.lppedd.cc.configuration.CCConfigService.PresentableNameGetter
 import com.github.lppedd.cc.vcs.VcsCommitTokenProvider
-import com.intellij.openapi.components.PersistentStateComponent
-import com.intellij.openapi.components.Service
-import com.intellij.openapi.components.State
-import com.intellij.openapi.components.Storage
+import com.intellij.openapi.components.*
+import com.intellij.openapi.project.Project
 import com.intellij.util.xmlb.XmlSerializerUtil
 import com.intellij.util.xmlb.annotations.Attribute
 import com.intellij.util.xmlb.annotations.Transient
@@ -27,8 +25,11 @@ import java.util.concurrent.ConcurrentHashMap
 @Service(Service.Level.PROJECT)
 internal class CCConfigService : PersistentStateComponent<CCConfigService> {
   @Transient
-  private companion object {
+  companion object {
     private const val CURRENT_VERSION = 2
+
+    @JvmStatic
+    fun getInstance(project: Project): CCConfigService = project.service()
   }
 
   @Attribute

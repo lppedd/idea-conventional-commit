@@ -2,12 +2,12 @@ package com.github.lppedd.cc.vcs.commitbuilder
 
 import com.github.lppedd.cc.completion.ConventionalCommitLookupElementWeigher
 import com.github.lppedd.cc.completion.FlatPrefixMatcher
+import com.github.lppedd.cc.configuration.CCConfigService
 import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.codeInsight.completion.CompletionSorter
 import com.intellij.codeInsight.completion.impl.PreferStartMatching
 import com.intellij.codeInsight.lookup.CharFilter.Result
-import com.intellij.openapi.components.service
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.util.textCompletion.TextCompletionProvider
@@ -36,7 +36,7 @@ internal abstract class CommitTokenTextCompletionProvider(private val project: P
       .withRelevanceSorter(
         CompletionSorter.emptySorter()
           .weigh(PreferStartMatching())
-          .weigh(ConventionalCommitLookupElementWeigher(project.service()))
+          .weigh(ConventionalCommitLookupElementWeigher(CCConfigService.getInstance(project)))
       )
 
   override fun acceptChar(ch: Char): Result? =

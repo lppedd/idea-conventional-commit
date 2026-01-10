@@ -5,7 +5,6 @@ import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.configuration.CCTokensService
 import com.github.lppedd.cc.scaled
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.ComponentValidator
 import com.intellij.openapi.ui.TextFieldWithBrowseButton
@@ -32,7 +31,7 @@ internal class DefaultTokensFilePickerPanel(
   project: Project,
   private val disposable: Disposable,
 ) : JPanel(GridLayoutManager(2, 1, JBUI.emptyInsets(), 0, 5.scaled)) {
-  private val tokensService = project.service<CCTokensService>()
+  private val tokensService = CCTokensService.getInstance(project)
   private val isCustomFile = JBCheckBox(CCBundle["cc.config.customFile"]).also {
     it.addItemListener { event ->
       when (event.stateChange) {

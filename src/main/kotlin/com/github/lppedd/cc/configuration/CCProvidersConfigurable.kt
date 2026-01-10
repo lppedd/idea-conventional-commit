@@ -3,7 +3,6 @@ package com.github.lppedd.cc.configuration
 import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.api.CommitTokenProviderService
-import com.intellij.openapi.components.service
 import com.intellij.openapi.options.SearchableConfigurable
 import com.intellij.openapi.project.Project
 import javax.swing.JPanel
@@ -12,8 +11,8 @@ import javax.swing.JPanel
  * @author Edoardo Luppi
  */
 internal class CCProvidersConfigurable(project: Project) : SearchableConfigurable {
-  private val configService = project.service<CCConfigService>()
-  private val providerService = project.service<CommitTokenProviderService>()
+  private val configService = CCConfigService.getInstance(project)
+  private val providerService = CommitTokenProviderService.getInstance(project)
   private lateinit var gui: CCProvidersConfigurableGui
 
   override fun getId(): String =

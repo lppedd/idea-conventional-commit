@@ -26,7 +26,6 @@ import com.github.lppedd.cc.vcs.commitbuilder.CommitBuilderService.CommitFooter
 import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.ide.util.PropertiesComponent
 import com.intellij.openapi.actionSystem.IdeActions
-import com.intellij.openapi.components.service
 import com.intellij.openapi.editor.event.DocumentEvent
 import com.intellij.openapi.editor.event.DocumentListener
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable
@@ -66,8 +65,8 @@ internal class CommitBuilderDialog(private val project: Project) :
     const val PROPERTY_HOWTO_SHOW = "com.github.lppedd.cc.commitbuilder.howto.show"
   }
 
-  private val configService = project.service<CCConfigService>()
-  private val commitMessageService = project.service<CommitBuilderService>()
+  private val configService = CCConfigService.getInstance(project)
+  private val commitMessageService = CommitBuilderService.getInstance(project)
 
   private val typeTextField = CommitTokenTextField(project, CommitTypeCompletionProvider())
   private val scopeTextField = CommitTokenTextField(project, CommitScopeCompletionProvider())
@@ -681,9 +680,9 @@ internal class CommitBuilderDialog(private val project: Project) :
   private inner class CommitFooterTypeCompletionProvider : CommitTokenTextCompletionProvider(project) {
     override fun fillVariants(prefix: String, resultSet: CompletionResultSet) {
       val prefixedResultSet = TextFieldResultSet(resultSet).withPrefixMatcher(prefix)
-      val providerService = project.service<CommitTokenProviderService>()
+      val providerService = CommitTokenProviderService.getInstance(project)
       val providers = providerService.getFooterTypeProviders()
-      val recentCommitsService = project.service<RecentCommitsService>()
+      val recentCommitsService = RecentCommitsService.getInstance(project)
       val recentTypes = recentCommitsService.getRecentTypes()
 
       // See comment in TypeCompletionProvider
@@ -717,8 +716,8 @@ internal class CommitBuilderDialog(private val project: Project) :
   ) : CommitTokenTextCompletionProvider(project) {
     override fun fillVariants(prefix: String, resultSet: CompletionResultSet) {
       val prefixedResultSet = TextFieldResultSet(resultSet).withPrefixMatcher(prefix)
-      val providerService = project.service<CommitTokenProviderService>()
-      val recentCommitsService = project.service<RecentCommitsService>()
+      val providerService = CommitTokenProviderService.getInstance(project)
+      val recentCommitsService = RecentCommitsService.getInstance(project)
       val recentTypes = recentCommitsService.getRecentTypes()
       val providers = providerService.getFooterValueProviders()
 

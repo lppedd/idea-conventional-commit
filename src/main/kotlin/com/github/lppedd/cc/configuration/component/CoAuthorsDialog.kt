@@ -4,7 +4,6 @@ import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.configuration.CCTokensService
 import com.github.lppedd.cc.configuration.CoAuthorsResult
 import com.github.lppedd.cc.configuration.holders.CoAuthorsTableHolder
-import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.ValidationInfo
@@ -39,7 +38,7 @@ internal class CoAuthorsDialog(private val project: Project, coAuthors: Set<Stri
     coAuthorsTableHolder.tableModel.selectedCoAuthors
 
   override fun doOKAction() {
-    val tokensService = project.service<CCTokensService>()
+    val tokensService = CCTokensService.getInstance(project)
     val coAuthors = coAuthorsTableHolder.tableModel.coAuthors.toSet()
 
     when (val result = tokensService.setCoAuthors(coAuthors)) {

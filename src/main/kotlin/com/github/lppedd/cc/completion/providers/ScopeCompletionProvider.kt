@@ -10,7 +10,6 @@ import com.github.lppedd.cc.parser.CommitContext.ScopeCommitContext
 import com.github.lppedd.cc.psiElement.CommitScopePsiElement
 import com.github.lppedd.cc.safeRunWithCheckCanceled
 import com.github.lppedd.cc.vcs.RecentCommitsService
-import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 
 /**
@@ -21,14 +20,14 @@ internal class ScopeCompletionProvider(
   private val context: ScopeCommitContext,
 ) : CompletionProvider<CommitScopeProvider> {
   override fun getProviders(): Collection<CommitScopeProvider> =
-    project.service<CommitTokenProviderService>().getScopeProviders()
+    CommitTokenProviderService.getInstance(project).getScopeProviders()
 
   override fun stopHere(): Boolean =
     false
 
   override fun complete(resultSet: ResultSet) {
     val prefixedResultSet = resultSet.withPrefixMatcher(context.scope.trim())
-    val recentCommitsService = project.service<RecentCommitsService>()
+    val recentCommitsService = RecentCommitsService.getInstance(project)
     val recentScopes = recentCommitsService.getRecentScopes()
     val scopes = LinkedHashSet<ProviderCommitToken<CommitScope>>(64)
 

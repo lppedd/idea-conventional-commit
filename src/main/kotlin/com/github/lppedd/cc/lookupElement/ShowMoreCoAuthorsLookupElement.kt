@@ -15,7 +15,6 @@ import com.intellij.codeInsight.lookup.LookupElementPresentation
 import com.intellij.codeInsight.lookup.impl.PrefixChangeListener
 import com.intellij.openapi.command.CommandProcessor
 import com.intellij.openapi.command.WriteCommandAction
-import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
@@ -83,7 +82,7 @@ internal class ShowMoreCoAuthorsLookupElement : CommitTokenLookupElement, Prefix
     commandName: String?,
   ) {
     val project = context.project
-    val tokensService = project.service<CCTokensService>()
+    val tokensService = CCTokensService.getInstance(project)
     val coAuthors = when (val result = tokensService.getCoAuthors()) {
       is CoAuthorsResult.Success -> result.coAuthors
       is CoAuthorsResult.Failure -> {

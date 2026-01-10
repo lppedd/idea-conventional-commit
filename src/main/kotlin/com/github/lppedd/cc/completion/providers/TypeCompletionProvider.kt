@@ -10,7 +10,6 @@ import com.github.lppedd.cc.parser.CommitContext.TypeCommitContext
 import com.github.lppedd.cc.psiElement.CommitTypePsiElement
 import com.github.lppedd.cc.safeRunWithCheckCanceled
 import com.github.lppedd.cc.vcs.RecentCommitsService
-import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 
 /**
@@ -21,14 +20,14 @@ internal class TypeCompletionProvider(
   private val context: TypeCommitContext,
 ) : CompletionProvider<CommitTypeProvider> {
   override fun getProviders(): Collection<CommitTypeProvider> =
-    project.service<CommitTokenProviderService>().getTypeProviders()
+    CommitTokenProviderService.getInstance(project).getTypeProviders()
 
   override fun stopHere(): Boolean =
     false
 
   override fun complete(resultSet: ResultSet) {
     val prefixedResultSet = resultSet.withPrefixMatcher(context.type)
-    val recentCommitsService = project.service<RecentCommitsService>()
+    val recentCommitsService = RecentCommitsService.getInstance(project)
     val recentTypes = recentCommitsService.getRecentTypes()
     val types = LinkedHashSet<ProviderCommitToken<CommitType>>(64)
 

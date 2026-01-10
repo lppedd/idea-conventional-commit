@@ -6,7 +6,6 @@ import com.github.lppedd.cc.language.psi.*
 import com.github.lppedd.cc.moveCaretRelatively
 import com.github.lppedd.cc.scheduleAutoPopup
 import com.intellij.openapi.actionSystem.DataContext
-import com.intellij.openapi.components.service
 import com.intellij.openapi.editor.Caret
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.actions.TabAction
@@ -47,7 +46,7 @@ internal class CommitTabAction : TabAction() {
       val project = editor.project
 
       if (project != null) {
-        val psiFile = project.service<PsiDocumentManager>().getPsiFile(editor.document)
+        val psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.document)
         val elementAtCaret = psiFile?.findElementAt(editor.getCaretOffset())
 
         if (
@@ -83,7 +82,7 @@ internal class CommitTabAction : TabAction() {
       val project = editor.project
 
       if (project != null) {
-        val psiFile = project.service<PsiDocumentManager>().getPsiFile(editor.document)
+        val psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.document)
 
         if (psiFile != null) {
           val elementAtCaret = psiFile.findElementAt(caret.offset)

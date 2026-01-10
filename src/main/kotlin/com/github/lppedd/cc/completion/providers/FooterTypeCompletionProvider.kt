@@ -9,7 +9,6 @@ import com.github.lppedd.cc.lookupElement.CommitFooterTypeLookupElement
 import com.github.lppedd.cc.parser.FooterContext.FooterTypeContext
 import com.github.lppedd.cc.psiElement.CommitFooterTypePsiElement
 import com.github.lppedd.cc.safeRunWithCheckCanceled
-import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 
 /**
@@ -20,7 +19,7 @@ internal class FooterTypeCompletionProvider(
   private val context: FooterTypeContext,
 ) : CompletionProvider<CommitFooterTypeProvider> {
   override fun getProviders(): Collection<CommitFooterTypeProvider> =
-    project.service<CommitTokenProviderService>().getFooterTypeProviders()
+    CommitTokenProviderService.getInstance(project).getFooterTypeProviders()
 
   override fun stopHere(): Boolean =
     false

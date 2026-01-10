@@ -5,7 +5,6 @@ import com.intellij.lang.ASTNode
 import com.intellij.lang.Language
 import com.intellij.lang.documentation.DocumentationProvider
 import com.intellij.navigation.ItemPresentation
-import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
@@ -28,7 +27,7 @@ internal sealed class CommitTokenPsiElement : PsiElementBase(), ItemPresentation
     Language.ANY
 
   override fun getManager(): PsiManager =
-    project.service()
+    PsiManager.getInstance(project)
 
   override fun getChildren(): Array<PsiElement> =
     EMPTY_ARRAY

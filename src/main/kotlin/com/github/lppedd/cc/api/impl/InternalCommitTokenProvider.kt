@@ -8,7 +8,6 @@ import com.github.lppedd.cc.configuration.CCTokensService
 import com.github.lppedd.cc.configuration.CCTokensService.TokensModel
 import com.github.lppedd.cc.configuration.CoAuthorsResult
 import com.github.lppedd.cc.configuration.TokensResult
-import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import javax.swing.Icon
@@ -50,7 +49,7 @@ internal class InternalCommitTokenProvider(private val project: Project) :
     subject: String?,
   ): Collection<CommitFooterValue> {
     if ("co-authored-by".equals(footerType, ignoreCase = true)) {
-      val tokensService = project.service<CCTokensService>()
+      val tokensService = CCTokensService.getInstance(project)
 
       when (val result = tokensService.getCoAuthors()) {
         is CoAuthorsResult.Success -> {
@@ -67,7 +66,7 @@ internal class InternalCommitTokenProvider(private val project: Project) :
   }
 
   private fun getTokens(): TokensModel {
-    val tokensService = project.service<CCTokensService>()
+    val tokensService = CCTokensService.getInstance(project)
 
     @Suppress("LoggingSimilarMessage")
     return when (val result = tokensService.getTokens()) {
@@ -80,7 +79,7 @@ internal class InternalCommitTokenProvider(private val project: Project) :
         logger.debug("Error while getting tokens", result.failure)
         val details = CCBundle["cc.notifications.schema.validation"]
         val message = CCBundle["cc.notifications.schema", details]
-        project.service<CCNotificationService>().notifyError(message)
+        CCNotificationService.getInstance(project).notifyError(message)
         tokensService.getBundledTokens()
       }
     }

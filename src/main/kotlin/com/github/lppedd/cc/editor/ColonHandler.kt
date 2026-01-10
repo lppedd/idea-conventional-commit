@@ -10,7 +10,6 @@ import com.github.lppedd.cc.parser.ValidToken
 import com.github.lppedd.cc.scheduleAutoPopup
 import com.intellij.codeInsight.editorActions.TypedHandlerDelegate.Result.CONTINUE
 import com.intellij.codeInsight.editorActions.TypedHandlerDelegate.Result.STOP
-import com.intellij.openapi.components.service
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 
@@ -69,7 +68,7 @@ internal class ColonHandler : BaseTypedHandler(':') {
       // type:| my desc
       val caretShift = if (subject.value.startsWith(' ')) 1 else 0
       editor.moveCaretRelatively(caretShift)
-    } else if (project.service<CCConfigService>().autoInsertSpaceAfterColon) {
+    } else if (CCConfigService.getInstance(project).autoInsertSpaceAfterColon) {
       // type:|
       editor.insertStringAtCaret(" ")
     }

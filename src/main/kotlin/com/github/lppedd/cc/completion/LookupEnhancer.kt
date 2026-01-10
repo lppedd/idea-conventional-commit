@@ -26,7 +26,6 @@ import com.intellij.openapi.actionSystem.ex.AnActionListener
 import com.intellij.openapi.actionSystem.impl.ActionButton
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.command.CommandProcessor
-import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.util.registry.Registry
@@ -51,7 +50,7 @@ internal class LookupEnhancer(private val lookup: LookupImpl) : LookupListener, 
 
   private val commandProcessor = CommandProcessor.getInstance()
   private val actionManager = ActionManagerEx.getInstanceEx()
-  private val config = lookup.project.service<CCConfigService>()
+  private val config = CCConfigService.getInstance(lookup.project)
 
   @Volatile private var lookupPopupMenuListenerDisposable: Disposable? = null
   @Volatile private var allActions = emptyList<AnAction>()

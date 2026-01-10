@@ -6,7 +6,6 @@ import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.FooterTokens
 import com.github.lppedd.cc.parser.ValidToken
 import com.github.lppedd.cc.trim
-import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vcs.VcsConfiguration
 import com.intellij.vcs.log.VcsCommitMetadata
@@ -34,7 +33,7 @@ internal class InternalRecentCommitsService(private val project: Project) : Rece
   private val footerValues = LinkedHashSet<String>(16)
 
   init {
-    val vcsService = project.service<VcsService>()
+    val vcsService = VcsService.getInstance(project)
     vcsService.addListener(::updateCachedTokens)
     updateCachedTokens()
   }
@@ -52,12 +51,12 @@ internal class InternalRecentCommitsService(private val project: Project) : Rece
     footerValues
 
   override fun getLocalMessageHistory(): Collection<String> {
-    val vcsConfiguration = project.service<VcsConfiguration>()
+    val vcsConfiguration = VcsConfiguration.getInstance(project)
     return vcsConfiguration.recentMessages
   }
 
   override fun clearLocalMessageHistory() {
-    val vcsConfiguration = project.service<VcsConfiguration>()
+    val vcsConfiguration = VcsConfiguration.getInstance(project)
     vcsConfiguration.myLastCommitMessages.clear()
     updateCachedTokens()
   }
@@ -77,7 +76,7 @@ internal class InternalRecentCommitsService(private val project: Project) : Rece
       return emptyList()
     }
 
-    val vcsHandler = project.service<VcsService>()
+    val vcsHandler = VcsService.getInstance(project)
     val currentUsers = vcsHandler.getCurrentUsers()
     return vcsHandler.getOrderedTopCommits()
       .asSequence()
@@ -87,7 +86,7 @@ internal class InternalRecentCommitsService(private val project: Project) : Rece
   }
 
   private fun getOrderedSavedCommitMessages(): Collection<String> {
-    val vcsConfiguration = project.service<VcsConfiguration>()
+    val vcsConfiguration = VcsConfiguration.getInstance(project)
     return vcsConfiguration.recentMessages.asReversed().take(25)
   }
 

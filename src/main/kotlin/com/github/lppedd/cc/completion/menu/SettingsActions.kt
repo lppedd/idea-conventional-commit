@@ -11,7 +11,6 @@ import com.github.lppedd.cc.updateIcons
 import com.intellij.codeInsight.lookup.impl.LookupImpl
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.actionSystem.*
-import com.intellij.openapi.components.service
 import com.intellij.openapi.project.DumbAware
 import com.intellij.util.ui.UIUtil
 import java.util.*
@@ -26,7 +25,7 @@ internal class SettingsActions(
   private val enhancer: LookupEnhancer,
   private val lookup: LookupImpl,
 ) : ActionGroup("", false), DumbAware {
-  private val config = lookup.project.service<CCConfigService>()
+  private val config = CCConfigService.getInstance(lookup.project)
   private val actions = arrayOf(
     Separator.create(),
     CompletionModeChangeAction(),

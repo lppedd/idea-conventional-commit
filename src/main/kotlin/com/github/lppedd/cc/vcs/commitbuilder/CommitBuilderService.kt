@@ -1,8 +1,10 @@
 package com.github.lppedd.cc.vcs.commitbuilder
 
 import com.intellij.openapi.components.*
+import com.intellij.openapi.project.Project
 import com.intellij.util.xmlb.XmlSerializerUtil
 import com.intellij.util.xmlb.annotations.Tag
+import com.intellij.util.xmlb.annotations.Transient
 import com.intellij.util.xmlb.annotations.XMap
 import java.util.*
 
@@ -15,6 +17,12 @@ import java.util.*
 )
 @Service(Service.Level.PROJECT)
 internal class CommitBuilderService : PersistentStateComponent<CommitBuilderService> {
+  @Transient
+  companion object {
+    @JvmStatic
+    fun getInstance(project: Project): CommitBuilderService = project.service()
+  }
+
   @JvmField @Tag var shouldRemember: Boolean = true
   @JvmField @Tag var type: String = ""
   @JvmField @Tag var scope: String = ""

@@ -15,7 +15,6 @@ import com.github.lppedd.cc.safeRunWithCheckCanceled
 import com.github.lppedd.cc.vcs.RecentCommitsService
 import com.intellij.codeInsight.completion.CompletionProcess
 import com.intellij.codeInsight.completion.CompletionProgressIndicator
-import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 
 /**
@@ -28,7 +27,7 @@ internal class FooterValueCompletionProvider(
   private val process: CompletionProcess,
 ) : CompletionProvider<CommitFooterValueProvider> {
   override fun getProviders(): Collection<CommitFooterValueProvider> =
-    project.service<CommitTokenProviderService>().getFooterValueProviders()
+    CommitTokenProviderService.getInstance(project).getFooterValueProviders()
 
   override fun stopHere(): Boolean =
     true
@@ -36,7 +35,7 @@ internal class FooterValueCompletionProvider(
   override fun complete(resultSet: ResultSet) {
     val prefix = context.value.trimStart()
     val prefixedResultSet = resultSet.withPrefixMatcher(prefix)
-    val recentCommitsService = project.service<RecentCommitsService>()
+    val recentCommitsService = RecentCommitsService.getInstance(project)
     val recentFooterValues = recentCommitsService.getRecentFooterValues()
     val footerValues = LinkedHashSet<ProviderCommitToken<CommitFooterValue>>(64)
 

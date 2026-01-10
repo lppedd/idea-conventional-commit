@@ -24,7 +24,6 @@ import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupManagerListener
 import com.intellij.codeInsight.lookup.impl.LookupImpl
 import com.intellij.lang.LanguageMatcher
-import com.intellij.openapi.components.service
 import com.intellij.openapi.fileTypes.PlainTextLanguage
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.project.DumbAware
@@ -114,7 +113,7 @@ internal class ConventionalCommitTextCompletionContributor : CompletionContribut
       .withRelevanceSorter(
         CompletionSorter.emptySorter()
           .weigh(PreferStartMatching())
-          .weigh(ConventionalCommitLookupElementWeigher(project.service()))
+          .weigh(ConventionalCommitLookupElementWeigher(CCConfigService.getInstance(project)))
       )
 
     val editor = parameters.editor
@@ -126,7 +125,7 @@ internal class ConventionalCommitTextCompletionContributor : CompletionContribut
       ContextResultSet(resultSet)
     }
 
-    val configService = project.service<CCConfigService>()
+    val configService = CCConfigService.getInstance(project)
     val process = parameters.process
 
     // If the user configured commit messages to be completed via templates,

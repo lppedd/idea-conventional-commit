@@ -1,6 +1,5 @@
 package com.github.lppedd.cc.vcs.commitbuilder
 
-import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vcs.CheckinProjectPanel
 import com.intellij.openapi.vcs.changes.CommitContext
@@ -17,7 +16,7 @@ internal class CommitBuilderCheckinHandlerFactory : CheckinHandlerFactory() {
     MyCheckinHandler(panel.project)
 
   private class MyCheckinHandler(project: Project) : CheckinHandler() {
-    val commitBuilderService = project.service<CommitBuilderService>()
+    val commitBuilderService = CommitBuilderService.getInstance(project)
 
     override fun checkinSuccessful() {
       commitBuilderService.clear()

@@ -10,7 +10,6 @@ import com.github.lppedd.cc.parser.CommitContext.SubjectCommitContext
 import com.github.lppedd.cc.psiElement.CommitSubjectPsiElement
 import com.github.lppedd.cc.safeRunWithCheckCanceled
 import com.github.lppedd.cc.vcs.RecentCommitsService
-import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 
 /**
@@ -21,14 +20,14 @@ internal class SubjectCompletionProvider(
   private val context: SubjectCommitContext,
 ) : CompletionProvider<CommitSubjectProvider> {
   override fun getProviders(): Collection<CommitSubjectProvider> =
-    project.service<CommitTokenProviderService>().getSubjectProviders()
+    CommitTokenProviderService.getInstance(project).getSubjectProviders()
 
   override fun stopHere(): Boolean =
     false
 
   override fun complete(resultSet: ResultSet) {
     val prefixedResultSet = resultSet.withPrefixMatcher(context.subject.trimStart())
-    val recentCommitsService = project.service<RecentCommitsService>()
+    val recentCommitsService = RecentCommitsService.getInstance(project)
     val recentSubjects = recentCommitsService.getRecentSubjects()
     val subjects = LinkedHashSet<ProviderCommitToken<CommitSubject>>(64)
 

@@ -1,12 +1,19 @@
 package com.github.lppedd.cc.api
 
 import com.intellij.openapi.Disposable
+import com.intellij.openapi.components.service
+import com.intellij.openapi.project.Project
 import org.jetbrains.annotations.TestOnly
 
 /**
  * @author Edoardo Luppi
  */
 public interface CommitTokenProviderService {
+  public companion object {
+    @JvmStatic
+    public fun getInstance(project: Project): CommitTokenProviderService = project.service()
+  }
+
   /**
    * Returns all the registered commit type providers.
    */

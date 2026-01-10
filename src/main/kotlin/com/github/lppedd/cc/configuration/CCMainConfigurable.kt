@@ -2,7 +2,6 @@ package com.github.lppedd.cc.configuration
 
 import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.CCBundle
-import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.options.SearchableConfigurable
 import com.intellij.openapi.project.Project
@@ -17,8 +16,8 @@ internal class CCMainConfigurable(private val project: Project) : SearchableConf
     private val logger = logger<CCMainConfigurable>()
   }
 
-  private val tokensService = project.service<CCTokensService>()
-  private val configService = project.service<CCConfigService>()
+  private val tokensService = CCTokensService.getInstance(project)
+  private val configService = CCConfigService.getInstance(project)
   private val disposable = Disposer.newDisposable("CCMainConfigurable")
   private lateinit var gui: CCMainConfigurableGui
 

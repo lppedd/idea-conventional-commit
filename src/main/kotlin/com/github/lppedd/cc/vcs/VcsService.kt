@@ -1,5 +1,7 @@
 package com.github.lppedd.cc.vcs
 
+import com.intellij.openapi.components.service
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.vcs.ProjectLevelVcsManager.Companion.VCS_CONFIGURATION_CHANGED
 import com.intellij.vcs.log.VcsCommitMetadata
 import com.intellij.vcs.log.VcsUser
@@ -8,6 +10,11 @@ import com.intellij.vcs.log.VcsUser
  * @author Edoardo Luppi
  */
 internal interface VcsService {
+  companion object {
+    @JvmStatic
+    fun getInstance(project: Project): VcsService = project.service()
+  }
+
   /**
    * Called on every [VCS_CONFIGURATION_CHANGED].
    */

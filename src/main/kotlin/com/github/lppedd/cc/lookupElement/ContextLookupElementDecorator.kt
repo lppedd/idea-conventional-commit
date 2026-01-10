@@ -8,7 +8,6 @@ import com.intellij.codeInsight.completion.CodeCompletionHandlerBase.DIRECT_INSE
 import com.intellij.codeInsight.completion.InsertionContext
 import com.intellij.codeInsight.lookup.AutoCompletionPolicy
 import com.intellij.codeInsight.lookup.LookupElementPresentation
-import com.intellij.openapi.components.service
 import com.intellij.openapi.util.Key
 import com.intellij.openapi.util.UserDataHolderBase
 import com.intellij.psi.PsiDocumentManager
@@ -32,7 +31,7 @@ internal class ContextLookupElementDecorator(private val delegate: CommitTokenLo
 
   override fun handleInsert(context: InsertionContext) = runInWriteActionIfNeeded {
     if (requiresCommittedDocuments()) {
-      context.project.service<PsiDocumentManager>().commitDocument(context.document)
+      PsiDocumentManager.getInstance(context.project).commitDocument(context.document)
     }
 
     context.editor.removeSelection()

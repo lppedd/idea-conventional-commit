@@ -15,7 +15,6 @@ import com.intellij.codeInspection.ProblemHighlightType.GENERIC_ERROR_OR_WARNING
 import com.intellij.codeInspection.ProblemHighlightType.WARNING
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.components.service
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
@@ -64,7 +63,7 @@ internal class CommitFormatInspection : CommitBaseInspection() {
     collectProblems(project, document).isNotEmpty()
 
   override fun reformat(project: Project, document: Document) {
-    val documentManager = project.service<PsiDocumentManager>()
+    val documentManager = PsiDocumentManager.getInstance(project)
 
     for (problem in collectProblems(project, document)) {
       val quickFixes = problem.fixes ?: return
@@ -80,8 +79,8 @@ internal class CommitFormatInspection : CommitBaseInspection() {
 
   private fun collectProblems(project: Project, document: Document): List<ProblemDescriptor> {
     if (isInspectionEnabled(document)) {
-      val documentManager = project.service<PsiDocumentManager>()
-      val inspectionManager = project.service<InspectionManager>()
+      val documentManager = PsiDocumentManager.getInstance(project)
+      val inspectionManager = InspectionManager.getInstance(project)
       val psiFile = documentManager.getPsiFile(document) ?: return emptyList()
       val problemsHolder = ProblemsHolder(inspectionManager, psiFile, true)
       val visitor = MyRecursiveVisitor(problemsHolder)
@@ -149,7 +148,7 @@ internal class CommitFormatInspection : CommitBaseInspection() {
 
       val valuePsiElement = element.nameIdentifier ?: return
       val (valueStart, valueEnd) = valuePsiElement.textRangeInParent
-      val char = holder.project.service<CCConfigService>().scopeReplaceChar
+      val char = CCConfigService.getInstance(holder.project).scopeReplaceChar
       val ranges = WHITESPACE_REGEX.findAll(scopeValue)
         .map(MatchResult::range)
         .map { TextRange(/* Account for ( */ it.first + 1, it.last + 2) }

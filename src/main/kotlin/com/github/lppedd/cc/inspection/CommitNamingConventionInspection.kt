@@ -11,7 +11,6 @@ import com.github.lppedd.cc.util.RangeValidator
 import com.intellij.codeInspection.ProblemHighlightType.GENERIC_ERROR_OR_WARNING
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.components.service
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
@@ -63,7 +62,7 @@ internal class CommitNamingConventionInspection : CommitBaseInspection() {
 
   private class MyVisitor(private val holder: ProblemsHolder) : ConventionalCommitPsiElementVisitor() {
     override fun visitType(element: ConventionalCommitTypePsiElement) {
-      val configService = holder.project.service<CCConfigService>()
+      val configService = CCConfigService.getInstance(holder.project)
       val regex = Regex(configService.typeNamingPattern)
 
       for (range in findInvalidRanges(element.text, regex)) {
@@ -77,7 +76,7 @@ internal class CommitNamingConventionInspection : CommitBaseInspection() {
     }
 
     override fun visitScopeValue(element: ConventionalCommitScopeValuePsiElement) {
-      val configService = holder.project.service<CCConfigService>()
+      val configService = CCConfigService.getInstance(holder.project)
       val regex = Regex(configService.scopeNamingPattern)
 
       for (range in findInvalidRanges(element.text, regex)) {

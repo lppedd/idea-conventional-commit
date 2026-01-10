@@ -11,7 +11,6 @@ import com.github.lppedd.cc.parser.FooterContext.FooterTypeContext
 import com.github.lppedd.cc.parser.ValidToken
 import com.github.lppedd.cc.psiElement.CommitBodyPsiElement
 import com.github.lppedd.cc.safeRunWithCheckCanceled
-import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 
 /**
@@ -23,7 +22,7 @@ internal class BodyCompletionProvider(
   private val commitTokens: CommitTokens,
 ) : CompletionProvider<CommitBodyProvider> {
   override fun getProviders(): Collection<CommitBodyProvider> =
-    project.service<CommitTokenProviderService>().getBodyProviders()
+    CommitTokenProviderService.getInstance(project).getBodyProviders()
 
   override fun stopHere(): Boolean =
     false

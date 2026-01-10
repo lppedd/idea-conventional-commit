@@ -3,7 +3,6 @@ package com.github.lppedd.cc.api.impl
 import com.github.lppedd.cc.api.*
 import com.github.lppedd.cc.configuration.CCConfigService
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.components.service
 import com.intellij.openapi.extensions.ProjectExtensionPointName
 import com.intellij.openapi.project.Project
 import org.jetbrains.annotations.TestOnly
@@ -33,37 +32,37 @@ internal class InternalCommitTokenProviderService(private val project: Project) 
   }
 
   override fun getTypeProviders(): List<CommitTypeProvider> {
-    val configService = project.service<CCConfigService>()
+    val configService = CCConfigService.getInstance(project)
     val providers = typeEpName.getExtensions(project)
     return providers.sortedBy(configService::getProviderOrder)
   }
 
   override fun getScopeProviders(): List<CommitScopeProvider> {
-    val configService = project.service<CCConfigService>()
+    val configService = CCConfigService.getInstance(project)
     val providers = scopeEpName.getExtensions(project)
     return providers.sortedBy(configService::getProviderOrder)
   }
 
   override fun getSubjectProviders(): List<CommitSubjectProvider> {
-    val configService = project.service<CCConfigService>()
+    val configService = CCConfigService.getInstance(project)
     val providers = subjectEpName.getExtensions(project)
     return providers.sortedBy(configService::getProviderOrder)
   }
 
   override fun getBodyProviders(): List<CommitBodyProvider> {
-    val configService = project.service<CCConfigService>()
+    val configService = CCConfigService.getInstance(project)
     val providers = bodyEpName.getExtensions(project)
     return providers.sortedBy(configService::getProviderOrder)
   }
 
   override fun getFooterTypeProviders(): List<CommitFooterTypeProvider> {
-    val configService = project.service<CCConfigService>()
+    val configService = CCConfigService.getInstance(project)
     val providers = footerTypeEpName.getExtensions(project)
     return providers.sortedBy(configService::getProviderOrder)
   }
 
   override fun getFooterValueProviders(): List<CommitFooterValueProvider> {
-    val configService = project.service<CCConfigService>()
+    val configService = CCConfigService.getInstance(project)
     val providers = footerValueEpName.getExtensions(project)
     return providers.sortedBy(configService::getProviderOrder)
   }

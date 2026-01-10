@@ -1,9 +1,17 @@
 package com.github.lppedd.cc.vcs
 
+import com.intellij.openapi.components.service
+import com.intellij.openapi.project.Project
+
 /**
  * @author Edoardo Luppi
  */
 internal interface RecentCommitsService {
+  companion object {
+    @JvmStatic
+    fun getInstance(project: Project): RecentCommitsService = project.service()
+  }
+
   /**
    * Returns recently used commit types.
    */

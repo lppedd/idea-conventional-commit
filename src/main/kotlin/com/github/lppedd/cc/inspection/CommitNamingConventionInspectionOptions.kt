@@ -6,7 +6,6 @@ import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.scaled
 import com.github.lppedd.cc.ui.VerifiableExtendableTextField
 import com.github.lppedd.cc.wrap
-import com.intellij.openapi.components.service
 import com.intellij.openapi.options.ConfigurableUi
 import com.intellij.openapi.project.Project
 import com.intellij.ui.Gray
@@ -52,13 +51,13 @@ internal class CommitNamingConventionInspectionOptions : ConfigurableUi<Project>
   )
 
   override fun reset(project: Project) {
-    val config = project.service<CCConfigService>()
+    val config = CCConfigService.getInstance(project)
     typePatternTextField.text = config.typeNamingPattern
     scopePatternTextField.text = config.scopeNamingPattern
   }
 
   override fun isModified(project: Project): Boolean {
-    val config = project.service<CCConfigService>()
+    val config = CCConfigService.getInstance(project)
     return typePatternTextField.isContentValid &&
            scopePatternTextField.isContentValid && (
                typePatternTextField.text != config.typeNamingPattern ||
@@ -66,7 +65,7 @@ internal class CommitNamingConventionInspectionOptions : ConfigurableUi<Project>
   }
 
   override fun apply(project: Project) {
-    val config = project.service<CCConfigService>()
+    val config = CCConfigService.getInstance(project)
     config.typeNamingPattern = typePatternTextField.text
     config.scopeNamingPattern = scopePatternTextField.text
   }

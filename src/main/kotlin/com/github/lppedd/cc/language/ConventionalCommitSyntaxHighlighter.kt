@@ -4,7 +4,6 @@ import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.language.lexer.ConventionalCommitLexer
 import com.github.lppedd.cc.language.lexer.ConventionalCommitTokenType
 import com.intellij.lexer.Lexer
-import com.intellij.openapi.components.service
 import com.intellij.openapi.editor.HighlighterColors.TEXT
 import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase
@@ -46,7 +45,7 @@ internal class ConventionalCommitSyntaxHighlighter(project: Project?) : SyntaxHi
     }
   }
 
-  private val configService = project?.service<CCConfigService>()
+  private val configService = project?.let { CCConfigService.getInstance(it) }
 
   override fun getHighlightingLexer(): Lexer =
     ConventionalCommitLexer()

@@ -6,7 +6,6 @@ import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.CommitTokens
 import com.github.lppedd.cc.parser.FooterTokens
 import com.github.lppedd.cc.parser.ValidToken
-import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import javax.swing.Icon
 import kotlin.text.RegexOption.MULTILINE
@@ -38,7 +37,7 @@ internal class VcsCommitTokenProvider(project: Project) :
     )
   }
 
-  private val vcsHandler = project.service<VcsService>()
+  private val vcsHandler = VcsService.getInstance(project)
 
   override fun getId(): String =
     ID

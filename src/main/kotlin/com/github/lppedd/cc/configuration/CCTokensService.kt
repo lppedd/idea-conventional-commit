@@ -20,6 +20,11 @@ import org.codehaus.jettison.json.JSONObject
  */
 @Service(Service.Level.PROJECT)
 internal class CCTokensService(private val project: Project) {
+  companion object {
+    @JvmStatic
+    fun getInstance(project: Project): CCTokensService = project.service()
+  }
+
   /**
    * JSON Schema used to validate the default commit types and scopes JSON file.
    */
@@ -53,7 +58,7 @@ internal class CCTokensService(private val project: Project) {
    * or falls back to the bundled defaults if no custom file is specified.
    */
   fun getTokens(): TokensResult {
-    val configService = project.service<CCConfigService>()
+    val configService = CCConfigService.getInstance(project)
     val filePath = configService.customFilePath
 
     val file = if (filePath != null) {
@@ -90,7 +95,7 @@ internal class CCTokensService(private val project: Project) {
    * Returns the user-defined co-authors.
    */
   fun getCoAuthors(): CoAuthorsResult {
-    val configService = project.service<CCConfigService>()
+    val configService = CCConfigService.getInstance(project)
     val filePath = configService.customCoAuthorsFilePath
 
     val file = if (filePath != null) {
@@ -123,7 +128,7 @@ internal class CCTokensService(private val project: Project) {
    * Note that the old list, if any, gets entirely replaced.
    */
   fun setCoAuthors(coAuthors: Set<String>): CoAuthorsResult {
-    val configService = project.service<CCConfigService>()
+    val configService = CCConfigService.getInstance(project)
     val filePath = configService.customCoAuthorsFilePath
 
     val file = if (filePath != null) {

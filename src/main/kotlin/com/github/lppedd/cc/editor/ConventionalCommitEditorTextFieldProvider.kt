@@ -6,7 +6,6 @@ import com.github.lppedd.cc.isCommitMessage
 import com.github.lppedd.cc.language.ConventionalCommitFileType
 import com.github.lppedd.cc.language.ConventionalCommitLanguage
 import com.intellij.lang.Language
-import com.intellij.openapi.components.service
 import com.intellij.openapi.editor.ex.EditorEx
 import com.intellij.openapi.editor.ex.util.LexerEditorHighlighter
 import com.intellij.openapi.fileTypes.PlainTextLanguage
@@ -83,7 +82,7 @@ internal class ConventionalCommitEditorTextFieldProvider : EditorTextFieldProvid
   }
 
   private fun installConventionalCommitLanguage(editorField: LanguageTextField, project: Project) {
-    val psiFileFactory = project.service<PsiFileFactory>()
+    val psiFileFactory = PsiFileFactory.getInstance(project)
     val oldDocument = editorField.document
     val psiFile = psiFileFactory.createFileFromText(
       "Dummy." + ConventionalCommitFileType.defaultExtension,

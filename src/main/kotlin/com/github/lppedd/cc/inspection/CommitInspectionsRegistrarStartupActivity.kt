@@ -3,7 +3,6 @@ package com.github.lppedd.cc.inspection
 import com.github.lppedd.cc.api.CommitInspectionProvider
 import com.github.lppedd.cc.api.CommitInspectionProviderService
 import com.intellij.codeInspection.ex.LocalInspectionToolWrapper
-import com.intellij.openapi.components.service
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.ProjectActivity
@@ -19,7 +18,7 @@ internal class CommitInspectionsRegistrarStartupActivity : ProjectActivity, Dumb
   }
 
   override suspend fun execute(project: Project) {
-    val inspectionProviderService = service<CommitInspectionProviderService>()
+    val inspectionProviderService = CommitInspectionProviderService.getInstance()
     val inspectionProviders = inspectionProviderService.getInspectionProviders()
     val inspections = inspectionProviders.flatMap(CommitInspectionProvider::getInspections)
 

@@ -3,7 +3,6 @@ package com.github.lppedd.cc.vcs
 import com.github.lppedd.cc.CC
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.components.service
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.vcs.CommitMessageI
 import com.intellij.openapi.vcs.VcsDataKeys
@@ -25,7 +24,7 @@ internal class ClearLocalMessageHistoryAction : DumbAwareAction() {
     val project = event.project
 
     if (project != null && getCommitMessagePanel(event) != null) {
-      val recentCommitsService = project.service<RecentCommitsService>()
+      val recentCommitsService = RecentCommitsService.getInstance(project)
       val isVisible = !recentCommitsService.getLocalMessageHistory().isEmpty()
       event.presentation.isEnabledAndVisible = isVisible
     }
@@ -33,7 +32,7 @@ internal class ClearLocalMessageHistoryAction : DumbAwareAction() {
 
   override fun actionPerformed(event: AnActionEvent) {
     val project = event.project ?: return
-    val recentCommitsService = project.service<RecentCommitsService>()
+    val recentCommitsService = RecentCommitsService.getInstance(project)
     recentCommitsService.clearLocalMessageHistory()
   }
 
