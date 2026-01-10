@@ -55,9 +55,9 @@ internal class DefaultTokensFileExportPanel(private val project: Project) :
   }
 
   private fun writeFile(fileWrapper: VirtualFileWrapper) {
-    val virtualFile = fileWrapper.getVirtualFile(/* createIfNotExist = */ true)
+    val file = fileWrapper.getVirtualFile(/* createIfNotExist = */ true)
 
-    if (virtualFile == null || !virtualFile.isWritable) {
+    if (file == null || !file.isWritable) {
       exportInfo.foreground = JBColor.RED
       exportInfo.text = CCBundle["cc.config.defaults.exportToPath.error"]
       return
@@ -65,18 +65,18 @@ internal class DefaultTokensFileExportPanel(private val project: Project) :
 
     // When exporting to a file, we also need to add the JSON schema reference.
     // Better normalize line endings to \n.
-    val jsonStr = StringUtil.convertLineSeparators(
+    val content = StringUtil.convertLineSeparators(
       getResourceAsStream("/defaults/${CC.File.Defaults}").bufferedReader().use(Reader::readText)
     )
 
     val pluginVersion = getPluginVersion()
     val schemaPath = "src/main/resources/defaults/conventionalcommit.schema.json"
     val schemaUrl = "https://github.com/lppedd/idea-conventional-commit/raw/$pluginVersion/$schemaPath"
-    val sb = StringBuilder(jsonStr)
-    sb.insert(4, $$"\"$schema\": \"$$schemaUrl\",\n  ")
+    val bytes = (content.substring(0, 4) + $$"\"$schema\": \"$$schemaUrl\",\n" + content.substring(2))
+      .toByteArray(file.charset)
 
     WriteAction.runAndWait<Throwable> {
-      virtualFile.setBinaryContent("$sb".toByteArray())
+      file.setBinaryContent(bytes)
     }
 
     exportInfo.foreground = UIUtil.getLabelDisabledForeground()
