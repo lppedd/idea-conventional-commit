@@ -49,6 +49,10 @@ internal class DefaultTokensFileExportPanel(private val project: Project) :
       .createSaveFileDialog(descriptor, project)
       .save(project.findRootDir(), CC.File.Defaults)
 
+    if (fileWrapper == null) {
+      return
+    }
+
     try {
       writeFile(fileWrapper)
     } catch (e: Exception) {
@@ -57,14 +61,8 @@ internal class DefaultTokensFileExportPanel(private val project: Project) :
     }
   }
 
-  private fun writeFile(fileWrapper: VirtualFileWrapper?) {
-    val file = fileWrapper?.file ?: return
-
-    if (!file.exists()) {
-      file.createNewFile()
-    }
-
-    val virtualFile = fileWrapper.virtualFile
+  private fun writeFile(fileWrapper: VirtualFileWrapper) {
+    val virtualFile = fileWrapper.getVirtualFile(/* createIfNotExist = */ true)
 
     if (virtualFile == null || !virtualFile.isWritable) {
       exportInfo.foreground = JBColor.RED
