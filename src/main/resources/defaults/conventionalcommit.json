@@ -10,11 +10,11 @@
       "description": "Changes that introduce a new feature."
     },
     "build": {
-      "description": "Changes that affect the build system or external dependencies.<br>Example scopes: gulp, broccoli, npm.",
+      "description": "Changes that affect the build system or external dependencies.<br>Example scopes: npm, gradle, maven.",
       "scopes": {
         "npm": {},
-        "gulp": {},
-        "broccoli": {}
+        "gradle": {},
+        "maven": {}
       }
     },
     "chore": {
