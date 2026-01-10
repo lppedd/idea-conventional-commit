@@ -1,14 +1,12 @@
 package com.github.lppedd.cc.configuration;
 
 import static com.intellij.uiDesigner.core.GridConstraints.*;
-import static org.apache.commons.validator.routines.UrlValidator.NO_FRAGMENTS;
 
 import java.awt.*;
 import java.util.Map;
 
 import javax.swing.*;
 
-import org.apache.commons.validator.routines.UrlValidator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -230,12 +228,11 @@ public class CCMainConfigurableGui {
     defaultsPanel.add(JBUI.Borders.emptyTop(7).wrap(defaultTokensPanel), gc);
   }
 
-  @SuppressWarnings("ConstantExpression")
   @Nullable
   private HyperlinkLabel buildTranslatorLabel() {
     final var name = CCBundle.getOrDefault("cc.translation.translator.name", "");
 
-    if (name.isEmpty()) {
+    if (name.isBlank()) {
       return null;
     }
 
@@ -245,16 +242,12 @@ public class CCMainConfigurableGui {
 
     final var url = CCBundle.getOrDefault("cc.translation.translator.url", "");
 
-    if (url.isEmpty()) {
+    if (url.isBlank()) {
       label.setText(CCBundle.get("cc.translation.text") + " " + name);
     } else {
-      if (new UrlValidator(new String[] {"http", "https"}, NO_FRAGMENTS).isValid(url)) {
-        final var hyperlink = "<hyperlink>" + name + "</hyperlink>";
-        label.setTextWithHyperlink(CCBundle.get("cc.translation.text") + " " + hyperlink);
-        label.setHyperlinkTarget(url);
-      } else {
-        label.setText(CCBundle.get("cc.translation.text") + " " + name);
-      }
+      final var hyperlink = "<hyperlink>" + name + "</hyperlink>";
+      label.setTextWithHyperlink(CCBundle.get("cc.translation.text") + " " + hyperlink);
+      label.setHyperlinkTarget(url);
     }
 
     // Keep this here or it will be overwritten

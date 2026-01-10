@@ -43,10 +43,6 @@ dependencies {
     pluginVerifier()
   }
 
-  implementation(libs.commonsValidator) {
-    exclude("commons-beanutils", "commons-beanutils")
-  }
-
   implementation(libs.jettison)
   implementation(libs.jsonSkema)
 
