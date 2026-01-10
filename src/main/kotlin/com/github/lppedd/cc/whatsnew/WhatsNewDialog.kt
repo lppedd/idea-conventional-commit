@@ -30,11 +30,13 @@ internal class WhatsNewDialog(project: Project) : CCDialogWrapper(project) {
   private val newerAction = NewerAction()
   private val tabSelectedHandlers = mutableMapOf<Int, () -> Unit>()
 
-  private val providers = WhatsNewProviderService.getInstance().getWhatsNewProviders()
-    .asSequence()
-    .sortedWith(WhatsNewProviderComparator)
-    .filter { it.getPages().isNotEmpty() }
-    .toList()
+  private val providers by lazy {
+    WhatsNewProviderService.getInstance().getWhatsNewProviders()
+      .asSequence()
+      .sortedWith(WhatsNewProviderComparator)
+      .filter { it.getPages().isNotEmpty() }
+      .toList()
+  }
 
   private lateinit var tabbedPane: NoContentTabbedPaneWrapper
 

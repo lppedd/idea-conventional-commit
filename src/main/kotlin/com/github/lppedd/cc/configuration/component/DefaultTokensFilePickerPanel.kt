@@ -28,10 +28,9 @@ import javax.swing.event.DocumentEvent
  * @author Edoardo Luppi
  */
 internal class DefaultTokensFilePickerPanel(
-  project: Project,
+  private val project: Project,
   private val disposable: Disposable,
 ) : JPanel(GridLayoutManager(2, 1, JBUI.emptyInsets(), 0, 5.scaled)) {
-  private val tokensService = CCTokensService.getInstance(project)
   private val isCustomFile = JBCheckBox(CCBundle["cc.config.customFile"]).also {
     it.addItemListener { event ->
       when (event.stateChange) {
@@ -142,6 +141,7 @@ internal class DefaultTokensFilePickerPanel(
       return ValidationInfo(CCBundle["cc.config.filePicker.error.path"], customFile)
     }
 
+    val tokensService = CCTokensService.getInstance(project)
     val result = tokensService.validateTokensFile(file)
 
     if (result != null) {

@@ -15,7 +15,7 @@ import com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributes
 /**
  * @author Edoardo Luppi
  */
-internal class ConventionalCommitSyntaxHighlighter(project: Project?) : SyntaxHighlighterBase() {
+internal class ConventionalCommitSyntaxHighlighter(private val project: Project?) : SyntaxHighlighterBase() {
   companion object {
     @JvmField val TYPE: TextAttributesKey = attrs("CONVENTIONAL_COMMIT_TYPE", TEXT)
     @JvmField val SCOPE: TextAttributesKey = attrs("CONVENTIONAL_COMMIT_SCOPE", TEXT)
@@ -45,13 +45,11 @@ internal class ConventionalCommitSyntaxHighlighter(project: Project?) : SyntaxHi
     }
   }
 
-  private val configService = project?.let { CCConfigService.getInstance(it) }
-
   override fun getHighlightingLexer(): Lexer =
     ConventionalCommitLexer()
 
   override fun getTokenHighlights(tokenType: IElementType): Array<TextAttributesKey> =
-    if (configService == null || configService.enableLanguageSupport) {
+    if (project == null || CCConfigService.getInstance(project).enableLanguageSupport) {
       attrsMap.getOrDefault(tokenType, attrsText)
     } else {
       TextAttributesKey.EMPTY_ARRAY

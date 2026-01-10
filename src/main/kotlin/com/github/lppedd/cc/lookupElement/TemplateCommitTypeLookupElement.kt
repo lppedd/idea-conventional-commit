@@ -21,15 +21,13 @@ internal class TemplateCommitTypeLookupElement(
   psiElement: CommitTypePsiElement,
   commitType: CommitType,
 ) : CommitTypeLookupElement(psiElement, commitType) {
-  private val templateSettings = TemplateSettings.getInstance()
-
   /**
    * When the user selects the commit type, a new template has to be initiated.
    * The template should start with the commit type already inserted and with the
    * caret positioned in the commit scope context, with an active completion popup.
    */
   override fun handleInsert(context: InsertionContext) {
-    val template = templateSettings.getTemplateById("ConventionalCommit-cs") as? TemplateImpl ?: return
+    val template = TemplateSettings.getInstance().getTemplateById("ConventionalCommit-cs") as? TemplateImpl ?: return
     val project = context.project
     val editor = context.editor
 

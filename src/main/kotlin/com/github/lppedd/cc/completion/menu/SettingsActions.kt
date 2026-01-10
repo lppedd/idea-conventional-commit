@@ -25,7 +25,6 @@ internal class SettingsActions(
   private val enhancer: LookupEnhancer,
   private val lookup: LookupImpl,
 ) : ActionGroup("", false), DumbAware {
-  private val config = CCConfigService.getInstance(lookup.project)
   private val actions = arrayOf(
     Separator.create(),
     CompletionModeChangeAction(),
@@ -47,20 +46,16 @@ internal class SettingsActions(
       ActionUpdateThread.EDT
 
     override fun actionPerformed(e: AnActionEvent) {
-      config.completionType =
-        if (config.completionType == TEMPLATE) {
-          POPUP
-        } else {
-          TEMPLATE
-        }
-
+      val configService = CCConfigService.getInstance(lookup.project)
+      configService.completionType = if (configService.completionType == TEMPLATE) POPUP else TEMPLATE
       enhancer.settingChanged()
     }
 
     override fun update(event: AnActionEvent) {
+      val configService = CCConfigService.getInstance(lookup.project)
       event.presentation.also {
         it.updateIcons(AllIcons.General.Settings)
-        it.text = if (config.completionType == TEMPLATE) {
+        it.text = if (configService.completionType == TEMPLATE) {
           "Template ${UIUtil.rightArrow()} Standard"
         } else {
           "Standard ${UIUtil.rightArrow()} Template"
@@ -74,23 +69,18 @@ internal class SettingsActions(
       ActionUpdateThread.EDT
 
     override fun actionPerformed(e: AnActionEvent) {
-      config.providerFilterType =
-        if (config.providerFilterType == HIDE_SELECTED) {
-          KEEP_SELECTED
-        } else {
-          HIDE_SELECTED
-        }
-
+      val configService = CCConfigService.getInstance(lookup.project)
+      configService.providerFilterType = if (configService.providerFilterType == HIDE_SELECTED) KEEP_SELECTED else HIDE_SELECTED
       enhancer.settingChanged()
     }
 
     override fun update(event: AnActionEvent) {
       val hideSelected = CCBundle["cc.completion.menu.filter.hideSelected"]
       val keepSelected = CCBundle["cc.completion.menu.filter.keepSelected"]
-
+      val configService = CCConfigService.getInstance(lookup.project)
       event.presentation.also {
         it.updateIcons(AllIcons.General.Filter)
-        it.text = if (config.providerFilterType == HIDE_SELECTED) {
+        it.text = if (configService.providerFilterType == HIDE_SELECTED) {
           "$hideSelected ${UIUtil.rightArrow()} $keepSelected"
         } else {
           "$keepSelected ${UIUtil.rightArrow()} $hideSelected"

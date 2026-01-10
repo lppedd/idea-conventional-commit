@@ -10,9 +10,7 @@ import javax.swing.JPanel
 /**
  * @author Edoardo Luppi
  */
-internal class CCProvidersConfigurable(project: Project) : SearchableConfigurable {
-  private val configService = CCConfigService.getInstance(project)
-  private val providerService = CommitTokenProviderService.getInstance(project)
+internal class CCProvidersConfigurable(private val project: Project) : SearchableConfigurable {
   private lateinit var gui: CCProvidersConfigurableGui
 
   override fun getId(): String =
@@ -22,6 +20,7 @@ internal class CCProvidersConfigurable(project: Project) : SearchableConfigurabl
     CCBundle["cc.config.providers"]
 
   override fun createComponent(): JPanel {
+    val providerService = CommitTokenProviderService.getInstance(project)
     gui = CCProvidersConfigurableGui()
     gui.setProviders(
       providerService.getTypeProviders(),
@@ -39,6 +38,7 @@ internal class CCProvidersConfigurable(project: Project) : SearchableConfigurabl
     gui.isModified
 
   override fun apply() {
+    val configService = CCConfigService.getInstance(project)
     configService.setTypeProvidersOrder(
       gui.typeProviders
         .mapIndexed { index, provider -> provider.getId() to index }

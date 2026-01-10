@@ -1,6 +1,5 @@
 package com.github.lppedd.cc.whatsnew
 
-import com.github.lppedd.cc.api.WhatsNewProvider
 import com.github.lppedd.cc.api.WhatsNewProviderService
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
@@ -19,9 +18,8 @@ internal class WhatsNewStartupActivity : ProjectActivity, DumbAware {
       return
     }
 
-    val shouldDisplay = WhatsNewProviderService.getInstance().getWhatsNewProviders()
-      .filter(WhatsNewProvider::shouldDisplayAtStartup)
-      .any { it.getPages().isNotEmpty() }
+    val providers = WhatsNewProviderService.getInstance().getWhatsNewProviders()
+    val shouldDisplay = providers.any { it.shouldDisplayAtStartup() && it.getPages().isNotEmpty() }
 
     if (shouldDisplay) {
       delay(1100L)

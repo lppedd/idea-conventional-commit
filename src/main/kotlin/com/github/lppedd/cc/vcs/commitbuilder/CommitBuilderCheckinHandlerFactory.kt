@@ -15,11 +15,9 @@ internal class CommitBuilderCheckinHandlerFactory : CheckinHandlerFactory() {
   override fun createHandler(panel: CheckinProjectPanel, commitContext: CommitContext): CheckinHandler =
     MyCheckinHandler(panel.project)
 
-  private class MyCheckinHandler(project: Project) : CheckinHandler() {
-    val commitBuilderService = CommitBuilderService.getInstance(project)
-
+  private class MyCheckinHandler(private val project: Project) : CheckinHandler() {
     override fun checkinSuccessful() {
-      commitBuilderService.clear()
+      CommitBuilderService.getInstance(project).clear()
       super.checkinSuccessful()
     }
   }

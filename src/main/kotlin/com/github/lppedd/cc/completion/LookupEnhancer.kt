@@ -48,10 +48,6 @@ internal class LookupEnhancer(private val lookup: LookupImpl) : LookupListener, 
     private val robot = Robot()
   }
 
-  private val commandProcessor = CommandProcessor.getInstance()
-  private val actionManager = ActionManagerEx.getInstanceEx()
-  private val config = CCConfigService.getInstance(lookup.project)
-
   @Volatile private var lookupPopupMenuListenerDisposable: Disposable? = null
   @Volatile private var allActions = emptyList<AnAction>()
   @Volatile private var filterActions = emptyList<FilterAction>()
@@ -78,8 +74,9 @@ internal class LookupEnhancer(private val lookup: LookupImpl) : LookupListener, 
     reopenMenu = true
   }
 
-  fun filterSelected(filterAction: FilterAction): Boolean =
-    if (config.providerFilterType == KEEP_SELECTED) {
+  fun filterSelected(filterAction: FilterAction): Boolean {
+    val configService = CCConfigService.getInstance(lookup.project)
+    return if (configService.providerFilterType == KEEP_SELECTED) {
       keepOnlySelectedOrReset(filterAction)
       menuButton?.click()
       false
@@ -87,6 +84,7 @@ internal class LookupEnhancer(private val lookup: LookupImpl) : LookupListener, 
       reopenMenu = true
       true
     }
+  }
 
   override fun lookupShown(event: LookupEvent) {
     try {
@@ -157,7 +155,7 @@ internal class LookupEnhancer(private val lookup: LookupImpl) : LookupListener, 
       var disposable = lookupPopupMenuListenerDisposable
       disposable?.dispose()
       disposable = Disposer.newDisposable(lookup, "LookupEnhancer popup menu listener")
-      actionManager.addActionPopupMenuListener(LookupPopupMenuListener(disposable), disposable)
+      ActionManagerEx.getInstanceEx().addActionPopupMenuListener(LookupPopupMenuListener(disposable), disposable)
       lookupPopupMenuListenerDisposable = disposable
       closeMenu = true
     }
@@ -185,7 +183,7 @@ internal class LookupEnhancer(private val lookup: LookupImpl) : LookupListener, 
         .invokeCompletion(project, editor, 1)
     }
 
-    commandProcessor.executeCommand(project, command, "Invoke completion", CC.AppName)
+    CommandProcessor.getInstance().executeCommand(project, command, "Invoke completion", CC.AppName)
   }
 
   private inner class LookupPopupMenuListener(private val disposable: Disposable) : ActionPopupMenuListener {

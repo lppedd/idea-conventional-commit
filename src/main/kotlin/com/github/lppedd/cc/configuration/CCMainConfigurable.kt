@@ -16,8 +16,6 @@ internal class CCMainConfigurable(private val project: Project) : SearchableConf
     private val logger = logger<CCMainConfigurable>()
   }
 
-  private val tokensService = CCTokensService.getInstance(project)
-  private val configService = CCConfigService.getInstance(project)
   private val disposable = Disposer.newDisposable("CCMainConfigurable")
   private lateinit var gui: CCMainConfigurableGui
 
@@ -27,7 +25,9 @@ internal class CCMainConfigurable(private val project: Project) : SearchableConf
   override fun getDisplayName(): String =
     CCBundle["cc.plugin.name"]
 
+  @Suppress("LoggingSimilarMessage")
   override fun createComponent(): JComponent {
+    val configService = CCConfigService.getInstance(project)
     gui = CCMainConfigurableGui(project, disposable)
     gui.completionType = configService.completionType
     gui.isEnableLanguageSupport = configService.enableLanguageSupport
@@ -36,7 +36,7 @@ internal class CCMainConfigurable(private val project: Project) : SearchableConf
     gui.customTokensFilePath = configService.customFilePath
     gui.customCoAuthorsFilePath = configService.customCoAuthorsFilePath
 
-    @Suppress("LoggingSimilarMessage")
+    val tokensService = CCTokensService.getInstance(project)
     val tokens = when (val result = tokensService.getTokens()) {
       is TokensResult.Success -> result.tokens
       is TokensResult.FileError -> {
@@ -53,16 +53,20 @@ internal class CCMainConfigurable(private val project: Project) : SearchableConf
     return gui.rootPanel
   }
 
-  override fun isModified(): Boolean =
-    gui.isValid && (
+  override fun isModified(): Boolean {
+    val configService = CCConfigService.getInstance(project)
+    return gui.isValid && (
         gui.completionType != configService.completionType ||
         gui.isEnableLanguageSupport != configService.enableLanguageSupport ||
         gui.isPrioritizeRecentlyUsed != configService.prioritizeRecentlyUsed ||
         gui.isAutoInsertSpaceAfterColon != configService.autoInsertSpaceAfterColon ||
         gui.customCoAuthorsFilePath != configService.customCoAuthorsFilePath ||
         gui.customTokensFilePath != configService.customFilePath)
+  }
 
+  @Suppress("LoggingSimilarMessage")
   override fun apply() {
+    val configService = CCConfigService.getInstance(project)
     configService.completionType = gui.completionType
     configService.enableLanguageSupport = gui.isEnableLanguageSupport
     configService.prioritizeRecentlyUsed = gui.isPrioritizeRecentlyUsed
@@ -70,7 +74,7 @@ internal class CCMainConfigurable(private val project: Project) : SearchableConf
     configService.customCoAuthorsFilePath = gui.customCoAuthorsFilePath
     configService.customFilePath = gui.customTokensFilePath
 
-    @Suppress("LoggingSimilarMessage")
+    val tokensService = CCTokensService.getInstance(project)
     when (val result = tokensService.getTokens()) {
       is TokensResult.Success -> gui.setTokens(result.tokens.types)
       is TokensResult.FileError -> {
@@ -89,6 +93,7 @@ internal class CCMainConfigurable(private val project: Project) : SearchableConf
   }
 
   override fun reset() {
+    val configService = CCConfigService.getInstance(project)
     gui.completionType = configService.completionType
     gui.isEnableLanguageSupport = configService.enableLanguageSupport
     gui.isPrioritizeRecentlyUsed = configService.prioritizeRecentlyUsed

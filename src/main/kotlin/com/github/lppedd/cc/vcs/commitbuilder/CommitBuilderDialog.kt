@@ -65,9 +65,6 @@ internal class CommitBuilderDialog(private val project: Project) :
     const val PROPERTY_HOWTO_SHOW = "com.github.lppedd.cc.commitbuilder.howto.show"
   }
 
-  private val configService = CCConfigService.getInstance(project)
-  private val commitMessageService = CommitBuilderService.getInstance(project)
-
   private val typeTextField = CommitTokenTextField(project, CommitTypeCompletionProvider())
   private val scopeTextField = CommitTokenTextField(project, CommitScopeCompletionProvider())
   private val subjectTextField = CommitTokenTextField(project, CommitSubjectCompletionProvider())
@@ -447,11 +444,14 @@ internal class CommitBuilderDialog(private val project: Project) :
       it.setName(CCBundle["cc.commitbuilder.dialog.build"])
     }
 
-  override fun isToBeShown(): Boolean =
-    !commitMessageService.shouldRemember
+  override fun isToBeShown(): Boolean {
+    val commitBuilderService = CommitBuilderService.getInstance(project)
+    return !commitBuilderService.shouldRemember
+  }
 
   override fun setToBeShown(toBeShown: Boolean, exitCode: Int) {
-    commitMessageService.shouldRemember = !toBeShown
+    val commitBuilderService = CommitBuilderService.getInstance(project)
+    commitBuilderService.shouldRemember = !toBeShown
   }
 
   override fun canBeHidden(): Boolean =
@@ -582,6 +582,7 @@ internal class CommitBuilderDialog(private val project: Project) :
       return
     }
 
+    val commitMessageService = CommitBuilderService.getInstance(project)
     commitMessageService.clear()
     commitMessageService.type = typeTextField.text
     commitMessageService.scope = scopeTextField.text
@@ -606,6 +607,8 @@ internal class CommitBuilderDialog(private val project: Project) :
   }
 
   private fun restoreFieldsValues() {
+    val commitMessageService = CommitBuilderService.getInstance(project)
+
     if (!commitMessageService.shouldRemember) {
       return
     }
@@ -684,6 +687,7 @@ internal class CommitBuilderDialog(private val project: Project) :
       val providers = providerService.getFooterTypeProviders()
       val recentCommitsService = RecentCommitsService.getInstance(project)
       val recentTypes = recentCommitsService.getRecentTypes()
+      val configService = CCConfigService.getInstance(project)
 
       // See comment in TypeCompletionProvider
       for (provider in providers.sortedBy(configService::getProviderOrder)) {
@@ -720,6 +724,7 @@ internal class CommitBuilderDialog(private val project: Project) :
       val recentCommitsService = RecentCommitsService.getInstance(project)
       val recentTypes = recentCommitsService.getRecentTypes()
       val providers = providerService.getFooterValueProviders()
+      val configService = CCConfigService.getInstance(project)
 
       for (provider in providers.sortedBy(configService::getProviderOrder)) {
         safeRunWithCheckCanceled {

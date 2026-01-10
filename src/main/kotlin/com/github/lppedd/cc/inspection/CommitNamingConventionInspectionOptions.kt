@@ -51,23 +51,23 @@ internal class CommitNamingConventionInspectionOptions : ConfigurableUi<Project>
   )
 
   override fun reset(project: Project) {
-    val config = CCConfigService.getInstance(project)
-    typePatternTextField.text = config.typeNamingPattern
-    scopePatternTextField.text = config.scopeNamingPattern
+    val configService = CCConfigService.getInstance(project)
+    typePatternTextField.text = configService.typeNamingPattern
+    scopePatternTextField.text = configService.scopeNamingPattern
   }
 
   override fun isModified(project: Project): Boolean {
-    val config = CCConfigService.getInstance(project)
+    val configService = CCConfigService.getInstance(project)
     return typePatternTextField.isContentValid &&
            scopePatternTextField.isContentValid && (
-               typePatternTextField.text != config.typeNamingPattern ||
-               scopePatternTextField.text != config.scopeNamingPattern)
+               typePatternTextField.text != configService.typeNamingPattern ||
+               scopePatternTextField.text != configService.scopeNamingPattern)
   }
 
   override fun apply(project: Project) {
-    val config = CCConfigService.getInstance(project)
-    config.typeNamingPattern = typePatternTextField.text
-    config.scopeNamingPattern = scopePatternTextField.text
+    val configService = CCConfigService.getInstance(project)
+    configService.typeNamingPattern = typePatternTextField.text
+    configService.scopeNamingPattern = scopePatternTextField.text
   }
 
   override fun getComponent(): JComponent =

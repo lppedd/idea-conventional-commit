@@ -15,7 +15,7 @@ import kotlin.text.RegexOption.MULTILINE
  *
  * @author Edoardo Luppi
  */
-internal class VcsCommitTokenProvider(project: Project) :
+internal class VcsCommitTokenProvider(private val project: Project) :
     CommitTypeProvider,
     CommitScopeProvider,
     CommitSubjectProvider,
@@ -36,8 +36,6 @@ internal class VcsCommitTokenProvider(project: Project) :
       "tested-by",
     )
   }
-
-  private val vcsHandler = VcsService.getInstance(project)
 
   override fun getId(): String =
     ID
@@ -128,7 +126,7 @@ internal class VcsCommitTokenProvider(project: Project) :
       return emptySequence()
     }
 
-    return vcsHandler.getOrderedTopCommits()
+    return VcsService.getInstance(project).getOrderedTopCommits()
       .asSequence()
       .map { it.fullMessage }
   }

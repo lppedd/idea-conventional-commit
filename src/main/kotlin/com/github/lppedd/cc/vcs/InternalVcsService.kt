@@ -9,10 +9,12 @@ import com.intellij.openapi.vcs.ProjectLevelVcsManager
 import com.intellij.openapi.vcs.VcsException
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.vcs.log.*
+import com.intellij.vcs.log.data.VcsLogMultiRepoJoiner
 import com.intellij.vcs.log.graph.PermanentGraph
 import com.intellij.vcs.log.impl.VcsLogManager
 import com.intellij.vcs.log.impl.VcsProjectLog
 import com.intellij.vcs.log.visible.filters.VcsLogFilterObject
+import fleet.multiplatform.shims.ConcurrentHashSet
 import java.util.*
 import java.util.Collections.newSetFromMap
 import kotlin.coroutines.cancellation.CancellationException
@@ -26,18 +28,12 @@ internal class InternalVcsService(private val project: Project) : VcsService {
     private val logger = logger<InternalVcsService>()
   }
 
-  private val refreshListeners = mutableSetOf<VcsListener>()
+  private val refreshListeners = ConcurrentHashSet<VcsListener>()
   private val vcsLogRefresher = MyVcsLogRefresher()
-  private val projectVcsManager = ProjectLevelVcsManager.getInstance(project)
-  private val vcsRepositoryManager = VcsRepositoryManager.getInstance(project)
-  private val vcsLogMultiRepoJoiner = VcsLogMultiRepoJoiner<Hash, VcsCommitMetadata>()
   private val subscribedVcsLogProviders = newSetFromMap<VcsLogProvider>(IdentityHashMap(16))
 
-  @Volatile
-  private var cachedCurrentUser: Collection<VcsUser> = emptyList()
-
-  @Volatile
-  private var cachedCommits: Collection<VcsCommitMetadata> = emptyList()
+  @Volatile private var cachedCurrentUser: Set<VcsUser> = emptySet()
+  @Volatile private var cachedCommits: List<VcsCommitMetadata> = emptyList()
 
   override fun refresh() {
     val vcsLogProviders = getVcsLogProviders()
@@ -87,11 +83,12 @@ internal class InternalVcsService(private val project: Project) : VcsService {
         }
       }.toSet()
 
+  @Suppress("UnstableApiUsage")
   private fun <T : Comparable<T>> fetchCommits(sortBy: (VcsCommitMetadata) -> T): List<VcsCommitMetadata> =
     getVcsLogProviders()
       .map { (root, vcsLogProvider) -> fetchCommitsFromLogProvider(root, vcsLogProvider) }
       .toList()
-      .let(vcsLogMultiRepoJoiner::join)
+      .let { VcsLogMultiRepoJoiner<Hash, VcsCommitMetadata>().join(it) }
       .sortedByDescending(sortBy)
 
   private fun fetchCommitsFromLogProvider(root: VirtualFile, vscLogProvider: VcsLogProvider): List<VcsCommitMetadata> {
@@ -103,6 +100,7 @@ internal class InternalVcsService(private val project: Project) : VcsService {
       return emptyList()
     }
 
+    val vcsRepositoryManager = VcsRepositoryManager.getInstance(project)
     val repository = vcsRepositoryManager.getRepositoryForRoot(root)
 
     // If the repository is fresh, it means it doesn't have commits yet, and so no branches.
@@ -144,6 +142,7 @@ internal class InternalVcsService(private val project: Project) : VcsService {
   }
 
   private fun getVcsLogProviders(): Map<VirtualFile, VcsLogProvider> {
+    val projectVcsManager = ProjectLevelVcsManager.getInstance(project)
     val activeVcsRoots = projectVcsManager.getAllVcsRoots().toList()
     return VcsLogManager.findLogProviders(activeVcsRoots, project)
   }

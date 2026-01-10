@@ -12,8 +12,7 @@ import com.intellij.codeInsight.lookup.LookupElementPresentation
  * @author Edoardo Luppi
  */
 internal sealed class CommitTokenLookupElement : LookupElement() {
-  @Volatile
-  private var isVisible: Boolean = true
+  @Volatile private var isVisible: Boolean = true
 
   fun setVisible(isVisible: Boolean) {
     this.isVisible = isVisible
