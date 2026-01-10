@@ -214,7 +214,7 @@ internal class CCTokensService(private val project: Project) {
     }
 
     if (createIfNotExists) {
-      return WriteAction.compute<VirtualFile, Throwable> {
+      return WriteAction.computeAndWait<VirtualFile, Throwable> {
         rootDir.createChildData(this, fileName)
       }
     }
