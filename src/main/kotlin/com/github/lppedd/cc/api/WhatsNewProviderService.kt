@@ -11,5 +11,8 @@ public interface WhatsNewProviderService {
     public fun getInstance(): WhatsNewProviderService = service()
   }
 
+  /**
+   * Returns all registered "What's new" providers.
+   */
   public fun getWhatsNewProviders(): Collection<WhatsNewProvider>
 }
