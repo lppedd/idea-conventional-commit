@@ -9,6 +9,7 @@ import com.intellij.openapi.application.WriteAction
 import com.intellij.openapi.extensions.PluginId
 import com.intellij.openapi.fileChooser.FileChooserFactory
 import com.intellij.openapi.fileChooser.FileSaverDescriptor
+import com.intellij.openapi.util.text.StringUtil
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.VirtualFileWrapper
 import com.intellij.ui.JBColor
@@ -70,13 +71,17 @@ internal class DefaultTokensFileExportPanel
       return
     }
 
-    // When exporting to a file, we also need to add the JSON schema reference
-    val jsonStr = getResourceAsStream("/defaults/${CC.File.Defaults}").bufferedReader().use(Reader::readText)
+    // When exporting to a file, we also need to add the JSON schema reference.
+    // Better normalize line endings to \n.
+    val jsonStr = StringUtil.convertLineSeparators(
+      getResourceAsStream("/defaults/${CC.File.Defaults}").bufferedReader().use(Reader::readText)
+    )
+
     val pluginVersion = getPluginVersion()
     val schemaPath = "src/main/resources/defaults/conventionalcommit.schema.json"
     val schemaUrl = "https://github.com/lppedd/idea-conventional-commit/raw/$pluginVersion/$schemaPath"
     val sb = StringBuilder(jsonStr)
-    sb.insert(4, $$"\"$schema\": \"$$schemaUrl\",\n")
+    sb.insert(4, $$"\"$schema\": \"$$schemaUrl\",\n  ")
 
     WriteAction.runAndWait<Throwable> {
       virtualFile.setBinaryContent("$sb".toByteArray())
