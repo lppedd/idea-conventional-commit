@@ -2,7 +2,6 @@ package com.github.lppedd.cc.configuration.component
 
 import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.CCBundle
-import com.github.lppedd.cc.configuration.CCTokensService.CommitScopeModel
 import com.github.lppedd.cc.configuration.CCTokensService.CommitTypeModel
 import com.github.lppedd.cc.configuration.component.tokens.CommitTokenList
 import com.github.lppedd.cc.scaled
@@ -45,7 +44,7 @@ internal class DefaultTokensPanel : JPanel(ScaledGridLayout(1, 1, 24, 1)) {
 
     if (selectedValue != null) {
       val jsonCommitType = latestTokens[selectedValue] ?: return
-      val scopes = jsonCommitType.scopes.map(CommitScopeModel::name)
+      val scopes = jsonCommitType.scopes.map { (_, value) -> value.name }
       scopeList.setTokens(scopes)
     }
   }

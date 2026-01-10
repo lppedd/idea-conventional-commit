@@ -36,7 +36,7 @@ internal class InternalCommitTokenProvider(private val project: Project) :
 
   override fun getCommitScopes(type: String): Collection<CommitScope> {
     val defaultType = getTokens().types[type] ?: return emptyList()
-    return defaultType.scopes.map { DefaultCommitToken(it.name, it.description) }
+    return defaultType.scopes.map { (_, value) -> DefaultCommitToken(value.name, value.description) }
   }
 
   override fun getCommitFooterTypes(): Collection<CommitFooterType> =
@@ -62,7 +62,7 @@ internal class InternalCommitTokenProvider(private val project: Project) :
     }
 
     val defaultFooterType = getTokens().footerTypes[footerType] ?: return emptyList()
-    return defaultFooterType.values.map { DefaultCommitToken(it.name, it.description) }
+    return defaultFooterType.values.map { (_, value) -> DefaultCommitToken(value.name, value.description) }
   }
 
   private fun getTokens(): TokensModel {

@@ -222,7 +222,7 @@ internal class CCTokensService(private val project: Project) {
     return null
   }
 
-  private fun buildTypes(jsonObject: JSONObject, commonScopes: List<CommitScopeModel>): Map<String, CommitTypeModel> =
+  private fun buildTypes(jsonObject: JSONObject, commonScopes: Map<String, CommitScopeModel>): Map<String, CommitTypeModel> =
     jsonObject.keySet().associateWith {
       val descriptor = jsonObject.getJSONObject(it)
       val description = descriptor.optString("description", "")
@@ -230,12 +230,12 @@ internal class CCTokensService(private val project: Project) {
       CommitTypeModel(
         name = it,
         description = description,
-        scopes = scopes + commonScopes,
+        scopes = commonScopes + scopes,
       )
     }
 
-  private fun buildScopes(jsonObject: JSONObject): List<CommitScopeModel> =
-    jsonObject.keySet().map {
+  private fun buildScopes(jsonObject: JSONObject): Map<String, CommitScopeModel> =
+    jsonObject.keySet().associateWithTo(LinkedHashMap()) {
       val descriptor = jsonObject.getJSONObject(it)
       val description = descriptor.optString("description", "")
       CommitScopeModel(
@@ -256,8 +256,8 @@ internal class CCTokensService(private val project: Project) {
       )
     }
 
-  private fun buildFooterValues(jsonObject: JSONObject): List<CommitFooterValueModel> =
-    jsonObject.keySet().map {
+  private fun buildFooterValues(jsonObject: JSONObject): Map<String, CommitFooterValueModel> =
+    jsonObject.keySet().associateWithTo(LinkedHashMap()) {
       val descriptor = jsonObject.getJSONObject(it)
       val description = descriptor.optString("description", "")
       CommitFooterValueModel(
@@ -278,7 +278,7 @@ internal class CCTokensService(private val project: Project) {
       map[name] = CommitFooterTypeModel(
         name = name,
         description = description,
-        values = emptyList(),
+        values = emptyMap(),
       )
     }
 
@@ -293,7 +293,7 @@ internal class CCTokensService(private val project: Project) {
   class CommitTypeModel(
     val name: String,
     val description: String,
-    val scopes: List<CommitScopeModel>,
+    val scopes: Map<String, CommitScopeModel>,
   )
 
   class CommitScopeModel(
@@ -304,7 +304,7 @@ internal class CCTokensService(private val project: Project) {
   class CommitFooterTypeModel(
     val name: String,
     val description: String,
-    val values: List<CommitFooterValueModel>,
+    val values: Map<String, CommitFooterValueModel>,
   )
 
   class CommitFooterValueModel(
