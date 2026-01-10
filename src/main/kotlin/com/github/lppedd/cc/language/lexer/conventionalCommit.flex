@@ -11,6 +11,7 @@ import com.intellij.psi.TokenType;
 %implements EofCapableFlexLexer
 %function advance
 %type IElementType
+%public
 %unicode
 %ignorecase
 
@@ -203,5 +204,5 @@ FooterType  = [^:\s]+ | BREAKING\ CHANGE
 }
 
 [^] {
-   return PlainTextTokenTypes.PLAIN_TEXT;
+  return PlainTextTokenTypes.PLAIN_TEXT;
 }
