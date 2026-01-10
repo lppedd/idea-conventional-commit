@@ -29,7 +29,7 @@ repositories {
 
 dependencies {
   intellijPlatform {
-    create(type = stringProperty("platformType"), version = stringProperty("platformVersion"))
+    intellijIdea(version = stringProperty("platformVersion"))
 
     bundledModule("intellij.platform.vcs.dvcs")
     bundledModule("intellij.platform.vcs.dvcs.impl")
@@ -67,7 +67,6 @@ intellijPlatform {
 
     ideaVersion {
       sinceBuild = stringProperty("pluginSinceBuild")
-      untilBuild = null
     }
   }
 
@@ -105,10 +104,10 @@ kotlin {
     jvmTarget = JvmTarget.JVM_21
     jvmDefault = JvmDefaultMode.NO_COMPATIBILITY
     freeCompilerArgs.addAll(
-        "-Xno-call-assertions",
-        "-Xno-receiver-assertions",
-        "-Xno-param-assertions",
-        "-Xallow-kotlin-package",
+      "-Xno-call-assertions",
+      "-Xno-receiver-assertions",
+      "-Xno-param-assertions",
+      "-Xallow-kotlin-package",
     )
 
     optIn.add("kotlin.contracts.ExperimentalContracts")
