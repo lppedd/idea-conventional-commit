@@ -42,10 +42,9 @@ internal class DefaultTokensFilePickerPanel(
     }
   }
 
-  private val browseListener = CCTextBrowseFolderListener(MyFileChooserDescriptor)
   private val customFile = TextFieldWithBrowseButton().also {
     it.isEnabled = false
-    it.addBrowseFolderListener(browseListener)
+    it.addBrowseFolderListener(CCTextBrowseFolderListener(MyFileChooserDescriptor))
   }
 
   var isComponentValid = true
