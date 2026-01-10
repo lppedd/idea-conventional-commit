@@ -49,15 +49,8 @@ internal class DefaultTokensFileExportPanel(private val project: Project) :
       .createSaveFileDialog(descriptor, project)
       .save(project.findRootDir(), CC.File.Defaults)
 
-    if (fileWrapper == null) {
-      return
-    }
-
-    try {
+    if (fileWrapper != null) {
       writeFile(fileWrapper)
-    } catch (e: Exception) {
-      exportInfo.foreground = JBColor.RED
-      exportInfo.text = "${CCBundle["cc.config.defaults.exportToPath.error"]} - ${e.message}"
     }
   }
 
