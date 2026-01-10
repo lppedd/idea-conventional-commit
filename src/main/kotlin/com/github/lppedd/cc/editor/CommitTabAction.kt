@@ -56,7 +56,10 @@ internal class CommitTabAction : TabAction() {
         ) {
           editor.putUserData(moveCaretKey, 1)
           return true
-        } else if (elementAtCaret is ConventionalCommitSeparatorPsiElement) {
+        } else if (
+          elementAtCaret is ConventionalCommitSeparatorPsiElement ||
+          elementAtCaret is ConventionalCommitFooterSeparatorPsiElement
+        ) {
           // Let's find where the subject/footer value text begins,
           // or just place the cursor at the right place if it doesn't exist yet
           val nextSibling = elementAtCaret.nextSibling

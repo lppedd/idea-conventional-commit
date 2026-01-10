@@ -177,7 +177,7 @@ FooterType  = [^:\s]+ | BREAKING\ CHANGE
 
       : {
         yybegin(FOOTER_VALUE);
-        return ConventionalCommitTokenType.SEPARATOR;
+        return ConventionalCommitTokenType.FOOTER_SEPARATOR;
       }
 }
 
