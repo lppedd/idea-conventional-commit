@@ -60,11 +60,10 @@ internal class CCTokensService(private val project: Project) {
   fun getTokens(): TokensResult {
     val configService = CCConfigService.getInstance(project)
     val filePath = configService.customFilePath
-
-    val file = if (filePath != null) {
-      LocalFileSystem.getInstance().refreshAndFindFileByPath(filePath)
-    } else {
+    val file = if (filePath == null) {
       findFileUnderProjectRoot(CC.File.Defaults)
+    } else {
+      LocalFileSystem.getInstance().refreshAndFindFileByPath(filePath)
     }
 
     return if (file != null) {
@@ -97,11 +96,10 @@ internal class CCTokensService(private val project: Project) {
   fun getCoAuthors(): CoAuthorsResult {
     val configService = CCConfigService.getInstance(project)
     val filePath = configService.customCoAuthorsFilePath
-
-    val file = if (filePath != null) {
-      LocalFileSystem.getInstance().refreshAndFindFileByPath(filePath)
+    val file = if (filePath == null) {
+      findFileUnderProjectRoot(CC.File.CoAuthors) ?: return CoAuthorsResult.Success(emptySet())
     } else {
-      findFileUnderProjectRoot(CC.File.CoAuthors)
+      LocalFileSystem.getInstance().refreshAndFindFileByPath(filePath)
     }
 
     if (file == null) {
@@ -130,11 +128,21 @@ internal class CCTokensService(private val project: Project) {
   fun setCoAuthors(coAuthors: Set<String>): CoAuthorsResult {
     val configService = CCConfigService.getInstance(project)
     val filePath = configService.customCoAuthorsFilePath
+    val file = if (filePath == null) {
+      val file = findFileUnderProjectRoot(CC.File.CoAuthors)
 
-    val file = if (filePath != null) {
-      LocalFileSystem.getInstance().refreshAndFindFileByPath(filePath)
+      if (file == null) {
+        // Avoid creating an empty file if the co-authors set is empty and the file doesn't exist already
+        if (coAuthors.isEmpty()) {
+          return CoAuthorsResult.Success(emptySet())
+        }
+
+        findFileUnderProjectRoot(CC.File.CoAuthors, createIfNotExists = true)
+      } else {
+        file
+      }
     } else {
-      findFileUnderProjectRoot(CC.File.CoAuthors, createIfNotExists = true)
+      LocalFileSystem.getInstance().refreshAndFindFileByPath(filePath)
     }
 
     if (file == null) {
