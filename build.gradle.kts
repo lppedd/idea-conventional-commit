@@ -39,15 +39,16 @@ dependencies {
     bundledPlugin("com.intellij.java")
     bundledPlugin("com.intellij.modules.json")
 
+    testFramework(TestFrameworkType.Platform)
     testFramework(TestFrameworkType.Plugin.Java)
+
     pluginVerifier()
   }
 
   implementation(libs.jettison)
   implementation(libs.jsonSkema)
 
-  // TODO: move to catalog if it is really needed
-  testImplementation("junit:junit:4.13.2")
+  testImplementation(libs.junit)
 }
 
 intellijPlatform {

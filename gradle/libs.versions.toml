@@ -4,10 +4,12 @@ intellijPlatform = "2.10.5"
 grammarkit = "2022.3.2.2"
 jettison = "1.5.4"
 jsonSkema = "0.28.0"
+junit = "4.13.2"
 
 [libraries]
 jettison = { group = "org.codehaus.jettison", name = "jettison", version.ref = "jettison" }
 jsonSkema = { group = "com.github.erosb", name = "json-sKema", version.ref = "jsonSkema" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
 
 [plugins]
 kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
