@@ -1,9 +1,10 @@
 package com.github.lppedd.cc.language.lexer;
 
 import org.jetbrains.annotations.NotNull;
+
 import com.intellij.psi.PlainTextTokenTypes;
-import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.TokenType;
+import com.intellij.psi.tree.IElementType;
 
 %%
 
@@ -112,7 +113,7 @@ FooterType  = [^:\s]+ | BREAKING\ CHANGE
 
 <BODY_OR_FOOTERS> {
       // Closes: #16
-      ^{FooterType} {Space}*: {
+      ^{FooterType}{Space}*: {
         // The ':' char should not be part of the footer type
         yypushback(1);
         yybegin(FOOTERS);
@@ -120,7 +121,7 @@ FooterType  = [^:\s]+ | BREAKING\ CHANGE
       }
 
       // Closes #16
-      ^{FooterType} {Space}+ / #.* {
+      ^{FooterType}{Space}+ / #.* {
         yybegin(FOOTER_VALUE);
         return getFooterType();
       }
@@ -164,13 +165,13 @@ FooterType  = [^:\s]+ | BREAKING\ CHANGE
 
 <FOOTERS> {
       // Closes: #16
-      ^{FooterType} {Space}*: {
+      ^{FooterType}{Space}*: {
         yypushback(1);
         return getFooterType();
       }
 
       // Closes #16
-      ^{FooterType} {Space}+ / #.* {
+      ^{FooterType}{Space}+ / #.* {
         yybegin(FOOTER_VALUE);
         return getFooterType();
       }
