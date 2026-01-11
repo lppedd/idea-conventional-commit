@@ -35,6 +35,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.util.ProcessingContext
 import com.intellij.util.ReflectionUtil.findField
 import com.intellij.util.concurrency.Semaphore
+import java.awt.GraphicsEnvironment
 import java.lang.reflect.Field
 import java.util.*
 import java.util.Collections.newSetFromMap
@@ -255,7 +256,10 @@ internal class ConventionalCommitTextCompletionContributor : CompletionContribut
         .distinctBy(CommitTokenProvider::getId)
         .toList()
 
-    checkNotNull(lookupEnhancers[process.lookup]).setProviders(commitTokenProviders)
+    if (!GraphicsEnvironment.isHeadless()) {
+      val lookupEnhancer = lookupEnhancers[process.lookup] ?: error("LookupEnhancer not found")
+      lookupEnhancer.setProviders(commitTokenProviders)
+    }
   }
 
   /**
@@ -303,7 +307,7 @@ internal class ConventionalCommitTextCompletionContributor : CompletionContribut
 
   private class LookupCreationListener : LookupManagerListener {
     override fun activeLookupChanged(oldLookup: Lookup?, newLookup: Lookup?) {
-      if (newLookup is LookupImpl && !isLookupEnhancerInstalled(newLookup)) {
+      if (!GraphicsEnvironment.isHeadless() && newLookup is LookupImpl && !isLookupEnhancerInstalled(newLookup)) {
         installLookupEnhancer(newLookup)
       }
     }
