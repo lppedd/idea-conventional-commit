@@ -3,7 +3,6 @@ package com.github.lppedd.cc.lookupElement
 import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.api.CommitScope
 import com.github.lppedd.cc.api.CommitToken
-import com.github.lppedd.cc.api.TokenPresentation
 import com.github.lppedd.cc.psiElement.CommitTokenPsiElement
 import com.github.lppedd.cc.psiElement.NoScopeCommitPsiElement
 import com.intellij.codeInsight.lookup.LookupElementPresentation
@@ -32,16 +31,10 @@ internal class CommitNoScopeLookupElement(
   }
 
   private object NoScopeCommitScope : CommitScope {
-    override fun getText(): String =
-      CCBundle["cc.completion.noScope"]
-
     override fun getValue(): String =
       ""
 
-    override fun getDescription(): String =
-      ""
-
-    override fun getPresentation(): TokenPresentation =
-      object : TokenPresentation {}
+    override fun getText(): String =
+      CCBundle["cc.completion.noScope"]
   }
 }

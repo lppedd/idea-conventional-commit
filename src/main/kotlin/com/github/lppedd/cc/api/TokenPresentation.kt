@@ -8,25 +8,25 @@ import javax.swing.Icon
  */
 public interface TokenPresentation {
   /**
-   * Returns if the token's text should be presented in bold.
+   * Returns whether the token text should be presented in bold.
    */
   public fun isBold(): Boolean =
     false
 
   /**
-   * Returns if the token's text should be presented in italic.
+   * Returns whether the token text should be presented in italic.
    */
   public fun isItalic(): Boolean =
     false
 
   /**
-   * Returns if the token's text should be presented as strike-through.
+   * Returns whether the token text should be presented as strike-through.
    */
   public fun isStrikeThrough(): Boolean =
     false
 
   /**
-   * Returns the token's text foreground color.
+   * Returns the token text foreground color.
    */
   public fun getForeground(): Color? =
     null
@@ -40,7 +40,7 @@ public interface TokenPresentation {
     null
 
   /**
-   * Returns the optional icon to display on the right side of the token, next to [getType].
+   * Returns the optional icon to display on the right side of the token, next to the [type][getType].
    */
   public fun getIcon(): Icon? =
     null

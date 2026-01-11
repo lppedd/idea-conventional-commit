@@ -2,6 +2,7 @@ package com.github.lppedd.cc.lookupElement
 
 import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.api.CommitToken
+import com.github.lppedd.cc.api.impl.DefaultTokenPresentation
 import com.github.lppedd.cc.brighter
 import com.github.lppedd.cc.darker
 import com.github.lppedd.cc.scaled
@@ -63,9 +64,8 @@ internal class CommitTokenLookupElementDocumentationTargetProvider : LookupEleme
 
     @NlsSafe
     private fun buildHtml(token: CommitToken, title: String): String {
-      val description = token.getDescription().trim()
       val value = token.getValue().trim()
-      val hasCustomDocumentation = description.isNotEmpty() && token.getPresentation().hasCustomDocumentation()
+      val description = token.getDescription()?.trim() ?: ""
       val totalLength = value.length + description.length
 
       if (totalLength == 0) {
@@ -80,6 +80,9 @@ internal class CommitTokenLookupElementDocumentationTargetProvider : LookupEleme
 
       // See DocumentationMarkup for the actual HTML elements used by default
       sb.append("<div class='content'")
+
+      val presentation = token.getPresentation() ?: DefaultTokenPresentation
+      val hasCustomDocumentation = description.isNotEmpty() && presentation.hasCustomDocumentation()
 
       if (hasCustomDocumentation) {
         sb.append(" style='padding: 0;'>")

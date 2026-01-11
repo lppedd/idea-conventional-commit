@@ -144,21 +144,18 @@ internal class VcsCommitTokenProvider(private val project: Project) :
       "VCS"
   }
 
-  private class VcsCommitToken(private val text: String) :
+  private class VcsCommitToken(private val value: String) :
       CommitType,
       CommitScope,
       CommitSubject,
       CommitFooterValue {
-    override fun getText(): String =
-      text
-
     override fun getValue(): String =
-      getText()
+      value
 
-    override fun getDescription(): String =
-      ""
+    override fun getText(): String =
+      getValue()
 
-    override fun getPresentation() =
+    override fun getPresentation(): TokenPresentation =
       VcsTokenPresentation
   }
 }

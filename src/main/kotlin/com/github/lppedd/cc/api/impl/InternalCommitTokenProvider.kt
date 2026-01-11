@@ -53,7 +53,7 @@ internal class InternalCommitTokenProvider(private val project: Project) :
 
       when (val result = tokensService.getCoAuthors()) {
         is CoAuthorsResult.Success -> {
-          return result.coAuthors.take(3).map { DefaultCommitToken(it, "", true) }
+          return result.coAuthors.take(3).map { DefaultCommitToken(it, null, true) }
         }
         is CoAuthorsResult.Failure -> {
           logger.debug("Error while getting co-authors", result.message)
@@ -93,34 +93,33 @@ internal class InternalCommitTokenProvider(private val project: Project) :
       CC.Icon.Logo
   }
 
-  private object DefaultTokenPresentation : TokenPresentation
   private object CoAuthorTokenPresentation : TokenPresentation {
     override fun getType(): String =
       "Co-author"
   }
 
   private class DefaultCommitToken(
-    private val text: String,
-    private val description: String,
+    private val value: String,
+    private val description: String? = null,
     private val isCoAuthor: Boolean = false,
   ) : CommitType,
       CommitScope,
       CommitFooterType,
       CommitFooterValue {
-    override fun getText(): String =
-      text
-
     override fun getValue(): String =
-      getText()
+      value
 
-    override fun getDescription(): String =
+    override fun getText(): String =
+      getValue()
+
+    override fun getDescription(): String? =
       description
 
-    override fun getPresentation(): TokenPresentation =
+    override fun getPresentation(): TokenPresentation? =
       if (isCoAuthor) {
         CoAuthorTokenPresentation
       } else {
-        DefaultTokenPresentation
+        null
       }
   }
 }

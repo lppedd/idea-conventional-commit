@@ -2,6 +2,7 @@ package com.github.lppedd.cc.lookupElement
 
 import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.api.CommitToken
+import com.github.lppedd.cc.api.impl.DefaultTokenPresentation
 import com.github.lppedd.cc.completion.LookupElementKey
 import com.github.lppedd.cc.psiElement.CommitTokenPsiElement
 import com.intellij.codeInsight.lookup.AutoCompletionPolicy
@@ -41,7 +42,7 @@ internal sealed class CommitTokenLookupElement : LookupElement() {
     presentation.itemText = getItemText()
     presentation.isTypeIconRightAligned = true
 
-    val tokenPresentation = getToken().getPresentation()
+    val tokenPresentation = getToken().getPresentation() ?: DefaultTokenPresentation
     presentation.isItemTextBold = tokenPresentation.isBold()
     presentation.isItemTextItalic = tokenPresentation.isItalic()
     presentation.isStrikeout = tokenPresentation.isStrikeThrough()

@@ -3,7 +3,6 @@ package com.github.lppedd.cc.lookupElement
 import com.github.lppedd.cc.*
 import com.github.lppedd.cc.api.CommitFooterValue
 import com.github.lppedd.cc.api.CommitToken
-import com.github.lppedd.cc.api.TokenPresentation
 import com.github.lppedd.cc.configuration.CCTokensService
 import com.github.lppedd.cc.configuration.CoAuthorsResult
 import com.github.lppedd.cc.configuration.component.CoAuthorsDialog
@@ -128,16 +127,13 @@ internal class ShowMoreCoAuthorsLookupElement : CommitTokenLookupElement, Prefix
   }
 
   private object ShowMoreCoAuthorsCommitFooterValue : CommitFooterValue {
-    override fun getText(): String =
-      getValue()
-
     override fun getValue(): String =
       CCBundle["cc.completion.showMore"]
 
+    override fun getText(): String =
+      getValue()
+
     override fun getDescription(): String =
       CCBundle["cc.config.coAuthors.description"]
-
-    override fun getPresentation(): TokenPresentation =
-      object : TokenPresentation {}
   }
 }

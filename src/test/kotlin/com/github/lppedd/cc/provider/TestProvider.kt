@@ -54,21 +54,15 @@ internal object TestProvider :
       CC.Icon.Logo
   }
 
-  private class TestCommitToken(private val text: String) :
+  private class TestCommitToken(private val value: String) :
       CommitSubject,
       CommitBody,
       CommitFooterType,
       CommitFooterValue {
-    override fun getText(): String =
-      text
-
     override fun getValue(): String =
-      getText()
+      value
 
-    override fun getDescription(): String =
-      ""
-
-    override fun getPresentation(): TokenPresentation =
-      object : TokenPresentation {}
+    override fun getText(): String =
+      getValue()
   }
 }
