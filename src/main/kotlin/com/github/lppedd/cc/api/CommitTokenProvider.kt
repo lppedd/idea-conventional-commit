@@ -8,7 +8,7 @@ import org.jetbrains.annotations.ApiStatus
  * @author Edoardo Luppi
  */
 @ApiStatus.Experimental
-public interface CommitTokenProvider {
+public sealed interface CommitTokenProvider {
   /**
    * Returns the provider's global unique identifier.
    */
