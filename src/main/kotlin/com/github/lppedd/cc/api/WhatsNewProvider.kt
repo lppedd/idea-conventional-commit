@@ -2,7 +2,7 @@ package com.github.lppedd.cc.api
 
 import com.intellij.openapi.extensions.PluginAware
 import com.intellij.openapi.extensions.PluginDescriptor
-import org.jetbrains.annotations.ApiStatus.*
+import org.jetbrains.annotations.ApiStatus
 
 /**
  * An entry point to provide your own "What's new" pages for the What's New dialog.
@@ -11,7 +11,7 @@ import org.jetbrains.annotations.ApiStatus.*
  * @author Edoardo Luppi
  * @see com.github.lppedd.cc.whatsnew.WhatsNewDialog
  */
-@Experimental
+@ApiStatus.Experimental
 public interface WhatsNewProvider : PluginAware {
   /**
    * Returns the name - representing this provider - to be displayed in a "What's new" dialog's tab.

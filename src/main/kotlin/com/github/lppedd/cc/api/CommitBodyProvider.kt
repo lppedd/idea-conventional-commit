@@ -1,11 +1,11 @@
 package com.github.lppedd.cc.api
 
-import org.jetbrains.annotations.ApiStatus.*
+import org.jetbrains.annotations.ApiStatus
 
 /**
  * @author Edoardo Luppi
  */
-@Experimental
+@ApiStatus.Experimental
 public interface CommitBodyProvider : CommitTokenProvider {
   /**
    * Returns commit bodies, optionally considering other user-inputted tokens.

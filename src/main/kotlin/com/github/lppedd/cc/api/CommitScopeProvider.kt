@@ -1,11 +1,11 @@
 package com.github.lppedd.cc.api
 
-import org.jetbrains.annotations.ApiStatus.*
+import org.jetbrains.annotations.ApiStatus
 
 /**
  * @author Edoardo Luppi
  */
-@Experimental
+@ApiStatus.Experimental
 public interface CommitScopeProvider : CommitTokenProvider {
   /**
    * Returns commit scopes, optionally considering the user-inputted commit type.

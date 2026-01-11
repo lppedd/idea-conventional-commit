@@ -1,13 +1,13 @@
 package com.github.lppedd.cc.api
 
-import org.jetbrains.annotations.ApiStatus.*
+import org.jetbrains.annotations.ApiStatus
 
 /**
  * Provides commit tokens to be proposed to the user via UI.
  *
  * @author Edoardo Luppi
  */
-@Experimental
+@ApiStatus.Experimental
 public interface CommitTokenProvider {
   /**
    * Returns the provider's global unique identifier.

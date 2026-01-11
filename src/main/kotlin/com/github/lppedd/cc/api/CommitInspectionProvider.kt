@@ -1,7 +1,7 @@
 package com.github.lppedd.cc.api
 
 import com.github.lppedd.cc.inspection.CommitBaseInspection
-import org.jetbrains.annotations.ApiStatus.*
+import org.jetbrains.annotations.ApiStatus
 
 /**
  * Provides inspections for the commit message panel's editor.
@@ -10,7 +10,7 @@ import org.jetbrains.annotations.ApiStatus.*
  *
  * @author Edoardo Luppi
  */
-@Experimental
+@ApiStatus.Experimental
 public interface CommitInspectionProvider {
   public fun getInspections(): Collection<CommitBaseInspection>
 }
