@@ -147,6 +147,22 @@ internal class InternalVcsService(private val project: Project) : VcsService {
     return VcsLogManager.findLogProviders(activeVcsRoots, project)
   }
 
+  private fun <T> safeLogAccess(function: String, block: () -> T): T? {
+    try {
+      return block()
+    } catch (e: VcsException) {
+      logger.debug("Error calling VcsLogProvider.$function", e)
+    } catch (e: IllegalStateException) {
+      if (e is CancellationException) {
+        throw e
+      }
+
+      logger.debug("Error calling VcsLogProvider.$function - see IJPL-148354", e)
+    }
+
+    return null
+  }
+
   /*
    * Methods from here onwards are unused, but we keep them for future reference.
    * They might come handy.
@@ -170,22 +186,6 @@ internal class InternalVcsService(private val project: Project) : VcsService {
     }
 
     return commitsMetadata
-  }
-
-  private fun <T> safeLogAccess(function: String, block: () -> T): T? {
-    try {
-      return block()
-    } catch (e: VcsException) {
-      logger.debug("Error calling VcsLogProvider.$function", e)
-    } catch (e: IllegalStateException) {
-      if (e is CancellationException) {
-        throw e
-      }
-
-      logger.debug("Error calling VcsLogProvider.$function - see IJPL-148354", e)
-    }
-
-    return null
   }
 
   private inner class MyVcsLogRefresher : VcsLogRefresher {

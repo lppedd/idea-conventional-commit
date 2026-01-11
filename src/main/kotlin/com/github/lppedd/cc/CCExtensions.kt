@@ -49,10 +49,10 @@ import kotlin.math.min
 // region Project
 
 internal fun Project.findRootDir(): VirtualFile? {
-  val baseDir = getBaseDirectories()
+  val baseDirs = getBaseDirectories()
 
-  if (baseDir.isNotEmpty()) {
-    return baseDir.first()
+  if (baseDirs.isNotEmpty()) {
+    return baseDirs.first()
   }
 
   // The base path is not prefixed with a file:// schema
