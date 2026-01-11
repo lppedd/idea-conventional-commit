@@ -88,8 +88,7 @@ internal class CCMainConfigurable(private val project: Project) : SearchableConf
     }
 
     // Notify that settings have been changed
-    val publisher = project.messageBus.syncPublisher(ConfigurationChangedListener.TOPIC)
-    publisher.onConfigurationChanged()
+    project.messageBus.syncPublisher(ConfigurationChangedListener.TOPIC).onConfigurationChanged()
   }
 
   override fun reset() {

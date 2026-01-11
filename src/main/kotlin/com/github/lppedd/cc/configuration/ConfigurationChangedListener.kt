@@ -7,6 +7,8 @@ import com.intellij.util.messages.Topic
  */
 internal fun interface ConfigurationChangedListener {
   companion object {
+    @Topic.ProjectLevel
+    @JvmField
     val TOPIC: Topic<ConfigurationChangedListener> =
       Topic.create("Configuration changed", ConfigurationChangedListener::class.java)
   }

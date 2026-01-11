@@ -54,8 +54,7 @@ internal class ConventionalCommitEditorTextFieldProvider : EditorTextFieldProvid
 
   private fun connectProject(project: Project) {
     val handler = MyConfigurationChangedListener(project)
-    val connection = project.messageBus.connect()
-    connection.subscribe(ConfigurationChangedListener.TOPIC, handler)
+    project.messageBus.connect().subscribe(ConfigurationChangedListener.TOPIC, handler)
   }
 
   private fun adaptEditorField(editorField: LanguageTextField, project: Project) {
