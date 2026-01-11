@@ -38,8 +38,14 @@ jobs:
           java-version: 21
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
-      - name: Build plugin
-        run: ./gradlew buildPlugin
+      - name: Build and test plugin
+        run: ./gradlew check buildPlugin
+      - name: Collect test results
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v6
+        with:
+          name: tests-result
+          path: ${{ github.workspace }}/build/reports/tests
       - name: Prepare plugin artifact
         id: artifact
         shell: bash
