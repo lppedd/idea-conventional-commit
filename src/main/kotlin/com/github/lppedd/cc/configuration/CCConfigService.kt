@@ -33,60 +33,60 @@ internal class CCConfigService : PersistentStateComponent<CCConfigService> {
   }
 
   @Attribute
-  private var version: Int = 0
+  @Volatile private var version: Int = 0
 
-  var completionType: CompletionType = CompletionType.POPUP
-  var enableLanguageSupport: Boolean = true
-  var prioritizeRecentlyUsed: Boolean = true
-  var autoInsertSpaceAfterColon: Boolean = true
-  var providerFilterType: ProviderFilterType = ProviderFilterType.HIDE_SELECTED
-  var customFilePath: String? = null
-  var customCoAuthorsFilePath: String? = null
-  var scopeReplaceChar: String = "-"
-  var typeNamingPattern: String = "[a-zA-Z]+"
-  var scopeNamingPattern: String = "[a-zA-Z0-9-:]+"
+  @Volatile var completionType: CompletionType = CompletionType.POPUP
+  @Volatile var enableLanguageSupport: Boolean = true
+  @Volatile var prioritizeRecentlyUsed: Boolean = true
+  @Volatile var autoInsertSpaceAfterColon: Boolean = true
+  @Volatile var providerFilterType: ProviderFilterType = ProviderFilterType.HIDE_SELECTED
+  @Volatile var customFilePath: String? = null
+  @Volatile var customCoAuthorsFilePath: String? = null
+  @Volatile var scopeReplaceChar: String = "-"
+  @Volatile var typeNamingPattern: String = "[a-zA-Z]+"
+  @Volatile var scopeNamingPattern: String = "[a-zA-Z0-9-:]+"
 
   @XMap(
     propertyElementName = "commitTypes",
     keyAttributeName = "providerId",
     valueAttributeName = "order"
   )
-  private var typeProvidersMap = ConcurrentHashMap<String, Int>()
+  @Volatile private var typeProvidersMap = ConcurrentHashMap<String, Int>()
 
   @XMap(
     propertyElementName = "commitScopes",
     keyAttributeName = "providerId",
     valueAttributeName = "order"
   )
-  private var scopeProvidersMap = ConcurrentHashMap<String, Int>()
+  @Volatile private var scopeProvidersMap = ConcurrentHashMap<String, Int>()
 
   @XMap(
     propertyElementName = "commitSubjects",
     keyAttributeName = "providerId",
     valueAttributeName = "order"
   )
-  private var subjectProvidersMap = ConcurrentHashMap<String, Int>()
+  @Volatile private var subjectProvidersMap = ConcurrentHashMap<String, Int>()
 
   @XMap(
     propertyElementName = "commitBodies",
     keyAttributeName = "providerId",
     valueAttributeName = "order"
   )
-  private var bodyProvidersMap = ConcurrentHashMap<String, Int>()
+  @Volatile private var bodyProvidersMap = ConcurrentHashMap<String, Int>()
 
   @XMap(
     propertyElementName = "commitFooterTypes",
     keyAttributeName = "providerId",
     valueAttributeName = "order"
   )
-  private var footerTypeProvidersMap = ConcurrentHashMap<String, Int>()
+  @Volatile private var footerTypeProvidersMap = ConcurrentHashMap<String, Int>()
 
   @XMap(
     propertyElementName = "commitFooterValues",
     keyAttributeName = "providerId",
     valueAttributeName = "order"
   )
-  private var footerValueProvidersMap = ConcurrentHashMap<String, Int>()
+  @Volatile private var footerValueProvidersMap = ConcurrentHashMap<String, Int>()
 
   init {
     noStateLoaded()
