@@ -14,30 +14,30 @@ internal object TestProvider :
     CommitFooterValueProvider {
   override fun getCommitSubjects(type: String, scope: String): Collection<CommitSubject> =
     listOf(
-        TestCommitToken("subject one"),
-        TestCommitToken("and subject two"),
+      TestCommitToken("subject one"),
+      TestCommitToken("and subject two"),
     )
 
   override fun getCommitBodies(type: String, scope: String, subject: String): Collection<CommitBody> =
     listOf(
-        TestCommitToken("Example body"),
-        TestCommitToken("Example of a\nmultiline body\nas it spawns multiple lines."),
-        TestCommitToken("Example of a\nmultiline body\n\nwith double new line."),
+      TestCommitToken("Example body"),
+      TestCommitToken("Example of a\nmultiline body\nas it spawns multiple lines."),
+      TestCommitToken("Example of a\nmultiline body\n\nwith double new line."),
     )
 
   override fun getCommitFooterTypes(): Collection<CommitFooterType> =
     emptyList()
 
   override fun getCommitFooterValues(
-      footerType: String,
-      type: String?,
-      scope: String?,
-      subject: String?,
+    footerType: String,
+    type: String?,
+    scope: String?,
+    subject: String?,
   ): Collection<CommitFooterValue> =
     listOf(
-        TestCommitToken("Footer one"),
-        TestCommitToken("Footer two"),
-        TestCommitToken("Long footer three\nwhich spawns\n\nmultiple lines.\n"),
+      TestCommitToken("Footer one"),
+      TestCommitToken("Footer two"),
+      TestCommitToken("Long footer three\nwhich spawns\n\nmultiple lines.\n"),
     )
 
   override fun getId(): String =

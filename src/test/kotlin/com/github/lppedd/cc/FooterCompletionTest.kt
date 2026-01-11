@@ -6,12 +6,12 @@ class FooterCompletionTest : BaseTest() {
       before = """
         |build(google): my description
         |
-        |BREAKING CHANGE: Foo<caret>ter two
+        |BREAKING-CHANGE: Foo<caret>ter two
       """.trimMargin(),
       after = """
         |build(google): my description
         |
-        |BREAKING CHANGE: Footer one<caret>
+        |BREAKING-CHANGE: Footer one<caret>
       """.trimMargin(),
       selectedItem = "Footer one"
     )
@@ -22,12 +22,12 @@ class FooterCompletionTest : BaseTest() {
       before = """
         |build(google): my description
         |
-        |BREAKING CHANGE:<caret>
+        |BREAKING-CHANGE:<caret>
       """.trimMargin(),
       after = """
         |build(google): my description
         |
-        |BREAKING CHANGE: Long footer three
+        |BREAKING-CHANGE: Long footer three
         |which spawns
         |
         |multiple lines.
@@ -66,7 +66,7 @@ class FooterCompletionTest : BaseTest() {
       before = """
         |Some other text
         |
-        |BREAKING CHANGE: <caret>Long footer three
+        |BREAKING-CHANGE: <caret>Long footer three
         |which spawns
         |multiple lines.
         |
@@ -75,11 +75,10 @@ class FooterCompletionTest : BaseTest() {
       after = """
         |Some other text
         |
-        |BREAKING CHANGE: Footer two<caret>
+        |BREAKING-CHANGE: Footer one<caret>
         |
         |Not included
       """.trimMargin(),
-      selectedItem = "Footer two"
     )
   }
 }

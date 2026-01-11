@@ -8,7 +8,7 @@ class FooterTypeCompletionTest : BaseTest() {
         |
         |<caret>
       """.trimMargin(),
-      "BREAKING CHANGE",
+      "BREAKING-CHANGE",
       "Closes",
       "Implements"
     )
@@ -24,9 +24,9 @@ class FooterTypeCompletionTest : BaseTest() {
       after = """
         |refactor: my description
         |
-        |BREAKING CHANGE: <caret>
+        |BREAKING-CHANGE: <caret>
       """.trimMargin(),
-      selectedItem = "BREAKING CHANGE"
+      selectedItem = "BREAKING-CHANGE"
     )
   }
 
@@ -35,7 +35,7 @@ class FooterTypeCompletionTest : BaseTest() {
       before = """
         |build(npm): description
         |
-        |<caret>BREAKING CHANGE: footer value
+        |<caret>BREAKING-CHANGE: footer value
       """.trimMargin(),
       after = """
         |build(npm): description
@@ -72,9 +72,9 @@ class FooterTypeCompletionTest : BaseTest() {
       after = """
         |build(npm): description
         |
-        |BREAKING CHANGE: <caret>footer value
+        |BREAKING-CHANGE: <caret>footer value
       """.trimMargin(),
-      selectedItem = "BREAKING CHANGE"
+      selectedItem = "BREAKING-CHANGE"
     )
   }
 }

@@ -4,13 +4,14 @@ import com.github.lppedd.cc.api.CommitTokenProviderService
 import com.github.lppedd.cc.provider.TestProvider
 import com.intellij.openapi.components.service
 import com.intellij.openapi.vcs.ui.CommitMessage
-import com.intellij.testFramework.UsefulTestCase
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase
-
-private const val TEST_FILE_NAME = "test.txt"
 
 @Suppress("ReplaceNotNullAssertionWithElvisReturn")
 abstract class BaseTest : LightJavaCodeInsightFixtureTestCase() {
+  companion object {
+    const val TEST_FILE_NAME: String = "test.conventionalcommit"
+  }
+
   override fun setUp() {
     super.setUp()
 
@@ -27,19 +28,16 @@ abstract class BaseTest : LightJavaCodeInsightFixtureTestCase() {
     myFixture.testCompletionVariants(TEST_FILE_NAME, *variants)
   }
 
+  @Suppress("SameParameterValue")
   protected fun testCompletionVariantsContain(text: String, vararg variants: String) {
     myFixture.configureByText(TEST_FILE_NAME, text)
     myFixture.file.document!!.putUserData(CommitMessage.DATA_KEY, CommitMessage(myFixture.project))
 
     val result = myFixture.getCompletionVariants(TEST_FILE_NAME)!!
-    UsefulTestCase.assertContainsElements(result, *variants)
+    assertContainsElements(result, *variants)
   }
 
-  protected fun testCompletionSelectItemOrFirst(
-      before: String,
-      after: String,
-      selectedItem: String? = null,
-  ) {
+  protected fun testCompletionSelectItemOrFirst(before: String, after: String, selectedItem: String? = null) {
     prepareFile(before)
     myFixture.completeBasic()
 
