@@ -41,6 +41,8 @@ This plugin addresses these challenges while respecting the Conventional Commits
 [specification][conventional-commits-spec], allowing users to customize the experience
 to fit their own workflow and preferences.
 
+<div align="center">
+
 ### IDE compatibility table
 
 | From Plugin version | From Platform version | To Platform version |
@@ -50,6 +52,8 @@ to fit their own workflow and preferences.
 | 0.24.0              | 233.11799             | 251.*               |
 | 0.23.0              | 223.4884              | 243.*               |
 | 0.19.0              | 202.6397              | 233.*               |
+
+</div>
 
 ## Completion modes
 
