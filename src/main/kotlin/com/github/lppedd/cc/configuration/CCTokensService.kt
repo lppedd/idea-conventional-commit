@@ -271,7 +271,7 @@ internal class CCTokensService(private val project: Project) {
   // TODO(Edoardo): will have to remove it as point, as keeping footer values
   //  as an array does not make sense anymore
   private fun buildFooterTypesArray(jsonArray: JSONArray): List<CommitFooterTypeModel> {
-    val list = ArrayList<CommitFooterTypeModel>()
+    val list = ArrayList<CommitFooterTypeModel>(jsonArray.length())
 
     for (i in 0..<jsonArray.length()) {
       val descriptor = jsonArray.getJSONObject(i)
