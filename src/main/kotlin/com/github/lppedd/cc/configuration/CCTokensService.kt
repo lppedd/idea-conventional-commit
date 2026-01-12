@@ -286,30 +286,30 @@ internal class CCTokensService(private val project: Project) {
   }
 
   class TokensModel(
-    val types: Map<String, CommitTypeModel>,
-    val footerTypes: Map<String, CommitFooterTypeModel>,
+    @JvmField val types: Map<String, CommitTypeModel>,
+    @JvmField val footerTypes: Map<String, CommitFooterTypeModel>,
   )
 
   class CommitTypeModel(
-    val name: String,
-    val description: String,
-    val scopes: Map<String, CommitScopeModel>,
+    @JvmField val name: String,
+    @JvmField val description: String,
+    @JvmField val scopes: Map<String, CommitScopeModel>,
   )
 
   class CommitScopeModel(
-    val name: String,
-    val description: String,
+    @JvmField val name: String,
+    @JvmField val description: String,
   )
 
   class CommitFooterTypeModel(
-    val name: String,
-    val description: String,
-    val values: Map<String, CommitFooterValueModel>,
+    @JvmField val name: String,
+    @JvmField val description: String,
+    @JvmField val values: Map<String, CommitFooterValueModel>,
   )
 
   class CommitFooterValueModel(
-    val name: String,
-    val description: String,
+    @JvmField val name: String,
+    @JvmField val description: String,
   )
 
   @Suppress("UNCHECKED_CAST")
