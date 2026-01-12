@@ -3,7 +3,6 @@ package com.github.lppedd.cc.configuration
 import com.github.erosb.jsonsKema.*
 import com.github.erosb.jsonsKema.FormatValidationPolicy.ALWAYS
 import com.github.lppedd.cc.*
-import com.intellij.application.options.CodeStyle
 import com.intellij.openapi.application.WriteAction
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
@@ -153,8 +152,11 @@ internal class CCTokensService(private val project: Project) {
       return CoAuthorsResult.Failure(CCBundle["cc.config.coAuthors.customFile.notWritable"])
     }
 
-    val lineSeparator = CodeStyle.getSettings(project).lineSeparator
-    val content = coAuthors.joinToString(lineSeparator, transform = String::trim)
+    val content = coAuthors.joinToString(
+      separator = "\n",
+      postfix = "\n",
+      transform = String::trim,
+    )
 
     WriteAction.runAndWait<Throwable> {
       file.setBinaryContent(content.toByteArray(file.charset))
