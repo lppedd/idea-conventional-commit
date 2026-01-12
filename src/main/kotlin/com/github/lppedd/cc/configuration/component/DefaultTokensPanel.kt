@@ -2,6 +2,7 @@ package com.github.lppedd.cc.configuration.component
 
 import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.CCBundle
+import com.github.lppedd.cc.configuration.CCTokensService.CommitScopeModel
 import com.github.lppedd.cc.configuration.CCTokensService.CommitTypeModel
 import com.github.lppedd.cc.configuration.component.tokens.CommitTokenList
 import com.github.lppedd.cc.scaled
@@ -20,7 +21,7 @@ import javax.swing.JPanel
  * @author Edoardo Luppi
  */
 internal class DefaultTokensPanel : JPanel(ScaledGridLayout(1, 1, 24, 1)) {
-  private var latestTokens: Map<String, CommitTypeModel> = emptyMap()
+  private var latestTokens: List<CommitTypeModel> = emptyList()
   private val scopeList = CommitTokenList(CC.Icon.Token.Scope)
   private val typeList = CommitTokenList(CC.Icon.Token.Type).also {
     it.addListSelectionListener {
@@ -33,9 +34,9 @@ internal class DefaultTokensPanel : JPanel(ScaledGridLayout(1, 1, 24, 1)) {
     add(createTokenListPanel(scopeList, CCBundle["cc.config.scopes"]))
   }
 
-  fun setTokens(tokens: Map<String, CommitTypeModel>) {
+  fun setTokens(tokens: List<CommitTypeModel>) {
     latestTokens = tokens
-    typeList.setTokens(tokens.keys)
+    typeList.setTokens(tokens.map(CommitTypeModel::name))
     onCommitTypeChanged()
   }
 
@@ -43,8 +44,8 @@ internal class DefaultTokensPanel : JPanel(ScaledGridLayout(1, 1, 24, 1)) {
     val selectedValue: String? = typeList.selectedValue
 
     if (selectedValue != null) {
-      val jsonCommitType = latestTokens[selectedValue] ?: return
-      val scopes = jsonCommitType.scopes.map { (_, value) -> value.name }
+      val jsonCommitType = latestTokens.find { it.name == selectedValue } ?: return
+      val scopes = jsonCommitType.scopes.map(CommitScopeModel::name)
       scopeList.setTokens(scopes)
     }
   }

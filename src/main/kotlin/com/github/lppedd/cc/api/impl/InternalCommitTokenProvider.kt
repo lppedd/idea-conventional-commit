@@ -31,16 +31,21 @@ internal class InternalCommitTokenProvider(private val project: Project) :
   override fun getPresentation(): ProviderPresentation =
     DefaultProviderPresentation
 
-  override fun getCommitTypes(prefix: String): Collection<CommitType> =
-    getTokens().types.map { (key, value) -> DefaultCommitToken(key, value.description) }
-
-  override fun getCommitScopes(type: String): Collection<CommitScope> {
-    val defaultType = getTokens().types[type] ?: return emptyList()
-    return defaultType.scopes.map { (_, value) -> DefaultCommitToken(value.name, value.description) }
+  override fun getCommitTypes(prefix: String): Collection<CommitType> {
+    val types = getTokens().types
+    return types.map { DefaultCommitToken(it.name, it.description) }
   }
 
-  override fun getCommitFooterTypes(): Collection<CommitFooterType> =
-    getTokens().footerTypes.map { (key, value) -> DefaultCommitToken(key, value.description) }
+  override fun getCommitScopes(type: String): Collection<CommitScope> {
+    val types = getTokens().types
+    val typeModel = types.find { it.name.equals(type, ignoreCase = true) } ?: return emptyList()
+    return typeModel.scopes.map { DefaultCommitToken(it.name, it.description) }
+  }
+
+  override fun getCommitFooterTypes(): Collection<CommitFooterType> {
+    val footerTypes = getTokens().footerTypes
+    return footerTypes.map { DefaultCommitToken(it.name, it.description) }
+  }
 
   override fun getCommitFooterValues(
     footerType: String,
@@ -61,8 +66,9 @@ internal class InternalCommitTokenProvider(private val project: Project) :
       }
     }
 
-    val defaultFooterType = getTokens().footerTypes[footerType] ?: return emptyList()
-    return defaultFooterType.values.map { (_, value) -> DefaultCommitToken(value.name, value.description) }
+    val footerTypes = getTokens().footerTypes
+    val footerTypeModel = footerTypes.find { it.name.equals(footerType, ignoreCase = true) } ?: return emptyList()
+    return footerTypeModel.values.map { DefaultCommitToken(it.name, it.description) }
   }
 
   private fun getTokens(): TokensModel {

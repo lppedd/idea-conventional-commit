@@ -3,7 +3,7 @@ package com.github.lppedd.cc.configuration;
 import static com.intellij.uiDesigner.core.GridConstraints.*;
 
 import java.awt.*;
-import java.util.Map;
+import java.util.List;
 
 import javax.swing.*;
 
@@ -142,7 +142,7 @@ public class CCMainConfigurableGui {
     defaultTokensFilePickerPanel.setCustomFilePath(path);
   }
 
-  public void setTokens(@NotNull final Map<String, CommitTypeModel> tokens) {
+  public void setTokens(@NotNull final List<CommitTypeModel> tokens) {
     defaultTokensPanel.setTokens(tokens);
   }
 
@@ -216,7 +216,10 @@ public class CCMainConfigurableGui {
     final var gc = new GridConstraints();
     gc.setFill(FILL_BOTH);
     gc.setHSizePolicy(SIZEPOLICY_CAN_SHRINK | SIZEPOLICY_CAN_GROW | SIZEPOLICY_WANT_GROW);
-    defaultsPanel.add(JBUI.Borders.empty(0, 1, 16, 0).wrap(new DefaultTokensFileExportPanel(project)), gc);
+    defaultsPanel.add(
+        JBUI.Borders.empty(0, 1, 16, 0).wrap(new DefaultTokensFileExportPanel(project)),
+        gc
+    );
 
     gc.setRow(1);
     defaultTokensFilePickerPanel = new DefaultTokensFilePickerPanel(project, disposable);
