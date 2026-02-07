@@ -7,40 +7,40 @@ import kotlin.contracts.contract
 class ConventionalCommitParserTest {
   @Test
   fun `fail incomplete`() {
-    var parse = parseConventionalCommit("fix: ")
-    assertIs<ParseResult.Error>(parse)
-    assertEquals("The commit subject is missing or invalid", parse.message)
+    var result = parseConventionalCommit("fix: ")
+    assertIs<ParseResult.Error>(result)
+    assertEquals("The commit subject is missing or invalid", result.message)
 
-    parse = parseConventionalCommit("build(np:  ")
-    assertIs<ParseResult.Error>(parse)
-    assertEquals("The commit scope is missing the closing parenthesis", parse.message)
+    result = parseConventionalCommit("build(np:  ")
+    assertIs<ParseResult.Error>(result)
+    assertEquals("The commit scope is missing the closing parenthesis", result.message)
 
-    parse = parseConventionalCommit("build(npm)")
-    assertIs<ParseResult.Error>(parse)
-    assertEquals("The ':' separator is missing after the type/scope", parse.message)
+    result = parseConventionalCommit("build(npm)")
+    assertIs<ParseResult.Error>(result)
+    assertEquals("The ':' separator is missing after the type/scope", result.message)
   }
 
   @Test
   fun `parse incomplete`() {
-    var parse = parseConventionalCommit("fix:  ", lenient = true)
-    assertIs<ParseResult.Success>(parse)
+    var result = parseConventionalCommit("fix:  ", lenient = true)
+    assertIs<ParseResult.Success>(result)
 
-    var message = parse.message
+    var message = result.message
     assertEquals("fix", message.type)
     assertEquals("  ", message.subject)
 
-    parse = parseConventionalCommit("build(np:  ", lenient = true)
-    assertIs<ParseResult.Success>(parse)
+    result = parseConventionalCommit("build(np:  ", lenient = true)
+    assertIs<ParseResult.Success>(result)
 
-    message = parse.message
+    message = result.message
     assertEquals("build", message.type)
     assertEquals("np:  ", message.scope)
     assertEquals("", message.subject)
 
-    parse = parseConventionalCommit("build(npm)", lenient = true)
-    assertIs<ParseResult.Success>(parse)
+    result = parseConventionalCommit("build(npm)", lenient = true)
+    assertIs<ParseResult.Success>(result)
 
-    message = parse.message
+    message = result.message
     assertEquals("build", message.type)
     assertEquals("npm", message.scope)
     assertEquals("", message.subject)
@@ -48,28 +48,28 @@ class ConventionalCommitParserTest {
 
   @Test
   fun `parse one liner`() {
-    val parse = parseConventionalCommit("fix: foo")
-    assertIs<ParseResult.Success>(parse)
+    val result = parseConventionalCommit("fix: foo")
+    assertIs<ParseResult.Success>(result)
 
-    val message = parse.message
+    val message = result.message
     assertEquals("fix", message.type)
     assertEquals("foo", message.subject.trim())
   }
 
   @Test
   fun `parse empty scope`() {
-    var parse = parseConventionalCommit("build(): bar")
-    assertIs<ParseResult.Success>(parse)
+    var result = parseConventionalCommit("build(): bar")
+    assertIs<ParseResult.Success>(result)
 
-    var message = parse.message
+    var message = result.message
     assertEquals("build", message.type)
     assertEquals("", message.scope)
     assertEquals("bar", message.subject.trim())
 
-    parse = parseConventionalCommit("build(   ): bar")
-    assertIs<ParseResult.Success>(parse)
+    result = parseConventionalCommit("build(   ): bar")
+    assertIs<ParseResult.Success>(result)
 
-    message = parse.message
+    message = result.message
     assertEquals("build", message.type)
     assertEquals("   ", message.scope)
     assertEquals("bar", message.subject.trim())
@@ -77,10 +77,10 @@ class ConventionalCommitParserTest {
 
   @Test
   fun `parse scope with breaking change`() {
-    val parse = parseConventionalCommit("build(foo)!: bar")
-    assertIs<ParseResult.Success>(parse)
+    val result = parseConventionalCommit("build(foo)!: bar")
+    assertIs<ParseResult.Success>(result)
 
-    val message = parse.message
+    val message = result.message
     assertEquals("build", message.type)
     assertEquals("foo", message.scope)
     assertEquals("bar", message.subject.trim())
@@ -89,7 +89,7 @@ class ConventionalCommitParserTest {
 
   @Test
   fun `parse body`() {
-    val parse = parseConventionalCommit(
+    val result = parseConventionalCommit(
       """
       |refactor!: foo
       |
@@ -98,9 +98,9 @@ class ConventionalCommitParserTest {
       """.trimMargin()
     )
 
-    assertIs<ParseResult.Success>(parse)
+    assertIs<ParseResult.Success>(result)
 
-    val message = parse.message
+    val message = result.message
     assertEquals("refactor", message.type)
     assertEquals("foo", message.subject.trim())
     assertEquals("bar is not foo 1\n  bar is not foo 2", message.body)
@@ -108,7 +108,7 @@ class ConventionalCommitParserTest {
 
   @Test
   fun `parse body and footers`() {
-    val parse = parseConventionalCommit(
+    val result = parseConventionalCommit(
       """
       |refactor!: foo
       |
@@ -120,9 +120,9 @@ class ConventionalCommitParserTest {
       """.trimMargin()
     )
 
-    assertIs<ParseResult.Success>(parse)
+    assertIs<ParseResult.Success>(result)
 
-    val message = parse.message
+    val message = result.message
     assertEquals("refactor", message.type)
     assertEquals("foo", message.subject.trim())
     assertEquals("bar is not foo 1\nbar is not foo 2", message.body)
@@ -141,7 +141,7 @@ class ConventionalCommitParserTest {
 
   @Test
   fun `parse footers`() {
-    val parse = parseConventionalCommit(
+    val result = parseConventionalCommit(
       """
       |refactor(scope): foo
       |
@@ -151,9 +151,9 @@ class ConventionalCommitParserTest {
       """.trimMargin()
     )
 
-    assertIs<ParseResult.Success>(parse)
+    assertIs<ParseResult.Success>(result)
 
-    val message = parse.message
+    val message = result.message
     assertEquals("refactor", message.type)
     assertEquals("scope", message.scope)
     assertEquals("foo", message.subject.trim())
@@ -176,7 +176,7 @@ class ConventionalCommitParserTest {
 
   @Test
   fun `parse BREAKING CHANGE footer`() {
-    val parse = parseConventionalCommit(
+    val result = parseConventionalCommit(
       """
       |build(npm): switch to yarn
       |
@@ -185,9 +185,9 @@ class ConventionalCommitParserTest {
       """.trimMargin()
     )
 
-    assertIs<ParseResult.Success>(parse)
+    assertIs<ParseResult.Success>(result)
 
-    val message = parse.message
+    val message = result.message
     assertEquals("build", message.type)
     assertEquals("npm", message.scope)
     assertEquals("switch to yarn", message.subject.trim())
@@ -204,7 +204,7 @@ class ConventionalCommitParserTest {
 
   @Test
   fun `parse multiline footer value`() {
-    val parse = parseConventionalCommit(
+    val result = parseConventionalCommit(
       """
       |build(npm): switch to yarn
       |
@@ -214,9 +214,9 @@ class ConventionalCommitParserTest {
       """.trimMargin()
     )
 
-    assertIs<ParseResult.Success>(parse)
+    assertIs<ParseResult.Success>(result)
 
-    val message = parse.message
+    val message = result.message
     assertEquals("build", message.type)
     assertEquals("npm", message.scope)
     assertEquals("switch to yarn", message.subject.trim())
@@ -236,7 +236,7 @@ class ConventionalCommitParserTest {
 
   @Test
   fun `parse missing footer value`() {
-    val parse = parseConventionalCommit(
+    val result = parseConventionalCommit(
       """
       |build: switch to yarn
       |
@@ -245,9 +245,9 @@ class ConventionalCommitParserTest {
       lenient = true,
     )
 
-    assertIs<ParseResult.Success>(parse)
+    assertIs<ParseResult.Success>(result)
 
-    val message = parse.message
+    val message = result.message
     assertEquals("build", message.type)
     assertEquals("switch to yarn", message.subject.trim())
     assertEquals(1, message.footers.size)
