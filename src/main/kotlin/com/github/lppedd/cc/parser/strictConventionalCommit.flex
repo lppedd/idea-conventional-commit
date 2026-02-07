@@ -187,6 +187,14 @@ FooterType  = [^:\r\n]+
         return token(CCToken.Type.FOOTER_TYPE);
       }
 
+      // A footer type without an associated value.
+      // Closes
+      // [Closes]
+      ^{FooterType} {
+        yybegin(FOOTER_VALUE);
+        return token(CCToken.Type.FOOTER_TYPE);
+      }
+
       ":" {
         yybegin(FOOTER_VALUE);
         return token(CCToken.Type.SEPARATOR);

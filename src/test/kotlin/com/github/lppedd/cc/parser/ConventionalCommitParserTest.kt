@@ -147,6 +147,7 @@ class ConventionalCommitParserTest {
       |
       |Closes: example 1
       |Fixes   #12
+      |[Author]   
       |Refs: example 2
       """.trimMargin()
     )
@@ -157,7 +158,7 @@ class ConventionalCommitParserTest {
     assertEquals("refactor", message.type)
     assertEquals("scope", message.scope)
     assertEquals("foo", message.subject.trim())
-    assertEquals(3, message.footers.size)
+    assertEquals(4, message.footers.size)
 
     val (type1, value1) = message.footers[0]
     assertEquals("Closes", type1)
@@ -168,8 +169,12 @@ class ConventionalCommitParserTest {
     assertEquals("#12", value2.trim())
 
     val (type3, value3) = message.footers[2]
-    assertEquals("Refs", type3)
-    assertEquals("example 2", value3.trim())
+    assertEquals("[Author]   ", type3)
+    assertEquals("", value3)
+
+    val (type4, value4) = message.footers[3]
+    assertEquals("Refs", type4)
+    assertEquals("example 2", value4.trim())
 
     assertFalse(message.isBreakingChange)
   }
