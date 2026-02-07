@@ -16,7 +16,6 @@ import com.intellij.vcs.log.impl.VcsProjectLog
 import com.intellij.vcs.log.visible.filters.VcsLogFilterObject
 import fleet.multiplatform.shims.ConcurrentHashSet
 import java.util.*
-import java.util.Collections.newSetFromMap
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.io.path.notExists
 
@@ -24,16 +23,24 @@ import kotlin.io.path.notExists
  * @author Edoardo Luppi
  */
 internal class InternalVcsService(private val project: Project) : VcsService {
+  private data class VcsSnapshot(
+    @JvmField val currentUsers: Set<VcsUser>,
+    @JvmField val commits: List<VcsCommitMetadata>,
+  )
+
   private companion object {
     private val logger = logger<InternalVcsService>()
   }
 
   private val refreshListeners = ConcurrentHashSet<VcsService.VcsListener>()
   private val vcsLogRefresher = MyVcsLogRefresher()
-  private val subscribedVcsLogProviders = newSetFromMap<VcsLogProvider>(IdentityHashMap(16))
+  private val subscribedVcsLogProviders = Collections.newSetFromMap<VcsLogProvider>(IdentityHashMap())
 
-  @Volatile private var cachedCurrentUser: Set<VcsUser> = emptySet()
-  @Volatile private var cachedCommits: List<VcsCommitMetadata> = emptyList()
+  @Volatile
+  private var vcsSnapshot = VcsSnapshot(
+    currentUsers = emptySet(),
+    commits = emptyList(),
+  )
 
   override fun refresh() {
     val vcsLogProviders = getVcsLogProviders()
@@ -55,28 +62,30 @@ internal class InternalVcsService(private val project: Project) : VcsService {
     }
 
     if (vcsLogProviders.isNotEmpty()) {
-      refreshCachedValues()
+      refreshVcsSnapshot()
       refreshListeners.forEach(VcsService.VcsListener::onRefresh)
     }
   }
 
   override fun getCurrentUsers(): Collection<VcsUser> =
-    cachedCurrentUser
+    vcsSnapshot.currentUsers
 
   override fun getOrderedTopCommits(): Collection<VcsCommitMetadata> =
-    cachedCommits
+    vcsSnapshot.commits
 
   override fun addListener(listener: VcsService.VcsListener) {
     refreshListeners.add(listener)
   }
 
-  private fun refreshCachedValues() {
-    cachedCurrentUser = fetchCurrentUsers()
-    cachedCommits = fetchCommits(sortBy = VcsCommitMetadata::getCommitTime)
+  private fun refreshVcsSnapshot() {
+    val vcsLogProviders = getVcsLogProviders()
+    val users = fetchCurrentUsers(vcsLogProviders)
+    val commits = fetchCommits(vcsLogProviders, sortBy = VcsCommitMetadata::getCommitTime)
+    vcsSnapshot = VcsSnapshot(currentUsers = users, commits = commits)
   }
 
-  private fun fetchCurrentUsers(): Set<VcsUser> =
-    getVcsLogProviders()
+  private fun fetchCurrentUsers(vcsLogProviders: Map<VirtualFile, VcsLogProvider>): Set<VcsUser> =
+    vcsLogProviders
       .mapNotNull { (root, vcsLogProvider) ->
         safeLogAccess("getCurrentUser") {
           vcsLogProvider.getCurrentUser(root)
@@ -84,8 +93,11 @@ internal class InternalVcsService(private val project: Project) : VcsService {
       }.toSet()
 
   @Suppress("UnstableApiUsage")
-  private fun <T : Comparable<T>> fetchCommits(sortBy: (VcsCommitMetadata) -> T): List<VcsCommitMetadata> =
-    getVcsLogProviders()
+  private fun <T : Comparable<T>> fetchCommits(
+    vcsLogProviders: Map<VirtualFile, VcsLogProvider>,
+    sortBy: (VcsCommitMetadata) -> T,
+  ): List<VcsCommitMetadata> =
+    vcsLogProviders
       .map { (root, vcsLogProvider) -> fetchCommitsFromLogProvider(root, vcsLogProvider) }
       .toList()
       .let { VcsLogMultiRepoJoiner<Hash, VcsCommitMetadata>().join(it) }
@@ -190,7 +202,7 @@ internal class InternalVcsService(private val project: Project) : VcsService {
 
   private inner class MyVcsLogRefresher : VcsLogRefresher {
     override fun refresh(root: VirtualFile) {
-      refreshCachedValues()
+      refreshVcsSnapshot()
       refreshListeners.forEach(VcsService.VcsListener::onRefresh)
     }
   }
