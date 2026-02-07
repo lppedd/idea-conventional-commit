@@ -1,11 +1,9 @@
 package com.github.lppedd.cc.vcs
 
 import com.github.lppedd.cc.CCRegistry
-import com.github.lppedd.cc.filterNotBlank
 import com.github.lppedd.cc.parser.CCParser
 import com.github.lppedd.cc.parser.FooterTokens
 import com.github.lppedd.cc.parser.ValidToken
-import com.github.lppedd.cc.trim
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vcs.VcsConfiguration
 import com.intellij.vcs.log.VcsCommitMetadata
@@ -113,14 +111,14 @@ internal class InternalRecentCommitsService(private val project: Project) : Rece
       .drop(1)
       .asSequence()
       .map { it.replace(regexBeginEndWs, "") }
-      .filterNotBlank()
+      .filter(String::isNotBlank)
       .map(CCParser::parseFooter)
       .filter { (t) -> t is ValidToken }
       .map(FooterTokens::footer)
       .filterIsInstance<ValidToken>()
       .map(ValidToken::value)
       .take(max(MAX_ELEMENTS - footerValues.size, 0))
-      .trim()
+      .map(String::trim)
       .toList()
 
     footerValues.addAll(values)

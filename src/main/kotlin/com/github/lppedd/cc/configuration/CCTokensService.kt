@@ -112,7 +112,7 @@ internal class CCTokensService(private val project: Project) {
     val reader = file.getReliableInputStream().bufferedReader(file.charset)
     val coAuthors = reader.useLines {
       it.map(String::trim)
-        .filterNotEmpty()
+        .filter(String::isNotEmpty)
         .toSet()
     }
 
