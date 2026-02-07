@@ -1,21 +1,22 @@
 package com.github.lppedd.cc.vcs
 
-import com.github.lppedd.cc.*
+import com.github.lppedd.cc.CC
+import com.github.lppedd.cc.CCRegistry
 import com.github.lppedd.cc.api.*
-import com.github.lppedd.cc.parser.CCParser
-import com.github.lppedd.cc.parser.CommitTokens
-import com.github.lppedd.cc.parser.FooterTokens
-import com.github.lppedd.cc.parser.ValidToken
+import com.github.lppedd.cc.parser.CommitFooter
+import com.github.lppedd.cc.parser.CommitMessage
+import com.github.lppedd.cc.parser.ParseResult
+import com.github.lppedd.cc.parser.parseConventionalCommit
 import com.intellij.openapi.project.Project
+import com.intellij.vcs.log.VcsCommitMetadata
 import javax.swing.Icon
-import kotlin.text.RegexOption.MULTILINE
 
 /**
  * Extracts commit tokens from the project's active VCS history.
  *
  * @author Edoardo Luppi
  */
-internal class VcsCommitTokenProvider(private val project: Project) :
+internal class VcsCommitTokenProvider(project: Project) :
     CommitTypeProvider,
     CommitScopeProvider,
     CommitSubjectProvider,
@@ -25,8 +26,6 @@ internal class VcsCommitTokenProvider(private val project: Project) :
     const val ID = "e9ce9acf-f4a6-4b36-b43c-531169556c29"
     const val MAX_ELEMENTS = 15
 
-    private val regexBeginEndWs = Regex("""^\s+|\s+$""")
-    private val regexBlankLines = Regex("""^\s*$""", MULTILINE)
     private val specialFooterTypes = setOf(
       "author",
       "co-authored-by",
@@ -37,53 +36,46 @@ internal class VcsCommitTokenProvider(private val project: Project) :
     )
   }
 
+  private val vcsService = VcsService.getInstance(project)
+
+  @Volatile
+  private var commitMessages: List<CommitMessage>? = null
+  private val commitMessagesLock = Any()
+
+  init {
+    vcsService.addListener {
+      commitMessages = null
+    }
+  }
+
   override fun getId(): String =
     ID
 
   override fun getPresentation(): ProviderPresentation =
     VcsProviderPresentation
 
-  @Suppress("Destructure")
   override fun getCommitTypes(prefix: String): Collection<CommitType> =
-    getOrderedVcsCommitMessages()
-      .mapNotNull { it.lines().firstOrNull(String::isNotBlank) }
+    getCommitMessages()
+      .map(CommitMessage::type)
+      .map(String::trim)
       .distinctBy(String::lowercase)
-      .map(CCParser::parseHeader)
-      .filter { it.type is ValidToken && it.separator.isPresent }
-      .map { it.type as ValidToken }
-      .map(ValidToken::value)
-      .trim()
-      .filterNotEmpty()
-      .distinct()
       .take(MAX_ELEMENTS)
       .map(::VcsCommitToken)
       .toList()
 
   override fun getCommitScopes(type: String): Collection<CommitScope> =
-    getOrderedVcsCommitMessages()
-      .mapNotNull { it.lines().firstOrNull(String::isNotBlank) }
+    getCommitMessages()
+      .mapNotNull(CommitMessage::scope)
+      .map(String::trim)
       .distinctBy(String::lowercase)
-      .map(CCParser::parseHeader)
-      .map(CommitTokens::scope)
-      .filterIsInstance<ValidToken>()
-      .map(ValidToken::value)
-      .trim()
-      .filterNotEmpty()
-      .distinct()
       .take(MAX_ELEMENTS)
       .map(::VcsCommitToken)
       .toList()
 
   override fun getCommitSubjects(type: String, scope: String): Collection<CommitSubject> =
-    getOrderedVcsCommitMessages()
-      .mapNotNull { it.lines().firstOrNull(String::isNotBlank) }
-      .distinctBy(String::lowercase)
-      .map(CCParser::parseHeader)
-      .map(CommitTokens::subject)
-      .filterIsInstance<ValidToken>()
-      .map(ValidToken::value)
-      .trim()
-      .filterNotEmpty()
+    getCommitMessages()
+      .map(CommitMessage::subject)
+      .map(String::trim)
       .distinctBy(String::lowercase)
       .take(MAX_ELEMENTS)
       .map(::VcsCommitToken)
@@ -97,38 +89,45 @@ internal class VcsCommitTokenProvider(private val project: Project) :
   ): Collection<CommitFooterValue> {
     val matchFooterType = specialFooterTypes.contains(footerType.lowercase())
     val maxElements = if (matchFooterType) 5 else MAX_ELEMENTS
-    return getOrderedVcsCommitMessages()
-      .flatMap { getFooterValues(it, if (matchFooterType) footerType else null) }
+    return getCommitMessages()
+      .flatMap(CommitMessage::footers)
+      .filter { it.type.equals(footerType, ignoreCase = true) }
+      .mapNotNull(CommitFooter::value)
       .distinctBy(String::lowercase)
       .take(maxElements)
       .map(::VcsCommitToken)
       .toList()
   }
 
-  @Suppress("Destructure")
-  private fun getFooterValues(message: String, footerType: String?): Sequence<String> =
-    message.replace(regexBeginEndWs, "")
-      .split(regexBlankLines)
-      .drop(1)
-      .asSequence()
-      .map { it.replace(regexBeginEndWs, "") }
-      .filterNotBlank()
-      .map(CCParser::parseFooter)
-      .filter { it.type is ValidToken && (footerType == null || it.type.value.equals(footerType, ignoreCase = true)) }
-      .map(FooterTokens::footer)
-      .filterIsInstance<ValidToken>()
-      .map(ValidToken::value)
-      .trim()
-      .filterNotEmpty()
-
-  private fun getOrderedVcsCommitMessages(): Sequence<String> {
+  private fun getCommitMessages(): Sequence<CommitMessage> {
     if (!CCRegistry.isVcsSupportEnabled()) {
       return emptySequence()
     }
 
-    return VcsService.getInstance(project).getOrderedTopCommits()
-      .asSequence()
-      .map { it.fullMessage }
+    var messages = commitMessages
+
+    if (messages != null) {
+      return messages.asSequence()
+    }
+
+    return synchronized(commitMessagesLock) {
+      messages = commitMessages
+
+      if (messages != null) {
+        return@synchronized messages.asSequence()
+      }
+
+      val commits = vcsService.getOrderedTopCommits()
+      messages = commits.asSequence()
+        .map(VcsCommitMetadata::getFullMessage)
+        .map(::parseConventionalCommit)
+        .filterIsInstance<ParseResult.Success>()
+        .map(ParseResult.Success::message)
+        .toList()
+
+      commitMessages = messages
+      return@synchronized messages.asSequence()
+    }
   }
 
   private object VcsProviderPresentation : ProviderPresentation {
