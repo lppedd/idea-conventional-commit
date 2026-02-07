@@ -75,9 +75,8 @@ intellijPlatform {
 }
 
 grammarKit {
-  // See https://github.com/JetBrains/intellij-deps-jflex/
-  jflexRelease = "1.9.2"
-  grammarKitRelease = "2022.3.2"
+  jflexRelease = "1.10.15"
+  grammarKitRelease = "2023.3"
 }
 
 sourceSets {
