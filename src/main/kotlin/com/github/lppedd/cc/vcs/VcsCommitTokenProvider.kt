@@ -60,6 +60,7 @@ internal class VcsCommitTokenProvider(project: Project) :
     getCommitMessages()
       .map(CommitMessage::type)
       .map(String::trim)
+      .filter(String::isNotEmpty)
       .distinctBy(String::lowercase)
       .take(MAX_ELEMENTS)
       .map(::VcsCommitToken)
@@ -69,6 +70,7 @@ internal class VcsCommitTokenProvider(project: Project) :
     getCommitMessages()
       .mapNotNull(CommitMessage::scope)
       .map(String::trim)
+      .filter(String::isNotEmpty)
       .distinctBy(String::lowercase)
       .take(MAX_ELEMENTS)
       .map(::VcsCommitToken)
@@ -78,6 +80,7 @@ internal class VcsCommitTokenProvider(project: Project) :
     getCommitMessages()
       .map(CommitMessage::subject)
       .map(String::trim)
+      .filter(String::isNotEmpty)
       .distinctBy(String::lowercase)
       .take(MAX_ELEMENTS)
       .map(::VcsCommitToken)
@@ -93,8 +96,10 @@ internal class VcsCommitTokenProvider(project: Project) :
     val maxElements = if (matchFooterType) 5 else MAX_ELEMENTS
     return getCommitMessages()
       .flatMap(CommitMessage::footers)
-      .filter { it.type.equals(footerType, ignoreCase = true) }
-      .mapNotNull(CommitFooter::value)
+      .filter { it.type.trim().equals(footerType, ignoreCase = true) }
+      .map(CommitFooter::value)
+      .map(String::trim)
+      .filter(String::isNotEmpty)
       .distinctBy(String::lowercase)
       .take(maxElements)
       .map(::VcsCommitToken)

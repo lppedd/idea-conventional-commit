@@ -90,19 +90,22 @@ internal class InternalRecentCommitsService(private val project: Project) : Rece
       when (val result = parseConventionalCommit(message)) {
         is ParseResult.Success -> {
           val parsed = result.message
-          types.addUpTo(parsed.type)
 
-          if (!parsed.scope.isNullOrEmpty()) {
-            scopes.addUpTo(parsed.scope)
+          if (parsed.type.isNotBlank()) {
+            types.addUpTo(parsed.type.trim())
           }
 
-          if (parsed.subject.isNotEmpty()) {
-            subjects.addUpTo(parsed.subject)
+          if (parsed.scope.isNullOrBlank().not()) {
+            scopes.addUpTo(parsed.scope.trim())
+          }
+
+          if (parsed.subject.isNotBlank()) {
+            subjects.addUpTo(parsed.subject.trim())
           }
 
           for ((_, value) in parsed.footers) {
-            if (value.isNotEmpty()) {
-              footerValues.addUpTo(value)
+            if (value.isNotBlank()) {
+              footerValues.addUpTo(value.trim())
             }
           }
         }

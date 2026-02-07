@@ -19,21 +19,35 @@ package com.github.lppedd.cc.parser;
 
   private final StringBuilder sb = new StringBuilder();
 
-  public void appendText(final CharSequence value) {
+  private void appendText(final CharSequence value) {
     sb.append(value);
   }
 
-  public String getTextAndReset() {
+  private String getTextAndReset() {
     final String value = sb.toString();
     sb.setLength(0);
     return value;
   }
 
-  public CCToken token(final CCToken.Type type) {
+  private int getWsPushback(final CharSequence value) {
+    final int length = value.length();
+
+    for (int i = length - 1, count = 0; i >= 0; i--, count++) {
+      final char c = value.charAt(i);
+
+      if (!Character.isWhitespace(c)) {
+        return count;
+      }
+    }
+
+    return length;
+  }
+
+  private CCToken token(final CCToken.Type type) {
     return token(type, yytext());
   }
 
-  public CCToken token(final CCToken.Type type, final CharSequence value) {
+  private CCToken token(final CCToken.Type type, final CharSequence value) {
     final int start = getTokenStart();
     final int end = getTokenEnd();
     return new CCToken(type, value.toString(), new CCTextRange(start, end));
@@ -42,7 +56,7 @@ package com.github.lppedd.cc.parser;
 %}
 
 NL          = \r\n | \r | \n
-WS          = [ \t]
+WS          = [^\S\r\n]
 
 // We allow footer types with spaces inside
 FooterType  = [^:\r\n]+
@@ -114,7 +128,7 @@ FooterType  = [^:\r\n]+
 
 <BODY_OR_FOOTERS> {
       // Closes: #16
-      ^{FooterType}{WS}*: {
+      ^{FooterType}: {
         // The ':' char should not be part of the footer type
         yypushback(1);
         yybegin(FOOTERS);
@@ -122,7 +136,9 @@ FooterType  = [^:\r\n]+
       }
 
       // Closes #16
-      ^{FooterType}{WS}+ / #.* {
+      ^{FooterType}{WS} / #.* {
+        // Push back any terminating whitespace, which should be part of the footer value instead
+        yypushback(getWsPushback(yytext()));
         yybegin(FOOTER_VALUE);
         return token(CCToken.Type.FOOTER_TYPE);
       }
@@ -139,7 +155,7 @@ FooterType  = [^:\r\n]+
 
 <BODY> {
       // Body until a footer starts (footer is NOT consumed)
-      [^] / {NL}({FooterType}{WS}*: | {FooterType}{WS}+#) {
+      [^] / {NL}({FooterType}: | {FooterType}{WS}#) {
         yybegin(FOOTERS);
         return token(CCToken.Type.BODY, getTextAndReset());
       }
@@ -157,13 +173,16 @@ FooterType  = [^:\r\n]+
 
 <FOOTERS> {
       // Closes: #16
-      ^{FooterType}{WS}*: {
+      ^{FooterType}: {
+        // The ':' char should not be part of the footer type
         yypushback(1);
         return token(CCToken.Type.FOOTER_TYPE);
       }
 
       // Closes #16
-      ^{FooterType}{WS}+ / #.* {
+      ^{FooterType}{WS} / #.* {
+        // Push back any terminating whitespace, which should be part of the footer value instead
+        yypushback(getWsPushback(yytext()));
         yybegin(FOOTER_VALUE);
         return token(CCToken.Type.FOOTER_TYPE);
       }

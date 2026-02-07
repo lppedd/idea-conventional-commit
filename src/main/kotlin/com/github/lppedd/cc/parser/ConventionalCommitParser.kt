@@ -43,10 +43,11 @@ internal class CCToken(
   }
 }
 
+@JvmOverloads
 @JvmName("parse")
 @Suppress("FoldInitializerAndIfToElvis")
-internal fun parseConventionalCommit(message: String): ParseResult {
-  val reader = createReader(message.trim())
+internal fun parseConventionalCommit(message: String, lenient: Boolean = false): ParseResult {
+  val reader = createReader(message)
   val type = reader.consume(CCToken.Type.TYPE)
 
   if (type == null) {
@@ -56,30 +57,46 @@ internal fun parseConventionalCommit(message: String): ParseResult {
   var scope: String? = null
 
   if (reader.consumeIf(CCToken.Type.SCOPE_OPEN_PAREN)) {
-    scope = reader.consume(CCToken.Type.SCOPE) ?: ""
+    scope = reader.consume(CCToken.Type.SCOPE)
+    val hasCloseParen = reader.consumeIf(CCToken.Type.SCOPE_CLOSE_PAREN)
 
-    // Keeping this for behavior reference, as we do allow a missing scope.
-    // For example, this is valid: 'build(): updated dev dependencies'
-    //
-    // if (scope == null) {
-    //   return ParseResult.Error("The commit scope is missing or invalid")
-    // }
+    if (scope.isNullOrBlank()) {
+      if (!lenient && !hasCloseParen) {
+        return ParseResult.Error("The commit scope is missing or invalid")
+      }
 
-    if (!reader.consumeIf(CCToken.Type.SCOPE_CLOSE_PAREN)) {
+      // These messages are valid:
+      //  'build(  ): updated dev dependencies'
+      //  'build(): updated dev dependencies'
+      scope = scope ?: ""
+    }
+
+    // In lenient mode this message without closing parenthesis is valid:
+    //  'build(np  '
+    if (!lenient && !hasCloseParen) {
       return ParseResult.Error("The commit scope is missing the closing parenthesis")
     }
   }
 
   val isBreakingChange = reader.consume(CCToken.Type.BREAKING_CHANGE) != null
 
-  if (!reader.consumeIf(CCToken.Type.SEPARATOR)) {
-    return ParseResult.Error("The separator ':' is missing after the type/scope")
+  // In lenient mode this message without a subject separator is valid:
+  //  'build(npm)'
+  if (!reader.consumeIf(CCToken.Type.SEPARATOR) && !lenient) {
+    return ParseResult.Error("The ':' separator is missing after the type/scope")
   }
 
-  val subject = reader.consume(CCToken.Type.SUBJECT)
+  var subject = reader.consume(CCToken.Type.SUBJECT)
 
-  if (subject == null) {
-    return ParseResult.Error("The commit subject is missing or invalid")
+  if (subject.isNullOrBlank()) {
+    if (!lenient) {
+      return ParseResult.Error("The commit subject is missing or invalid")
+    }
+
+    // In lenient mode these messages are valid:
+    //  'build:'
+    //  'build:   '
+    subject = subject ?: ""
   }
 
   val body = reader.consume(CCToken.Type.BODY)
@@ -88,27 +105,21 @@ internal fun parseConventionalCommit(message: String): ParseResult {
   while (reader.current?.type == CCToken.Type.FOOTER_TYPE) {
     val footerType = reader.takeAndAdvance()
 
-    // Consume/skip the separator, if any
+    // Consume/skip the separator, if present
     reader.consume(CCToken.Type.SEPARATOR)
 
+    // Allow a missing footer value, even in non-lenient mode
     val footerValue = reader.consume(CCToken.Type.FOOTER_VALUE) ?: ""
-
-    // Keeping this for behavior reference, as we do allow a missing footer value.
-    //
-    // if (footerValue == null) {
-    //   return ParseResult.Error("The footer type '$footerType' is missing a value")
-    // }
-
-    footers += CommitFooter(footerType.trim(), footerValue.trim())
+    footers += CommitFooter(footerType, footerValue)
   }
 
   return ParseResult.Success(
     CommitMessage(
-      type = type.trim(),
-      scope = scope?.trim(),
+      type = type,
+      scope = scope,
       isBreakingChange = isBreakingChange,
-      subject = subject.trim(),
-      body = body?.trim(),
+      subject = subject,
+      body = body,
       footers = footers,
     )
   )
@@ -117,13 +128,11 @@ internal fun parseConventionalCommit(message: String): ParseResult {
 private fun createReader(message: String): CCTokenReader {
   val lexer = StrictConventionalCommitFlexLexer(null)
   lexer.reset(message, 0, message.length, StrictConventionalCommitFlexLexer.YYINITIAL)
-
-  val initialToken = lexer.advance()
-  return CCTokenReader(lexer, initialToken)
+  return CCTokenReader(lexer)
 }
 
-private class CCTokenReader(private val lexer: StrictConventionalCommitFlexLexer, initialToken: CCToken?) {
-  var current: CCToken? = initialToken
+private class CCTokenReader(private val lexer: StrictConventionalCommitFlexLexer) {
+  var current: CCToken? = lexer.advance()
     private set
 
   fun consume(expected: CCToken.Type): String? =
