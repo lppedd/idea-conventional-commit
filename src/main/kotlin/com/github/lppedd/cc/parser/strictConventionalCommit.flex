@@ -155,7 +155,7 @@ FooterType  = [^\s:][^:\r\n]*
 
 <BODY> {
       // Body until a footer starts (footer is NOT consumed)
-      [^] / {NL}({FooterType}: | {FooterType}{WS}#) {
+      [^] / {NL}+({FooterType}: | {FooterType}{WS}#) {
         appendText(yytext());
         yybegin(FOOTERS);
         return token(CCToken.Type.BODY, getTextAndReset());
