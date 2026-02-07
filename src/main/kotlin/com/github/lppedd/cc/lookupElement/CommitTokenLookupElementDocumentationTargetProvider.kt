@@ -73,7 +73,7 @@ internal class CommitTokenLookupElementDocumentationTargetProvider : LookupEleme
       }
 
       val grayedColorHex = ColorUtil.toHex(UIUtil.getContextHelpForeground())
-      val sb = StringBuilder(totalLength + 200)
+      val sb = StringBuilder(totalLength + 300)
 
       val px2 = "${2.scaled}px"
       val px4 = "${4.scaled}px"
@@ -110,12 +110,12 @@ internal class CommitTokenLookupElementDocumentationTargetProvider : LookupEleme
 
         sb.append("<table class='sections' style='margin-top: $px4;'>")
           .append("<tr>")
-          .append("<td class='section'>")
+          .append("<td class='section' valign='top' style='vertical-align: top;'>")
           .append("<span style='color: #$grayedColorHex;'>")
           .append(CCBundle["cc.completion.documentation.section.value"])
           .append("</span>")
           .append("</td>")
-          .append("<td>")
+          .append("<td valign='top' style='vertical-align: top;'>")
           .append(value.replace("\n", "<br/>"))
           .append("</td>")
           .append("</tr>")
