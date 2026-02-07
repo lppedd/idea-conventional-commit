@@ -28,7 +28,7 @@ internal class InternalVcsService(private val project: Project) : VcsService {
     private val logger = logger<InternalVcsService>()
   }
 
-  private val refreshListeners = ConcurrentHashSet<VcsListener>()
+  private val refreshListeners = ConcurrentHashSet<VcsService.VcsListener>()
   private val vcsLogRefresher = MyVcsLogRefresher()
   private val subscribedVcsLogProviders = newSetFromMap<VcsLogProvider>(IdentityHashMap(16))
 
@@ -56,7 +56,7 @@ internal class InternalVcsService(private val project: Project) : VcsService {
 
     if (vcsLogProviders.isNotEmpty()) {
       refreshCachedValues()
-      refreshListeners.forEach(VcsListener::refreshed)
+      refreshListeners.forEach(VcsService.VcsListener::onRefresh)
     }
   }
 
@@ -66,7 +66,7 @@ internal class InternalVcsService(private val project: Project) : VcsService {
   override fun getOrderedTopCommits(): Collection<VcsCommitMetadata> =
     cachedCommits
 
-  override fun addListener(listener: VcsListener) {
+  override fun addListener(listener: VcsService.VcsListener) {
     refreshListeners.add(listener)
   }
 
@@ -191,7 +191,7 @@ internal class InternalVcsService(private val project: Project) : VcsService {
   private inner class MyVcsLogRefresher : VcsLogRefresher {
     override fun refresh(root: VirtualFile) {
       refreshCachedValues()
-      refreshListeners.forEach(VcsListener::refreshed)
+      refreshListeners.forEach(VcsService.VcsListener::onRefresh)
     }
   }
 }

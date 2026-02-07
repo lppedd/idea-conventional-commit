@@ -10,6 +10,10 @@ import com.intellij.vcs.log.VcsUser
  * @author Edoardo Luppi
  */
 internal interface VcsService {
+  interface VcsListener {
+    fun onRefresh()
+  }
+
   companion object {
     @JvmStatic
     fun getInstance(project: Project): VcsService = project.service()

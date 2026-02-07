@@ -32,7 +32,12 @@ internal class InternalRecentCommitsService(private val project: Project) : Rece
 
   init {
     val vcsService = VcsService.getInstance(project)
-    vcsService.addListener(::updateCachedTokens)
+    vcsService.addListener(object : VcsService.VcsListener {
+      override fun onRefresh() {
+        updateCachedTokens()
+      }
+    })
+
     updateCachedTokens()
   }
 

@@ -43,9 +43,11 @@ internal class VcsCommitTokenProvider(project: Project) :
   private val commitMessagesLock = Any()
 
   init {
-    vcsService.addListener {
-      commitMessages = null
-    }
+    vcsService.addListener(object : VcsService.VcsListener {
+      override fun onRefresh() {
+        commitMessages = null
+      }
+    })
   }
 
   override fun getId(): String =
