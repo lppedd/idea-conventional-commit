@@ -59,7 +59,7 @@ NL          = \r\n | \r | \n
 WS          = [^\S\r\n]
 
 // We allow footer types with spaces inside
-FooterType  = [^:\r\n]+
+FooterType  = [^\s:][^:\r\n]*
 
 %state TYPE
 %state SCOPE
