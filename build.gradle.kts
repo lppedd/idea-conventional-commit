@@ -103,21 +103,17 @@ kotlin {
 }
 
 tasks {
-  val cleanGeneratedSources by registering(Delete::class) {
-    delete(layout.projectDirectory.dir("src/main/gen"))
-  }
-
   val baseDir = "src/main/kotlin/com/github/lppedd/cc"
   val generateLangLexer by registering(GenerateLexerTask::class) {
-    dependsOn(cleanGeneratedSources)
     sourceFile = layout.projectDirectory.file("$baseDir/language/lexer/conventionalCommit.flex")
-    targetOutputDir = layout.projectDirectory.dir("src/main/gen")
+    targetOutputDir = layout.projectDirectory.dir("src/main/gen/lang")
+    purgeOldFiles = true
   }
 
   val generateStrictLexer by registering(GenerateLexerTask::class) {
-    dependsOn(cleanGeneratedSources)
     sourceFile = layout.projectDirectory.file("$baseDir/parser/strictConventionalCommit.flex")
-    targetOutputDir = layout.projectDirectory.dir("src/main/gen")
+    targetOutputDir = layout.projectDirectory.dir("src/main/gen/strict")
+    purgeOldFiles = true
   }
 
   val buildApiSourceJar by registering(Jar::class) {
