@@ -6,7 +6,7 @@ import org.jetbrains.intellij.platform.gradle.utils.asPath
 import org.jetbrains.kotlin.gradle.dsl.JvmDefaultMode
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 
 fun stringProperty(key: String, default: String? = null): String =
   findProperty(key)?.toString() ?: default ?: error("Expected a valid property $key")
@@ -79,14 +79,6 @@ grammarKit {
   grammarKitRelease = "2023.3"
 }
 
-sourceSets {
-  main {
-    java {
-      srcDir("src/main/gen")
-    }
-  }
-}
-
 kotlin {
   @Suppress("UnstableApiUsage")
   jvmToolchain {
@@ -111,25 +103,19 @@ kotlin {
 }
 
 tasks {
-  val generateLangLexer = register<GenerateLexerTask>("generateLangConventionalCommitLexer") {
-    sourceFile = file("src/main/kotlin/com/github/lppedd/cc/language/lexer/conventionalCommit.flex")
-    targetOutputDir = file("src/main/gen/com/github/lppedd/cc/language/lexer")
-    purgeOldFiles = true
+  val baseDir = "src/main/kotlin/com/github/lppedd/cc"
+  val generateLangLexer by registering(GenerateLexerTask::class) {
+    sourceFile = layout.projectDirectory.file("$baseDir/language/lexer/conventionalCommit.flex")
+    targetOutputDir = layout.projectDirectory.dir("src/main/gen")
   }
 
-  val generateStrictLexer = register<GenerateLexerTask>("generateStrictConventionalCommitLexer") {
-    sourceFile = file("src/main/kotlin/com/github/lppedd/cc/parser/strictConventionalCommit.flex")
-    targetOutputDir = file("src/main/gen/com/github/lppedd/cc/parser")
-    purgeOldFiles = true
+  val generateStrictLexer by registering(GenerateLexerTask::class) {
+    sourceFile = layout.projectDirectory.file("$baseDir/parser/strictConventionalCommit.flex")
+    targetOutputDir = layout.projectDirectory.dir("src/main/gen")
   }
 
-  withType<KotlinCompile>().configureEach {
-    dependsOn(generateLangLexer, generateStrictLexer)
-  }
-
-  val buildApiSourceJar = register<Jar>("buildConventionalCommitApiSourceJar") {
-    dependsOn(generateLangLexer, generateStrictLexer)
-    from(kotlin.sourceSets.main.get().kotlin) {
+  val buildApiSourceJar by registering(Jar::class) {
+    from(kotlin.sourceSets.main.map(KotlinSourceSet::kotlin)) {
       include("com/github/lppedd/cc/api/*.kt")
     }
 
@@ -137,8 +123,15 @@ tasks {
     archiveClassifier = "src"
   }
 
+  sourceSets {
+    main {
+      java {
+        srcDirs(generateLangLexer, generateStrictLexer)
+      }
+    }
+  }
+
   buildPlugin {
-    dependsOn(buildApiSourceJar)
     from(buildApiSourceJar) {
       into("lib/src")
     }
