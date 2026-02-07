@@ -112,18 +112,24 @@ kotlin {
 }
 
 tasks {
-  val generateLexer = register<GenerateLexerTask>("generateConventionalCommitLexer") {
+  val generateLangLexer = register<GenerateLexerTask>("generateLangConventionalCommitLexer") {
     sourceFile = file("src/main/kotlin/com/github/lppedd/cc/language/lexer/conventionalCommit.flex")
     targetOutputDir = file("src/main/gen/com/github/lppedd/cc/language/lexer")
     purgeOldFiles = true
   }
 
+  val generateStrictLexer = register<GenerateLexerTask>("generateStrictConventionalCommitLexer") {
+    sourceFile = file("src/main/kotlin/com/github/lppedd/cc/parser/strictConventionalCommit.flex")
+    targetOutputDir = file("src/main/gen/com/github/lppedd/cc/parser")
+    purgeOldFiles = true
+  }
+
   withType<KotlinCompile>().configureEach {
-    dependsOn(generateLexer)
+    dependsOn(generateLangLexer, generateStrictLexer)
   }
 
   val buildApiSourceJar = register<Jar>("buildConventionalCommitApiSourceJar") {
-    dependsOn(generateLexer)
+    dependsOn(generateLangLexer, generateStrictLexer)
     from(kotlin.sourceSets.main.get().kotlin) {
       include("com/github/lppedd/cc/api/*.kt")
     }
