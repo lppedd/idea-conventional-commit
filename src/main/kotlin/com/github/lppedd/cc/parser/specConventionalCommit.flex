@@ -18,7 +18,7 @@ package com.github.lppedd.cc.parser;
 
 %{
 
-  private final StringBuilder sb = new StringBuilder();
+  private final StringBuilder sb = new StringBuilder(256);
 
   private void appendText(final CharSequence value) {
     sb.append(value);
