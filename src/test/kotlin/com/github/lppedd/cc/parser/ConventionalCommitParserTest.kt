@@ -253,7 +253,7 @@ class ConventionalCommitParserTest {
       """
       |build(npm): switch to yarn
       |
-      |Co-authored by: this may be a long
+      |Co-authored-by: this may be a long
       | multiline footer value that spans
       | multiple lines.
       """.trimMargin()
@@ -268,7 +268,7 @@ class ConventionalCommitParserTest {
     assertEquals(1, message.footers.size)
 
     val (type, value) = message.footers.first()
-    assertEquals("Co-authored by", type)
+    assertEquals("Co-authored-by", type)
     assertEquals(
       """
       | this may be a long

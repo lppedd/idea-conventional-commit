@@ -112,9 +112,21 @@ internal fun parseConventionalCommit(message: String, lenient: Boolean = false):
     // Consume/skip the separator (':' or ' '), if present
     reader.consume(CCToken.Type.SEPARATOR)
 
-    // Allow a missing footer value, even in non-lenient mode
-    val footerValue = reader.consume(CCToken.Type.FOOTER_VALUE) ?: ""
-    footers += CommitFooter(footerType, footerValue)
+    val footerValue = reader.consume(CCToken.Type.FOOTER_VALUE)
+
+    if (!lenient) {
+      // If the footer type does not have an associated value,
+      // we can disregard trailing whitespace when validating it
+      val fv = if (footerValue.isNullOrBlank()) footerType.trimEnd() else footerType
+
+      // The BREAKING CHANGE footer type is a special case
+      if (!fv.equals("BREAKING CHANGE", ignoreCase = true) && fv.any(Char::isWhitespace)) {
+        return ParseResult.Error("The commit footer type '$footerType' is invalid")
+      }
+    }
+
+    // Allow a missing footer value even in non-lenient mode
+    footers += CommitFooter(footerType, footerValue ?: "")
   }
 
   return ParseResult.Success(
