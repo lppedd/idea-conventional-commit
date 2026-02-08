@@ -105,7 +105,7 @@ internal fun parseConventionalCommit(message: String, lenient: Boolean = false):
   while (reader.current?.type == CCToken.Type.FOOTER_TYPE) {
     val footerType = reader.takeAndAdvance()
 
-    // Consume/skip the separator, if present
+    // Consume/skip the separator (':' or ' '), if present
     reader.consume(CCToken.Type.SEPARATOR)
 
     // Allow a missing footer value, even in non-lenient mode

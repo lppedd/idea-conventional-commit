@@ -29,16 +29,29 @@ package com.github.lppedd.cc.parser;
     return value;
   }
 
-  private int getWsPushback() {
-    final int length = yylength();
+  private int getFooterTypePushback() {
+    int i = yylength() - 1;
+    int pushback = 0;
 
-    for (int i = length - 1, count = 0; i >= 0; i--, count++) {
-      if (!Character.isWhitespace(yycharat(i))) {
-        return count;
+    // Push back trailing whitespace
+    for (; i >= 0 && Character.isWhitespace(yycharat(i)); i--, pushback++);
+
+    // Check whether we now have a trailing '#'
+    while (i >= 0 && yycharat(i) == '#') {
+      // If '#' is attached (e.g., 'Something#'), keep it as part of the type and stop
+      if (i - 1 >= 0 && !Character.isWhitespace(yycharat(i - 1))) {
+        break;
       }
+
+      // Since the '#' char is preceeded by a whitespace, push it back
+      i--;
+      pushback++;
+
+      // Push back any whitespace before the '#' we have just encountered
+      for (; i >= 0 && Character.isWhitespace(yycharat(i)); i--, pushback++);
     }
 
-    return length;
+    return pushback;
   }
 
   private CCToken token(final CCToken.Type type) {
@@ -66,6 +79,7 @@ FooterType  = [^\s:][^:\r\n]*
 %state BODY_OR_FOOTERS
 %state BODY
 %state FOOTERS
+%state FOOTER_HASH_SEPARATOR
 %state FOOTER_VALUE
 
 %%
@@ -136,9 +150,9 @@ FooterType  = [^\s:][^:\r\n]*
 
       // Closes #16
       ^{FooterType}{WS} / #.* {
-        // Push back any terminating whitespace, which should be part of the footer value instead
-        yypushback(getWsPushback());
-        yybegin(FOOTER_VALUE);
+        // Push back any trailing whitespace or '#'
+        yypushback(getFooterTypePushback());
+        yybegin(FOOTER_HASH_SEPARATOR);
         return token(CCToken.Type.FOOTER_TYPE);
       }
 
@@ -181,9 +195,9 @@ FooterType  = [^\s:][^:\r\n]*
 
       // Closes #16
       ^{FooterType}{WS} / #.* {
-        // Push back any terminating whitespace, which should be part of the footer value instead
-        yypushback(getWsPushback());
-        yybegin(FOOTER_VALUE);
+        // Push back any trailing whitespace or '#'
+        yypushback(getFooterTypePushback());
+        yybegin(FOOTER_HASH_SEPARATOR);
         return token(CCToken.Type.FOOTER_TYPE);
       }
 
@@ -196,6 +210,15 @@ FooterType  = [^\s:][^:\r\n]*
       }
 
       ":" {
+        yybegin(FOOTER_VALUE);
+        return token(CCToken.Type.SEPARATOR);
+      }
+}
+
+<FOOTER_HASH_SEPARATOR> {
+      // Lex exactly one whitespace as the footer separator token ' '.
+      // Additional whitespace will be lexed as part of the footer value.
+      {WS} {
         yybegin(FOOTER_VALUE);
         return token(CCToken.Type.SEPARATOR);
       }
