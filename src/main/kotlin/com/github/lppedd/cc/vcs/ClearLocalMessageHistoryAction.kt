@@ -1,11 +1,15 @@
 package com.github.lppedd.cc.vcs
 
 import com.github.lppedd.cc.CC
+import com.github.lppedd.cc.CCBundle
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.actionSystem.PlatformCoreDataKeys
 import com.intellij.openapi.project.DumbAwareAction
+import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.vcs.CommitMessageI
 import com.intellij.openapi.vcs.VcsDataKeys
+import java.awt.Component
 
 /**
  * @author Edoardo Luppi
@@ -32,10 +36,21 @@ internal class ClearLocalMessageHistoryAction : DumbAwareAction() {
 
   override fun actionPerformed(event: AnActionEvent) {
     val project = event.project ?: return
-    val recentCommitsService = RecentCommitsService.getInstance(project)
-    recentCommitsService.clearLocalMessageHistory()
+    val component = getActionComponent(event) ?: return
+    val popup = JBPopupFactory.getInstance().createConfirmation(
+      /* title = */ CCBundle["action.cc.vcs.clearLocalMessageHistory.text"],
+      /* onYes = */ { RecentCommitsService.getInstance(project).clearLocalMessageHistory() },
+      /* defaultOptionIndex = */ 1,
+    )
+
+    if (popup.canShow()) {
+      popup.showUnderneathOf(component)
+    }
   }
 
   private fun getCommitMessagePanel(event: AnActionEvent): CommitMessageI? =
     event.getData(VcsDataKeys.COMMIT_MESSAGE_CONTROL)
+
+  private fun getActionComponent(event: AnActionEvent): Component? =
+    event.inputEvent?.component ?: event.getData(PlatformCoreDataKeys.CONTEXT_COMPONENT)
 }
