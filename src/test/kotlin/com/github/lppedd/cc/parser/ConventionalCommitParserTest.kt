@@ -8,37 +8,37 @@ class ConventionalCommitParserTest {
   @Test
   fun `fail incomplete`() {
     var result = parseConventionalCommit("f!x")
-    assertIs<ParseResult.Error>(result)
+    assertError(result)
     assertEquals("The ':' separator is missing after the type/scope", result.message)
 
     result = parseConventionalCommit("!fix")
-    assertIs<ParseResult.Error>(result)
+    assertError(result)
     assertEquals("The commit type is missing or invalid", result.message)
 
     result = parseConventionalCommit("fix: ")
-    assertIs<ParseResult.Error>(result)
+    assertError(result)
     assertEquals("The commit subject is missing or invalid", result.message)
 
     result = parseConventionalCommit("build(np:  ")
-    assertIs<ParseResult.Error>(result)
+    assertError(result)
     assertEquals("The commit scope is missing the closing parenthesis", result.message)
 
     result = parseConventionalCommit("build(npm)")
-    assertIs<ParseResult.Error>(result)
+    assertError(result)
     assertEquals("The ':' separator is missing after the type/scope", result.message)
   }
 
   @Test
   fun `parse incomplete`() {
     var result = parseConventionalCommit("fix:  ", lenient = true)
-    assertIs<ParseResult.Success>(result)
+    assertSuccess(result)
 
     var message = result.message
     assertEquals("fix", message.type)
     assertEquals("  ", message.subject)
 
     result = parseConventionalCommit("build(np:  ", lenient = true)
-    assertIs<ParseResult.Success>(result)
+    assertSuccess(result)
 
     message = result.message
     assertEquals("build", message.type)
@@ -46,7 +46,7 @@ class ConventionalCommitParserTest {
     assertEquals("", message.subject)
 
     result = parseConventionalCommit("build(npm)", lenient = true)
-    assertIs<ParseResult.Success>(result)
+    assertSuccess(result)
 
     message = result.message
     assertEquals("build", message.type)
@@ -57,7 +57,7 @@ class ConventionalCommitParserTest {
   @Test
   fun `parse one liner`() {
     val result = parseConventionalCommit("fix: foo")
-    assertIs<ParseResult.Success>(result)
+    assertSuccess(result)
 
     val message = result.message
     assertEquals("fix", message.type)
@@ -68,7 +68,7 @@ class ConventionalCommitParserTest {
   @Test
   fun `parse unusual type`() {
     val result = parseConventionalCommit("bui!ld!: foo")
-    assertIs<ParseResult.Success>(result)
+    assertSuccess(result)
 
     val message = result.message
     assertEquals("bui!ld", message.type)
@@ -80,7 +80,7 @@ class ConventionalCommitParserTest {
   @Test
   fun `parse empty scope`() {
     var result = parseConventionalCommit("build(): bar")
-    assertIs<ParseResult.Success>(result)
+    assertSuccess(result)
 
     var message = result.message
     assertEquals("build", message.type)
@@ -88,7 +88,7 @@ class ConventionalCommitParserTest {
     assertEquals("bar", message.subject.trim())
 
     result = parseConventionalCommit("build(   ): bar")
-    assertIs<ParseResult.Success>(result)
+    assertSuccess(result)
 
     message = result.message
     assertEquals("build", message.type)
@@ -99,7 +99,7 @@ class ConventionalCommitParserTest {
   @Test
   fun `parse scope with breaking change`() {
     val result = parseConventionalCommit("build(foo)!: bar")
-    assertIs<ParseResult.Success>(result)
+    assertSuccess(result)
 
     val message = result.message
     assertEquals("build", message.type)
@@ -119,7 +119,7 @@ class ConventionalCommitParserTest {
       """.trimMargin()
     )
 
-    assertIs<ParseResult.Success>(result)
+    assertSuccess(result)
 
     val message = result.message
     assertEquals("refactor", message.type)
@@ -142,7 +142,7 @@ class ConventionalCommitParserTest {
       """.trimMargin()
     )
 
-    assertIs<ParseResult.Success>(result)
+    assertSuccess(result)
 
     val message = result.message
     assertEquals("refactor", message.type)
@@ -176,7 +176,7 @@ class ConventionalCommitParserTest {
       """.trimMargin()
     )
 
-    assertIs<ParseResult.Success>(result)
+    assertSuccess(result)
 
     val message = result.message
     assertEquals("refactor", message.type)
@@ -218,7 +218,7 @@ class ConventionalCommitParserTest {
       """.trimMargin()
     )
 
-    assertIs<ParseResult.Success>(result)
+    assertSuccess(result)
 
     val message = result.message
     assertEquals("build", message.type)
@@ -247,7 +247,7 @@ class ConventionalCommitParserTest {
       """.trimMargin()
     )
 
-    assertIs<ParseResult.Success>(result)
+    assertSuccess(result)
 
     val message = result.message
     assertEquals("build", message.type)
@@ -278,7 +278,7 @@ class ConventionalCommitParserTest {
       lenient = true,
     )
 
-    assertIs<ParseResult.Success>(result)
+    assertSuccess(result)
 
     val message = result.message
     assertEquals("build", message.type)
@@ -291,13 +291,27 @@ class ConventionalCommitParserTest {
     assertEquals("", value)
   }
 
-  private inline fun <reified T> assertIs(value: Any?): Boolean {
+  private fun assertSuccess(value: ParseResult): Boolean {
     contract {
-      returns() implies (value is T)
+      returns() implies (value is ParseResult.Success)
     }
 
-    if (value !is T) {
-      fail("Expected a value of type ${T::class.java.name}")
+    when (value) {
+      is ParseResult.Success -> {}
+      is ParseResult.Error -> fail("Expected a success result but got an error result: ${value.message}")
+    }
+
+    return true
+  }
+
+  private fun assertError(value: ParseResult): Boolean {
+    contract {
+      returns() implies (value is ParseResult.Error)
+    }
+
+    when (value) {
+      is ParseResult.Success -> fail("Expected an error result but got a success result")
+      is ParseResult.Error -> {}
     }
 
     return true
