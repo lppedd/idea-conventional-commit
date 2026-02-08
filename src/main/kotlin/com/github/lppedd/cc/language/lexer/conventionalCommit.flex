@@ -1,7 +1,5 @@
 package com.github.lppedd.cc.language.lexer;
 
-import org.jetbrains.annotations.NotNull;
-
 import com.intellij.psi.PlainTextTokenTypes;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
@@ -30,7 +28,6 @@ import com.intellij.psi.tree.IElementType;
     this.isEof = isEof;
   }
 
-  @NotNull
   private IElementType getFooterType() {
     final String text = yytext().toString().trim();
     return "BREAKING CHANGE".equals(text) || "BREAKING-CHANGE".equals(text)
@@ -40,8 +37,9 @@ import com.intellij.psi.tree.IElementType;
 
 %}
 
-NewLine     = \r\n | \r | \n
-Space       = [ \t]
+NL          = \r\n | \r | \n
+WS          = [ \t]
+
 FooterType  = [^:\s]+ | BREAKING\ CHANGE
 
 %state TYPE
@@ -63,16 +61,16 @@ FooterType  = [^:\s]+ | BREAKING\ CHANGE
 }
 
 <TYPE, SCOPE, SUMMARY_SEPARATOR, SUBJECT> {
-      {NewLine} {
+      {NL} {
         yybegin(BODY_OR_FOOTERS);
         return TokenType.WHITE_SPACE;
       }
 
-      \! / : {
+      "!" / ":" {
         return ConventionalCommitTokenType.BREAKING_CHANGE;
       }
 
-      : {
+      ":" {
         yybegin(SUBJECT);
         return ConventionalCommitTokenType.SEPARATOR;
       }
@@ -92,11 +90,11 @@ FooterType  = [^:\s]+ | BREAKING\ CHANGE
       // We lex it as BREAKING_CHANGE so that we do not fail lexing
       // and then let the parser or inspections reason about it.
       // Note that this rule must have lower priority than '\! / :'.
-      \! {
+      "!" {
         return ConventionalCommitTokenType.BREAKING_CHANGE;
       }
 
-      \( {
+      "(" {
         yybegin(SCOPE);
         return ConventionalCommitTokenType.SCOPE_OPEN_PAREN;
       }
@@ -107,13 +105,14 @@ FooterType  = [^:\s]+ | BREAKING\ CHANGE
         return ConventionalCommitTokenType.SCOPE;
       }
 
-      \) {
+      ")" {
         yybegin(SUMMARY_SEPARATOR);
         return ConventionalCommitTokenType.SCOPE_CLOSE_PAREN;
       }
 }
 
 <SUBJECT> {
+      // A subject is any text up to a newline character
       [^\r\n]+ {
         yybegin(TYPE);
         return ConventionalCommitTokenType.SUBJECT;
@@ -122,7 +121,7 @@ FooterType  = [^:\s]+ | BREAKING\ CHANGE
 
 <BODY_OR_FOOTERS> {
       // Closes: #16
-      ^{FooterType}{Space}*: {
+      ^{FooterType}{WS}*: {
         // The ':' char should not be part of the footer type
         yypushback(1);
         yybegin(FOOTERS);
@@ -130,17 +129,17 @@ FooterType  = [^:\s]+ | BREAKING\ CHANGE
       }
 
       // Closes #16
-      ^{FooterType}{Space}+ / #.* {
+      ^{FooterType}{WS}+ / #.* {
         yybegin(FOOTER_VALUE);
         return getFooterType();
       }
 
       // Skip all blank lines after the summary
-      ^{Space}*{NewLine} {
+      ^{WS}*{NL} {
         return TokenType.WHITE_SPACE;
       }
 
-      ^{Space}+ {
+      ^{WS}+ {
         yypushback(yylength());
         yybegin(BODY);
       }
@@ -152,16 +151,17 @@ FooterType  = [^:\s]+ | BREAKING\ CHANGE
 }
 
 <BODY> {
-      {NewLine}{Space}*{NewLine} ({FooterType}{Space}*: | {FooterType}{Space}+#) {
+      {NL}{WS}*{NL} ({FooterType}{WS}*: | {FooterType}{WS}+#) {
         yypushback(yylength());
         yybegin(FOOTERS);
         return ConventionalCommitTokenType.BODY;
       }
 
-      [^] | {Space}+ {
+      [^] | {WS}+ {
         // Skip
       }
 
+      // Match body until EOF
       <<EOF>> {
         if (isEof()) {
           return null;
@@ -174,18 +174,18 @@ FooterType  = [^:\s]+ | BREAKING\ CHANGE
 
 <FOOTERS> {
       // Closes: #16
-      ^{FooterType}{Space}*: {
+      ^{FooterType}{WS}*: {
         yypushback(1);
         return getFooterType();
       }
 
       // Closes #16
-      ^{FooterType}{Space}+ / #.* {
+      ^{FooterType}{WS}+ / #.* {
         yybegin(FOOTER_VALUE);
         return getFooterType();
       }
 
-      : {
+      ":" {
         yybegin(FOOTER_VALUE);
         return ConventionalCommitTokenType.FOOTER_SEPARATOR;
       }
@@ -195,21 +195,21 @@ FooterType  = [^:\s]+ | BREAKING\ CHANGE
       // Closes #16           | .+
       //  multiline footer    | ({NewLine}{Space}+([^\s]+{Space}*)+)*
       //  value               | ({NewLine}{Space}+([^\s]+{Space}*)+)*
-      .+ ({NewLine}{Space}+([^\s]+{Space}*)+)* {
+      .+ ({NL}{WS}+([^\s]+{WS}*)+)* {
         return ConventionalCommitTokenType.FOOTER_VALUE;
       }
 
-      {NewLine} {
+      {NL} {
         yybegin(FOOTERS);
         return TokenType.WHITE_SPACE;
       }
 }
 
-{Space} {
+{WS} {
   return TokenType.WHITE_SPACE;
 }
 
-{NewLine} {
+{NL} {
   return TokenType.WHITE_SPACE;
 }
 
