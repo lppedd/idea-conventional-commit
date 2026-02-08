@@ -41,15 +41,7 @@ class ConventionalCommitParserTest {
     assertEquals("fix", message.type)
     assertEquals("  ", message.subject)
 
-    result = parseConventionalCommit("build(np:  ", lenient = true)
-    assertSuccess(result)
-
-    message = result.message
-    assertEquals("build", message.type)
-    assertEquals("np:  ", message.scope)
-    assertEquals("", message.subject)
-
-    result = parseConventionalCommit("build(npm)", lenient = true)
+    result = parseConventionalCommit("build(npm):", lenient = true)
     assertSuccess(result)
 
     message = result.message
@@ -92,6 +84,9 @@ class ConventionalCommitParserTest {
   @Test
   fun `parse empty scope`() {
     var result = parseConventionalCommit("build(): bar")
+    assertError(result)
+
+    result = parseConventionalCommit("build(): bar", lenient = true)
     assertSuccess(result)
 
     var message = result.message

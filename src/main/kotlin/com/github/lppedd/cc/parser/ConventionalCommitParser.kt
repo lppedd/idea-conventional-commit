@@ -62,31 +62,29 @@ internal fun parseConventionalCommit(message: String, lenient: Boolean = false):
 
   if (reader.consumeIf(CCToken.Type.SCOPE_OPEN_PAREN)) {
     scope = reader.consume(CCToken.Type.SCOPE)
-    val hasCloseParen = reader.consumeIf(CCToken.Type.SCOPE_CLOSE_PAREN)
 
-    if (scope.isNullOrBlank()) {
-      if (!lenient && !hasCloseParen) {
+    // This message is valid in non-lenient mode:
+    //  'build(  ): updated dev dependencies'
+    if (scope == null) {
+      if (!lenient) {
         return ParseResult.Error("The commit scope is missing or invalid")
       }
 
-      // These messages are valid:
-      //  'build(  ): updated dev dependencies'
+      // This message is valid in lenient mode:
       //  'build(): updated dev dependencies'
-      scope = scope ?: ""
+      scope = ""
     }
 
-    // In lenient mode this message without closing parenthesis is valid:
-    //  'build(np  '
-    if (!lenient && !hasCloseParen) {
+    if (!reader.consumeIf(CCToken.Type.SCOPE_CLOSE_PAREN)) {
       return ParseResult.Error("The commit scope is missing the closing parenthesis")
     }
   }
 
   val isBreakingChange = reader.consume(CCToken.Type.BREAKING_CHANGE) != null
 
-  // In lenient mode this message without a subject separator is valid:
-  //  'build(npm)'
-  if (!reader.consumeIf(CCToken.Type.SEPARATOR) && !lenient) {
+  // The ':' subject separator is required to recognize a Conventional Commits message,
+  // even in lenient mode
+  if (!reader.consumeIf(CCToken.Type.SEPARATOR)) {
     return ParseResult.Error("The ':' separator is missing after the type/scope")
   }
 
