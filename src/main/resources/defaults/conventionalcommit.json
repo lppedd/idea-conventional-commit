@@ -44,7 +44,10 @@
       "description": "The commit introduces backward-incompatible changes."
     },
     "Closes": {
-      "description": "The commit closes issues or pull requests."
+      "description": "The commit closes an issue."
+    },
+    "Fixes": {
+      "description": "The commit fixes an issue."
     },
     "Implements": {
       "description": "The commit implements new features."
