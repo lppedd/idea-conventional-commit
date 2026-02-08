@@ -54,6 +54,10 @@ internal fun parseConventionalCommit(message: String, lenient: Boolean = false):
     return ParseResult.Error("The commit type is missing or invalid")
   }
 
+  if (!lenient && type.any(Char::isWhitespace)) {
+    return ParseResult.Error("The commit type '$type' is invalid")
+  }
+
   var scope: String? = null
 
   if (reader.consumeIf(CCToken.Type.SCOPE_OPEN_PAREN)) {

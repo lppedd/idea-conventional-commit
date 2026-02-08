@@ -7,7 +7,11 @@ import kotlin.contracts.contract
 class ConventionalCommitParserTest {
   @Test
   fun `fail incomplete`() {
-    var result = parseConventionalCommit("f!x")
+    var result = parseConventionalCommit("fi x:")
+    assertError(result)
+    assertEquals("The commit type 'fi x' is invalid", result.message)
+
+    result = parseConventionalCommit("f!x")
     assertError(result)
     assertEquals("The ':' separator is missing after the type/scope", result.message)
 
@@ -56,13 +60,21 @@ class ConventionalCommitParserTest {
 
   @Test
   fun `parse one liner`() {
-    val result = parseConventionalCommit("fix: foo")
+    var result = parseConventionalCommit("fix: foo")
     assertSuccess(result)
 
-    val message = result.message
+    var message = result.message
     assertEquals("fix", message.type)
     assertNull(message.scope)
     assertEquals("foo", message.subject.trim())
+
+    result = parseConventionalCommit("bui  (npm):foo", lenient = true)
+    assertSuccess(result)
+
+    message = result.message
+    assertEquals("bui  ", message.type)
+    assertEquals("npm", message.scope)
+    assertEquals("foo", message.subject)
   }
 
   @Test

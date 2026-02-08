@@ -93,7 +93,7 @@ FooterType  = [^\s:][^:\r\n]*
 
 <TYPE> {
       // The commit type must be at the beginning of the line, and cannot start with a '!'
-      ^[^!(:\s][^(:\s]*\!? {
+      ^[^!(:\r\n][^(:\r\n]*\!? {
         if (yycharat(yylength() - 1) == '!') {
           yypushback(1);
         }
