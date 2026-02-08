@@ -5,6 +5,8 @@ package com.github.lppedd.cc.parser;
 // than the IDE language one, but it still expects cooperation from whatever
 // parser is going to consume tokens to actually respect (or not respect)
 // the specification.
+//
+// Grammar: https://github.com/conventional-commits/parser#the-grammar
 
 %%
 
