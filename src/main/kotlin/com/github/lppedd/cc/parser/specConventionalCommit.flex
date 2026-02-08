@@ -34,12 +34,12 @@ package com.github.lppedd.cc.parser;
     int pushback = 0;
 
     // Push back trailing whitespace
-    for (; i >= 0 && Character.isWhitespace(yycharat(i)); i--, pushback++);
+    for (; i >= 0 && isWhitespace(yycharat(i)); i--, pushback++);
 
     // Check whether we now have a trailing '#'
     while (i >= 0 && yycharat(i) == '#') {
       // If '#' is attached (e.g., 'Something#'), keep it as part of the type and stop
-      if (i - 1 >= 0 && !Character.isWhitespace(yycharat(i - 1))) {
+      if (i - 1 >= 0 && !isWhitespace(yycharat(i - 1))) {
         break;
       }
 
@@ -48,10 +48,14 @@ package com.github.lppedd.cc.parser;
       pushback++;
 
       // Push back any whitespace before the '#' we have just encountered
-      for (; i >= 0 && Character.isWhitespace(yycharat(i)); i--, pushback++);
+      for (; i >= 0 && isWhitespace(yycharat(i)); i--, pushback++);
     }
 
     return pushback;
+  }
+
+  private boolean isWhitespace(final char ch) {
+    return Character.isWhitespace(ch) || Character.isSpaceChar(ch);
   }
 
   private CCToken token(final CCToken.Type type) {
