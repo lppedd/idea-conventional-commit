@@ -79,12 +79,21 @@ FooterType  = [^:\s]+ | BREAKING\ CHANGE
 }
 
 <TYPE> {
-      ^[^(:\r\n]+\!? {
+      // The commit type must be at the beginning of the line, and cannot start with a '!'
+      ^[^!(:\r\n][^(:\r\n]*\!? {
         if (yycharat(yylength() - 1) == '!') {
           yypushback(1);
         }
 
         return ConventionalCommitTokenType.TYPE;
+      }
+
+      // This catches the case where we have a lone '!'.
+      // We lex it as BREAKING_CHANGE so that we do not fail lexing
+      // and then let the parser or inspections reason about it.
+      // Note that this rule must have lower priority than '\! / :'.
+      \! {
+        return ConventionalCommitTokenType.BREAKING_CHANGE;
       }
 
       \( {
