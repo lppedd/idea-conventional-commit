@@ -15,7 +15,6 @@ package com.github.lppedd.cc.parser;
 %function advance
 %public
 %unicode
-%ignorecase
 
 %{
 
@@ -80,7 +79,6 @@ FooterType  = [^\s:][^:\r\n]*
 
 %state TYPE
 %state SCOPE
-%state SUMMARY_SEPARATOR
 %state SUBJECT
 %state BODY_OR_FOOTERS
 %state BODY
