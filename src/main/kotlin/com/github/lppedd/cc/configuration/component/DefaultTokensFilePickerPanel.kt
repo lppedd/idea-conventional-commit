@@ -4,7 +4,9 @@ import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.configuration.CCTokensService
 import com.github.lppedd.cc.scaled
+import com.intellij.ide.plugins.PluginManagerCore
 import com.intellij.openapi.Disposable
+import com.intellij.openapi.extensions.PluginId
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.ComponentValidator
 import com.intellij.openapi.ui.TextFieldWithBrowseButton
@@ -115,10 +117,12 @@ internal class DefaultTokensFilePickerPanel(
       .withTooltip(CCBundle["cc.config.defaults.customFile.tooltip"])
       .createPanel()
 
-  private fun buildCustomFilePanel(): JPanel =
-    UI.PanelFactory.panel(customFile)
-      .withComment(CCBundle["cc.config.defaults.customFile.comment"])
+  private fun buildCustomFilePanel(): JPanel {
+    val plugin = PluginManagerCore.getPlugin(PluginId.getId(CC.PluginId)) ?: error("plugin not found")
+    return UI.PanelFactory.panel(customFile)
+      .withComment(CCBundle["cc.config.defaults.customFile.comment", plugin.version])
       .createPanel()
+  }
 
   private fun customFileValidator(): ValidationInfo? {
     isComponentValid = true // Reset the validity state
