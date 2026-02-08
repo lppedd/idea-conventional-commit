@@ -61,6 +61,7 @@ class ConventionalCommitParserTest {
 
     val message = result.message
     assertEquals("fix", message.type)
+    assertNull(message.scope)
     assertEquals("foo", message.subject.trim())
   }
 
@@ -71,6 +72,7 @@ class ConventionalCommitParserTest {
 
     val message = result.message
     assertEquals("bui!ld", message.type)
+    assertNull(message.scope)
     assertTrue(message.isBreakingChange)
     assertEquals("foo", message.subject.trim())
   }
@@ -121,6 +123,7 @@ class ConventionalCommitParserTest {
 
     val message = result.message
     assertEquals("refactor", message.type)
+    assertNull(message.scope)
     assertEquals("foo", message.subject.trim())
     assertEquals("bar is not foo 1\n  bar is not foo 2", message.body)
   }
@@ -143,6 +146,7 @@ class ConventionalCommitParserTest {
 
     val message = result.message
     assertEquals("refactor", message.type)
+    assertNull(message.scope)
     assertEquals("foo", message.subject.trim())
     assertEquals("bar is not foo 1\nbar is not foo 2", message.body)
     assertEquals(2, message.footers.size)
@@ -278,6 +282,7 @@ class ConventionalCommitParserTest {
 
     val message = result.message
     assertEquals("build", message.type)
+    assertNull(message.scope)
     assertEquals("switch to yarn", message.subject.trim())
     assertEquals(1, message.footers.size)
 
