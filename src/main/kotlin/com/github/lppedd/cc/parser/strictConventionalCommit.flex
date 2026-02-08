@@ -29,13 +29,11 @@ package com.github.lppedd.cc.parser;
     return value;
   }
 
-  private int getWsPushback(final CharSequence value) {
-    final int length = value.length();
+  private int getWsPushback() {
+    final int length = yylength();
 
     for (int i = length - 1, count = 0; i >= 0; i--, count++) {
-      final char c = value.charAt(i);
-
-      if (!Character.isWhitespace(c)) {
+      if (!Character.isWhitespace(yycharat(i))) {
         return count;
       }
     }
@@ -122,7 +120,8 @@ FooterType  = [^\s:][^:\r\n]*
       }
 
       {NL} {
-        yybegin(BODY_OR_FOOTERS); // Discard newline
+        // Discard newline
+        yybegin(BODY_OR_FOOTERS);
       }
 }
 
@@ -138,12 +137,12 @@ FooterType  = [^\s:][^:\r\n]*
       // Closes #16
       ^{FooterType}{WS} / #.* {
         // Push back any terminating whitespace, which should be part of the footer value instead
-        yypushback(getWsPushback(yytext()));
+        yypushback(getWsPushback());
         yybegin(FOOTER_VALUE);
         return token(CCToken.Type.FOOTER_TYPE);
       }
 
-      ^[\s]+ {
+      ^\s+ {
         // Discard whitespace after the subject
       }
 
@@ -183,7 +182,7 @@ FooterType  = [^\s:][^:\r\n]*
       // Closes #16
       ^{FooterType}{WS} / #.* {
         // Push back any terminating whitespace, which should be part of the footer value instead
-        yypushback(getWsPushback(yytext()));
+        yypushback(getWsPushback());
         yybegin(FOOTER_VALUE);
         return token(CCToken.Type.FOOTER_TYPE);
       }
