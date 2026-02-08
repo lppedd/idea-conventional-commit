@@ -56,7 +56,7 @@ package com.github.lppedd.cc.parser;
   }
 
   private boolean isWhitespace(final char ch) {
-    return Character.isWhitespace(ch) || Character.isSpaceChar(ch);
+    return Character.getType(ch) == Character.SPACE_SEPARATOR || ch == '\t';
   }
 
   private CCToken token(final CCToken.Type type) {
@@ -72,7 +72,7 @@ package com.github.lppedd.cc.parser;
 %}
 
 NL          = \r\n | \r | \n
-WS          = [^\S\r\n]
+WS          = [\p{Zs}\t]
 
 // We allow footer types with spaces inside
 FooterType  = [^\s:][^:\r\n]*
