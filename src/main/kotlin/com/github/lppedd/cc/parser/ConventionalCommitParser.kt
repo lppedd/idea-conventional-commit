@@ -126,12 +126,12 @@ internal fun parseConventionalCommit(message: String, lenient: Boolean = false):
 }
 
 private fun createReader(message: String): CCTokenReader {
-  val lexer = StrictConventionalCommitFlexLexer(null)
-  lexer.reset(message, 0, message.length, StrictConventionalCommitFlexLexer.YYINITIAL)
+  val lexer = SpecConventionalCommitFlexLexer(null)
+  lexer.reset(message, 0, message.length, SpecConventionalCommitFlexLexer.YYINITIAL)
   return CCTokenReader(lexer)
 }
 
-private class CCTokenReader(private val lexer: StrictConventionalCommitFlexLexer) {
+private class CCTokenReader(private val lexer: SpecConventionalCommitFlexLexer) {
   var current: CCToken? = lexer.advance()
     private set
 

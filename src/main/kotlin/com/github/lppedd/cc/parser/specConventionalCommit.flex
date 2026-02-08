@@ -1,14 +1,14 @@
 package com.github.lppedd.cc.parser;
 
-// Note that while the name includes "strict", the strictness is only related
-// to how tokens are looked for: a message is conventional commits compliant
-// only if it has at least a type and a subject.
-// However, valid characters for tokens are not as restrictive as what the
-// specification mandates.
+// Note that while the name includes "spec", the lexer does not exactly adhere
+// to what the Conventional Commits spec mandates. This lexer *is* stricter
+// than the IDE language one, but it still expects cooperation from whatever
+// parser is going to consume tokens to actually respect (or not respect)
+// the specification.
 
 %%
 
-%class StrictConventionalCommitFlexLexer
+%class SpecConventionalCommitFlexLexer
 %type CCToken
 %function advance
 %public

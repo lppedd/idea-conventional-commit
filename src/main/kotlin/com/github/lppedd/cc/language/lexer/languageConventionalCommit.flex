@@ -6,7 +6,7 @@ import com.intellij.psi.tree.IElementType;
 
 %%
 
-%class ConventionalCommitFlexLexer
+%class LanguageConventionalCommitFlexLexer
 %implements EofCapableFlexLexer
 %function advance
 %type IElementType

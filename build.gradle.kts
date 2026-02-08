@@ -105,14 +105,14 @@ kotlin {
 tasks {
   val baseDir = "src/main/kotlin/com/github/lppedd/cc"
   val generateLangLexer by registering(GenerateLexerTask::class) {
-    sourceFile = layout.projectDirectory.file("$baseDir/language/lexer/conventionalCommit.flex")
+    sourceFile = layout.projectDirectory.file("$baseDir/language/lexer/languageConventionalCommit.flex")
     targetOutputDir = layout.projectDirectory.dir("src/main/gen/lang")
     purgeOldFiles = true
   }
 
-  val generateStrictLexer by registering(GenerateLexerTask::class) {
-    sourceFile = layout.projectDirectory.file("$baseDir/parser/strictConventionalCommit.flex")
-    targetOutputDir = layout.projectDirectory.dir("src/main/gen/strict")
+  val generateSpecLexer by registering(GenerateLexerTask::class) {
+    sourceFile = layout.projectDirectory.file("$baseDir/parser/specConventionalCommit.flex")
+    targetOutputDir = layout.projectDirectory.dir("src/main/gen/spec")
     purgeOldFiles = true
   }
 
@@ -128,7 +128,7 @@ tasks {
   sourceSets {
     main {
       java {
-        srcDirs(generateLangLexer, generateStrictLexer)
+        srcDirs(generateLangLexer, generateSpecLexer)
       }
     }
   }
