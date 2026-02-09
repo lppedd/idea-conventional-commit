@@ -3,7 +3,7 @@ package com.github.lppedd.cc.configuration
 import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.CCBundle
 import com.github.lppedd.cc.invokeLaterOnEdt
-import com.intellij.openapi.application.ApplicationManager
+import com.github.lppedd.cc.runInBackgroundThread
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.options.SearchableConfigurable
 import com.intellij.openapi.project.Project
@@ -38,7 +38,7 @@ internal class CCMainConfigurable(private val project: Project) : SearchableConf
     gui.customTokensFilePath = configService.customFilePath
     gui.customCoAuthorsFilePath = configService.customCoAuthorsFilePath
 
-    ApplicationManager.getApplication().executeOnPooledThread {
+    runInBackgroundThread {
       val tokensService = CCTokensService.getInstance(project)
       val tokens = when (val result = tokensService.getTokens()) {
         is TokensResult.Success -> result.tokens
@@ -81,7 +81,7 @@ internal class CCMainConfigurable(private val project: Project) : SearchableConf
     configService.customCoAuthorsFilePath = gui.customCoAuthorsFilePath
     configService.customFilePath = gui.customTokensFilePath
 
-    ApplicationManager.getApplication().executeOnPooledThread {
+    runInBackgroundThread {
       val tokensService = CCTokensService.getInstance(project)
       val result = tokensService.getTokens()
 

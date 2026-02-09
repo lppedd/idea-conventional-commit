@@ -408,6 +408,11 @@ internal inline fun runInWriteActionIfNeeded(noinline block: () -> Unit) {
 }
 
 @InlineOnly
+internal inline fun runInBackgroundThread(noinline block: () -> Unit) {
+  ApplicationManager.getApplication().executeOnPooledThread(block)
+}
+
+@InlineOnly
 internal inline fun invokeLaterOnEdt(noinline block: () -> Unit) {
   ApplicationManager.getApplication().invokeLater(block)
 }
