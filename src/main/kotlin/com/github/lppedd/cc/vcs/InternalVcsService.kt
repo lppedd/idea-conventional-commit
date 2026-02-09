@@ -14,8 +14,8 @@ import com.intellij.vcs.log.graph.PermanentGraph
 import com.intellij.vcs.log.impl.VcsLogManager
 import com.intellij.vcs.log.impl.VcsProjectLog
 import com.intellij.vcs.log.visible.filters.VcsLogFilterObject
-import fleet.multiplatform.shims.ConcurrentHashSet
 import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.io.path.notExists
 
@@ -32,7 +32,7 @@ internal class InternalVcsService(private val project: Project) : VcsService {
     private val logger = logger<InternalVcsService>()
   }
 
-  private val refreshListeners = ConcurrentHashSet<VcsService.VcsListener>()
+  private val refreshListeners = ConcurrentHashMap.newKeySet<VcsService.VcsListener>()
   private val vcsLogRefresher = MyVcsLogRefresher()
   private val subscribedVcsLogProviders = Collections.newSetFromMap<VcsLogProvider>(IdentityHashMap())
 
