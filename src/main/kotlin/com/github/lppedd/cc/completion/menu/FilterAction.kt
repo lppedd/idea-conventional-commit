@@ -73,13 +73,6 @@ internal class FilterAction(
   override fun getActionUpdateThread(): ActionUpdateThread =
     ActionUpdateThread.EDT
 
-  override fun actionPerformed(event: AnActionEvent) {
-    if (enhancer.filterSelected(this)) {
-      filterItems(!isFiltered)
-      lookup.resort(false)
-    }
-  }
-
   override fun update(event: AnActionEvent) {
     val presentation = provider.getPresentation()
     val icon = if (isFiltered) {
@@ -89,6 +82,13 @@ internal class FilterAction(
     }
 
     event.presentation.updateIcons(icon)
+  }
+
+  override fun actionPerformed(event: AnActionEvent) {
+    if (enhancer.filterSelected(this)) {
+      filterItems(!isFiltered)
+      lookup.resort(false)
+    }
   }
 
   override fun equals(other: Any?): Boolean =

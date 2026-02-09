@@ -45,12 +45,6 @@ internal class SettingsActions(
     override fun getActionUpdateThread(): ActionUpdateThread =
       ActionUpdateThread.EDT
 
-    override fun actionPerformed(e: AnActionEvent) {
-      val configService = CCConfigService.getInstance(lookup.project)
-      configService.completionType = if (configService.completionType == TEMPLATE) POPUP else TEMPLATE
-      enhancer.settingChanged()
-    }
-
     override fun update(event: AnActionEvent) {
       val configService = CCConfigService.getInstance(lookup.project)
       event.presentation.also {
@@ -62,17 +56,17 @@ internal class SettingsActions(
         }
       }
     }
+
+    override fun actionPerformed(e: AnActionEvent) {
+      val configService = CCConfigService.getInstance(lookup.project)
+      configService.completionType = if (configService.completionType == TEMPLATE) POPUP else TEMPLATE
+      enhancer.settingChanged()
+    }
   }
 
   private inner class FilterModeChangeAction : AnAction() {
     override fun getActionUpdateThread(): ActionUpdateThread =
       ActionUpdateThread.EDT
-
-    override fun actionPerformed(e: AnActionEvent) {
-      val configService = CCConfigService.getInstance(lookup.project)
-      configService.providerFilterType = if (configService.providerFilterType == HIDE_SELECTED) KEEP_SELECTED else HIDE_SELECTED
-      enhancer.settingChanged()
-    }
 
     override fun update(event: AnActionEvent) {
       val hideSelected = CCBundle["cc.completion.menu.filter.hideSelected"]
@@ -86,6 +80,12 @@ internal class SettingsActions(
           "$keepSelected ${UIUtil.rightArrow()} $hideSelected"
         }
       }
+    }
+
+    override fun actionPerformed(e: AnActionEvent) {
+      val configService = CCConfigService.getInstance(lookup.project)
+      configService.providerFilterType = if (configService.providerFilterType == HIDE_SELECTED) KEEP_SELECTED else HIDE_SELECTED
+      enhancer.settingChanged()
     }
   }
 }
