@@ -2,6 +2,8 @@ package com.github.lppedd.cc.configuration
 
 import com.github.lppedd.cc.CC
 import com.github.lppedd.cc.CCBundle
+import com.github.lppedd.cc.invokeLaterOnEdt
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.options.SearchableConfigurable
 import com.intellij.openapi.project.Project
@@ -36,20 +38,25 @@ internal class CCMainConfigurable(private val project: Project) : SearchableConf
     gui.customTokensFilePath = configService.customFilePath
     gui.customCoAuthorsFilePath = configService.customCoAuthorsFilePath
 
-    val tokensService = CCTokensService.getInstance(project)
-    val tokens = when (val result = tokensService.getTokens()) {
-      is TokensResult.Success -> result.tokens
-      is TokensResult.FileError -> {
-        logger.debug("Error while getting tokens", result.message)
-        tokensService.getBundledTokens()
+    ApplicationManager.getApplication().executeOnPooledThread {
+      val tokensService = CCTokensService.getInstance(project)
+      val tokens = when (val result = tokensService.getTokens()) {
+        is TokensResult.Success -> result.tokens
+        is TokensResult.FileError -> {
+          logger.debug("Error while getting tokens", result.message)
+          tokensService.getBundledTokens()
+        }
+        is TokensResult.SchemaError -> {
+          logger.debug("Error while getting tokens", result.failure)
+          tokensService.getBundledTokens()
+        }
       }
-      is TokensResult.SchemaError -> {
-        logger.debug("Error while getting tokens", result.failure)
-        tokensService.getBundledTokens()
+
+      invokeLaterOnEdt {
+        gui.setTokens(tokens.types)
       }
     }
 
-    gui.setTokens(tokens.types)
     return gui.rootPanel
   }
 
@@ -74,16 +81,22 @@ internal class CCMainConfigurable(private val project: Project) : SearchableConf
     configService.customCoAuthorsFilePath = gui.customCoAuthorsFilePath
     configService.customFilePath = gui.customTokensFilePath
 
-    val tokensService = CCTokensService.getInstance(project)
-    when (val result = tokensService.getTokens()) {
-      is TokensResult.Success -> gui.setTokens(result.tokens.types)
-      is TokensResult.FileError -> {
-        logger.debug("Error while getting tokens", result.message)
-        gui.revalidate()
-      }
-      is TokensResult.SchemaError -> {
-        logger.debug("Error while getting tokens", result.failure)
-        gui.revalidate()
+    ApplicationManager.getApplication().executeOnPooledThread {
+      val tokensService = CCTokensService.getInstance(project)
+      val result = tokensService.getTokens()
+
+      invokeLaterOnEdt {
+        when (result) {
+          is TokensResult.Success -> gui.setTokens(result.tokens.types)
+          is TokensResult.FileError -> {
+            logger.debug("Error while getting tokens", result.message)
+            gui.revalidate()
+          }
+          is TokensResult.SchemaError -> {
+            logger.debug("Error while getting tokens", result.failure)
+            gui.revalidate()
+          }
+        }
       }
     }
 
