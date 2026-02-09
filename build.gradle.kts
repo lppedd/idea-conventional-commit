@@ -8,9 +8,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 
-fun stringProperty(key: String, default: String? = null): String =
-  findProperty(key)?.toString() ?: default ?: error("Expected a valid property $key")
-
 plugins {
   java
   alias(libs.plugins.kotlin)
@@ -27,9 +24,13 @@ repositories {
   }
 }
 
+val pluginVersion: Provider<String> = providers.gradleProperty("version")
+val pluginSinceBuild: Provider<String> = providers.gradleProperty("pluginSinceBuild")
+val platformVersion: Provider<String> = providers.gradleProperty("platformVersion")
+
 dependencies {
   intellijPlatform {
-    intellijIdea(version = stringProperty("platformVersion"))
+    intellijIdea(version = platformVersion)
 
     bundledModule("intellij.platform.vcs.dvcs")
     bundledModule("intellij.platform.vcs.dvcs.impl")
@@ -53,17 +54,17 @@ dependencies {
 
 intellijPlatform {
   pluginConfiguration {
-    val versionStr = stringProperty("version")
-    version = versionStr
+    version = pluginVersion
 
-    val descriptionFile = file("plugin-description.html")
-    description = descriptionFile.readText()
+    val pluginDescFile = layout.projectDirectory.file("plugin-description.html")
+    description = providers.fileContents(pluginDescFile).asText
 
-    val changeNotesFile = file("change-notes/${versionStr.replace('.', '_')}.html")
-    changeNotes = changeNotesFile.readText()
+    val changeNotesPath = pluginVersion.map { "change-notes/${it.replace('.', '_')}.html" }
+    val changeNotesFile = layout.projectDirectory.file(changeNotesPath)
+    changeNotes = providers.fileContents(changeNotesFile).asText
 
     ideaVersion {
-      sinceBuild = stringProperty("pluginSinceBuild")
+      sinceBuild = pluginSinceBuild
     }
   }
 
