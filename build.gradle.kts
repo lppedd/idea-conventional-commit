@@ -24,9 +24,10 @@ repositories {
   }
 }
 
-val pluginVersion: Provider<String> = providers.gradleProperty("version")
-val pluginSinceBuild: Provider<String> = providers.gradleProperty("pluginSinceBuild")
 val platformVersion: Provider<String> = providers.gradleProperty("platformVersion")
+val pluginSinceBuild: Provider<String> = providers.gradleProperty("pluginSinceBuild")
+val pluginVerifyType: Provider<String> = providers.gradleProperty("pluginVerifyType")
+val pluginVersion: Provider<String> = providers.gradleProperty("version")
 
 dependencies {
   intellijPlatform {
@@ -70,7 +71,11 @@ intellijPlatform {
 
   pluginVerification {
     ides {
-      create(IntelliJPlatformType.IntellijIdea, "2025.3")
+      if (pluginVerifyType.getOrElse("stable") == "recommended") {
+        recommended()
+      } else {
+        create(IntelliJPlatformType.IntellijIdea, "2025.3")
+      }
     }
   }
 }
