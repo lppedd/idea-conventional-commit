@@ -1,13 +1,14 @@
 package com.github.lppedd.cc.liveTemplate
 
-import com.github.lppedd.cc.*
 import com.github.lppedd.cc.annotation.Compatibility
 import com.github.lppedd.cc.lookupElement.TemplateSegment
+import com.github.lppedd.cc.moveCaretToOffset
+import com.github.lppedd.cc.runAndLogError
+import com.github.lppedd.cc.scheduleAutoPopup
 import com.intellij.codeInsight.template.Template
 import com.intellij.codeInsight.template.TemplateEditingAdapter
 import com.intellij.codeInsight.template.impl.TemplateState
 import com.intellij.codeInsight.template.impl.TemplateStateBase
-import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.util.TextRange
@@ -74,33 +75,41 @@ internal class CCTemplateEditingListener : TemplateEditingAdapter() {
       predefinedValues.remove(segmentName)
     }
 
-    if (oldIndex == TemplateSegment.BodyOrFooterType && newIndex > oldIndex) {
-      if (templateState.getSegmentRange(TemplateSegment.BodyOrFooterType).isEmpty) {
-        deleteFooterValue(templateState)
-        templateState.gotoEnd()
-        return
-      }
-    }
-
     val newOffset = templateState.getSegmentRange(newIndex).startOffset
     templateState.editor.moveCaretToOffset(newOffset)
     templateState.editor.scheduleAutoPopup()
   }
 
   override fun beforeTemplateFinished(templateState: TemplateState, template: Template) {
+    val footerValueRange = templateState.getSegmentRange(TemplateSegment.FooterValue)
+
+    if (footerValueRange.isEmpty) {
+      deleteFooterValue(templateState, footerValueRange)
+    }
+
     val bodyOrFooterTypeRange = templateState.getSegmentRange(TemplateSegment.BodyOrFooterType)
 
     if (bodyOrFooterTypeRange.isEmpty) {
-      repositionCursorAfterSubjectAndCleanUp(templateState, bodyOrFooterTypeRange)
+      deleteBodyOrFooter(templateState, bodyOrFooterTypeRange)
     }
 
-    deleteScopeParenthesesIfEmpty(templateState)
+    val scopeRange = templateState.getSegmentRange(TemplateSegment.Scope)
+
+    if (scopeRange.isEmpty) {
+      deleteScopeParentheses(templateState, scopeRange)
+    }
   }
 
-  private fun repositionCursorAfterSubjectAndCleanUp(
-    templateState: TemplateState,
-    bodyOrFooterTypeRange: TextRange,
-  ) {
+  private fun deleteFooterValue(templateState: TemplateState, footerValueRange: TextRange) {
+    val editor = templateState.editor
+    val startOffset = max(footerValueRange.startOffset - 1, 0)
+    WriteCommandAction.runWriteCommandAction(editor.project, "Delete empty footer value", "", {
+      editor.document.deleteString(startOffset, footerValueRange.endOffset)
+      editor.moveCaretToOffset(startOffset)
+    })
+  }
+
+  private fun deleteBodyOrFooter(templateState: TemplateState, bodyOrFooterTypeRange: TextRange) {
     // If the body is empty, it means the user didn't need to insert it.
     // Thus, we can reposition the cursor at the end of the subject
     val newOffset = templateState.getSegmentRange(TemplateSegment.Subject).endOffset
@@ -114,32 +123,17 @@ internal class CCTemplateEditingListener : TemplateEditingAdapter() {
     }
   }
 
-  private fun deleteScopeParenthesesIfEmpty(templateState: TemplateState) {
-    val (scopeStart, scopeEnd, isScopeEmpty) = templateState.getSegmentRange(TemplateSegment.Scope)
+  private fun deleteScopeParentheses(templateState: TemplateState, scopeRange: TextRange) {
+    val editor = templateState.editor
+    val document = editor.document
+    val startOffset = max(scopeRange.startOffset - 1, 0)
 
-    // If the scope is empty, it means the user didn't need to insert it, thus we can remove it
-    if (isScopeEmpty) {
-      val editor = templateState.editor
-      val document = editor.document
-      val startOffset = max(scopeStart - 1, 0)
-
-      // In some cases it seems the segment range is not yet up to date with document changes
-      if (startOffset <= document.textLength) {
-        val endOffset = min(scopeEnd + 1, document.textLength)
-        WriteCommandAction.runWriteCommandAction(editor.project, "Delete scope's parentheses", "", {
-          document.deleteString(startOffset, endOffset)
-        })
-      }
-    }
-  }
-
-  private fun deleteFooterValue(templateState: TemplateState) {
-    val (start, end, isEmpty) = templateState.getSegmentRange(TemplateSegment.FooterValue)
-
-    if (!isEmpty) {
-      runWriteAction {
-        templateState.editor.document.deleteString(start, end)
-      }
+    // In some cases it seems the segment range is not yet up to date with document changes
+    if (startOffset <= document.textLength) {
+      val endOffset = min(scopeRange.endOffset + 1, document.textLength)
+      WriteCommandAction.runWriteCommandAction(editor.project, "Delete scope's parentheses", "", {
+        document.deleteString(startOffset, endOffset)
+      })
     }
   }
 

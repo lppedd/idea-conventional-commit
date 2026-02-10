@@ -2,7 +2,7 @@
   <template
       id="ConventionalCommit-cs"
       name="cs"
-      value="$TYPE$($SCOPE$): $SUBJECT$&#10;&#10;$BODY_OR_FOOTER_TYPE$$FOOTER_VALUE$"
+      value="$TYPE$($SCOPE$): $SUBJECT$&#10;&#10;$BODY_OR_FOOTER_TYPE$ $FOOTER_VALUE$"
       description="Conventional commit"
       toReformat="false"
       toShortenFQNames="true"

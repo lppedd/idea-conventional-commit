@@ -121,10 +121,10 @@ internal class TemplateLookupElementDecorator(private val delegate: CommitTokenL
 
   private fun appendSeparatorOnFooterType(editor: Editor, templateState: TemplateState) {
     val offset = templateState.getSegmentRange(TemplateSegment.BodyOrFooterType).endOffset
-    editor.document.insertString(offset, ": ")
+    editor.document.insertString(offset, ":")
 
     invokeLaterOnEdt {
-      editor.moveCaretToOffset(offset + 2)
+      editor.moveCaretToOffset(offset + 1)
     }
   }
 }
