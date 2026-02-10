@@ -107,12 +107,10 @@ internal class CCTemplateEditingListener : TemplateEditingAdapter() {
 
     if (newOffset <= bodyOrFooterTypeRange.endOffset) {
       val editor = templateState.editor
-      val action = {
+      WriteCommandAction.runWriteCommandAction(editor.project, "Reposition cursor after the subject", "", {
         editor.document.deleteString(newOffset, bodyOrFooterTypeRange.endOffset)
         editor.moveCaretToOffset(newOffset)
-      }
-
-      WriteCommandAction.runWriteCommandAction(editor.project, "Reposition cursor after the subject", "", action)
+      })
     }
   }
 
@@ -124,12 +122,14 @@ internal class CCTemplateEditingListener : TemplateEditingAdapter() {
       val editor = templateState.editor
       val document = editor.document
       val startOffset = max(scopeStart - 1, 0)
-      val endOffset = min(scopeEnd + 1, document.textLength)
-      val action = {
-        document.deleteString(startOffset, endOffset)
-      }
 
-      WriteCommandAction.runWriteCommandAction(editor.project, "Delete scope's parentheses", "", action)
+      // In some cases it seems the segment range is not yet up to date with document changes
+      if (startOffset <= document.textLength) {
+        val endOffset = min(scopeEnd + 1, document.textLength)
+        WriteCommandAction.runWriteCommandAction(editor.project, "Delete scope's parentheses", "", {
+          document.deleteString(startOffset, endOffset)
+        })
+      }
     }
   }
 
