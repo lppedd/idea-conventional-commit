@@ -462,8 +462,7 @@ internal inline fun ListSelectionModel.selectedIndices(): IntArray {
   return rv
 }
 
-@Suppress("SameParameterValue")
-internal inline fun <T> Logger.runAndLogError(defaultValue: T, block: () -> T): T {
+internal fun <T> Logger.runAndLogError(defaultValue: T, block: () -> T): T {
   contract {
     callsInPlace(block, InvocationKind.AT_MOST_ONCE)
   }
