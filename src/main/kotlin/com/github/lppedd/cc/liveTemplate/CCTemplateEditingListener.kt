@@ -6,6 +6,7 @@ import com.github.lppedd.cc.lookupElement.TemplateSegment
 import com.intellij.codeInsight.template.Template
 import com.intellij.codeInsight.template.TemplateEditingAdapter
 import com.intellij.codeInsight.template.impl.TemplateState
+import com.intellij.codeInsight.template.impl.TemplateStateBase
 import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.diagnostic.logger
@@ -17,6 +18,14 @@ import kotlin.math.min
  * @author Edoardo Luppi
  */
 internal class CCTemplateEditingListener : TemplateEditingAdapter() {
+  private class MyHashMap : HashMap<String, String> {
+    constructor() : super()
+    constructor(map: Map<String, String>) : super(map)
+
+    override fun containsKey(key: String): Boolean =
+      false
+  }
+
   private companion object {
     private val logger = logger<CCTemplateEditingListener>()
   }
@@ -41,6 +50,30 @@ internal class CCTemplateEditingListener : TemplateEditingAdapter() {
       return
     }
 
+    // This is a workaround to restore the old (cannot remember how old tho) template behavior,
+    // where stepping to a previous template segment would not erase the currently inputted value.
+    // To achieve this, we store the currently inputted value for the segment we are stepping
+    // away from into the segments' predefined values map.
+    //
+    // MyHashMap is used to trick 'TemplateState.checkIfTabStop' in believing the segment
+    // we are stepping into does not have a predefined value. Otherwise, the template engine
+    // simply skips that segment.
+    var predefinedValues = templateState.getPredefinedVariableValues()
+
+    if (predefinedValues !is MyHashMap) {
+      predefinedValues = predefinedValues?.let(::MyHashMap) ?: MyHashMap()
+      templateState.setPredefinedVariableValues(predefinedValues)
+    }
+
+    if (newIndex < oldIndex) {
+      val segmentName = template.getSegmentName(oldIndex)
+      val segmentRange = templateState.getSegmentRange(oldIndex)
+      predefinedValues[segmentName] = templateState.editor.document.getText(segmentRange)
+    } else {
+      val segmentName = template.getSegmentName(newIndex)
+      predefinedValues.remove(segmentName)
+    }
+
     if (oldIndex == TemplateSegment.BodyOrFooterType && newIndex > oldIndex) {
       if (templateState.getSegmentRange(TemplateSegment.BodyOrFooterType).isEmpty) {
         deleteFooterValue(templateState)
@@ -50,9 +83,8 @@ internal class CCTemplateEditingListener : TemplateEditingAdapter() {
     }
 
     val newOffset = templateState.getSegmentRange(newIndex).startOffset
-    val editor = templateState.editor
-    editor.moveCaretToOffset(newOffset)
-    editor.scheduleAutoPopup()
+    templateState.editor.moveCaretToOffset(newOffset)
+    templateState.editor.scheduleAutoPopup()
   }
 
   override fun beforeTemplateFinished(templateState: TemplateState, template: Template) {
@@ -107,6 +139,24 @@ internal class CCTemplateEditingListener : TemplateEditingAdapter() {
     if (!isEmpty) {
       runWriteAction {
         templateState.editor.document.deleteString(start, end)
+      }
+    }
+  }
+
+  @Suppress("UNCHECKED_CAST")
+  private fun TemplateStateBase.getPredefinedVariableValues(): MutableMap<String, String>? =
+    logger.runAndLogError(null) {
+      TemplateStateBase::class.java.getDeclaredMethod("getPredefinedVariableValues").let {
+        it.isAccessible = true
+        it.invoke(this) as MutableMap<String, String>?
+      }
+    }
+
+  private fun TemplateStateBase.setPredefinedVariableValues(map: MutableMap<String, String>?) {
+    logger.runAndLogError(Unit) {
+      TemplateStateBase::class.java.getDeclaredMethod("setPredefinedVariableValues", Map::class.java).let {
+        it.isAccessible = true
+        it.invoke(this, map)
       }
     }
   }
