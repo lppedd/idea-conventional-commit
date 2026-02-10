@@ -112,7 +112,7 @@ internal class ShowMoreCoAuthorsLookupElement : CommitTokenLookupElement, Prefix
       TextRange(lineStart, lineEnd)
     }
 
-    val action = Runnable {
+    val action = {
       editor.removeSelection()
       editor.replaceString(footerStart, footerEnd, text)
     }

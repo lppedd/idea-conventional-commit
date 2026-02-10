@@ -75,7 +75,7 @@ internal class CCTemplateEditingListener : TemplateEditingAdapter() {
 
     if (newOffset <= bodyOrFooterTypeRange.endOffset) {
       val editor = templateState.editor
-      val action = Runnable {
+      val action = {
         editor.document.deleteString(newOffset, bodyOrFooterTypeRange.endOffset)
         editor.moveCaretToOffset(newOffset)
       }
@@ -93,7 +93,7 @@ internal class CCTemplateEditingListener : TemplateEditingAdapter() {
       val document = editor.document
       val startOffset = max(scopeStart - 1, 0)
       val endOffset = min(scopeEnd + 1, document.textLength)
-      val action = Runnable {
+      val action = {
         document.deleteString(startOffset, endOffset)
       }
 

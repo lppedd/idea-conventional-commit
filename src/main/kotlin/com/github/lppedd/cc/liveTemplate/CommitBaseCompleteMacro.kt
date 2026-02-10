@@ -41,7 +41,7 @@ internal abstract class CommitBaseCompleteMacro : Macro() {
         return@invokeLaterOnEdt
       }
 
-      val command = Runnable {
+      val command = {
         @Suppress("UnstableApiUsage")
         CompletionServiceImpl.setCompletionPhase(CompletionPhase.NoCompletion)
         invokeCompletionHandler(project, editor)

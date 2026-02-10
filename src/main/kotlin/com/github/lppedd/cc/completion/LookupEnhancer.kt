@@ -176,7 +176,7 @@ internal class LookupEnhancer(private val lookup: LookupImpl) : LookupListener, 
   private fun invokeCompletion() {
     val project = lookup.project
     val editor = lookup.editor
-    val command = Runnable {
+    val command = {
       val invokedExplicitly = ApplicationManager.getApplication().isUnitTestMode
       CodeCompletionHandlerBase
         .createHandler(BASIC, invokedExplicitly, !invokedExplicitly, true)
