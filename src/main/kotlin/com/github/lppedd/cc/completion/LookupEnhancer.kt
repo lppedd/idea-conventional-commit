@@ -6,6 +6,7 @@ import com.github.lppedd.cc.completion.menu.FilterAction
 import com.github.lppedd.cc.completion.menu.SettingsActions
 import com.github.lppedd.cc.configuration.CCConfigService
 import com.github.lppedd.cc.configuration.CCConfigService.ProviderFilterType.KEEP_SELECTED
+import com.github.lppedd.cc.isTemplateActive
 import com.github.lppedd.cc.keyPressAndRelease
 import com.github.lppedd.cc.plus
 import com.intellij.codeInsight.completion.CodeCompletionHandlerBase
@@ -95,7 +96,11 @@ internal class LookupEnhancer(private val lookup: LookupImpl) : LookupListener, 
       //   registry key is set to "true".
       //   Also if the user checked the "Insert selected suggestion by... context-dependent keys"
       //   option, the FOCUSED degree is used while we want SEMI_FOCUSED
-      lookup.lookupFocusDegree = LookupFocusDegree.SEMI_FOCUSED
+      lookup.lookupFocusDegree = if (lookup.editor.isTemplateActive()) {
+        LookupFocusDegree.UNFOCUSED
+      } else {
+        LookupFocusDegree.SEMI_FOCUSED
+      }
     } catch (e: Exception) {
       logger.error("Couldn't override the lookup focus degree", e)
     }
