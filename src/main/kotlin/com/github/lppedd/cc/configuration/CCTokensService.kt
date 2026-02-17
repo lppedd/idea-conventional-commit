@@ -1,7 +1,6 @@
 package com.github.lppedd.cc.configuration
 
 import com.github.erosb.jsonsKema.*
-import com.github.erosb.jsonsKema.FormatValidationPolicy.ALWAYS
 import com.github.lppedd.cc.*
 import com.intellij.openapi.application.WriteAction
 import com.intellij.openapi.components.Service
@@ -11,8 +10,6 @@ import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import org.codehaus.jettison.json.JSONArray
 import org.codehaus.jettison.json.JSONObject
-import java.io.Reader
-import java.net.URI
 
 /**
  * Manages bundled and custom commit message tokens.
@@ -30,27 +27,12 @@ internal class CCTokensService(private val project: Project) {
    * JSON Schema used to validate the default commit types and scopes JSON file.
    */
   private val tokensSchema: Schema by lazy {
-    // See https://github.com/erosb/json-sKema/tree/master/src/main/resources/json-meta-schemas
-    val draft04Reader = getResourceAsStream("/json-meta-schemas/draft04/schema.json").bufferedReader()
-    val draft04Str = draft04Reader.use(Reader::readText)
-
     val schemaReader = getResourceAsStream("/defaults/${CC.File.Schema}").bufferedReader()
     val schemaJson = schemaReader.use {
       JsonParser(schemaReader).parse()
     }
 
-    // Pre-populate additional Draft 4 schemas to avoid network calls.
-    // I'm not sure whether all of these are needed, but let's play on the safe side.
-    val config = SchemaLoaderConfig.createDefaultConfig(
-      mapOf(
-        URI("http://json-schema.org/draft-04/schema") to draft04Str,
-        URI("http://json-schema.org/draft-04/schema#") to draft04Str,
-        URI("https://json-schema.org/draft-04/schema") to draft04Str,
-        URI("https://json-schema.org/draft-04/schema#") to draft04Str,
-      )
-    )
-
-    return@lazy SchemaLoader(schemaJson, config).load()
+    return@lazy SchemaLoader(schemaJson).load()
   }
 
   /**
@@ -337,7 +319,7 @@ internal class CCTokensService(private val project: Project) {
 
   private fun Schema.validateJson(content: String): ValidationFailure? {
     val jsonValue = JsonParser(content).parse()
-    val validator = Validator.create(this, ValidatorConfig(ALWAYS))
+    val validator = Validator.create(this, ValidatorConfig(FormatValidationPolicy.ALWAYS))
     return validator.validate(jsonValue)
   }
 }
