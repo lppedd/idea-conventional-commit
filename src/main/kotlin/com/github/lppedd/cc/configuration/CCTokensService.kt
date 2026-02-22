@@ -39,15 +39,15 @@ internal class CCTokensService(private val project: Project) {
    * Bundled commit message tokens.
    */
   private val bundledTokensModel: TokensModel by lazy {
-    val reader = getResourceAsStream("/defaults/${CC.File.Defaults}").bufferedReader()
-    val result = reader.use {
+    val defaultsReader = getResourceAsStream("/defaults/${CC.File.Defaults}").bufferedReader()
+    val parseResult = defaultsReader.use {
       parseTokens(it.readText())
     }
 
-    when (result) {
-      is TokensResult.Success -> return@lazy result.tokens
-      is TokensResult.FileError -> error("Unexpected TokensResult.FileError. ${result.message}")
-      is TokensResult.SchemaError -> error("unexpected TokensResult.SchemaError. ${result.failure}")
+    when (parseResult) {
+      is TokensResult.Success -> return@lazy parseResult.tokens
+      is TokensResult.FileError -> error("Unexpected TokensResult.FileError. ${parseResult.message}")
+      is TokensResult.SchemaError -> error("unexpected TokensResult.SchemaError. ${parseResult.failure}")
     }
   }
 

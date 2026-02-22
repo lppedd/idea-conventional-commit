@@ -65,14 +65,13 @@ internal class DefaultTokensFileExportPanel(private val project: Project) :
 
     // When exporting to a file, we also need to add the JSON schema reference.
     // Better normalize line endings to \n.
-    val content = StringUtil.convertLineSeparators(
-      getResourceAsStream("/defaults/${CC.File.Defaults}").bufferedReader().use(Reader::readText)
-    )
+    val defaultsReader = getResourceAsStream("/defaults/${CC.File.Defaults}").bufferedReader()
+    val defaultsStr = StringUtil.convertLineSeparators(defaultsReader.use(Reader::readText))
 
     val pluginVersion = getPluginVersion()
     val schemaPath = "src/main/resources/defaults/conventionalcommit.schema.json"
     val schemaUrl = "https://github.com/lppedd/idea-conventional-commit/raw/$pluginVersion/$schemaPath"
-    val bytes = (content.substring(0, 4) + $$"\"$schema\": \"$$schemaUrl\",\n" + content.substring(2))
+    val bytes = (defaultsStr.substring(0, 4) + $$"\"$schema\": \"$$schemaUrl\",\n" + defaultsStr.substring(2))
       .toByteArray(file.charset)
 
     WriteAction.runAndWait<Throwable> {
