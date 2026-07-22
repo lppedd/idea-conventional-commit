@@ -74,6 +74,8 @@ intellijPlatform {
         recommended()
       } else {
         create(IntelliJPlatformType.IntellijIdea, "2025.3")
+        create(IntelliJPlatformType.IntellijIdea, "2026.1")
+        create(IntelliJPlatformType.IntellijIdea, "2026.2")
       }
     }
   }
