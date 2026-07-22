@@ -67,6 +67,9 @@
     "Tested-by": {
       "description": "The specified person tested the commit's changes and confirmed the desired behavior."
     },
+    "Assisted-by": {
+      "description": "The specified person or AI agent assisted with the commit's changes."
+    },
     "Acked-by": {
       "description": "The specified person acknowledged or approved the commit's changes."
     },
