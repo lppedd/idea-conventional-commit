@@ -5,7 +5,6 @@ import org.jetbrains.intellij.platform.gradle.extensions.intellijPlatform
 import org.jetbrains.intellij.platform.gradle.utils.asPath
 import org.jetbrains.kotlin.gradle.dsl.JvmDefaultMode
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 
 plugins {
@@ -94,7 +93,6 @@ kotlin {
 
   explicitApiWarning()
   compilerOptions {
-    languageVersion = KotlinVersion.KOTLIN_2_3
     jvmTarget = JvmTarget.JVM_21
     jvmDefault = JvmDefaultMode.NO_COMPATIBILITY
     freeCompilerArgs.addAll(
@@ -110,23 +108,26 @@ kotlin {
 
 tasks {
   val baseDir = "src/main/kotlin/com/github/lppedd/cc"
-  val generateLangLexer by registering(GenerateLexerTask::class) {
+  val generateLangLexer = register<GenerateLexerTask>("generateLangLexer") {
+    description = "Generates the JFlex lexer for the IDE-aware ConventionalCommit language"
     sourceFile = layout.projectDirectory.file("$baseDir/language/lexer/languageConventionalCommit.flex")
     targetOutputDir = layout.projectDirectory.dir("src/main/gen/lang")
     purgeOldFiles = true
   }
 
-  val generateSpecLexer by registering(GenerateLexerTask::class) {
+  val generateSpecLexer = register<GenerateLexerTask>("generateSpecLexer") {
+    description = "Generates the JFlex lexer for the spec-adhering ConventionalCommit language"
     sourceFile = layout.projectDirectory.file("$baseDir/parser/specConventionalCommit.flex")
     targetOutputDir = layout.projectDirectory.dir("src/main/gen/spec")
     purgeOldFiles = true
   }
 
-  val buildApiSourceJar by registering(Jar::class) {
+  val buildApiSourceJar = register<Jar>("buildApiSourceJar") {
     from(kotlin.sourceSets.main.map(KotlinSourceSet::kotlin)) {
       include("com/github/lppedd/cc/api/*.kt")
     }
 
+    description = "Builds a sources JAR for the plugin API"
     destinationDirectory = layout.buildDirectory.dir("libs")
     archiveClassifier = "src"
   }
