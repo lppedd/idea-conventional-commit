@@ -155,7 +155,7 @@ tasks {
   }
 
   runIde {
-    val agentPath = layout.projectDirectory.file("hotswap-agent-2.0.1.jar").asPath
+    val agentPath = layout.projectDirectory.file("hotswap-agent-2.0.3.jar").asPath
     jvmArgs("-XX:+AllowEnhancedClassRedefinition", "-XX:HotswapAgent=external", "-javaagent:$agentPath")
   }
 }
