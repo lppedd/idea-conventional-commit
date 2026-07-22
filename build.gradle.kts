@@ -2,6 +2,7 @@ import org.jetbrains.grammarkit.tasks.GenerateLexerTask
 import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 import org.jetbrains.intellij.platform.gradle.extensions.intellijPlatform
+import org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginTask.FailureLevel
 import org.jetbrains.intellij.platform.gradle.utils.asPath
 import org.jetbrains.kotlin.gradle.dsl.JvmDefaultMode
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -69,6 +70,11 @@ intellijPlatform {
   }
 
   pluginVerification {
+    failureLevel = listOf(
+      FailureLevel.COMPATIBILITY_PROBLEMS,
+      FailureLevel.OVERRIDE_ONLY_API_USAGES,
+    )
+
     ides {
       if (pluginVerifyType.getOrElse("stable") == "recommended") {
         recommended()
