@@ -1,6 +1,7 @@
 package com.github.lppedd.cc.language
 
 import com.github.lppedd.cc.language.psi.*
+import com.intellij.openapi.project.DumbAware
 import com.intellij.psi.PsiElement
 import com.intellij.spellchecker.inspections.PlainTextSplitter
 import com.intellij.spellchecker.tokenizer.SpellcheckingStrategy
@@ -10,7 +11,7 @@ import com.intellij.spellchecker.tokenizer.Tokenizer
 /**
  * @author Edoardo Luppi
  */
-internal class ConventionalCommitSpellcheckingStrategy : SpellcheckingStrategy() {
+internal class ConventionalCommitSpellcheckingStrategy : SpellcheckingStrategy(), DumbAware {
   private val tokenizer = object : Tokenizer<PsiElement>() {
     override fun tokenize(element: PsiElement, consumer: TokenConsumer) {
       consumer.consumeToken(element, PlainTextSplitter.getInstance())

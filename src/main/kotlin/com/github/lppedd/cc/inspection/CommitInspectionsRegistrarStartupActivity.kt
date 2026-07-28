@@ -13,12 +13,12 @@ import com.intellij.vcs.commit.message.CommitMessageInspectionProfile
  */
 internal class CommitInspectionsRegistrarStartupActivity : ProjectActivity, DumbAware {
   private object Lock {
-    // Used to synchronize the inspections registration process
+    // Used to synchronize the inspection registration process
     val lock = Any()
   }
 
   override suspend fun execute(project: Project) {
-    val inspectionProviderService = CommitInspectionProviderService.getInstance()
+    val inspectionProviderService = CommitInspectionProviderService.getInstance(project)
     val inspectionProviders = inspectionProviderService.getInspectionProviders()
     val inspections = inspectionProviders.flatMap(CommitInspectionProvider::getInspections)
 

@@ -46,6 +46,7 @@
     <extensionPoint
         qualifiedName="com.github.lppedd.idea-conventional-commit.commitInspectionProvider"
         interface="com.github.lppedd.cc.api.CommitInspectionProvider"
+        area="IDEA_PROJECT"
     />
   </extensionPoints>
 

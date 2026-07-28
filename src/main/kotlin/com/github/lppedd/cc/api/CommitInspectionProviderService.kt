@@ -1,6 +1,7 @@
 package com.github.lppedd.cc.api
 
 import com.intellij.openapi.components.service
+import com.intellij.openapi.project.Project
 
 /**
  * @author Edoardo Luppi
@@ -8,7 +9,7 @@ import com.intellij.openapi.components.service
 public interface CommitInspectionProviderService {
   public companion object {
     @JvmStatic
-    public fun getInstance(): CommitInspectionProviderService = service()
+    public fun getInstance(project: Project): CommitInspectionProviderService = project.service()
   }
 
   /**
