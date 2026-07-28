@@ -143,4 +143,4 @@ Desktop.ini
 ######################
 # Plugin Development
 ######################
-!hotswap-agent-2.0.1.jar
+!hotswap-agent-*.jar
