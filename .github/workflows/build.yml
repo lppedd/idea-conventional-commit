@@ -26,39 +26,39 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Free disk space
-        uses: jlumbroso/free-disk-space@v1.3.1
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
         with:
           large-packages: false
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Setup JDK 21
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
         with:
           distribution: corretto
           java-version: 21
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
+        uses: gradle/actions/setup-gradle@3f131e8634966bd73d06cc69884922b02e6faf92 #v6.2.0
       - name: Build and test plugin
         run: ./gradlew check buildPlugin
       - name: Collect test results
         if: ${{ failure() }}
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: tests-result
           path: ${{ github.workspace }}/build/reports/tests
-      - name: Prepare plugin artifact
+      - name: Read plugin artifact name
         id: artifact
         shell: bash
         run: |
           cd ${{ github.workspace }}/build/distributions
           FILENAME=`ls *.zip`
-          unzip "$FILENAME" -d content
           echo "filename=${FILENAME:0:-4}" >> $GITHUB_OUTPUT
       - name: Upload plugin artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: ${{ steps.artifact.outputs.filename }}
-          path: ./build/distributions/content/**
+          name: ${{ steps.artifact.outputs.filename }}-${{ github.job }}
+          path: ${{ github.workspace }}/build/distributions/*.zip
+          if-no-files-found: error
 
   verify:
     name: Verify
@@ -67,25 +67,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Free disk space
-        uses: jlumbroso/free-disk-space@v1.3.1
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
         with:
           large-packages: false
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Setup JDK 21
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
         with:
           distribution: corretto
           java-version: 21
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
+        uses: gradle/actions/setup-gradle@3f131e8634966bd73d06cc69884922b02e6faf92 #v6.2.0
         with:
           cache-read-only: true
       - name: Verify plugin
         run: ./gradlew verifyPlugin
       - name: Collect Plugin Verifier results
         if: ${{ always() }}
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: plugin-verifier-result
           path: ${{ github.workspace }}/build/reports/pluginVerifier
