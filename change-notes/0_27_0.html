@@ -1,5 +1,61 @@
-<h3>0.27.0</h3>
-<p>This release contains the following changes:</p>
+<h3>0.27.0 (03/08/2026)</h3>
+<p>This release contains the following enhancements and fixes:</p>
 <ul>
-  <li>TODO</li>
+  <li>
+    Reimplemented commit message parsing, improving syntax handling and support
+    for incomplete messages, bodies, footers, multiline footer values, and recent VCS commit tokens
+    (closes <a href="https://github.com/lppedd/idea-conventional-commit/issues/124">#124</a>
+    and <a href="https://github.com/lppedd/idea-conventional-commit/issues/128">#128</a>).
+  </li>
+  <li>
+    Fixed an OOM issue when parsing a commit type that starts with <code>!</code>
+    (closes <a href="https://github.com/lppedd/idea-conventional-commit/issues/161">#161</a>).
+  </li>
+  <li>
+    Improved template completion: move freely between segments without losing
+    entered values and clean up empty footer fields when finishing a template.
+  </li>
+  <li>
+    Restored spellchecking for commit messages, which had stopped working after
+    the migration to the Grazie-based platform implementation.
+  </li>
+  <li>
+    Added a confirmation before clearing the local commit message history
+    (closes <a href="https://github.com/lppedd/idea-conventional-commit/issues/147">#147</a>).
+  </li>
+  <li>
+    Moved Conventional Commit settings under <em>Tools</em>.
+  </li>
+  <li>
+    Used the IDE locale by default, while allowing an override through the
+    <code>com.github.lppedd.cc.locale</code> registry option
+    (closes <a href="https://github.com/lppedd/idea-conventional-commit/issues/126">#126</a>).
+  </li>
+  <li>
+    Added the <code>Fixes</code> and <code>Assisted-by</code> built-in footer types
+    (closes <a href="https://github.com/lppedd/idea-conventional-commit/issues/164">#164</a>).
+  </li>
+  <li>
+    Improved custom token file handling: exported files now include the appropriate versioned schema reference.
+  </li>
+  <li>
+    Used the IDE file chooser consistently when selecting token-related files.
+  </li>
+  <li>
+    Loaded tokens in the plugin's Settings page on the appropriate background thread
+    (closes <a href="https://github.com/lppedd/idea-conventional-commit/issues/162">#162</a>).
+  </li>
+  <li>
+    Prevented errors when accessing VCS log providers
+    (closes <a href="https://github.com/lppedd/idea-conventional-commit/issues/150">#150</a>).
+  </li>
+  <li>
+    Expanded compatibility verification to IDEA 2026.1 and 2026.2.
+  </li>
+  <li>
+    And a lot of other stuff that I'm too lazy to list.
+  </li>
 </ul>
+<p>
+  See the complete list of changes at <a href="https://github.com/lppedd/idea-conventional-commit/compare/0.26.0...0.27.0">0.26.0...0.27.0</a>
+</p>.
